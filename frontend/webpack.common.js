@@ -3,11 +3,8 @@
 
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
-  mode: "development",
   entry: "./src/index.tsx",
   output: {
     path: path.join(__dirname, "/dist"),
@@ -53,7 +50,5 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
     }),
-    new CleanWebpackPlugin(),
-    new ReactRefreshWebpackPlugin(),
   ],
 };
