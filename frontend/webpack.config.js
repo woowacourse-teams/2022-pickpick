@@ -32,7 +32,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|woff)$/i,
         loader: "file-loader",
         options: {
           name: "[path][name].[ext]",
