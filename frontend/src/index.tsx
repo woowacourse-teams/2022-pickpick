@@ -1,18 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { LIGHT_MODE_THEME } from "./@styles/theme";
+import { LIGHT_MODE_THEME } from "@src/@styles/theme";
+import Home from "@src/pages/Home";
+import LayoutContainer from "@src/components/Layout/LayoutContainer";
+import GlobalStyle from "./@styles/GlobalStyle";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 
 root.render(
   <BrowserRouter>
     <ThemeProvider theme={LIGHT_MODE_THEME}>
-      <Routes>
-        <Route path="/" element={<App />} />
-      </Routes>
+      <GlobalStyle />
+      <LayoutContainer>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </LayoutContainer>
     </ThemeProvider>
   </BrowserRouter>
 );
