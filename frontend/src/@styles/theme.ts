@@ -1,0 +1,39 @@
+import { COLORS } from "./colors";
+import { FONT_SIZE } from "./fontSize";
+
+export const LIGHT_MODE_THEME = {
+  COLOR: {
+    PRIMARY: { DEFAULT: COLORS.BLUE["90"] },
+    SECONDARY: { DEFAULT: COLORS.GREY["70"] },
+    TEXT: {
+      DEFAULT: COLORS.GREY["90"],
+      DISABLED: COLORS.GREY["60"],
+    },
+    BACKGROUND: {
+      PRIMARY: COLORS.GREY["30"],
+      SECONDARY: COLORS.WHITE,
+      TERTIARY: COLORS.GREY["50"],
+    },
+    WRAPPER: {
+      DEFAULT: COLORS.WHITE,
+      DISABLED: COLORS.GREY["40"],
+    },
+    CONTAINER: {
+      DEFAULT: COLORS.GREY["20"],
+      HOVER: COLORS.WHITE,
+    },
+    DIMMER: COLORS.GREY["80"],
+    STAR_ICON_FILL: COLORS.ORANGE["90"],
+  },
+  FONT: {
+    PRIMARY: "Roboto",
+    SECONDARY: "Twayair",
+  },
+  FONT_SIZE: {
+    TITLE: FONT_SIZE.X_LARGE,
+    SUBTITLE: FONT_SIZE.LARGE,
+    BODY: FONT_SIZE.MEDIUM,
+    PLACEHOLDER: FONT_SIZE.MEDIUM,
+    CAPTION: FONT_SIZE.SMALL,
+  },
+} as const;
