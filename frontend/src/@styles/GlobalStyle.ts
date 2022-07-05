@@ -6,12 +6,11 @@ import RobotoRegular from "@public/assets/fonts/Roboto-Regular.woff";
 import RobotoItalic from "@public/assets/fonts/Roboto-Italic.woff";
 import RobotoLight from "@public/assets/fonts/Roboto-Light.woff";
 import RobotoLightItalic from "@public/assets/fonts/Roboto-LightItalic.woff";
-
 import Twayair from "@public/assets/fonts/Twayair.woff";
 
-import { LIGHT_MODE_THEME } from "./theme";
+import { Theme } from "@src/@types/shared";
 
-const GlobalStyle = createGlobalStyle<{ theme: typeof LIGHT_MODE_THEME }>`
+const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
   @font-face {
     font-family: 'Roboto';
     src: url(${RobotoBold}) format('woff'),
