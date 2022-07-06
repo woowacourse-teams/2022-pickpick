@@ -33,6 +33,7 @@ public class MessageController {
 
     private MessageDto extractMessageDto(Map<String, Object> map) {
         final Map<String, Object> event = (Map<String, Object>) map.get("event");
+
         return new MessageDto(
                 (String) event.get("user"),
                 (String) event.get("ts"),

@@ -13,8 +13,8 @@ import javax.persistence.Table;
 import lombok.Getter;
 
 @Getter
-@Entity
 @Table(name = "message")
+@Entity
 public class Message {
 
     @Id

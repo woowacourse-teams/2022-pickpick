@@ -35,3 +35,4 @@ public class User {
         this.thumbnail = thumbnail;
     }
 }
+
