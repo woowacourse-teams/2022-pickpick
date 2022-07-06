@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/message")
-public class MessageController {
+@RequestMapping("/api/event")
+public class EventController {
 
     private final MessageService messageService;
 
-    public MessageController(MessageService messageService) {
+    public EventController(MessageService messageService) {
         this.messageService = messageService;
     }
 

@@ -12,7 +12,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
-class MessageAcceptanceTest extends AcceptanceTest {
+class EventAcceptanceTest extends AcceptanceTest {
+
+    public static final String API_URL = "/api/event";
 
     @Test
     void 메시지_생성() {
@@ -29,7 +31,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, String> request = Map.of("token", token, "type", type, "challenge", challenge);
 
         // when
-        ExtractableResponse<Response> result = post("/api/message", request);
+        ExtractableResponse<Response> result = post(API_URL, request);
 
         // then
         assertThat(result.asString()).isEqualTo(challenge);
@@ -37,7 +39,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     private void 메시지_저장_성공() {
         // given
-        String user = "ABCD5N02W3N";
+        String user = "U03MKN0UWQN";
         String timestamp = "1234567890.123456";
         String text = "메시지 전송!";
 
@@ -47,7 +49,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("type",type,"event", event);
 
         // when
-        ExtractableResponse<Response> result = post("/api/message", request);
+        ExtractableResponse<Response> result = post(API_URL, request);
 
         // then
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());

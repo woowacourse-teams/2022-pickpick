@@ -23,16 +23,16 @@ public class User {
     @Column(name = "username", length = 80, nullable = false)
     private String username;
 
-    @Column(name = "thumbnail", length = 2048, nullable = false)
-    private String thumbnail;
+    @Column(name = "thumbnail_url", length = 2048, nullable = false)
+    private String thumbnailUrl;
 
     protected User() {
     }
 
-    public User(final String slackId, final String username, final String thumbnail) {
+    public User(final String slackId, final String username, final String thumbnailUrl) {
         this.slackId = slackId;
         this.username = username;
-        this.thumbnail = thumbnail;
+        this.thumbnailUrl = thumbnailUrl;
     }
 }
 
