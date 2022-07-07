@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { messages } from "./mockData";
+import { messages } from "./data";
 
 export const handlers = [
   rest.get("/api/messages", (req, res, ctx) => {
