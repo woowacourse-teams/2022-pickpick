@@ -8,7 +8,7 @@ import RemoveIcon from "@public/assets/icons/RemoveIcon.svg";
 
 import ProfileImage from "@src/components/ProfileImage";
 import WrapperButton from "@src/components/@shared/WrapperButton";
-import { parseText } from "@src/@utils/utils";
+import { parseText } from "@src/@utils";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 
 interface Props {
