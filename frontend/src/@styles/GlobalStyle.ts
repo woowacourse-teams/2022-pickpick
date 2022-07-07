@@ -26,12 +26,45 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
     src: url(${Twayair}) format('woff');
   }
 
-  * {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
     ${({ theme }) => css`
       font-family: ${theme.FONT.PRIMARY};
       color: ${theme.COLOR.TEXT.DEFAULT};
     `}
   }
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd,
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+  ul,
+  ol {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+  
 `;
 
 export default GlobalStyle;
