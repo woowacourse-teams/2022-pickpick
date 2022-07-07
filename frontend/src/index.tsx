@@ -1,10 +1,9 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 import Home from "@src/pages/Home";
-import LayoutContainer from "@src/components/Layout/LayoutContainer";
+import LayoutContainer from "@src/components/layouts/LayoutContainer";
 import GlobalStyle from "./@styles/GlobalStyle";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);

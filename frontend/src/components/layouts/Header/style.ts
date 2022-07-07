@@ -2,6 +2,10 @@ import styled, { css } from "styled-components";
 import { Theme } from "@src/@types/shared";
 
 export const Container = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background-color: ${({ theme }: { theme: Theme }) =>
     theme.COLOR.BACKGROUND.SECONDARY};
   padding: 20px;

@@ -8,8 +8,8 @@ export const Container = styled.nav`
   right: 0;
 
   display: flex;
-  gap: 38px;
-  padding: 25px;
+  justify-content: space-around;
+  padding: 5px;
   background-color: ${({ theme }: { theme: Theme }) =>
     `${theme.COLOR.BACKGROUND.SECONDARY}`};
 `;
