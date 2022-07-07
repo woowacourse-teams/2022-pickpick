@@ -2,7 +2,7 @@ import { Theme } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
 export const Container = styled.footer`
-  padding: 20px;
+  padding: 20px 20px 77.5px 20px;
   background-color: ${({ theme }: { theme: Theme }) =>
     theme.COLOR.BACKGROUND.PRIMARY};
 `;
