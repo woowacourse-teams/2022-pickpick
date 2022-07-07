@@ -96,26 +96,6 @@ export const messages = [
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
     text: "안녕하세요. 10",
-    postedDate: " 2022-07-02T14:53:58.972493",
-    modifiedDate: "2022-07-02T14:53:58.972493",
-  },
-  {
-    id: 10,
-    userId: 1,
-    username: "호프(김문희)",
-    userThumbnail:
-      "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "안녕하세요. 10",
-    postedDate: " 2022-07-02T14:50:58.972493",
-    modifiedDate: "2022-07-02T14:50:58.972493",
-  },
-  {
-    id: 10,
-    userId: 1,
-    username: "호프(김문희)",
-    userThumbnail:
-      "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "안녕하세요. 10",
     postedDate: " 2022-07-04T14:56:58.972493",
     modifiedDate: "2022-07-04T14:56:58.972493",
   },

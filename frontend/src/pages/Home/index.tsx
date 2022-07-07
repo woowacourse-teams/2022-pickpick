@@ -1,94 +1,19 @@
-import MockImage from "@public/assets/images/MockImage.png";
 import { FlexColumn } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import MessageCard from "@src/components/MessageCard";
 import SearchInput from "@src/components/SearchInput";
 import * as Styled from "./style";
-
-const testArray = [
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-  {
-    username: "포코(장현석)",
-    date: "오후 2:23",
-    text: `어쩌구저쩌
-  어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구
-   어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구 어쩌구저쩌구`,
-    thumbnail: MockImage,
-  },
-];
+import { useEffect, useState } from "react";
 
 function Home() {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/messages")
+      .then((response) => response.json())
+      .then(({ messages }) => setMessages(messages));
+  }, []);
+
   return (
     <Styled.Container>
       <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
@@ -96,13 +21,13 @@ function Home() {
         <Dropdown />
       </Styled.Wrapper>
       <FlexColumn gap="4px">
-        {testArray.map(({ username, date, text, thumbnail }, index) => (
+        {messages.map(({ id, username, postedDate, text, userThumbnail }) => (
           <MessageCard
-            key={index}
+            key={id}
             username={username}
-            date={date}
+            date={postedDate}
             text={text}
-            thumbnail={thumbnail}
+            thumbnail={userThumbnail}
           />
         ))}
       </FlexColumn>
