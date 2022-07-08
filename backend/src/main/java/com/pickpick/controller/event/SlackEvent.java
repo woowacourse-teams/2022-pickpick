@@ -17,8 +17,8 @@ public enum SlackEvent {
         this.subtype = subtype;
     }
 
-    public static SlackEvent of(Map<String, Object> map) {
-        Map<String, Object> event = (Map<String, Object>) map.get("event");
+    public static SlackEvent of(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map<String, Object>) requestBody.get("event");
         String type = String.valueOf(event.get("type"));
         String subtype = String.valueOf(event.getOrDefault("subtype", ""));
 

@@ -1,12 +1,14 @@
 package com.pickpick.controller;
 
 import com.pickpick.controller.event.SlackEvent;
-import java.util.Map;
+import com.pickpick.service.SlackEventServiceFinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/event")
@@ -24,7 +26,7 @@ public class EventController {
             return ResponseEntity.ok((String) requestBody.get("challenge"));
         }
 
-        slackEventServiceFinder.find(SlackEvent.of(requestBody))
+        slackEventServiceFinder.findBySlackEvent(SlackEvent.of(requestBody))
                 .execute(requestBody);
 
         return ResponseEntity.ok("");

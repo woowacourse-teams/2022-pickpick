@@ -6,18 +6,19 @@ import com.pickpick.entity.User;
 import com.pickpick.exception.UserNotFoundException;
 import com.pickpick.repository.MessageRepository;
 import com.pickpick.repository.UserRepository;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Transactional
 @Service
-public class MessageSaveService implements SlackEventService {
+public class MessageCreatedService implements SlackEventService {
 
     private final MessageRepository messages;
     private final UserRepository users;
 
-    public MessageSaveService(final MessageRepository messages, final UserRepository users) {
+    public MessageCreatedService(final MessageRepository messages, final UserRepository users) {
         this.messages = messages;
         this.users = users;
     }
