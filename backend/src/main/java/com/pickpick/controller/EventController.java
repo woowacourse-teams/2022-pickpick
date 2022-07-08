@@ -14,6 +14,11 @@ import java.util.Map;
 @RequestMapping("/api/event")
 public class EventController {
 
+    private static final String URL_VERIFICATION = "url_verification";
+    private static final String TYPE = "type";
+    private static final String CHALLENGE = "challenge";
+    private static final String EMPTY_STRING = "";
+
     private final SlackEventServiceFinder slackEventServiceFinder;
 
     public EventController(final SlackEventServiceFinder slackEventServiceFinder) {
@@ -23,16 +28,16 @@ public class EventController {
     @PostMapping
     public ResponseEntity<String> save(@RequestBody Map<String, Object> requestBody) {
         if (isUrlVerificationRequest(requestBody)) {
-            return ResponseEntity.ok((String) requestBody.get("challenge"));
+            return ResponseEntity.ok((String) requestBody.get(CHALLENGE));
         }
 
         slackEventServiceFinder.findBySlackEvent(SlackEvent.of(requestBody))
                 .execute(requestBody);
 
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(EMPTY_STRING);
     }
 
     private boolean isUrlVerificationRequest(final Map<String, Object> map) {
-        return "url_verification".equals(String.valueOf(map.get("type")));
+        return URL_VERIFICATION.equals(String.valueOf(map.get(TYPE)));
     }
 }

@@ -15,6 +15,11 @@ import java.util.Map;
 @Service
 public class MessageCreatedService implements SlackEventService {
 
+    private static final String EVENT = "event";
+    private static final String USER = "user";
+    private static final String TIMESTAMP = "ts";
+    private static final String TEXT = "text";
+
     private final MessageRepository messages;
     private final UserRepository users;
 
@@ -33,14 +38,14 @@ public class MessageCreatedService implements SlackEventService {
         messages.save(messageDto.toEntity(user));
     }
 
-    private MessageDto convert(final Map<String, Object> eventBody) {
-        final Map<String, Object> event = (Map<String, Object>) eventBody.get("event");
+    private MessageDto convert(final Map<String, Object> requestBody) {
+        final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
         return new MessageDto(
-                (String) event.get("user"),
-                (String) event.get("ts"),
-                (String) event.get("ts"),
-                (String) event.get("text")
+                (String) event.get(USER),
+                (String) event.get(TIMESTAMP),
+                (String) event.get(TIMESTAMP),
+                (String) event.get(TEXT)
         );
     }
 
