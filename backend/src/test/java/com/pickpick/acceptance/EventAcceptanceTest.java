@@ -1,14 +1,13 @@
 package com.pickpick.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
@@ -43,10 +42,10 @@ class EventAcceptanceTest extends AcceptanceTest {
         String timestamp = "1234567890.123456";
         String text = "메시지 전송!";
 
-        Map<String, String> event = Map.of("user", user, "ts", timestamp, "text", text);
+        Map<String, String> event = Map.of("type", "message", "user", user, "ts", timestamp, "text", text);
 
         String type = "event_callback";
-        Map<String, Object> request = Map.of("type",type,"event", event);
+        Map<String, Object> request = Map.of("type", type, "event", event);
 
         // when
         ExtractableResponse<Response> result = post(API_URL, request);

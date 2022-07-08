@@ -9,11 +9,11 @@ public class TimeUtils {
     private TimeUtils() {
     }
 
-    public static LocalDateTime toLocalDateTime(String unixTime) {
+    public static LocalDateTime toLocalDateTime(final String unixTime) {
         return toLocalDateTime(new BigDecimal(unixTime).longValue());
     }
 
-    private static LocalDateTime toLocalDateTime(long unixTime) {
+    private static LocalDateTime toLocalDateTime(final long unixTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault());
     }
 }
