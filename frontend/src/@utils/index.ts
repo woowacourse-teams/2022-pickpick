@@ -1,35 +1,15 @@
-const FIRST_LINE_MAX_LENGTH = 16;
-const SECOND_LINE_MAX_LENGTH = 32;
+const getTimeStandard = (time: number): string => {
+  if (time < 12) return `오전 ${time}`;
+  if (time === 12) return `오후 ${12}`;
 
-const sliceText = (text: string): string =>
-  text.slice(0, FIRST_LINE_MAX_LENGTH);
+  return `오후 ${time - 12}`;
+};
 
-export const parseText = (text: string): string => {
-  const splittedArray = text.split("\n");
+export const parseTime = (date: string): string => {
+  const dateInstance = new Date(date);
+  const hour = dateInstance.getHours();
+  const minute = dateInstance.getMinutes();
+  const timeStandard = getTimeStandard(Number(hour));
 
-  if (
-    splittedArray.length < 2 &&
-    splittedArray[0].length <= FIRST_LINE_MAX_LENGTH
-  )
-    return splittedArray[0];
-
-  if (splittedArray[0].length > SECOND_LINE_MAX_LENGTH)
-    return sliceText(splittedArray[0]) + "...";
-
-  if (
-    splittedArray.length < 3 &&
-    splittedArray[1].length < FIRST_LINE_MAX_LENGTH
-  )
-    return `${splittedArray[0]}\n${splittedArray[1]}`;
-
-  if (
-    splittedArray.length < 3 &&
-    splittedArray[1].length > FIRST_LINE_MAX_LENGTH
-  )
-    return `${splittedArray[0]}\n${sliceText(splittedArray[1])} ...`;
-
-  if (splittedArray[1].length < FIRST_LINE_MAX_LENGTH)
-    return `${splittedArray[0]}\n${splittedArray[1]} ...`;
-
-  return `${splittedArray[0]}\n${sliceText(splittedArray[1])} ...`;
+  return `${timeStandard}:${minute}`;
 };

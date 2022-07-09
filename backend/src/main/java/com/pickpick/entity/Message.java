@@ -21,12 +21,19 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "slack_message_id", length = 50, nullable = false, updatable = false)
+    private String slackId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
+
     @Column(name = "text", length = 12000, nullable = false)
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(name = "posted_date", nullable = false)
     private LocalDateTime postedDate;
@@ -37,11 +44,18 @@ public class Message {
     protected Message() {
     }
 
-    public Message(final String text, final User user, final LocalDateTime postedDate,
-                   final LocalDateTime modifiedDate) {
+    public Message(final String slackId, final String text, final Member member, final Channel channel,
+                   final LocalDateTime postedDate, final LocalDateTime modifiedDate) {
+        this.slackId = slackId;
         this.text = text;
-        this.user = user;
+        this.member = member;
+        this.channel = channel;
         this.postedDate = postedDate;
+        this.modifiedDate = modifiedDate;
+    }
+
+    public void changeText(final String text, final LocalDateTime modifiedDate) {
+        this.text = text;
         this.modifiedDate = modifiedDate;
     }
 }

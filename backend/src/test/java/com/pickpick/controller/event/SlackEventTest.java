@@ -24,7 +24,11 @@ class SlackEventTest {
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(
-                Arguments.of(Map.of("event", Map.of("type", "message")), SlackEvent.MESSAGE_CREATED)
+                Arguments.of(Map.of("event", Map.of("type", "message")), SlackEvent.MESSAGE_CREATED),
+                Arguments.of(Map.of("event", Map.of("type", "message", "subtype", "message_changed")),
+                        SlackEvent.MESSAGE_CHANGED),
+                Arguments.of(Map.of("event", Map.of("type", "message", "subtype", "message_deleted")),
+                        SlackEvent.MESSAGE_DELETED)
         );
     }
 }

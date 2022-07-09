@@ -2,16 +2,20 @@ import Header from "@src/components/layouts/Header";
 import Footer from "@src/components/layouts/Footer";
 import * as Styled from "./style";
 import Navigation from "../Navigation";
+import { useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-interface Props {
-  children: JSX.Element;
-}
+function LayoutContainer() {
+  const { pathname } = useLocation();
 
-function LayoutContainer({ children }: Props) {
+  const hasHeader = () => pathname === "/" || pathname === "/addChannel";
+
   return (
     <Styled.Container>
-      <Header />
-      <Styled.Main>{children}</Styled.Main>
+      {hasHeader() && <Header />}
+      <Styled.Main hasMarginTop={hasHeader()}>
+        <Outlet />
+      </Styled.Main>
       <Footer />
       <Navigation />
     </Styled.Container>

@@ -1,36 +1,47 @@
-import { FlexColumn } from "@src/@styles/shared";
-import Dropdown from "@src/components/Dropdown";
-import MessageCard from "@src/components/MessageCard";
-import SearchInput from "@src/components/SearchInput";
 import * as Styled from "./style";
-import { useEffect, useState } from "react";
+import Button from "@src/components/@shared/Button";
+import { FlexRow } from "@src/@styles/shared";
+import LogoIcon from "@public/assets/icons/pickpick.svg";
+import { useNavigate } from "react-router-dom";
+import { PATH_NAME } from "@src/@constants";
 
 function Home() {
-  const [messages, setMessages] = useState([]);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("/api/messages")
-      .then((response) => response.json())
-      .then(({ messages }) => setMessages(messages));
-  }, []);
-
+  const handleNavigateToAddChannel = () => {
+    navigate(PATH_NAME.ADD_CHANNEL);
+  };
   return (
     <Styled.Container>
-      <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
-      <Styled.Wrapper>
-        <Dropdown />
-      </Styled.Wrapper>
-      <FlexColumn gap="4px">
-        {messages.map(({ id, username, postedDate, text, userThumbnail }) => (
-          <MessageCard
-            key={id}
-            username={username}
-            date={postedDate}
-            text={text}
-            thumbnail={userThumbnail}
-          />
-        ))}
-      </FlexColumn>
+      <Styled.GreetingContainer>
+        <FlexRow
+          gap="30px"
+          marginBottom="27px"
+          justifyContent="center"
+          alignItems="center"
+          flexWrap="wrap"
+        >
+          <LogoIcon width="200px" height="200px" />
+          <h2>
+            사라지는 슬랙 메시지,
+            <br />
+            우리가 주워줄게!
+          </h2>
+        </FlexRow>
+        <Button onClick={handleNavigateToAddChannel}>시작하기</Button>
+      </Styled.GreetingContainer>
+
+      <Styled.UsageContainer>
+        <h1>이용 방법</h1>
+        <Styled.UsageList>
+          <li>
+            워크스페이스에 줍줍 Slack App 을 설치하고 백업하고 싶은 채널에
+            초대해주세요 🤗
+          </li>
+          <li>이제부터 여러분의 대화를 줍줍이가 보관해드릴거예요 🤚</li>
+          <li>사이트에 방문하셔서 대화를 확인해보세요 😎</li>
+        </Styled.UsageList>
+      </Styled.UsageContainer>
     </Styled.Container>
   );
 }

@@ -5,4 +5,5 @@ export const Container = styled.img`
   height: 35px;
   object-fit: contain;
   cursor: pointer;
+  border-radius: 50%;
 `;

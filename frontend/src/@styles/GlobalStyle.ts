@@ -50,8 +50,7 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
     margin: 0;
     padding: 0;
   }
-  ul,
-  ol {
+  ul{
     list-style: none;
   }
   a {
@@ -65,6 +64,11 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
     font: inherit;
   }
   
+  body {
+    ${({ theme }: { theme: Theme }) => css`
+      background-color: ${theme.COLOR.BACKGROUND.PRIMARY};
+    `}
+  }
 `;
 
 export default GlobalStyle;

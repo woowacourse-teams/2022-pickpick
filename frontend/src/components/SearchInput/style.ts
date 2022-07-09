@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding: 10px 14px;
   background-color: ${({ theme }: { theme: Theme }) =>
     theme.COLOR.BACKGROUND.SECONDARY};
-  width: 17.5rem;
+  width: 100%;
   border-radius: 4px;
 `;
 

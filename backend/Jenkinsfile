@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    tools {
+        gradle 'gradle'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/woowacourse-teams/2022-pickpick.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                cd ./backend
+                chmod +x ./gradlew
+                ./gradlew bootJar
+                cd ..
+                '''
+            }
+        }
+    }
+}
+
+node {
+    withCredentials([sshUserPrivateKey(credentialsId: "key-pickpick", keyFileVariable: 'my_private_key_file')]) {
+        def remote = [:]
+        remote.name = "key-pickpick"
+        remote.host = "192.168.1.231"
+        remote.user = "ubuntu"
+        remote.allowAnyHosts = true
+        remote.identityFile = my_private_key_file
+
+        sh "echo 'Deploy AWS'"
+        dir('backend/build/libs') {
+            sh 'scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@192.168.1.231:/home/ubuntu'
+        }
+        stage("Post Deploy") {
+            sh 'ssh -i ${my_private_key_file} ubuntu@192.168.1.231 "./deploy.sh"'
+        }
+    }
+}
