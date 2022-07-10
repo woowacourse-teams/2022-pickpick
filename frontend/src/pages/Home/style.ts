@@ -5,7 +5,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6px 0;
+  padding: 26px 0;
 `;
 
 export const Wrapper = styled.div`
