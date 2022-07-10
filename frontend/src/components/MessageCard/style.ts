@@ -3,19 +3,16 @@ import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-
-  ${({ isFocused, theme }: { theme: Theme; isFocused: boolean }) => css`
-    background-color: ${isFocused
-      ? theme.COLOR.CONTAINER.DEFAULT
-      : theme.COLOR.CONTAINER.WHITE};
-    height: ${isFocused ? "auto" : "78px"};
-  `}
-
+  height: auto;
   padding: 14px;
   column-gap: 4px;
   width: 17.5rem;
   border-radius: 4px;
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
+
+  ${({ theme }: { theme: Theme }) => css`
+    background-color: ${theme.COLOR.CONTAINER.WHITE};
+  `}
 `;
 
 export const Writer = styled.p`
@@ -36,6 +33,7 @@ export const Message = styled.p`
   width: 193px;
   white-space: pre-wrap;
   cursor: pointer;
+
   ${({ theme }: { theme: Theme }) => css`
     font-size: ${theme.FONT_SIZE.BODY};
     color: ${theme.COLOR.TEXT.DEFAULT};
