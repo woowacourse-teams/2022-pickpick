@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 320px;
+  width: 100%;
+  min-width: 320px;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,7 +12,6 @@ export const Container = styled.div`
 
 export const Wrapper = styled.div`
   margin-top: 10px;
-  margin-left: 45px;
   margin-bottom: 4px;
   width: 100%;
 `;
