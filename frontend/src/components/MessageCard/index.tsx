@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import * as Styled from "./style";
 
 import StarIconFill from "@public/assets/icons/StarIcon-Fill.svg";
@@ -9,6 +7,7 @@ import RemoveIcon from "@public/assets/icons/RemoveIcon.svg";
 import ProfileImage from "@src/components/ProfileImage";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
+import { parseTime } from "@src/@utils";
 
 interface Props {
   username: string;
@@ -25,7 +24,7 @@ function MessageCard({ username, date, text, thumbnail }: Props) {
         <div>
           <FlexRow columnGap="4px" alignItems="center">
             <Styled.Writer>{username}</Styled.Writer>
-            <Styled.Date>{date}</Styled.Date>
+            <Styled.Date>{parseTime(date)}</Styled.Date>
           </FlexRow>
           <Styled.Message>{text}</Styled.Message>
         </div>
