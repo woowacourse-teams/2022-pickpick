@@ -8,7 +8,6 @@ import RemoveIcon from "@public/assets/icons/RemoveIcon.svg";
 
 import ProfileImage from "@src/components/ProfileImage";
 import WrapperButton from "@src/components/@shared/WrapperButton";
-import { parseText } from "@src/@utils";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 
 interface Props {
@@ -19,14 +18,8 @@ interface Props {
 }
 
 function MessageCard({ username, date, text, thumbnail }: Props) {
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleMessageClick = () => {
-    setIsFocused((prev) => !prev);
-  };
-
   return (
-    <Styled.Container isFocused={isFocused}>
+    <Styled.Container>
       <FlexRow columnGap="8px">
         <ProfileImage src={thumbnail} alt={`${username} 프로필 사진`} />
         <div>
@@ -34,9 +27,7 @@ function MessageCard({ username, date, text, thumbnail }: Props) {
             <Styled.Writer>{username}</Styled.Writer>
             <Styled.Date>{date}</Styled.Date>
           </FlexRow>
-          <Styled.Message onClick={handleMessageClick}>
-            {isFocused ? text : parseText(text)}
-          </Styled.Message>
+          <Styled.Message>{text}</Styled.Message>
         </div>
       </FlexRow>
       <FlexColumn alignItems="center">
