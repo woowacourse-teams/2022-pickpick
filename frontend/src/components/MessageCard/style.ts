@@ -6,7 +6,7 @@ export const Container = styled.div`
   height: auto;
   padding: 14px;
   column-gap: 4px;
-  width: 17.5rem;
+  width: 100%;
   border-radius: 4px;
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
 
@@ -30,7 +30,7 @@ export const Date = styled.p`
 
 export const Message = styled.p`
   margin-top: 3px;
-  width: 193px;
+  width: 100%;
   white-space: pre-wrap;
   cursor: pointer;
 

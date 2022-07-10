@@ -33,7 +33,7 @@ function Home() {
       <Styled.Wrapper>
         <Dropdown />
       </Styled.Wrapper>
-      <FlexColumn gap="4px">
+      <FlexColumn gap="4px" width="100%">
         {data?.messages.map(
           ({ id, username, postedDate, text, userThumbnail }) => (
             <MessageCard
