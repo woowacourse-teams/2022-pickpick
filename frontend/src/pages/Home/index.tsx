@@ -6,21 +6,10 @@ import MessageCardSkeleton from "@src/components/MessageCardSkeleton";
 import * as Styled from "./style";
 import { useQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
-
-interface Message {
-  id: string;
-  username: string;
-  postedDate: string;
-  text: string;
-  userThumbnail: string;
-}
-
-interface Response {
-  messages: Message[];
-}
+import { ResponseMessages } from "@src/@types/shared";
 
 function Home() {
-  const { data, isLoading, isError } = useQuery<Response>(
+  const { data, isLoading, isError } = useQuery<ResponseMessages>(
     "messages",
     getMessages
   );
