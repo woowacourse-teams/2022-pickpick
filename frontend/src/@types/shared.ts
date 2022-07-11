@@ -12,4 +12,6 @@ export interface Message {
 
 export interface ResponseMessages {
   messages: Message[];
+  isLast: boolean;
+  nextPage: number;
 }
