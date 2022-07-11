@@ -17,7 +17,6 @@ function InfiniteScroll({ children, callback, threshold, endPoint }: Props) {
 
   function onIntersect([entry]: IntersectionObserverEntry[]) {
     if (entry.isIntersecting) {
-      console.log("제발되어라");
       callback();
     }
   }

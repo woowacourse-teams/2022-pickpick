@@ -4,18 +4,30 @@ import MessageCard from "@src/components/MessageCard";
 import SearchInput from "@src/components/SearchInput";
 import MessageCardSkeleton from "@src/components/MessageCardSkeleton";
 import * as Styled from "./style";
-import { useQuery } from "react-query";
+import { InfiniteData, useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
-import { ResponseMessages } from "@src/@types/shared";
+import { Message, ResponseMessages } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 
 function Home() {
-  const { data, isLoading, isError } = useQuery<ResponseMessages>(
-    "messages",
-    getMessages
-  );
+  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+    useInfiniteQuery<ResponseMessages>(["messages"], getMessages, {
+      getNextPageParam: ({ isLast, nextPage }) => {
+        if (!isLast) {
+          return nextPage;
+        }
+      },
+    });
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
+
+  const reduceMessages = (data?: InfiniteData<ResponseMessages>): Message[] => {
+    if (!data) return [];
+
+    return data.pages.reduce<Message[]>((joinArray, currentArray) => {
+      return [...joinArray, ...currentArray.messages];
+    }, []);
+  };
 
   return (
     <Styled.Container>
@@ -24,14 +36,12 @@ function Home() {
         <Dropdown />
       </Styled.Wrapper>
       <InfiniteScroll
-        callback={() => {
-          return "";
-        }}
+        callback={fetchNextPage}
         threshold={0.9}
-        endPoint={false}
+        endPoint={!hasNextPage}
       >
         <FlexColumn gap="4px" width="100%">
-          {data?.messages.map(
+          {reduceMessages(data).map(
             ({ id, username, postedDate, text, userThumbnail }) => (
               <MessageCard
                 key={id}
