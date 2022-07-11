@@ -2,6 +2,7 @@ import { FlexColumn } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import MessageCard from "@src/components/MessageCard";
 import SearchInput from "@src/components/SearchInput";
+import MessageCardSkeleton from "@src/components/MessageCardSkeleton";
 import * as Styled from "./style";
 import { useQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
@@ -24,7 +25,6 @@ function Home() {
     getMessages
   );
 
-  if (isLoading) return <div>로딩중이야!!!</div>;
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
   return (
@@ -44,6 +44,14 @@ function Home() {
               thumbnail={userThumbnail}
             />
           )
+        )}
+
+        {isLoading && (
+          <>
+            {Array.from({ length: 20 }).map((_, index) => (
+              <MessageCardSkeleton key={index} />
+            ))}
+          </>
         )}
       </FlexColumn>
     </Styled.Container>
