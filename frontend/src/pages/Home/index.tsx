@@ -7,6 +7,7 @@ import * as Styled from "./style";
 import { useQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages } from "@src/@types/shared";
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 
 function Home() {
   const { data, isLoading, isError } = useQuery<ResponseMessages>(
@@ -22,27 +23,35 @@ function Home() {
       <Styled.Wrapper>
         <Dropdown />
       </Styled.Wrapper>
-      <FlexColumn gap="4px" width="100%">
-        {data?.messages.map(
-          ({ id, username, postedDate, text, userThumbnail }) => (
-            <MessageCard
-              key={id}
-              username={username}
-              date={postedDate}
-              text={text}
-              thumbnail={userThumbnail}
-            />
-          )
-        )}
+      <InfiniteScroll
+        callback={() => {
+          return "";
+        }}
+        threshold={0.9}
+        endPoint={false}
+      >
+        <FlexColumn gap="4px" width="100%">
+          {data?.messages.map(
+            ({ id, username, postedDate, text, userThumbnail }) => (
+              <MessageCard
+                key={id}
+                username={username}
+                date={postedDate}
+                text={text}
+                thumbnail={userThumbnail}
+              />
+            )
+          )}
 
-        {isLoading && (
-          <>
-            {Array.from({ length: 20 }).map((_, index) => (
-              <MessageCardSkeleton key={index} />
-            ))}
-          </>
-        )}
-      </FlexColumn>
+          {isLoading && (
+            <>
+              {Array.from({ length: 20 }).map((_, index) => (
+                <MessageCardSkeleton key={index} />
+              ))}
+            </>
+          )}
+        </FlexColumn>
+      </InfiniteScroll>
     </Styled.Container>
   );
 }
