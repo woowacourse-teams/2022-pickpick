@@ -2,14 +2,13 @@ package com.pickpick.service;
 
 import com.pickpick.controller.dto.MessageDto;
 import com.pickpick.controller.event.SlackEvent;
-import com.pickpick.entity.User;
-import com.pickpick.exception.UserNotFoundException;
+import com.pickpick.entity.Member;
+import com.pickpick.exception.MemberNotFoundException;
+import com.pickpick.repository.MemberRepository;
 import com.pickpick.repository.MessageRepository;
-import com.pickpick.repository.UserRepository;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Transactional
 @Service
@@ -21,9 +20,9 @@ public class MessageCreatedService implements SlackEventService {
     private static final String TEXT = "text";
 
     private final MessageRepository messages;
-    private final UserRepository users;
+    private final MemberRepository users;
 
-    public MessageCreatedService(final MessageRepository messages, final UserRepository users) {
+    public MessageCreatedService(final MessageRepository messages, final MemberRepository users) {
         this.messages = messages;
         this.users = users;
     }
@@ -32,10 +31,10 @@ public class MessageCreatedService implements SlackEventService {
     public void execute(final Map<String, Object> requestBody) {
         MessageDto messageDto = convert(requestBody);
 
-        User user = users.findBySlackId(messageDto.getUserSlackId())
-                .orElseThrow(UserNotFoundException::new);
+        Member member = users.findBySlackId(messageDto.getMemberSlackId())
+                .orElseThrow(MemberNotFoundException::new);
 
-        messages.save(messageDto.toEntity(user));
+        messages.save(messageDto.toEntity(member));
     }
 
     private MessageDto convert(final Map<String, Object> requestBody) {

@@ -25,8 +25,8 @@ public class Message {
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(name = "posted_date", nullable = false)
     private LocalDateTime postedDate;
@@ -37,10 +37,10 @@ public class Message {
     protected Message() {
     }
 
-    public Message(final String text, final User user, final LocalDateTime postedDate,
+    public Message(final String text, final Member member, final LocalDateTime postedDate,
                    final LocalDateTime modifiedDate) {
         this.text = text;
-        this.user = user;
+        this.member = member;
         this.postedDate = postedDate;
         this.modifiedDate = modifiedDate;
     }
