@@ -21,12 +21,12 @@ function Feed() {
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
-  const reduceMessages = (data?: InfiniteData<ResponseMessages>): Message[] => {
+  const extractMessages = (
+    data?: InfiniteData<ResponseMessages>
+  ): Message[] => {
     if (!data) return [];
 
-    return data.pages.reduce<Message[]>((joinArray, currentArray) => {
-      return [...joinArray, ...currentArray.messages];
-    }, []);
+    return data.pages.flatMap((arr) => arr.messages);
   };
 
   return (
@@ -41,7 +41,7 @@ function Feed() {
         endPoint={!hasNextPage}
       >
         <FlexColumn gap="4px" width="100%">
-          {reduceMessages(data).map(
+          {extractMessages(data).map(
             ({ id, username, postedDate, text, userThumbnail }) => (
               <MessageCard
                 key={id}

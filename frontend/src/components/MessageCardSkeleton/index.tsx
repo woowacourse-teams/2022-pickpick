@@ -7,8 +7,10 @@ function MessageCardSkeleton() {
       <Styled.ProfileImageSkeleton />
       <FlexColumn width="100%" gap="4px">
         <Styled.WriterSkeleton />
-        <Styled.FirstLineSkeleton />
-        <Styled.SecondLineSkeleton />
+        <Styled.LongLineSkeleton />
+        <Styled.LongLineSkeleton />
+        <Styled.LongLineSkeleton />
+        <Styled.ShortLineSkeleton />
       </FlexColumn>
     </Styled.Container>
   );

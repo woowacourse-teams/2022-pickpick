@@ -42,14 +42,14 @@ export const WriterSkeleton = styled.div`
   animation: ${refresh} 2s infinite ease-out;
 `;
 
-export const FirstLineSkeleton = styled.div`
+export const LongLineSkeleton = styled.div`
   width: 90%;
   height: 10px;
   border-radius: 4px;
   animation: ${refresh} 2s infinite ease-out;
 `;
 
-export const SecondLineSkeleton = styled.div`
+export const ShortLineSkeleton = styled.div`
   width: 60%;
   height: 10px;
   border-radius: 4px;
