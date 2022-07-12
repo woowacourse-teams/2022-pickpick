@@ -14,6 +14,6 @@ export const COLORS = {
     90: "#0742FA",
   },
   ORANGE: {
-    90: "#FFAD33",
+    90: "#FF9900",
   },
 } as const;

@@ -8,9 +8,7 @@ export const Main = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
   height: auto;
-  min-height: 100vh;
 
   ${({ theme, hasMarginTop }: { theme: Theme; hasMarginTop: boolean }) => css`
     background-color: ${theme.COLOR.BACKGROUND.PRIMARY};

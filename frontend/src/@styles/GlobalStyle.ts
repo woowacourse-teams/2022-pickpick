@@ -50,8 +50,7 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
     margin: 0;
     padding: 0;
   }
-  ul,
-  ol {
+  ul{
     list-style: none;
   }
   a {
