@@ -3,7 +3,7 @@ import { FONT_SIZE } from "./fontSize";
 
 export const LIGHT_MODE_THEME = {
   COLOR: {
-    PRIMARY: { DEFAULT: COLORS.BLUE[90] },
+    PRIMARY: { DEFAULT: COLORS.ORANGE[90] },
     SECONDARY: { DEFAULT: COLORS.GREY[80] },
     TEXT: {
       DEFAULT: COLORS.GREY[90],
