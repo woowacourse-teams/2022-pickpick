@@ -1,67 +1,39 @@
-import { FlexColumn } from "@src/@styles/shared";
-import Dropdown from "@src/components/Dropdown";
-import MessageCard from "@src/components/MessageCard";
-import SearchInput from "@src/components/SearchInput";
-import MessageCardSkeleton from "@src/components/MessageCardSkeleton";
 import * as Styled from "./style";
-import { InfiniteData, useInfiniteQuery } from "react-query";
-import { getMessages } from "@src/api/messages";
-import { Message, ResponseMessages } from "@src/@types/shared";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Button from "@src/components/@shared/Button";
+import { FlexRow } from "@src/@styles/shared";
 
 function Home() {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteQuery<ResponseMessages>(["messages"], getMessages, {
-      getNextPageParam: ({ isLast, nextPage }) => {
-        if (!isLast) {
-          return nextPage;
-        }
-      },
-    });
-
-  if (isError) return <div>이거슨 에러양!!!!</div>;
-
-  const reduceMessages = (data?: InfiniteData<ResponseMessages>): Message[] => {
-    if (!data) return [];
-
-    return data.pages.reduce<Message[]>((joinArray, currentArray) => {
-      return [...joinArray, ...currentArray.messages];
-    }, []);
-  };
-
   return (
     <Styled.Container>
-      <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
-      <Styled.Wrapper>
-        <Dropdown />
-      </Styled.Wrapper>
-      <InfiniteScroll
-        callback={fetchNextPage}
-        threshold={0.9}
-        endPoint={!hasNextPage}
-      >
-        <FlexColumn gap="4px" width="100%">
-          {reduceMessages(data).map(
-            ({ id, username, postedDate, text, userThumbnail }) => (
-              <MessageCard
-                key={id}
-                username={username}
-                date={postedDate}
-                text={text}
-                thumbnail={userThumbnail}
-              />
-            )
-          )}
+      <Styled.GreetingContainer>
+        <FlexRow
+          gap="10px"
+          marginBottom="27px"
+          justifyContent="center"
+          alignItems="center"
+          flexWrap="wrap"
+        >
+          <img src="" alt="줍줍 로고 이미지" />
+          <h2>
+            사라지는 슬랙 메시지,
+            <br />
+            우리가 주워줄게!
+          </h2>
+        </FlexRow>
+        <Button>시작하기</Button>
+      </Styled.GreetingContainer>
 
-          {isLoading && (
-            <>
-              {Array.from({ length: 20 }).map((_, index) => (
-                <MessageCardSkeleton key={index} />
-              ))}
-            </>
-          )}
-        </FlexColumn>
-      </InfiniteScroll>
+      <Styled.UsageContainer>
+        <h1>이용 방법</h1>
+        <Styled.UsageList>
+          <li>
+            워크스페이스에 줍줍 Slack App 을 설치하고 백업하고 싶은 채널에
+            초대해주세요 🤗
+          </li>
+          <li>이제부터 여러분의 대화를 줍줍이가 보관해드릴거예요 🤚</li>
+          <li>사이트에 방문하셔서 대화를 확인해보세요 😎</li>
+        </Styled.UsageList>
+      </Styled.UsageContainer>
     </Styled.Container>
   );
 }
