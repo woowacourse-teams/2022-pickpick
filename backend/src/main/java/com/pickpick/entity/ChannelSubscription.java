@@ -22,4 +22,9 @@ public class ChannelSubscription {
 
     protected ChannelSubscription() {
     }
+
+    public ChannelSubscription(Channel channel, int viewOrder) {
+        this.channel = channel;
+        this.viewOrder = viewOrder;
+    }
 }
