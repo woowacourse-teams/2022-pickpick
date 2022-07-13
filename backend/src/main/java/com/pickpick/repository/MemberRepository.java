@@ -11,4 +11,6 @@ public interface MemberRepository extends Repository<Member, Long> {
     void saveAll(Iterable<Member> members);
 
     List<Member> findAll();
+
+    void deleteAll();
 }

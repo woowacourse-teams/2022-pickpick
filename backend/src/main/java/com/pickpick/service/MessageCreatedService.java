@@ -20,18 +20,18 @@ public class MessageCreatedService implements SlackEventService {
     private static final String TEXT = "text";
 
     private final MessageRepository messages;
-    private final MemberRepository users;
+    private final MemberRepository members;
 
-    public MessageCreatedService(final MessageRepository messages, final MemberRepository users) {
+    public MessageCreatedService(final MessageRepository messages, final MemberRepository members) {
         this.messages = messages;
-        this.users = users;
+        this.members = members;
     }
 
     @Override
     public void execute(final Map<String, Object> requestBody) {
         MessageDto messageDto = convert(requestBody);
 
-        Member member = users.findBySlackId(messageDto.getMemberSlackId())
+        Member member = members.findBySlackId(messageDto.getMemberSlackId())
                 .orElseThrow(MemberNotFoundException::new);
 
         messages.save(messageDto.toEntity(member));
