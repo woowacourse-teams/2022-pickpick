@@ -11,7 +11,7 @@ interface Props {
 function LayoutContainer({ children }: Props) {
   const { pathname } = useLocation();
 
-  const hasHeader = () => pathname === "/";
+  const hasHeader = () => pathname === "/" || pathname === "/addChannel";
 
   return (
     <Styled.Container>

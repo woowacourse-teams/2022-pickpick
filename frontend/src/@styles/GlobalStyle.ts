@@ -64,6 +64,11 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
     font: inherit;
   }
   
+  body {
+    ${({ theme }: { theme: Theme }) => css`
+      background-color: ${theme.COLOR.BACKGROUND.PRIMARY};
+    `}
+  }
 `;
 
 export default GlobalStyle;

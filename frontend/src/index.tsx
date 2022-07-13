@@ -7,6 +7,7 @@ import LayoutContainer from "@src/components/layouts/LayoutContainer";
 import GlobalStyle from "./@styles/GlobalStyle";
 import { QueryClientProvider, QueryClient } from "react-query";
 import Home from "./pages/Home";
+import AddChannel from "./pages/AddChannel";
 
 if (process.env.NODE_ENV === "development") {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,6 +28,7 @@ root.render(
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/feed" element={<Feed />} />
+            <Route path="/addChannel" element={<AddChannel />} />
           </Routes>
         </LayoutContainer>
       </ThemeProvider>
