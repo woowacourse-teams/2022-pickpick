@@ -1,8 +1,6 @@
 package com.pickpick.service;
 
 import com.pickpick.controller.dto.SlackMessageRequest;
-import com.pickpick.controller.dto.SlackMessageResponse;
-import com.pickpick.controller.dto.SlackMessageResponses;
 import com.pickpick.entity.Message;
 import com.pickpick.entity.QMessage;
 import com.pickpick.exception.MessageNotFoundException;
@@ -12,7 +10,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +28,7 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public SlackMessageResponses find(final SlackMessageRequest slackMessageRequest) {
+    public List<Message> find(final SlackMessageRequest slackMessageRequest) {
 
         jpaQueryFactory = new JPAQueryFactory(entityManager);
 
@@ -40,7 +37,7 @@ public class MessageService {
         List<Long> channelIds = slackMessageRequest.getChannelIds();
         int messageCount = slackMessageRequest.getMessageCount();
 
-        List<Message> messages = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
@@ -50,10 +47,6 @@ public class MessageService {
                 .orderBy(QMessage.message.postedDate.desc())
                 .limit(messageCount)
                 .fetch();
-
-        return new SlackMessageResponses(messages.stream()
-                .map(SlackMessageResponse::from)
-                .collect(Collectors.toList()));
     }
 
     //TODO https://whitepro.tistory.com/450 BooleanBuilder 리팩터링 참고
