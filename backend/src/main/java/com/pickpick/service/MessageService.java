@@ -41,7 +41,6 @@ public class MessageService {
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
-                .distinct()
                 .where(QMessage.message.channel.id.in(channelIds))
                 .where(builder)
                 .orderBy(QMessage.message.postedDate.desc())
