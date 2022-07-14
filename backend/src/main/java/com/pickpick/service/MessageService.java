@@ -1,15 +1,20 @@
 package com.pickpick.service;
 
 import com.pickpick.controller.dto.SlackMessageRequest;
+import com.pickpick.controller.dto.SlackMessageResponse;
+import com.pickpick.controller.dto.SlackMessageResponses;
 import com.pickpick.entity.Message;
 import com.pickpick.entity.QMessage;
 import com.pickpick.exception.MessageNotFoundException;
 import com.pickpick.repository.MessageRepository;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,30 +31,43 @@ public class MessageService {
     public MessageService(final EntityManager entityManager, final MessageRepository messageRepository) {
         this.entityManager = entityManager;
         this.messageRepository = messageRepository;
+
     }
 
-    public List<Message> find(final SlackMessageRequest slackMessageRequest) {
-
+    public SlackMessageResponses find(final SlackMessageRequest slackMessageRequest) {
         jpaQueryFactory = new JPAQueryFactory(entityManager);
 
-        BooleanBuilder builder = createBooleanBuilder(slackMessageRequest);
+        final List<Message> messages = findMessages(slackMessageRequest);
+        final boolean isLast = isLast(slackMessageRequest, messages);
 
-        List<Long> channelIds = slackMessageRequest.getChannelIds();
-        int messageCount = slackMessageRequest.getMessageCount();
+        return toSlackMessageResponse(messages, isLast);
+    }
+
+    private List<Message> findMessages(final SlackMessageRequest slackMessageRequest) {
+        BooleanBuilder builder = createFindMessagesCondition(slackMessageRequest);
 
         return jpaQueryFactory
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
-                .where(QMessage.message.channel.id.in(channelIds))
+                .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
                 .where(builder)
-                .orderBy(QMessage.message.postedDate.desc())
-                .limit(messageCount)
+                .limit(slackMessageRequest.getMessageCount())
+                .orderBy(getTimeCondition(slackMessageRequest))
                 .fetch();
     }
 
-    //TODO https://whitepro.tistory.com/450 BooleanBuilder 리팩터링 참고
-    private BooleanBuilder createBooleanBuilder(final SlackMessageRequest slackMessageRequest) {
+    private OrderSpecifier<LocalDateTime> getTimeCondition(final SlackMessageRequest slackMessageRequest) {
+        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
+
+        if (needPastMessage) {
+            return QMessage.message.postedDate.desc();
+        }
+
+        return QMessage.message.postedDate.asc();
+    }
+
+    private BooleanBuilder createFindMessagesCondition(final SlackMessageRequest slackMessageRequest) {
         BooleanBuilder builder = new BooleanBuilder();
 
         String keyword = slackMessageRequest.getKeyword();
@@ -88,5 +106,62 @@ public class MessageService {
             }
         }
         return builder;
+    }
+
+    private boolean isLast(final SlackMessageRequest slackMessageRequest, final List<Message> messages) {
+        if (messages.isEmpty()) {
+            return true;
+        }
+
+        BooleanBuilder builder = createIsLastCondition(slackMessageRequest);
+        Message oldestMessage = getTargetMessage(messages, slackMessageRequest.isNeedPastMessage());
+
+        Integer result = jpaQueryFactory
+                .selectOne()
+                .from(QMessage.message)
+                .where(QMessage.message.channel.id.in(slackMessageRequest.getMessageId()))
+                .where(isLastExpression(oldestMessage, slackMessageRequest.isNeedPastMessage()))
+                .where(builder)
+                .fetchFirst();
+
+        return Objects.isNull(result);
+    }
+
+    private BooleanExpression isLastExpression(final Message oldestMessage, final boolean needPastMessage) {
+        if (needPastMessage) {
+            return QMessage.message.postedDate.before(oldestMessage.getPostedDate());
+        }
+
+        return QMessage.message.postedDate.after(oldestMessage.getPostedDate());
+    }
+
+    private Message getTargetMessage(final List<Message> messages,
+                                     final boolean needPastMessage) {
+        if (needPastMessage) {
+            return messages.get(0);
+        }
+
+        return messages.get(messages.size() - 1);
+    }
+
+    private BooleanBuilder createIsLastCondition(final SlackMessageRequest slackMessageRequest) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        String keyword = slackMessageRequest.getKeyword();
+        if (StringUtils.hasText(keyword)) {
+            builder.and(QMessage.message.text.contains(keyword));
+        }
+
+        return builder;
+    }
+
+    private SlackMessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast) {
+        return new SlackMessageResponses(toSlackMessageResponseList(messages), isLast);
+    }
+
+    private List<SlackMessageResponse> toSlackMessageResponseList(final List<Message> messages) {
+        return messages.stream()
+                .map(SlackMessageResponse::from)
+                .collect(Collectors.toList());
     }
 }

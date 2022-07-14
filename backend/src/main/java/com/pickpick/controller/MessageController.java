@@ -1,14 +1,10 @@
 package com.pickpick.controller;
 
 import com.pickpick.controller.dto.SlackMessageRequest;
-import com.pickpick.controller.dto.SlackMessageResponse;
 import com.pickpick.controller.dto.SlackMessageResponses;
-import com.pickpick.entity.Message;
 import com.pickpick.exception.WrongMessageRequestException;
 import com.pickpick.service.MessageService;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,14 +26,6 @@ public class MessageController {
             throw new WrongMessageRequestException();
         }
 
-        List<Message> messages = messageService.find(slackMessageRequest);
-
-        return toSlackMessageResponses(messages);
-    }
-
-    private SlackMessageResponses toSlackMessageResponses(final List<Message> messages) {
-        return new SlackMessageResponses(messages.stream()
-                .map(SlackMessageResponse::from)
-                .collect(Collectors.toList()));
+        return messageService.find(slackMessageRequest);
     }
 }
