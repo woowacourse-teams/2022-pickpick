@@ -18,7 +18,7 @@ interface Channel {
 }
 
 interface Props {
-  channels: Channel[];
+  channels?: Channel[];
 }
 
 function Drawer({ channels = mockChannels }: Props) {

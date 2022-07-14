@@ -2,9 +2,14 @@ import styled, { css } from "styled-components";
 import { Theme } from "@src/@types/shared";
 
 export const Container = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 228px;
-  height: 100%;
+  height: calc(100% - 62px);
   padding: 20px 0;
+  z-index: 10;
+  border-radius: 0 4px 4px 0;
 
   ${({ theme }: { theme: Theme }) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};
