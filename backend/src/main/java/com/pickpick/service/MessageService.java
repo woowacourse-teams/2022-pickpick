@@ -37,7 +37,7 @@ public class MessageService {
 
         BooleanBuilder builder = createBooleanBuilder(slackMessageRequest);
 
-        Long channelId = slackMessageRequest.getChannelId();
+        List<Long> channelIds = slackMessageRequest.getChannelIds();
         int messageCount = slackMessageRequest.getMessageCount();
 
         List<Message> messages = jpaQueryFactory
@@ -45,7 +45,7 @@ public class MessageService {
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
                 .distinct()
-                .where(QMessage.message.channel.id.eq(channelId))
+                .where(QMessage.message.channel.id.in(channelIds))
                 .where(builder)
                 .orderBy(QMessage.message.postedDate.desc())
                 .limit(messageCount)

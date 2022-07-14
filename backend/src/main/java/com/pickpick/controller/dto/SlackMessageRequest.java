@@ -1,7 +1,9 @@
 package com.pickpick.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,8 +20,8 @@ public class SlackMessageRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime date;
 
-    //    @NotNull
-    private Long channelId;
+    @NotNull
+    private List<Long> channelIds;
 
     private boolean needPastMessage = true;
 
