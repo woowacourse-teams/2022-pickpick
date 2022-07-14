@@ -1,5 +1,6 @@
 package com.pickpick.service;
 
+import com.pickpick.controller.dto.SlackMessageRequest;
 import com.pickpick.controller.dto.SlackMessageResponse;
 import com.pickpick.controller.dto.SlackMessageResponses;
 import com.pickpick.entity.Message;
@@ -30,13 +31,14 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public SlackMessageResponses find(final String keyword, final LocalDateTime date, final Long channelId,
-                                      final boolean needPastMessage, final Long messageId,
-                                      final int messageCount) {
+    public SlackMessageResponses find(final SlackMessageRequest slackMessageRequest) {
 
         jpaQueryFactory = new JPAQueryFactory(entityManager);
 
-        BooleanBuilder builder = createBooleanBuilder(keyword, date, needPastMessage, messageId);
+        BooleanBuilder builder = createBooleanBuilder(slackMessageRequest);
+
+        Long channelId = slackMessageRequest.getChannelId();
+        int messageCount = slackMessageRequest.getMessageCount();
 
         List<Message> messages = jpaQueryFactory
                 .selectFrom(QMessage.message)
@@ -55,14 +57,16 @@ public class MessageService {
     }
 
     //TODO https://whitepro.tistory.com/450 BooleanBuilder 리팩터링 참고
-    private BooleanBuilder createBooleanBuilder(final String keyword, final LocalDateTime date,
-                                                final boolean needPastMessage, final Long messageId) {
+    private BooleanBuilder createBooleanBuilder(final SlackMessageRequest slackMessageRequest) {
         BooleanBuilder builder = new BooleanBuilder();
 
+        String keyword = slackMessageRequest.getKeyword();
         if (StringUtils.hasText(keyword)) {
             builder.and(QMessage.message.text.contains(keyword));
         }
 
+        LocalDateTime date = slackMessageRequest.getDate();
+        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
         if (Objects.nonNull(date)) {
             if (needPastMessage) {
                 builder.and(
@@ -78,6 +82,7 @@ public class MessageService {
             }
         }
 
+        Long messageId = slackMessageRequest.getMessageId();
         if (Objects.nonNull(messageId)) {
             Message message = messageRepository.findById(messageId)
                     .orElseThrow(MessageNotFoundException::new);
