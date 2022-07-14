@@ -9,9 +9,9 @@ import javax.persistence.Table;
 import lombok.Getter;
 
 @Getter
-@Table(name ="users")
+@Table(name = "member")
 @Entity
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,10 @@ public class User {
     @Column(name = "thumbnail_url", length = 2048, nullable = false)
     private String thumbnailUrl;
 
-    protected User() {
+    protected Member() {
     }
 
-    public User(final String slackId, final String username, final String thumbnailUrl) {
+    public Member(final String slackId, final String username, final String thumbnailUrl) {
         this.slackId = slackId;
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
