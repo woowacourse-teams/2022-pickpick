@@ -11,7 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "classpath:application-test.yml")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AcceptanceTest {
 
     @LocalServerPort
@@ -34,6 +34,15 @@ class AcceptanceTest {
 
     ExtractableResponse<Response> get(String uri) {
         return RestAssured.given().log().all()
+                .when()
+                .get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    ExtractableResponse<Response> getWithAuth(String uri, Long memberId) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + memberId)
                 .when()
                 .get(uri)
                 .then().log().all()
