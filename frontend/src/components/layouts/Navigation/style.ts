@@ -7,6 +7,7 @@ export const Container = styled.nav`
   left: 0;
   right: 0;
   z-index: 3;
+  height: 62px;
 
   display: flex;
   justify-content: space-around;
