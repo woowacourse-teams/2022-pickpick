@@ -3,7 +3,7 @@ package com.pickpick.controller.dto;
 import com.pickpick.entity.ChannelSubscription;
 import lombok.Builder;
 import lombok.Getter;
-ø
+
 @Getter
 public class ChannelSubscriptionResponse {
 

@@ -39,4 +39,12 @@ public class ChannelSubscription {
         this.member = member;
         this.viewOrder = viewOrder;
     }
+
+    public void changeOrder(int order) {
+        this.viewOrder = order;
+    }
+
+    public Long getChannelId() {
+        return this.channel.getId();
+    }
 }

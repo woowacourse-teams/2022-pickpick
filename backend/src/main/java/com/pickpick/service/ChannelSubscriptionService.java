@@ -1,5 +1,6 @@
 package com.pickpick.service;
 
+import com.pickpick.controller.dto.ChannelOrderRequest;
 import com.pickpick.controller.dto.ChannelResponse;
 import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
@@ -9,9 +10,12 @@ import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class ChannelSubscriptionService {
 
@@ -53,6 +57,7 @@ public class ChannelSubscriptionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void saveAll(final List<Channel> channels, final Long memberId) {
         Member member = members.findById(memberId);
 
@@ -71,4 +76,18 @@ public class ChannelSubscriptionService {
         return subscriptions;
     }
 
+    @Transactional
+    public void updateOrders(final List<ChannelOrderRequest> orderRequests, final Long memberId) {
+        List<ChannelSubscription> subscribedChannels = channelSubscriptions.findAllByMemberId(memberId);
+        Map<Long, Integer> ordersByChannelId = getOrdersMap(orderRequests);
+
+        for (ChannelSubscription subscribedChannel : subscribedChannels) {
+            subscribedChannel.changeOrder(ordersByChannelId.get(subscribedChannel.getChannelId()));
+        }
+    }
+
+    private Map<Long, Integer> getOrdersMap(List<ChannelOrderRequest> orderRequests) {
+        return orderRequests.stream()
+                .collect(Collectors.toMap(ChannelOrderRequest::getId, ChannelOrderRequest::getOrder));
+    }
 }
