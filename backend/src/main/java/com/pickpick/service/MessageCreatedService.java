@@ -18,6 +18,7 @@ public class MessageCreatedService implements SlackEventService {
     private static final String USER = "user";
     private static final String TIMESTAMP = "ts";
     private static final String TEXT = "text";
+    private static final String CLIENT_MSG_ID = "client_msg_id";
 
     private final MessageRepository messages;
     private final MemberRepository members;
@@ -41,6 +42,7 @@ public class MessageCreatedService implements SlackEventService {
         final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
         return new MessageDto(
+                (String) event.get(CLIENT_MSG_ID),
                 (String) event.get(USER),
                 (String) event.get(TIMESTAMP),
                 (String) event.get(TIMESTAMP),
