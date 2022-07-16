@@ -31,14 +31,13 @@ public class MessageService {
     public MessageService(final EntityManager entityManager, final MessageRepository messageRepository) {
         this.entityManager = entityManager;
         this.messageRepository = messageRepository;
-
     }
 
     public SlackMessageResponses find(final SlackMessageRequest slackMessageRequest) {
         jpaQueryFactory = new JPAQueryFactory(entityManager);
 
-        final List<Message> messages = findMessages(slackMessageRequest);
-        final boolean isLast = isLast(slackMessageRequest, messages);
+        List<Message> messages = findMessages(slackMessageRequest);
+        boolean isLast = isLast(slackMessageRequest, messages);
 
         return toSlackMessageResponse(messages, isLast);
     }
@@ -53,13 +52,11 @@ public class MessageService {
                 .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
                 .where(builder)
                 .limit(slackMessageRequest.getMessageCount())
-                .orderBy(getTimeCondition(slackMessageRequest))
+                .orderBy(getTimeCondition(slackMessageRequest.isNeedPastMessage()))
                 .fetch();
     }
 
-    private OrderSpecifier<LocalDateTime> getTimeCondition(final SlackMessageRequest slackMessageRequest) {
-        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
-
+    private OrderSpecifier<LocalDateTime> getTimeCondition(final boolean needPastMessage) {
         if (needPastMessage) {
             return QMessage.message.postedDate.desc();
         }
@@ -114,13 +111,13 @@ public class MessageService {
         }
 
         BooleanBuilder builder = createIsLastCondition(slackMessageRequest);
-        Message oldestMessage = getTargetMessage(messages, slackMessageRequest.isNeedPastMessage());
+        Message targetMessage = getTargetMessage(messages, slackMessageRequest.isNeedPastMessage());
 
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QMessage.message)
                 .where(QMessage.message.channel.id.in(slackMessageRequest.getMessageId()))
-                .where(isLastExpression(oldestMessage, slackMessageRequest.isNeedPastMessage()))
+                .where(isLastExpression(targetMessage, slackMessageRequest.isNeedPastMessage()))
                 .where(builder)
                 .fetchFirst();
 
@@ -135,8 +132,7 @@ public class MessageService {
         return QMessage.message.postedDate.after(oldestMessage.getPostedDate());
     }
 
-    private Message getTargetMessage(final List<Message> messages,
-                                     final boolean needPastMessage) {
+    private Message getTargetMessage(final List<Message> messages, final boolean needPastMessage) {
         if (needPastMessage) {
             return messages.get(0);
         }
