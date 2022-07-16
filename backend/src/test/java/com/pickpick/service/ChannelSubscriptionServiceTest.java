@@ -2,8 +2,8 @@ package com.pickpick.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.pickpick.controller.dto.ChannelResponse;
 import com.pickpick.entity.Channel;
-import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
@@ -43,12 +43,12 @@ class ChannelSubscriptionServiceTest {
         assertThat(channelSubscriptionService.findAll(member.getId()).size()).isEqualTo(findChannels.size());
     }
 
-    @DisplayName("isSubscribed와 무관하게 구독 전체를 채널 이름 순서로 조회")
+    @DisplayName("모든 채널을 구독 여부 포함해 이름순 조회")
     @Test
     void findAll() {
         //given
         Member member = saveTestFixtureMember();
-        List<Channel> findChannels = channels.findAll();
+        List<Channel> findChannels = channels.findAllByOrderByName();
         List<Channel> expected = findChannels.stream().sorted(Comparator.comparing(Channel::getName))
                 .collect(Collectors.toList());
 
@@ -56,10 +56,10 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.saveAll(findChannels, member.getId());
 
         // then
-        List<ChannelSubscription> actual = channelSubscriptionService.findAll(member.getId());
+        List<ChannelResponse> actual = channelSubscriptionService.findAll(member.getId());
 
         for (int i = 0; i < actual.size(); i++) {
-            assertThat(expected.get(i)).isEqualTo(actual.get(i).getChannel());
+            assertThat(expected.get(i).getId()).isEqualTo(actual.get(i).getId());
         }
     }
 

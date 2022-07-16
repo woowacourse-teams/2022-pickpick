@@ -14,5 +14,6 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     void deleteByIdIn(List<Long> id);
 
-    List<ChannelSubscription> findAllByMemberIdOrderByChannelName(Long memberId);
+    List<ChannelSubscription> findAllByMemberId(Long memberId);
+
 }

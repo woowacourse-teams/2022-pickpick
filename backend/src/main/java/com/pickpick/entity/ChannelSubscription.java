@@ -31,9 +31,6 @@ public class ChannelSubscription {
     @Column(name = "view_order", nullable = false)
     private int viewOrder;
 
-    @Column(name = "is_subscribed", nullable = false)
-    private boolean isSubscribed = false;
-
     protected ChannelSubscription() {
     }
 
