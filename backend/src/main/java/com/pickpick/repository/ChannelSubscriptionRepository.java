@@ -16,4 +16,5 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     List<ChannelSubscription> findAllByMemberId(Long memberId);
 
+    List<ChannelSubscription> findAllByMemberIdOrderByViewOrder(Long memberId);
 }

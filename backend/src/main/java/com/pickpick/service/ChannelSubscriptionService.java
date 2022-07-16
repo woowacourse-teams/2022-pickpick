@@ -34,6 +34,10 @@ public class ChannelSubscriptionService {
         return getChannelResponsesWithIsSubscribed(allChannels, subscribedChannels);
     }
 
+    public List<ChannelSubscription> findAllOrderByViewOrder(Long memberId) {
+        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId);
+    }
+
     private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
                                                                       final List<Channel> subscribedChannels) {
         return allChannels.stream()
