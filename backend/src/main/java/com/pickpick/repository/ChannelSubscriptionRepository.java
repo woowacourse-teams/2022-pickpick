@@ -2,6 +2,7 @@ package com.pickpick.repository;
 
 import com.pickpick.entity.ChannelSubscription;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.repository.Repository;
 
 public interface ChannelSubscriptionRepository extends Repository<ChannelSubscription, Long> {
@@ -19,4 +20,6 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
     List<ChannelSubscription> findAllByMemberId(Long memberId);
 
     List<ChannelSubscription> findAllByMemberIdOrderByViewOrder(Long memberId);
+
+    Optional<ChannelSubscription> findFirstByMemberIdOrderByViewOrderDesc(Long memberId);
 }

@@ -82,7 +82,9 @@ public class ChannelSubscriptionService {
     }
 
     private int getMaxViewOrder(Long memberId) {
-        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId).size() + 1;
+        return channelSubscriptions.findFirstByMemberIdOrderByViewOrderDesc(memberId)
+                .map(it -> it.getViewOrder() + 1)
+                .orElse(1);
     }
 
     private List<ChannelSubscription> getChannelSubscriptionsByChannel(final List<Channel> channels,
