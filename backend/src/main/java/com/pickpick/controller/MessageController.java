@@ -22,10 +22,14 @@ public class MessageController {
 
     @GetMapping
     public SlackMessageResponses findSlackMessages(@Valid SlackMessageRequest slackMessageRequest) {
-        if (Objects.nonNull(slackMessageRequest.getDate()) && Objects.nonNull(slackMessageRequest.getMessageId())) {
+        if (duplicateFindCondition(slackMessageRequest)) {
             throw new WrongMessageRequestException();
         }
 
         return messageService.find(slackMessageRequest);
+    }
+
+    private boolean duplicateFindCondition(final SlackMessageRequest slackMessageRequest) {
+        return Objects.nonNull(slackMessageRequest.getDate()) && Objects.nonNull(slackMessageRequest.getMessageId());
     }
 }
