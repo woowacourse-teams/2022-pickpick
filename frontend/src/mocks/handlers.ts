@@ -1,18 +1,53 @@
 import { rest } from "msw";
-import { messages } from "./data";
+import { messages, channels, subscribedChannels } from "./data";
 
+const SIZE = 20;
 export const handlers = [
   rest.get("/api/messages", (req, res, ctx) => {
-    const page = Number(req.url.searchParams.get("page"));
-    const size = Number(req.url.searchParams.get("size"));
+    const messageId = Number(req.url.searchParams.get("messageId"));
+    const needPastMessage = req.url.searchParams.get("size") === "true";
 
-    const slicedMessages = messages.slice((page - 1) * size, size * page);
+    const targetIndex =
+      messages.findIndex((message) => message.id === messageId) + 1;
+
+    const newMessages = messages.slice(targetIndex, SIZE + targetIndex);
 
     return res(
+      ctx.status(200),
+      ctx.delay(500),
       ctx.json({
-        messages: slicedMessages,
-        isLast: slicedMessages.length !== 20,
-        nextPage: page + 1,
+        messages: needPastMessage ? newMessages : newMessages.reverse(),
+        isLast: newMessages.length !== SIZE,
+      })
+    );
+  }),
+
+  rest.get("/api/channels", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.delay(500),
+      ctx.json({
+        channels,
+      })
+    );
+  }),
+
+  rest.get("/api/channel-subscription", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.delay(500),
+      ctx.json({
+        channels: subscribedChannels,
+      })
+    );
+  }),
+
+  rest.get("/api/channel-subscription", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.delay(500),
+      ctx.json({
+        channels: subscribedChannels,
       })
     );
   }),
