@@ -1,6 +1,7 @@
 package com.pickpick.controller;
 
 import com.pickpick.controller.dto.ChannelOrderRequest;
+import com.pickpick.controller.dto.ChannelSubscriptionRequest;
 import com.pickpick.controller.dto.ChannelSubscriptionResponse;
 import com.pickpick.controller.dto.ChannelSubscriptionResponses;
 import com.pickpick.service.ChannelSubscriptionService;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,13 @@ public class ChannelSubscriptionController {
                         .stream()
                         .map(ChannelSubscriptionResponse::from)
                         .collect(Collectors.toList()));
+    }
+
+    @PostMapping
+    public void subscribeChannel(HttpServletRequest request,
+                                 @RequestBody ChannelSubscriptionRequest subscriptionRequest) {
+        String memberId = AuthorizationExtractor.extract(request);
+        channelSubscriptionService.save(subscriptionRequest, Long.parseLong(memberId));
     }
 
     @PutMapping

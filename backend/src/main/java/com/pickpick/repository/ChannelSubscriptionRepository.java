@@ -6,6 +6,8 @@ import org.springframework.data.repository.Repository;
 
 public interface ChannelSubscriptionRepository extends Repository<ChannelSubscription, Long> {
 
+    void save(ChannelSubscription channelSubscription);
+
     void saveAll(Iterable<ChannelSubscription> channelSubscriptions);
 
     List<ChannelSubscription> findAllByOrderByViewOrder();

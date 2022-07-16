@@ -2,9 +2,12 @@ package com.pickpick.service;
 
 import com.pickpick.controller.dto.ChannelOrderRequest;
 import com.pickpick.controller.dto.ChannelResponse;
+import com.pickpick.controller.dto.ChannelSubscriptionRequest;
 import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
+import com.pickpick.exception.ChannelNotFoundException;
+import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
@@ -59,11 +62,27 @@ public class ChannelSubscriptionService {
 
     @Transactional
     public void saveAll(final List<Channel> channels, final Long memberId) {
-        Member member = members.findById(memberId);
+        Member member = members.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
 
         channelSubscriptions.deleteAllByMemberId(memberId);
 
         channelSubscriptions.saveAll(getChannelSubscriptionsByChannel(channels, member));
+    }
+
+    @Transactional
+    public void save(final ChannelSubscriptionRequest subscriptionRequest, final Long memberId) {
+        Channel channel = channels.findById(subscriptionRequest.getId())
+                .orElseThrow(ChannelNotFoundException::new);
+
+        Member member = members.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(memberId)));
+    }
+
+    private int getMaxViewOrder(Long memberId) {
+        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId).size() + 1;
     }
 
     private List<ChannelSubscription> getChannelSubscriptionsByChannel(final List<Channel> channels,
