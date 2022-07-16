@@ -111,4 +111,15 @@ public class ChannelSubscriptionService {
         return orderRequests.stream()
                 .collect(Collectors.toMap(ChannelOrderRequest::getId, ChannelOrderRequest::getOrder));
     }
+
+    @Transactional
+    public void delete(Long channelId, Long memberId) {
+        Channel channel = channels.findById(channelId)
+                .orElseThrow(ChannelNotFoundException::new);
+
+        Member member = members.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        channelSubscriptions.deleteAllByChannelAndMember(channel, member);
+    }
 }

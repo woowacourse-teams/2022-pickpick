@@ -9,7 +9,9 @@ import com.pickpick.utils.AuthorizationExtractor;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,5 +49,11 @@ public class ChannelSubscriptionController {
     public void updateViewOrders(HttpServletRequest request, @RequestBody List<ChannelOrderRequest> orderRequests) {
         String memberId = AuthorizationExtractor.extract(request);
         channelSubscriptionService.updateOrders(orderRequests, Long.parseLong(memberId));
+    }
+
+    @DeleteMapping("/{channelId}")
+    public void unsubscribeChannel(HttpServletRequest request, @PathVariable Long channelId) {
+        String memberId = AuthorizationExtractor.extract(request);
+        channelSubscriptionService.delete(channelId, Long.parseLong(memberId));
     }
 }

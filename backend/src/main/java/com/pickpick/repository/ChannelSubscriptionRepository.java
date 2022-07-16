@@ -1,6 +1,8 @@
 package com.pickpick.repository;
 
+import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
+import com.pickpick.entity.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
@@ -11,15 +13,13 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     void saveAll(Iterable<ChannelSubscription> channelSubscriptions);
 
-    List<ChannelSubscription> findAllByOrderByViewOrder();
-
     void deleteAllByMemberId(Long memberId);
-
-    void deleteByIdIn(List<Long> id);
 
     List<ChannelSubscription> findAllByMemberId(Long memberId);
 
     List<ChannelSubscription> findAllByMemberIdOrderByViewOrder(Long memberId);
 
     Optional<ChannelSubscription> findFirstByMemberIdOrderByViewOrderDesc(Long memberId);
+
+    void deleteAllByChannelAndMember(Channel channel, Member member);
 }
