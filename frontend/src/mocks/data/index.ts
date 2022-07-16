@@ -311,6 +311,8 @@ export const messages = [
   },
 ];
 
+export const reverseMessages = [...messages].reverse();
+
 export const channels = [
   {
     id: 1,
