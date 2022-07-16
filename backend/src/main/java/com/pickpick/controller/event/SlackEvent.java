@@ -7,7 +7,8 @@ import java.util.Map;
 
 public enum SlackEvent {
 
-    MESSAGE_CREATED("message", "");
+    MESSAGE_CREATED("message", ""),
+    MESSAGE_CHANGED("message", "message_changed");
 
     private final String type;
     private final String subtype;

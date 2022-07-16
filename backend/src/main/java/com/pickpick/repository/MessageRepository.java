@@ -6,9 +6,10 @@ import java.util.Optional;
 import org.springframework.data.repository.Repository;
 
 public interface MessageRepository extends Repository<Message, Long> {
+
     void save(Message message);
 
     List<Message> findAll();
 
-    Optional<Message> findById(Long messageId);
+    Optional<Message> findBySlackId(String slackMessageId);
 }
