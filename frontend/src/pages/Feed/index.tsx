@@ -8,16 +8,27 @@ import { InfiniteData, useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { Message, ResponseMessages } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import React, { useRef } from "react";
 
 function Feed() {
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useInfiniteQuery<ResponseMessages>(["messages"], getMessages, {
-      getNextPageParam: ({ isLast, nextPage }) => {
+      getNextPageParam: ({ isLast, messages }) => {
         if (!isLast) {
-          return nextPage;
+          return messages.at(-1)?.id;
         }
       },
+      getPreviousPageParam: ({ isLast, messages }) => {
+        if (!isLast) {
+          return messages[0].id;
+        }
+      },
+      onSettled: () => {
+        dateArrayRef.current = [];
+      },
     });
+
+  const dateArrayRef = useRef<string[]>([]);
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
@@ -29,12 +40,22 @@ function Feed() {
     return data.pages.flatMap((arr) => arr.messages);
   };
 
+  const renderDateDropdown = (postedDate: string) => {
+    if (dateArrayRef.current.includes(postedDate)) return;
+
+    dateArrayRef.current.push(postedDate);
+
+    return (
+      <Styled.Wrapper>
+        <Dropdown postedDate={postedDate} />
+      </Styled.Wrapper>
+    );
+  };
+
   return (
     <Styled.Container>
       <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
-      <Styled.Wrapper>
-        <Dropdown />
-      </Styled.Wrapper>
+
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
@@ -43,13 +64,15 @@ function Feed() {
         <FlexColumn gap="4px" width="100%">
           {extractMessages(data).map(
             ({ id, username, postedDate, text, userThumbnail }) => (
-              <MessageCard
-                key={id}
-                username={username}
-                date={postedDate}
-                text={text}
-                thumbnail={userThumbnail}
-              />
+              <React.Fragment key={id}>
+                {renderDateDropdown(postedDate)}
+                <MessageCard
+                  username={username}
+                  date={postedDate}
+                  text={text}
+                  thumbnail={userThumbnail}
+                />
+              </React.Fragment>
             )
           )}
 
