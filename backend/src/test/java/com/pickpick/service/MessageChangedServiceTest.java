@@ -72,9 +72,14 @@ class MessageChangedServiceTest {
     }
 
     private Map<String, Object> messageChangedEvent(String updatedText, String modifiedDate) {
-        Map<String, String> event = Map.of(
+        Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", "message_changed",
+                "message", Map.of(
+                        "user", SAMPLE_MEMBER.getSlackId(),
+                        "ts", modifiedDate,
+                        "text", updatedText,
+                        "client_msg_id", SAMPLE_MESSAGE.getSlackId()),
                 "user", SAMPLE_MEMBER.getSlackId(),
                 "ts", modifiedDate,
                 "text", updatedText,

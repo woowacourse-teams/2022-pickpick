@@ -17,7 +17,7 @@ public class MessageChangedService implements SlackEventService {
     private static final String USER = "user";
     private static final String TIMESTAMP = "ts";
     private static final String TEXT = "text";
-    public static final String CLIENT_MSG_ID = "client_msg_id";
+    private static final String CLIENT_MSG_ID = "client_msg_id";
 
     private final MessageRepository messages;
 
@@ -30,20 +30,21 @@ public class MessageChangedService implements SlackEventService {
         MessageDto messageDto = convert(requestBody);
 
         Message message = messages.findBySlackId(messageDto.getSlackId())
-                .orElseThrow(MessageNotFoundException::new);
+                .orElseThrow(() -> new MessageNotFoundException(messageDto.getSlackId()));
 
         message.changeText(messageDto.getText(), messageDto.getModifiedDate());
     }
 
     private MessageDto convert(final Map<String, Object> requestBody) {
-        final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+        Map<String, Object> event = (Map) requestBody.get(EVENT);
+        Map<String, Object> message = (Map) event.get("message");
 
         return new MessageDto(
-                (String) event.get(USER),
-                (String) event.get(CLIENT_MSG_ID),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TEXT)
+                (String) message.get(USER),
+                (String) message.get(CLIENT_MSG_ID),
+                (String) message.get(TIMESTAMP),
+                (String) message.get(TIMESTAMP),
+                (String) message.get(TEXT)
         );
     }
 

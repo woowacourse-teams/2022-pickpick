@@ -87,11 +87,18 @@ class EventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", subtype,
-                "user", user,
-                "ts", timestamp,
                 "previous_message", Map.of("client_msg_id", slackMessageId),
+                "message", Map.of(
+                        "user", user,
+                        "ts", timestamp,
+                        "text", text,
+                        "client_msg_id", slackMessageId
+                ),
+                "client_msg_id", slackMessageId,
                 "text", text,
-                "client_msg_id", slackMessageId);
+                "user", user,
+                "ts", timestamp
+        );
 
         return Map.of("type", type, "event", event);
     }
