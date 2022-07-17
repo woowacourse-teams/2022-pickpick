@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { Theme } from "@src/@types/shared";
 
 export const Container = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 228px;

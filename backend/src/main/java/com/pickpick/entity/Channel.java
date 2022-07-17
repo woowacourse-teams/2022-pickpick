@@ -13,7 +13,7 @@ public class Channel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "slack_id", length = 15, nullable = false, unique = true)
+    @Column(name = "slack_id", length = 15, nullable = false, unique = true, updatable = false)
     private String slackId;
 
     @Column(name = "name", length = 80, nullable = false)

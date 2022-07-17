@@ -8,7 +8,9 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql("/message.sql")
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class EventAcceptanceTest extends AcceptanceTest {
@@ -38,11 +40,17 @@ class EventAcceptanceTest extends AcceptanceTest {
 
     private void 메시지_저장_성공() {
         // given
-        String user = "U03MKN0UWQN";
+        String user = "U03MC231";
         String timestamp = "1234567890.123456";
         String text = "메시지 전송!";
+        String slackMessageId = "db8a1f84-8acf-46ab-b93d-85177cee3e97";
 
-        Map<String, String> event = Map.of("type", "message", "user", user, "ts", timestamp, "text", text);
+        Map<String, String> event = Map.of(
+                "type", "message",
+                "user", user,
+                "ts", timestamp,
+                "text", text,
+                "client_msg_id", slackMessageId);
 
         String type = "event_callback";
         Map<String, Object> request = Map.of("type", type, "event", event);

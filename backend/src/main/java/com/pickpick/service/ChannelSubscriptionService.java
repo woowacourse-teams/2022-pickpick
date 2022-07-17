@@ -11,6 +11,8 @@ import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +53,7 @@ public class ChannelSubscriptionService {
     private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
                                                                       final List<Channel> subscribedChannels) {
         return allChannels.stream()
-                .map(channel -> new ChannelResponse(channel.getId(), channel.getName(),
-                        subscribedChannels.contains(channel)))
+                .map(channel -> ChannelResponse.of(subscribedChannels, channel))
                 .collect(Collectors.toList());
     }
 
