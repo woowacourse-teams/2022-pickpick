@@ -18,7 +18,7 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-@Sql("/message.sql")
+@Sql({"/truncate.sql", "/message.sql"})
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Transactional
 @SpringBootTest
