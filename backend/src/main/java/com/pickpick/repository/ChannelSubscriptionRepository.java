@@ -1,8 +1,9 @@
 package com.pickpick.repository;
 
 import com.pickpick.entity.ChannelSubscription;
-import java.util.List;
 import org.springframework.data.repository.Repository;
+
+import java.util.List;
 
 public interface ChannelSubscriptionRepository extends Repository<ChannelSubscription, Long> {
 
@@ -15,5 +16,4 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
     void deleteByIdIn(List<Long> id);
 
     List<ChannelSubscription> findAllByMemberId(Long memberId);
-
 }

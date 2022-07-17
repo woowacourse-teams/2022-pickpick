@@ -8,7 +8,7 @@ public class ChannelService {
 
     private final ChannelRepository channels;
 
-    public ChannelService(ChannelRepository channels) {
+    public ChannelService(final ChannelRepository channels) {
         this.channels = channels;
     }
 }

@@ -1,20 +1,21 @@
 package com.pickpick.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.pickpick.controller.dto.ChannelResponse;
 import com.pickpick.entity.Channel;
 import com.pickpick.entity.Member;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -33,7 +34,7 @@ class ChannelSubscriptionServiceTest {
     @Test
     void saveAll() {
         // given
-        Member member = saveTestFixtureMember();
+        Member member = saveMember();
         List<Channel> findChannels = channels.findAll();
 
         // when
@@ -47,7 +48,7 @@ class ChannelSubscriptionServiceTest {
     @Test
     void findAll() {
         //given
-        Member member = saveTestFixtureMember();
+        Member member = saveMember();
         List<Channel> findChannels = channels.findAllByOrderByName();
         List<Channel> expected = findChannels.stream().sorted(Comparator.comparing(Channel::getName))
                 .collect(Collectors.toList());
@@ -63,7 +64,7 @@ class ChannelSubscriptionServiceTest {
         }
     }
 
-    private Member saveTestFixtureMember() {
+    private Member saveMember() {
         Member member = new Member("TESTMEMBER", "테스트 계정", "test.png");
         members.save(member);
         return member;

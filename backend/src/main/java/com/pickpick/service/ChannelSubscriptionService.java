@@ -7,10 +7,11 @@ import com.pickpick.entity.Member;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChannelSubscriptionService {
@@ -19,9 +20,9 @@ public class ChannelSubscriptionService {
     private final ChannelRepository channels;
     private final MemberRepository members;
 
-    public ChannelSubscriptionService(ChannelSubscriptionRepository channelSubscriptions,
-                                      ChannelRepository channels,
-                                      MemberRepository members) {
+    public ChannelSubscriptionService(final ChannelSubscriptionRepository channelSubscriptions,
+                                      final ChannelRepository channels,
+                                      final MemberRepository members) {
         this.channelSubscriptions = channelSubscriptions;
         this.channels = channels;
         this.members = members;
@@ -37,8 +38,7 @@ public class ChannelSubscriptionService {
     private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
                                                                       final List<Channel> subscribedChannels) {
         return allChannels.stream()
-                .map(channel -> new ChannelResponse(channel.getId(), channel.getName(),
-                        subscribedChannels.contains(channel)))
+                .map(channel -> ChannelResponse.of(subscribedChannels, channel))
                 .collect(Collectors.toList());
     }
 

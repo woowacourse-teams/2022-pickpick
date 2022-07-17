@@ -22,7 +22,7 @@ class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    ExtractableResponse<Response> post(String uri, Object object) {
+    ExtractableResponse<Response> post(final String uri, final Object object) {
         return RestAssured.given().log().all()
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -32,7 +32,7 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> get(String uri) {
+    ExtractableResponse<Response> get(final String uri) {
         return RestAssured.given().log().all()
                 .when()
                 .get(uri)
@@ -40,7 +40,7 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> getWithAuth(String uri, Long memberId) {
+    ExtractableResponse<Response> getWithAuth(final String uri, final Long memberId) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + memberId)
                 .when()
