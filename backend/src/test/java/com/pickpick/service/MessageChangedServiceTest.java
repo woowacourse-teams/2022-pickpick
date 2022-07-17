@@ -61,7 +61,6 @@ class MessageChangedServiceTest {
                 () -> assertThat(expected.get().getModifiedDate()).isEqualTo(
                         TimeUtils.toLocalDateTime(modifiedDate))
         );
-
     }
 
     private void saveMessage() {
