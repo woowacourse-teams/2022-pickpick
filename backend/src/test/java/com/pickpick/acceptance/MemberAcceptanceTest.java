@@ -5,7 +5,6 @@ import com.pickpick.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayName("유저 기능")
 @SuppressWarnings("NonAsciiCharacters")
-@ActiveProfiles("test")
 public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Autowired
