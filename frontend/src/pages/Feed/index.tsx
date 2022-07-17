@@ -7,20 +7,15 @@ import * as Styled from "./style";
 import { InfiniteData, useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { Message, ResponseMessages } from "@src/@types/shared";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import React, { useRef } from "react";
+import NextInfiniteScroll from "@src/components/@shared/NextInfiniteScroll";
 
 function Feed() {
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteQuery<ResponseMessages>(["messages"], getMessages, {
+    useInfiniteQuery<ResponseMessages>(["messages"], getMessages(), {
       getNextPageParam: ({ isLast, messages }) => {
         if (!isLast) {
           return messages.at(-1)?.id;
-        }
-      },
-      getPreviousPageParam: ({ isLast, messages }) => {
-        if (!isLast) {
-          return messages[0].id;
         }
       },
       onSettled: () => {
@@ -56,7 +51,7 @@ function Feed() {
     <Styled.Container>
       <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
 
-      <InfiniteScroll
+      <NextInfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
         endPoint={!hasNextPage}
@@ -84,7 +79,7 @@ function Feed() {
             </>
           )}
         </FlexColumn>
-      </InfiniteScroll>
+      </NextInfiniteScroll>
     </Styled.Container>
   );
 }
