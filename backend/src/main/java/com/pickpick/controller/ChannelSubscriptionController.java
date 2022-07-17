@@ -24,7 +24,7 @@ public class ChannelSubscriptionController {
 
     private final ChannelSubscriptionService channelSubscriptionService;
 
-    public ChannelSubscriptionController(ChannelSubscriptionService channelSubscriptionService) {
+    public ChannelSubscriptionController(final ChannelSubscriptionService channelSubscriptionService) {
         this.channelSubscriptionService = channelSubscriptionService;
     }
 

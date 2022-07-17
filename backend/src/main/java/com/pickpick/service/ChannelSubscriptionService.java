@@ -29,9 +29,9 @@ public class ChannelSubscriptionService {
     private final ChannelRepository channels;
     private final MemberRepository members;
 
-    public ChannelSubscriptionService(ChannelSubscriptionRepository channelSubscriptions,
-                                      ChannelRepository channels,
-                                      MemberRepository members) {
+    public ChannelSubscriptionService(final ChannelSubscriptionRepository channelSubscriptions,
+                                      final ChannelRepository channels,
+                                      final MemberRepository members) {
         this.channelSubscriptions = channelSubscriptions;
         this.channels = channels;
         this.members = members;
@@ -44,7 +44,7 @@ public class ChannelSubscriptionService {
         return getChannelResponsesWithIsSubscribed(allChannels, subscribedChannels);
     }
 
-    public List<ChannelSubscription> findAllOrderByViewOrder(Long memberId) {
+    public List<ChannelSubscription> findAllOrderByViewOrder(final Long memberId) {
         return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId);
     }
 
@@ -84,7 +84,7 @@ public class ChannelSubscriptionService {
         channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(memberId)));
     }
 
-    private int getMaxViewOrder(Long memberId) {
+    private int getMaxViewOrder(final Long memberId) {
         return channelSubscriptions.findFirstByMemberIdOrderByViewOrderDesc(memberId)
                 .map(it -> it.getViewOrder() + ORDER_NEXT)
                 .orElse(ORDER_FIRST);
@@ -110,13 +110,13 @@ public class ChannelSubscriptionService {
         }
     }
 
-    private Map<Long, Integer> getOrdersMap(List<ChannelOrderRequest> orderRequests) {
+    private Map<Long, Integer> getOrdersMap(final List<ChannelOrderRequest> orderRequests) {
         return orderRequests.stream()
                 .collect(Collectors.toMap(ChannelOrderRequest::getId, ChannelOrderRequest::getOrder));
     }
 
     @Transactional
-    public void delete(Long channelId, Long memberId) {
+    public void delete(final Long channelId, final Long memberId) {
         Channel channel = channels.findById(channelId)
                 .orElseThrow(ChannelNotFoundException::new);
 
