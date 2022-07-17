@@ -1,9 +1,13 @@
 package com.pickpick.service;
 
+import com.pickpick.controller.dto.ChannelOrderRequest;
 import com.pickpick.controller.dto.ChannelResponse;
+import com.pickpick.controller.dto.ChannelSubscriptionRequest;
 import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
+import com.pickpick.exception.ChannelNotFoundException;
+import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
@@ -11,10 +15,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class ChannelSubscriptionService {
+
+    private static final int ORDER_FIRST = 1;
+    private static final int ORDER_NEXT = 1;
 
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final ChannelRepository channels;
@@ -35,6 +46,10 @@ public class ChannelSubscriptionService {
         return getChannelResponsesWithIsSubscribed(allChannels, subscribedChannels);
     }
 
+    public List<ChannelSubscription> findAllOrderByViewOrder(final Long memberId) {
+        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId);
+    }
+
     private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
                                                                       final List<Channel> subscribedChannels) {
         return allChannels.stream()
@@ -49,12 +64,31 @@ public class ChannelSubscriptionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void saveAll(final List<Channel> channels, final Long memberId) {
-        Member member = members.findById(memberId);
+        Member member = members.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
 
         channelSubscriptions.deleteAllByMemberId(memberId);
 
         channelSubscriptions.saveAll(getChannelSubscriptionsByChannel(channels, member));
+    }
+
+    @Transactional
+    public void save(final ChannelSubscriptionRequest subscriptionRequest, final Long memberId) {
+        Channel channel = channels.findById(subscriptionRequest.getId())
+                .orElseThrow(ChannelNotFoundException::new);
+
+        Member member = members.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(memberId)));
+    }
+
+    private int getMaxViewOrder(final Long memberId) {
+        return channelSubscriptions.findFirstByMemberIdOrderByViewOrderDesc(memberId)
+                .map(it -> it.getViewOrder() + ORDER_NEXT)
+                .orElse(ORDER_FIRST);
     }
 
     private List<ChannelSubscription> getChannelSubscriptionsByChannel(final List<Channel> channels,
@@ -67,4 +101,29 @@ public class ChannelSubscriptionService {
         return subscriptions;
     }
 
+    @Transactional
+    public void updateOrders(final List<ChannelOrderRequest> orderRequests, final Long memberId) {
+        List<ChannelSubscription> subscribedChannels = channelSubscriptions.findAllByMemberId(memberId);
+        Map<Long, Integer> ordersByChannelId = getOrdersMap(orderRequests);
+
+        for (ChannelSubscription subscribedChannel : subscribedChannels) {
+            subscribedChannel.changeOrder(ordersByChannelId.get(subscribedChannel.getChannelId()));
+        }
+    }
+
+    private Map<Long, Integer> getOrdersMap(final List<ChannelOrderRequest> orderRequests) {
+        return orderRequests.stream()
+                .collect(Collectors.toMap(ChannelOrderRequest::getId, ChannelOrderRequest::getOrder));
+    }
+
+    @Transactional
+    public void delete(final Long channelId, final Long memberId) {
+        Channel channel = channels.findById(channelId)
+                .orElseThrow(ChannelNotFoundException::new);
+
+        Member member = members.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        channelSubscriptions.deleteAllByChannelAndMember(channel, member);
+    }
 }

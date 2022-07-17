@@ -7,7 +7,7 @@ import org.springframework.data.repository.Repository;
 
 public interface MemberRepository extends Repository<Member, Long> {
 
-    Member findById(Long id);
+    Optional<Member> findById(Long id);
 
     Optional<Member> findBySlackId(String slackId);
 
