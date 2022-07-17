@@ -14,4 +14,6 @@ public interface MessageRepository extends Repository<Message, Long> {
     Optional<Message> findById(long id);
 
     Optional<Message> findBySlackId(String slackMessageId);
+
+    void deleteBySlackId(String slackId);
 }
