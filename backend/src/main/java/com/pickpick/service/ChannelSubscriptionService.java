@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChannelSubscriptionService {
 
+    private static final int ORDER_FIRST = 1;
+    private static final int ORDER_NEXT = 1;
+
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final ChannelRepository channels;
     private final MemberRepository members;
@@ -83,8 +86,8 @@ public class ChannelSubscriptionService {
 
     private int getMaxViewOrder(Long memberId) {
         return channelSubscriptions.findFirstByMemberIdOrderByViewOrderDesc(memberId)
-                .map(it -> it.getViewOrder() + 1)
-                .orElse(1);
+                .map(it -> it.getViewOrder() + ORDER_NEXT)
+                .orElse(ORDER_FIRST);
     }
 
     private List<ChannelSubscription> getChannelSubscriptionsByChannel(final List<Channel> channels,
