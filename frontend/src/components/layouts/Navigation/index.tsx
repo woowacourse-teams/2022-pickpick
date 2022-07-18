@@ -1,5 +1,6 @@
 import * as Styled from "./style";
 import { useState, useEffect } from "react";
+import { PATH_NAME } from "@src/@constants";
 import MenuIcon from "@public/assets/icons/MenuIcon.svg";
 import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
 import HomeIconUnfill from "@public/assets/icons/HomeIcon-Unfill.svg";
@@ -8,6 +9,7 @@ import InfoIcon from "@public/assets/icons/InfoIcon.svg";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
+import WrapperLink from "@src/components/@shared/WrapperLink";
 import Drawer from "@src/components/Drawer";
 
 function Navigation() {
@@ -34,19 +36,18 @@ function Navigation() {
       <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
         <MenuIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
-      <WrapperButton kind="bigIcon">
+      <WrapperLink to="/" kind="bigIcon">
         <StarIconUnfill width="24px" height="24px" fill="#121212" />
-      </WrapperButton>
-      <WrapperButton kind="bigIcon">
+      </WrapperLink>
+      <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
         <HomeIconUnfill width="24px" height="24px" fill="#121212" />
-      </WrapperButton>
-      <WrapperButton kind="bigIcon">
+      </WrapperLink>
+      <WrapperLink to="/" kind="bigIcon">
         <AlarmIconInactive width="24px" height="24px" fill="#121212" />
-      </WrapperButton>
+      </WrapperLink>
       <WrapperButton kind="bigIcon">
         <InfoIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
-
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
