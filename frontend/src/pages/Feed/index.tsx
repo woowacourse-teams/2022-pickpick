@@ -15,7 +15,7 @@ function Feed() {
     useInfiniteQuery<ResponseMessages>(["messages"], getMessages(), {
       getNextPageParam: ({ isLast, messages }) => {
         if (!isLast) {
-          return messages.at(-1)?.id;
+          return { messageId: messages.at(-1)?.id };
         }
       },
       onSettled: () => {
