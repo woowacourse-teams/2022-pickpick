@@ -1,7 +1,7 @@
 import styled, { css, CSSProp } from "styled-components";
 import { Kind } from ".";
 
-const kindTable: Record<Kind, CSSProp> = {
+export const kindTable: Record<Kind, CSSProp> = {
   bigIcon: css`
     padding: 20px;
   `,
