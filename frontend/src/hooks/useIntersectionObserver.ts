@@ -1,13 +1,9 @@
 import { useEffect, useRef } from "react";
+import { Props as InfiniteScrollProps } from "@src/components/@shared/NextInfiniteScroll";
 
-interface Props {
-  children: JSX.Element;
-  callback: () => void;
-  threshold: number;
-  endPoint: boolean;
-}
+type Props = Omit<InfiniteScrollProps, "children">;
 
-function InfiniteScroll({ children, callback, threshold, endPoint }: Props) {
+function useIntersectionObserver({ callback, threshold, endPoint }: Props) {
   const targetRef = useRef<HTMLDivElement>(null);
   const observer = useRef(
     new IntersectionObserver(onIntersect, {
@@ -33,12 +29,7 @@ function InfiniteScroll({ children, callback, threshold, endPoint }: Props) {
     return () => observer && observer.disconnect();
   }, [callback, endPoint, observer, targetRef]);
 
-  return (
-    <>
-      {children}
-      <div ref={targetRef}></div>
-    </>
-  );
+  return { targetRef };
 }
 
-export default InfiniteScroll;
+export default useIntersectionObserver;

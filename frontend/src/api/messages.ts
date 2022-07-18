@@ -1,18 +1,26 @@
 import { ResponseMessages } from "@src/@types/shared";
 import { fetcher } from ".";
 
-export const getNextMessages = async ({ pageParam = 0 }) => {
-  const { data } = await fetcher.get<ResponseMessages>(
-    `/api/messages?messageId=${pageParam}&size=20&needPastMessage=true`
-  );
+export const getMessages =
+  ({ date = "" } = {}) =>
+  async ({ pageParam }: any) => {
+    if (!pageParam) {
+      const { data } = await fetcher.get<ResponseMessages>(
+        `/api/messages?messageId=${0}&size=20&needPastMessage=${true}&date=${date}`
+      );
 
-  return data;
-};
+      return data;
+    }
 
-export const getPreviousMessages = async ({ pageParam = 0 }) => {
-  const { data } = await fetcher.get<ResponseMessages>(
-    `/api/messages?messageId=${pageParam}&size=20&needPastMessage=false`
-  );
+    const {
+      messageId = 0,
+      needPastMessage = true,
+      date: currentDate = "",
+    } = pageParam;
 
-  return data;
-};
+    const { data } = await fetcher.get<ResponseMessages>(
+      `/api/messages?messageId=${messageId}&size=20&needPastMessage=${needPastMessage}&date=${currentDate}`
+    );
+
+    return data;
+  };
