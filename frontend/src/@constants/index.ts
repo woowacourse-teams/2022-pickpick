@@ -1,7 +1,7 @@
 export const PATH_NAME = {
-  START: "/",
+  HOME: "/",
   FEED: "/feed",
   ALARM: "/alarm",
   BOOKMARK: "/bookmark",
-  USER: "/user",
+  ADD_CHANNEL: "/addChannel",
 };

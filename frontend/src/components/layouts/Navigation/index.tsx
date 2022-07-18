@@ -36,13 +36,13 @@ function Navigation() {
       <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
         <MenuIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
-      <WrapperLink to="/" kind="bigIcon">
+      <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
         <StarIconUnfill width="24px" height="24px" fill="#121212" />
       </WrapperLink>
       <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
         <HomeIconUnfill width="24px" height="24px" fill="#121212" />
       </WrapperLink>
-      <WrapperLink to="/" kind="bigIcon">
+      <WrapperLink to={PATH_NAME.ALARM} kind="bigIcon">
         <AlarmIconInactive width="24px" height="24px" fill="#121212" />
       </WrapperLink>
       <WrapperButton kind="bigIcon">

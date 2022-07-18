@@ -3,7 +3,8 @@ import { Kind } from "../WrapperButton";
 import * as Styled from "./style";
 
 interface Props extends LinkProps {
-  kind: Kind;
+  kind?: Kind;
+  children: JSX.Element | string;
 }
 
 function WrapperLink(props: Props) {
