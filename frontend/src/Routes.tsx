@@ -38,11 +38,11 @@ const routes = [
         path: PATH_NAME.FEED,
         element: <Feed />,
       },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
-  },
-  {
-    path: "*",
-    element: <NotFound />,
   },
 ];
 

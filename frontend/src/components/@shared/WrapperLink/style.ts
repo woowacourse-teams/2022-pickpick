@@ -7,5 +7,5 @@ export const Container = styled(Link)`
   cursor: pointer;
   background-color: inherit;
 
-  ${({ kind }: { kind?: Kind }) => (kind ? kindTable[kind] : `width:100%;`)}
+  ${({ kind }: { kind?: Kind }) => kind && kindTable[kind]}
 `;
