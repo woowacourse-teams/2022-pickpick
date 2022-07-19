@@ -2,8 +2,11 @@ package com.pickpick.service;
 
 import com.pickpick.controller.dto.MessageDto;
 import com.pickpick.controller.event.SlackEvent;
+import com.pickpick.entity.Channel;
 import com.pickpick.entity.Member;
+import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
+import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
 import com.pickpick.repository.MessageRepository;
 import java.util.Map;
@@ -19,13 +22,17 @@ public class MessageCreatedService implements SlackEventService {
     private static final String TIMESTAMP = "ts";
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
+    private static final String CHANNEL = "channel";
 
     private final MessageRepository messages;
     private final MemberRepository members;
+    private final ChannelRepository channels;
 
-    public MessageCreatedService(final MessageRepository messages, final MemberRepository members) {
+    public MessageCreatedService(final MessageRepository messages, final MemberRepository members,
+                                 final ChannelRepository channels) {
         this.messages = messages;
         this.members = members;
+        this.channels = channels;
     }
 
     @Override
@@ -35,7 +42,10 @@ public class MessageCreatedService implements SlackEventService {
         Member member = members.findBySlackId(messageDto.getMemberSlackId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        messages.save(messageDto.toEntity(member));
+        Channel channel = channels.findBySlackId(messageDto.getChannelSlackId())
+                .orElseThrow(ChannelNotFoundException::new);
+
+        messages.save(messageDto.toEntity(member, channel));
     }
 
     private MessageDto convert(final Map<String, Object> requestBody) {
@@ -46,7 +56,8 @@ public class MessageCreatedService implements SlackEventService {
                 (String) event.get(CLIENT_MSG_ID),
                 (String) event.get(TIMESTAMP),
                 (String) event.get(TIMESTAMP),
-                (String) event.get(TEXT)
+                (String) event.get(TEXT),
+                (String) event.get(CHANNEL)
         );
     }
 

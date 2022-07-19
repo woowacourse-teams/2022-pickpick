@@ -18,6 +18,8 @@ public class MessageChangedService implements SlackEventService {
     private static final String TIMESTAMP = "ts";
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
+    private static final String CHANNEL = "channel";
+    private static final String MESSAGE = "message";
 
     private final MessageRepository messages;
 
@@ -37,14 +39,15 @@ public class MessageChangedService implements SlackEventService {
 
     private MessageDto convert(final Map<String, Object> requestBody) {
         Map<String, Object> event = (Map) requestBody.get(EVENT);
-        Map<String, Object> message = (Map) event.get("message");
+        Map<String, Object> message = (Map) event.get(MESSAGE);
 
         return new MessageDto(
                 (String) message.get(USER),
                 (String) message.get(CLIENT_MSG_ID),
                 (String) message.get(TIMESTAMP),
                 (String) message.get(TIMESTAMP),
-                (String) message.get(TEXT)
+                (String) message.get(TEXT),
+                (String) event.get(CHANNEL)
         );
     }
 
