@@ -4,22 +4,24 @@ import { fetcher } from ".";
 export const getMessages =
   ({ date = "" } = {}) =>
   async ({ pageParam }: any) => {
+    console.log(pageParam);
+
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
-        `/api/messages?messageId=${0}&size=20&needPastMessage=${true}&date=${date}`
+        `/api/messages?channelIds=5&messageId=&needPastMessage=${true}&date=${date}`
       );
 
       return data;
     }
 
     const {
-      messageId = 0,
+      messageId = "",
       needPastMessage = true,
       date: currentDate = "",
     } = pageParam;
 
     const { data } = await fetcher.get<ResponseMessages>(
-      `/api/messages?messageId=${messageId}&size=20&needPastMessage=${needPastMessage}&date=${currentDate}`
+      `/api/messages?channelIds=5&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`
     );
 
     return data;
