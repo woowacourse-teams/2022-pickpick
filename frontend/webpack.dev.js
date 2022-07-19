@@ -9,7 +9,6 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 require("dotenv").config({ path: join(__dirname, "./.env.development") });
-console.log(process.env.API_URL, "?");
 
 module.exports = merge(common, {
   mode: "development",
