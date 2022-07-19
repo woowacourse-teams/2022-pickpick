@@ -6,9 +6,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
+@ToString
 @Setter
 @Getter
 public class SlackMessageRequest {
