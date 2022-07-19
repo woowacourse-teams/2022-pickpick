@@ -116,7 +116,7 @@ public class MessageService {
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QMessage.message)
-                .where(QMessage.message.channel.id.in(slackMessageRequest.getMessageId()))
+                .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
                 .where(isLastExpression(targetMessage, slackMessageRequest.isNeedPastMessage()))
                 .where(builder)
                 .fetchFirst();
