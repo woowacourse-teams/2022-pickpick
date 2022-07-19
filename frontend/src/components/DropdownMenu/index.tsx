@@ -9,11 +9,11 @@ const ISOConverter = (date: string) => {
   const today = new Date();
 
   if (date === "오늘") {
-    return today.toISOString().replace(/[.]\d+/, "");
+    return today.toISOString().split("T")[0] + "T23:59:59";
   }
 
   const yesterday = new Date(today.setDate(today.getDate() - 1));
-  return yesterday.toISOString().replace(/[.]\d+/, "");
+  return yesterday.toISOString().split("T")[0] + "T23:59:59";
 };
 
 function DropdownMenu({ date }: Props) {
