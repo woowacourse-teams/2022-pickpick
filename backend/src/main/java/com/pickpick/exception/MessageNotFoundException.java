@@ -7,4 +7,8 @@ public class MessageNotFoundException extends RuntimeException {
     public MessageNotFoundException() {
         super(DEFAULT_MESSAGE);
     }
+
+    public MessageNotFoundException(final String slackId) {
+        super(String.format("%s : %s", DEFAULT_MESSAGE, slackId));
+    }
 }
