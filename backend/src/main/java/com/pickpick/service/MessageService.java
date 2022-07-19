@@ -10,24 +10,20 @@ import com.pickpick.repository.MessageRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@Slf4j
 @Transactional(readOnly = true)
 @Service
 public class MessageService {
-
-    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private final EntityManager entityManager;
     private final MessageRepository messageRepository;
@@ -48,20 +44,26 @@ public class MessageService {
     }
 
     private List<Message> findMessages(final SlackMessageRequest slackMessageRequest) {
+        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
         BooleanBuilder builder = createFindMessagesCondition(slackMessageRequest);
 
-        JPAQuery<Message> findMessageQuery = jpaQueryFactory
+        List<Message> foundMessages = jpaQueryFactory
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
                 .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
                 .where(builder)
+                .orderBy(getTimeCondition(needPastMessage))
                 .limit(slackMessageRequest.getMessageCount())
-                .orderBy(getTimeCondition(slackMessageRequest.isNeedPastMessage()));
+                .fetch();
 
-        log.info("{} request: {} {} query : {}", LINE_SEPARATOR, slackMessageRequest, LINE_SEPARATOR, findMessageQuery);
+        if (needPastMessage) {
+            return foundMessages;
+        }
 
-        return findMessageQuery.fetch();
+        return foundMessages.stream()
+                .sorted(Comparator.comparing(Message::getPostedDate).reversed())
+                .collect(Collectors.toList());
     }
 
     private OrderSpecifier<LocalDateTime> getTimeCondition(final boolean needPastMessage) {
