@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 12px;
   height: auto;
   padding: 14px;
   column-gap: 4px;
@@ -30,12 +32,18 @@ export const Date = styled.p`
 
 export const Message = styled.p`
   margin-top: 3px;
-  width: 100%;
   white-space: pre-wrap;
-  cursor: pointer;
+  word-break: break-all;
 
   ${({ theme }: { theme: Theme }) => css`
     font-size: ${theme.FONT_SIZE.BODY};
     color: ${theme.COLOR.TEXT.DEFAULT};
+  `}
+`;
+
+export const ButtonText = styled.p`
+  ${({ theme }: { theme: Theme }) => css`
+    font-size: ${theme.FONT_SIZE.CAPTION};
+    color: ${theme.COLOR.TEXT.WHITE};
   `}
 `;
