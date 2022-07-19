@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
-    Long channelIdToSubscribe1;
-    Long channelIdToSubscribe2;
+    private Long channelIdToSubscribe1;
+    private Long channelIdToSubscribe2;
 
     @BeforeEach
     void subscribe() {
@@ -54,7 +54,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
 
     private ExtractableResponse<Response> 유저_구독_채널_목록_조회_요청() {
-        return getWithAuth("/api/channel-subscription", 2L);
+        return getWithAuth(API_CHANNEL_SUBSCRIPTION, 2L);
     }
 
     private void 구독이_올바른_순서로_조회됨(
@@ -80,6 +80,6 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
                 new ChannelOrderRequest(channelIdToSubscribe1, 2)
         );
 
-        return putWithAuth("/api/channel-subscription", request, 2L);
+        return putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
     }
 }

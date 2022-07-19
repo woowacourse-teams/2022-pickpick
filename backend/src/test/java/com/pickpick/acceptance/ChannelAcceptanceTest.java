@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("NonAsciiCharacters")
 public class ChannelAcceptanceTest extends AcceptanceTest {
 
+    protected static final String API_CHANNEL_SUBSCRIPTION = "/api/channel-subscription";
+
     @Test
     void 유저_전체_채널_목록_조회() {
         ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
@@ -70,11 +72,11 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
 
     protected ExtractableResponse<Response> 구독_요청(final Long channelId) {
         ChannelSubscriptionRequest channelSubscriptionRequest = new ChannelSubscriptionRequest(channelId);
-        return postWithAuth("/api/channel-subscription", channelSubscriptionRequest, 2L);
+        return postWithAuth(API_CHANNEL_SUBSCRIPTION, channelSubscriptionRequest, 2L);
     }
 
     private ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
-        return deleteWithAuth("/api/channel-subscription/" + channelId, 2L);
+        return deleteWithAuth(API_CHANNEL_SUBSCRIPTION + "/" + channelId, 2L);
     }
 
     private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {
