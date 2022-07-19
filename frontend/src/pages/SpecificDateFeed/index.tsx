@@ -128,7 +128,7 @@ function SpecificDateFeed() {
             .flatMap((arr) => arr.messages)
             .map(({ id, username, postedDate, text, userThumbnail }) => (
               <React.Fragment key={id}>
-                {renderDateDropdown(postedDate)}
+                {renderDateDropdown(postedDate.split("T")[0])}
                 <MessageCard
                   username={username}
                   date={postedDate}

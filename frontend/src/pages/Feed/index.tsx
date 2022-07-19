@@ -60,7 +60,7 @@ function Feed() {
           {extractMessages(data).map(
             ({ id, username, postedDate, text, userThumbnail }) => (
               <React.Fragment key={id}>
-                {renderDateDropdown(postedDate)}
+                {renderDateDropdown(postedDate.split("T")[0])}
                 <MessageCard
                   username={username}
                   date={postedDate}
