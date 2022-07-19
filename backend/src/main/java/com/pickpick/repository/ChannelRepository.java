@@ -7,9 +7,13 @@ import org.springframework.data.repository.Repository;
 
 public interface ChannelRepository extends Repository<Channel, Long> {
 
-    Optional<Channel> findById(Long id);
+    void save(Channel channel);
 
     List<Channel> findAll();
 
     List<Channel> findAllByOrderByName();
+
+    Optional<Channel> findBySlackId(String slackId);
+
+    Optional<Channel> findById(Long id);
 }

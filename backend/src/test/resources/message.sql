@@ -1,5 +1,5 @@
 insert into channel (id, name, slack_id)
-values (2, '임시 채널', 1);
+values (2, '임시 채널', 'ABC1234');
 
 insert into member (id, slack_id, thumbnail_url, username)
 values (46, 'U03MC231', 'https://avatars.slack-edge.com/2022-07-02/3764274541009_4d1fa8d13242781486fa_512.png',

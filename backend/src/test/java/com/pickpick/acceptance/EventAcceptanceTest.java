@@ -87,6 +87,7 @@ class EventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", subtype,
+                "channel", "ABC1234",
                 "previous_message", Map.of("client_msg_id", slackMessageId),
                 "message", Map.of(
                         "user", user,
