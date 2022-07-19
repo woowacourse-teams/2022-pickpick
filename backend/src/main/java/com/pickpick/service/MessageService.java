@@ -148,10 +148,10 @@ public class MessageService {
 
     private Message getTargetMessage(final List<Message> messages, final boolean needPastMessage) {
         if (needPastMessage) {
-            return messages.get(0);
+            return messages.get(messages.size() - 1);
         }
 
-        return messages.get(messages.size() - 1);
+        return messages.get(0);
     }
 
     private BooleanBuilder createIsLastCondition(final SlackMessageRequest slackMessageRequest) {
