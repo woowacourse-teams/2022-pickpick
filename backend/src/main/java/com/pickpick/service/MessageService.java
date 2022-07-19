@@ -12,6 +12,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -43,17 +44,26 @@ public class MessageService {
     }
 
     private List<Message> findMessages(final SlackMessageRequest slackMessageRequest) {
+        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
         BooleanBuilder builder = createFindMessagesCondition(slackMessageRequest);
 
-        return jpaQueryFactory
+        List<Message> foundMessages = jpaQueryFactory
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
                 .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
                 .where(builder)
+                .orderBy(getTimeCondition(needPastMessage))
                 .limit(slackMessageRequest.getMessageCount())
-                .orderBy(getTimeCondition(slackMessageRequest.isNeedPastMessage()))
                 .fetch();
+
+        if (needPastMessage) {
+            return foundMessages;
+        }
+
+        return foundMessages.stream()
+                .sorted(Comparator.comparing(Message::getPostedDate).reversed())
+                .collect(Collectors.toList());
     }
 
     private OrderSpecifier<LocalDateTime> getTimeCondition(final boolean needPastMessage) {
@@ -138,10 +148,10 @@ public class MessageService {
 
     private Message getTargetMessage(final List<Message> messages, final boolean needPastMessage) {
         if (needPastMessage) {
-            return messages.get(0);
+            return messages.get(messages.size() - 1);
         }
 
-        return messages.get(messages.size() - 1);
+        return messages.get(0);
     }
 
     private BooleanBuilder createIsLastCondition(final SlackMessageRequest slackMessageRequest) {
