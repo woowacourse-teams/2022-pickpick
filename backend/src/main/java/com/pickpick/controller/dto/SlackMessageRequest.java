@@ -31,20 +31,6 @@ public class SlackMessageRequest {
     @Min(0)
     private int messageCount = 20;
 
-    private SlackMessageRequest() {
-    }
-
-    public SlackMessageRequest(final String keyword,
-                               final LocalDateTime date,
-                               final List<Long> channelIds,
-                               final boolean needPastMessage,
-                               final Long messageId,
-                               final int messageCount) {
-        this.keyword = keyword;
-        this.date = date;
-        this.channelIds = channelIds;
-        this.needPastMessage = needPastMessage;
-        this.messageId = messageId;
-        this.messageCount = messageCount;
+    public SlackMessageRequest() {
     }
 }

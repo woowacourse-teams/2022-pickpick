@@ -44,11 +44,12 @@ public class Message {
     protected Message() {
     }
 
-    public Message(final String slackId, final String text, final Member member,
+    public Message(final String slackId, final String text, final Member member, final Channel channel,
                    final LocalDateTime postedDate, final LocalDateTime modifiedDate) {
         this.slackId = slackId;
         this.text = text;
         this.member = member;
+        this.channel = channel;
         this.postedDate = postedDate;
         this.modifiedDate = modifiedDate;
     }
