@@ -85,10 +85,14 @@ function SpecificDateFeed() {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", function () {
-      wheelPosition.current.scroll = this.scrollY;
-    });
-  });
+    function scrollEvent(event: any) {
+      wheelPosition.current.scroll = event.scrollY;
+    }
+
+    window.addEventListener("scroll", scrollEvent);
+
+    return window.removeEventListener("scroll", scrollEvent);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({
