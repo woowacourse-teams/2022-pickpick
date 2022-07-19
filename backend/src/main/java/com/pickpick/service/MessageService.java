@@ -72,8 +72,25 @@ public class MessageService {
             builder.and(QMessage.message.text.contains(keyword));
         }
 
-        LocalDateTime date = slackMessageRequest.getDate();
+        Long messageId = slackMessageRequest.getMessageId();
         boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
+
+        if (Objects.nonNull(messageId)) {
+            Message message = messageRepository.findById(messageId)
+                    .orElseThrow(MessageNotFoundException::new);
+
+            LocalDateTime messageDate = message.getPostedDate();
+
+            if (needPastMessage) {
+                builder.and(QMessage.message.postedDate.before(messageDate));
+            } else {
+                builder.and(QMessage.message.postedDate.after(messageDate));
+            }
+
+            return builder;
+        }
+
+        LocalDateTime date = slackMessageRequest.getDate();
         if (Objects.nonNull(date)) {
             if (needPastMessage) {
                 builder.and(
@@ -89,19 +106,6 @@ public class MessageService {
             }
         }
 
-        Long messageId = slackMessageRequest.getMessageId();
-        if (Objects.nonNull(messageId)) {
-            Message message = messageRepository.findById(messageId)
-                    .orElseThrow(MessageNotFoundException::new);
-
-            LocalDateTime messageDate = message.getPostedDate();
-
-            if (needPastMessage) {
-                builder.and(QMessage.message.postedDate.before(messageDate));
-            } else {
-                builder.and(QMessage.message.postedDate.after(messageDate));
-            }
-        }
         return builder;
     }
 
