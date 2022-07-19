@@ -18,7 +18,7 @@ public class MessageCreatedService implements SlackEventService {
     private static final String USER = "user";
     private static final String TIMESTAMP = "ts";
     private static final String TEXT = "text";
-    public static final String CLIENT_MSG_ID = "client_msg_id";
+    private static final String CLIENT_MSG_ID = "client_msg_id";
 
     private final MessageRepository messages;
     private final MemberRepository members;
