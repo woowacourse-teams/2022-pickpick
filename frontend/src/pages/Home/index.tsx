@@ -1,19 +1,20 @@
 import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
 import { FlexRow } from "@src/@styles/shared";
+import LogoIcon from "@public/assets/icons/pickpick.svg";
 
 function Home() {
   return (
     <Styled.Container>
       <Styled.GreetingContainer>
         <FlexRow
-          gap="10px"
+          gap="30px"
           marginBottom="27px"
           justifyContent="center"
           alignItems="center"
           flexWrap="wrap"
         >
-          <img src="" alt="줍줍 로고 이미지" />
+          <LogoIcon width="200px" height="200px" />
           <h2>
             사라지는 슬랙 메시지,
             <br />
