@@ -63,7 +63,7 @@ function SpecificDateFeed() {
     );
   };
 
-  const onWheel = (event: any) => {
+  const onWheel = (event: React.WheelEvent<HTMLDivElement>) => {
     wheelPosition.current.move = event.deltaY;
 
     if (
@@ -77,7 +77,7 @@ function SpecificDateFeed() {
       return;
     }
 
-    if (wheelPosition.current.move > -30 && flag.current) {
+    if (wheelPosition.current.move > -10 && flag.current) {
       flag.current = false;
 
       return;
@@ -85,13 +85,13 @@ function SpecificDateFeed() {
   };
 
   useEffect(() => {
-    function scrollEvent(event: any) {
-      wheelPosition.current.scroll = event.scrollY;
-    }
+    const handleScrollEvent = () => {
+      wheelPosition.current.scroll = window.scrollY;
+    };
 
-    window.addEventListener("scroll", scrollEvent);
+    window.addEventListener("scroll", handleScrollEvent);
 
-    return window.removeEventListener("scroll", scrollEvent);
+    return () => window.removeEventListener("scroll", handleScrollEvent);
   }, []);
 
   useEffect(() => {
