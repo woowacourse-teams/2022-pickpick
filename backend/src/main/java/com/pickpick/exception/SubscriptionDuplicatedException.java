@@ -7,4 +7,8 @@ public class SubscriptionDuplicatedException extends RuntimeException {
     public SubscriptionDuplicatedException() {
         super(DEFAULT_MESSAGE);
     }
+
+    public SubscriptionDuplicatedException(final Long slackId) {
+        super(String.format("%s : %s", DEFAULT_MESSAGE, slackId));
+    }
 }

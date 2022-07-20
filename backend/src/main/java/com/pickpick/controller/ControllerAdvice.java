@@ -18,6 +18,6 @@ public class ControllerAdvice {
             SubscriptionNotExistException.class
     })
     public void handleBadRequest(final RuntimeException e) {
-        log.error("예외 발생 : " + e.getMessage());
+        log.error("예외 발생 ){}", e.getMessage(), e);
     }
 }
