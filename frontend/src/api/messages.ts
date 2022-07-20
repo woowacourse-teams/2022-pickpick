@@ -4,8 +4,6 @@ import { fetcher } from ".";
 export const getMessages =
   ({ date = "" } = {}) =>
   async ({ pageParam }: any) => {
-    console.log(pageParam);
-
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
         `/api/messages?channelIds=5&messageId=&needPastMessage=${true}&date=${date}`
