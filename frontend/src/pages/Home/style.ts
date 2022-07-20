@@ -1,13 +1,17 @@
 import { Theme } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  width: 100%;
+  min-width: 320px;
+`;
 
 export const GreetingContainer = styled.section`
   display: flex;
   flex-direction: column;
+  max-width: 600px;
   padding: 50px 40px 40px;
-  min-width: 320px;
+  margin: 0 auto;
 `;
 
 export const UsageContainer = styled.section`
