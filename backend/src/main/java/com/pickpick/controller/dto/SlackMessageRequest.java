@@ -2,35 +2,44 @@ package com.pickpick.controller.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
+import org.springframework.util.StringUtils;
 
-@Setter
 @Getter
 public class SlackMessageRequest {
 
-    @Nullable
     private String keyword;
-
-    @Nullable
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime date;
-
-    @NotNull
     private List<Long> channelIds;
-
     private boolean needPastMessage = true;
-
-    @Nullable
     private Long messageId;
-
-    @Min(0)
     private int messageCount = 20;
 
-    public SlackMessageRequest() {
+    public SlackMessageRequest(final String keyword, final String date, final List<Long> channelIds,
+                               final Boolean needPastMessage, final Long messageId, final Integer messageCount) {
+        if (StringUtils.hasText(keyword)) {
+            this.keyword = keyword;
+        }
+
+        if (StringUtils.hasText(date)) {
+            this.date = LocalDateTime.parse(date);
+        }
+
+        if (Objects.nonNull(channelIds)) {
+            this.channelIds = channelIds;
+        }
+
+        if (Objects.nonNull(needPastMessage)) {
+            this.needPastMessage = needPastMessage;
+        }
+
+        if (Objects.nonNull(messageId)) {
+            this.messageId = messageId;
+        }
+
+        if (Objects.nonNull(messageCount)) {
+            this.messageCount = messageCount;
+        }
     }
 }

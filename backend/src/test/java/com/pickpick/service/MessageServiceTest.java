@@ -61,12 +61,6 @@ class MessageServiceTest {
     }
 
     private static SlackMessageRequest getSlackMessageRequest() {
-        SlackMessageRequest slackMessageRequest = new SlackMessageRequest();
-        slackMessageRequest.setChannelIds(List.of(5L));
-        slackMessageRequest.setNeedPastMessage(false);
-        slackMessageRequest.setMessageId(1L);
-        slackMessageRequest.setMessageCount(7);
-
-        return slackMessageRequest;
+        return new SlackMessageRequest("", "", List.of(5L), false, 1L, 7);
     }
 }
