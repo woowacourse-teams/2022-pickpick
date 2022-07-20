@@ -7,6 +7,7 @@ import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
+import com.pickpick.exception.DuplicatedSubscriptionException;
 import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
@@ -82,7 +83,15 @@ public class ChannelSubscriptionService {
         Member member = members.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
+        validateDuplicatedSubscription(channel, member);
+
         channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(memberId)));
+    }
+
+    private void validateDuplicatedSubscription(Channel channel, Member member) {
+        if (channelSubscriptions.existsByChannelAndMember(channel, member)) {
+            throw new DuplicatedSubscriptionException();
+        }
     }
 
     private int getMaxViewOrder(final Long memberId) {

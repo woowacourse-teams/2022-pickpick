@@ -75,7 +75,7 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
         return postWithAuth(API_CHANNEL_SUBSCRIPTION, channelSubscriptionRequest, 2L);
     }
 
-    private ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
+    protected ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
         return deleteWithAuth(API_CHANNEL_SUBSCRIPTION + "/" + channelId, 2L);
     }
 

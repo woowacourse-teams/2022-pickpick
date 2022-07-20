@@ -15,13 +15,15 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     void saveAll(Iterable<ChannelSubscription> channelSubscriptions);
 
-    void deleteAllByMemberId(Long memberId);
-
     List<ChannelSubscription> findAllByMemberId(Long memberId);
 
     List<ChannelSubscription> findAllByMemberIdOrderByViewOrder(Long memberId);
 
     Optional<ChannelSubscription> findFirstByMemberIdOrderByViewOrderDesc(Long memberId);
+
+    boolean existsByChannelAndMember(Channel channel, Member member);
+
+    void deleteAllByMemberId(Long memberId);
 
     void deleteAllByChannelAndMember(Channel channel, Member member);
 }
