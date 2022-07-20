@@ -8,17 +8,18 @@ import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
+import com.pickpick.exception.SubscriptionDuplicatedException;
+import com.pickpick.exception.SubscriptionNotExistException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service
@@ -82,7 +83,15 @@ public class ChannelSubscriptionService {
         Member member = members.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
+        validateDuplicatedSubscription(channel, member);
+
         channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(memberId)));
+    }
+
+    private void validateDuplicatedSubscription(final Channel channel, final Member member) {
+        if (channelSubscriptions.existsByChannelAndMember(channel, member)) {
+            throw new SubscriptionDuplicatedException(channel.getId());
+        }
     }
 
     private int getMaxViewOrder(final Long memberId) {
@@ -124,6 +133,14 @@ public class ChannelSubscriptionService {
         Member member = members.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
+        validateSubscriptionExist(channel, member);
+
         channelSubscriptions.deleteAllByChannelAndMember(channel, member);
+    }
+
+    private void validateSubscriptionExist(final Channel channel, final Member member) {
+        if (!channelSubscriptions.existsByChannelAndMember(channel, member)) {
+            throw new SubscriptionNotExistException(channel.getId());
+        }
     }
 }

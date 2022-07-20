@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -50,6 +51,21 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청();
         구독이_올바른_순서로_조회됨(subscriptionResponse, channelIdToSubscribe2, channelIdToSubscribe1);
+    }
+
+    @Test
+    void 구독_중인_채널_다시_구독_요청() {
+        ExtractableResponse<Response> response = 구독_요청(channelIdToSubscribe1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 구독하지_않은_채널_구독_취소() {
+        구독_취소_요청(channelIdToSubscribe1);
+        ExtractableResponse<Response> response = 구독_취소_요청(channelIdToSubscribe1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
 

@@ -8,7 +8,10 @@ public class ChannelOrderRequest {
     private Long id;
     private int order;
 
-    public ChannelOrderRequest(Long id, int order) {
+    private ChannelOrderRequest() {
+    }
+
+    public ChannelOrderRequest(final Long id, final int order) {
         this.id = id;
         this.order = order;
     }
