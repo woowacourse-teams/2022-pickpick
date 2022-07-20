@@ -8,7 +8,6 @@ export const Container = styled.div`
   width: 228px;
   height: calc(100% - 62px);
   padding: 20px 0;
-  z-index: 10;
   border-radius: 0 4px 4px 0;
 
   ${({ theme }: { theme: Theme }) => css`

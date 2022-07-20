@@ -6,12 +6,11 @@ export const Container = styled.nav`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 3;
   height: 62px;
-
   display: flex;
   justify-content: space-around;
   padding: 5px;
+  z-index: 1;
   background-color: ${({ theme }: { theme: Theme }) =>
     `${theme.COLOR.BACKGROUND.SECONDARY}`};
 `;
