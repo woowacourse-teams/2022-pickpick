@@ -53,20 +53,14 @@ class MessageServiceTest {
     private static Stream<Arguments> slackMessageRequest() {
         return Stream.of(
                 Arguments.of(
-                        "1번, 2번 채널에서 메시지ID가 1인 메시지 이후에 작성된 메시지 7개 조회",
+                        "5번 채널에서 메시지ID가 1인 메시지 이후에 작성된 메시지 7개 조회",
                         getSlackMessageRequest(),
-                        List.of(222L, 3L, 4L, 5L, 6L, 7L, 8L),
-                        true)
+                        List.of(8L, 7L, 6L, 5L, 4L, 3L, 2L),
+                        false)
         );
     }
 
     private static SlackMessageRequest getSlackMessageRequest() {
-        SlackMessageRequest slackMessageRequest = new SlackMessageRequest();
-        slackMessageRequest.setChannelIds(List.of(1L, 2L));
-        slackMessageRequest.setNeedPastMessage(false);
-        slackMessageRequest.setMessageId(1L);
-        slackMessageRequest.setMessageCount(7);
-
-        return slackMessageRequest;
+        return new SlackMessageRequest("", "", List.of(5L), false, 1L, 7);
     }
 }

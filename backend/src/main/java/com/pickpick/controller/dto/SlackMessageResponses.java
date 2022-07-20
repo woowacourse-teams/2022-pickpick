@@ -7,10 +7,13 @@ import lombok.Getter;
 @Getter
 public class SlackMessageResponses {
 
-    private final List<SlackMessageResponse> messages;
+    private List<SlackMessageResponse> messages;
 
     @JsonProperty(value = "isLast")
-    private final boolean last;
+    private boolean last;
+
+    private SlackMessageResponses() {
+    }
 
     public SlackMessageResponses(final List<SlackMessageResponse> messages, final boolean last) {
         this.messages = messages;

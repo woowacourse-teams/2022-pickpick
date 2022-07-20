@@ -8,13 +8,16 @@ import lombok.Getter;
 @Getter
 public class SlackMessageResponse {
 
-    private final Long id;
-    private final Long memberId;
-    private final String username;
-    private final String userThumbnail;
-    private final String text;
-    private final LocalDateTime postedDate;
-    private final LocalDateTime modifiedDate;
+    private Long id;
+    private Long memberId;
+    private String username;
+    private String userThumbnail;
+    private String text;
+    private LocalDateTime postedDate;
+    private LocalDateTime modifiedDate;
+
+    private SlackMessageResponse() {
+    }
 
     public SlackMessageResponse(final Long id,
                                 final Long memberId,
