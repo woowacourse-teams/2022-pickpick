@@ -11,7 +11,7 @@ pipeline
         stage ('Checkout')
         {
             steps {
-                git branch: 'test/jenkins', url: 'https://github.com/woowacourse-teams/2022-pickpick.git'
+                git branch: 'main', url: 'https://github.com/woowacourse-teams/2022-pickpick.git'
             }
         }
         stage ('Build')
@@ -21,7 +21,7 @@ pipeline
                 chmod +x ./gradlew
                 ./gradlew bootJar
                 cd ..
-'''
+                '''
             }
         }
     }
