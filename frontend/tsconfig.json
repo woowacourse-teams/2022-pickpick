@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsxdev",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
