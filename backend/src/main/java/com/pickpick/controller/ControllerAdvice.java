@@ -1,6 +1,7 @@
 package com.pickpick.controller;
 
-import com.pickpick.exception.DuplicatedSubscriptionException;
+import com.pickpick.exception.SubscriptionDuplicatedException;
+import com.pickpick.exception.SubscriptionNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,7 +12,8 @@ public class ControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            DuplicatedSubscriptionException.class
+            SubscriptionDuplicatedException.class,
+            SubscriptionNotExistException.class
     })
     public void handleBadRequest() {
     }
