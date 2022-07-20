@@ -3,7 +3,6 @@ package com.pickpick.service;
 
 import com.pickpick.entity.Channel;
 import com.pickpick.repository.ChannelRepository;
-import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.Conversation;
@@ -21,10 +20,11 @@ public class ChannelInitializer {
     @Value("${slack.bot-token}")
     private String slackBotToken;
 
-    private final MethodsClient client = Slack.getInstance().methods();
+    private final MethodsClient slackClient;
     private final ChannelRepository channels;
 
-    public ChannelInitializer(ChannelRepository channels) {
+    public ChannelInitializer(final MethodsClient slackClient, final ChannelRepository channels) {
+        this.slackClient = slackClient;
         this.channels = channels;
     }
 
@@ -45,7 +45,7 @@ public class ChannelInitializer {
     }
 
     private List<Channel> getCurrentChannels() throws IOException, SlackApiException {
-        return toChannels(client.conversationsList(request -> request
+        return toChannels(slackClient.conversationsList(request -> request
                 .token(slackBotToken)).getChannels());
     }
 

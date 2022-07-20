@@ -2,7 +2,6 @@ package com.pickpick.service;
 
 import com.pickpick.entity.Member;
 import com.pickpick.repository.MemberRepository;
-import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.User;
@@ -20,10 +19,11 @@ public class MemberInitializer {
     @Value("${slack.bot-token}")
     private String slackBotToken;
 
-    private final MethodsClient client = Slack.getInstance().methods();
+    private final MethodsClient slackClient;
     private final MemberRepository memberRepository;
 
-    public MemberInitializer(final MemberRepository memberRepository) {
+    public MemberInitializer(final MethodsClient slackClient, final MemberRepository memberRepository) {
+        this.slackClient = slackClient;
         this.memberRepository = memberRepository;
     }
 
@@ -45,7 +45,7 @@ public class MemberInitializer {
 
     private List<Member> getCurrentWorkspaceMembers() throws IOException, SlackApiException {
         return toMembers(
-                client.usersList(request -> request.token(slackBotToken))
+                slackClient.usersList(request -> request.token(slackBotToken))
                         .getMembers());
     }
 
