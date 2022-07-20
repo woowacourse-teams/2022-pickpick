@@ -28,8 +28,8 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     @MethodSource("methodSource")
     @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(String description, Map<String, Object> request, boolean expectedIsLast,
-                    List<Long> expectedMessageIds) {
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
+                    final List<Long> expectedMessageIds) {
         // when
         ExtractableResponse<Response> response = get(API_URL, request);
 
@@ -80,7 +80,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private static List<Long> createExpectedMessageIds(Long endInclusive, Long startInclusive) {
+    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
         return LongStream.rangeClosed(startInclusive, endInclusive)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
