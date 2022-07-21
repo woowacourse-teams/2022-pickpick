@@ -2,8 +2,15 @@ import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
 import { FlexRow } from "@src/@styles/shared";
 import LogoIcon from "@public/assets/icons/pickpick.svg";
+import { useNavigate } from "react-router-dom";
+import { PATH_NAME } from "@src/@constants";
 
 function Home() {
+  const navigate = useNavigate();
+
+  const handleNavigateToAddChannel = () => {
+    navigate(PATH_NAME.ADD_CHANNEL);
+  };
   return (
     <Styled.Container>
       <Styled.GreetingContainer>
@@ -21,7 +28,7 @@ function Home() {
             우리가 주워줄게!
           </h2>
         </FlexRow>
-        <Button>시작하기</Button>
+        <Button onClick={handleNavigateToAddChannel}>시작하기</Button>
       </Styled.GreetingContainer>
 
       <Styled.UsageContainer>
