@@ -16,13 +16,8 @@ interface Props {
 }
 
 function MessageCard({ username, date, text, thumbnail }: Props) {
-  const [isActiveRemoveButton, setIsActiveRemoveButton] = useState(false);
   const [isActiveAlarmButton, setIsActiveAlarmButton] = useState(false);
   const [isActiveStarButton, setIsActiveStarButton] = useState(false);
-
-  const handleActiveRemoveButton = () => {
-    setIsActiveRemoveButton((prev) => !prev);
-  };
 
   const handleActiveAlarmButton = () => {
     setIsActiveAlarmButton((prev) => !prev);
@@ -49,18 +44,6 @@ function MessageCard({ username, date, text, thumbnail }: Props) {
       <FlexRow justifyContent="flex-end" alignItems="center" gap="2px">
         <IconButton
           type="button"
-          icon="remove"
-          isActive={true}
-          onClick={handleActiveRemoveButton}
-        >
-          <FlexRow justifyContent="center" alignItems="center" gap="5px">
-            <Styled.ButtonText>삭제</Styled.ButtonText>
-            <RemoveIcon width="12px" height="12px" fill="#ffffff" />
-          </FlexRow>
-        </IconButton>
-
-        <IconButton
-          type="button"
           icon="alarm"
           isActive={isActiveAlarmButton}
           onClick={handleActiveAlarmButton}
@@ -78,7 +61,7 @@ function MessageCard({ username, date, text, thumbnail }: Props) {
           onClick={handleActiveStarButton}
         >
           <FlexRow justifyContent="center" alignItems="center" gap="5px">
-            <Styled.ButtonText>삭제</Styled.ButtonText>
+            <Styled.ButtonText>즐겨찾기</Styled.ButtonText>
             <StarIconUnfill width="12px" height="13.3px" fill="#ffffff" />
           </FlexRow>
         </IconButton>
