@@ -16,7 +16,6 @@ import com.pickpick.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,10 +46,6 @@ public class ChannelSubscriptionService {
         return getChannelResponsesWithIsSubscribed(allChannels, subscribedChannels);
     }
 
-    public List<ChannelSubscription> findAllOrderByViewOrder(final Long memberId) {
-        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId);
-    }
-
     private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
                                                                       final List<Channel> subscribedChannels) {
         return allChannels.stream()
@@ -65,14 +60,8 @@ public class ChannelSubscriptionService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void saveAll(final List<Channel> channels, final Long memberId) {
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
-        channelSubscriptions.deleteAllByMemberId(memberId);
-
-        channelSubscriptions.saveAll(getChannelSubscriptionsByChannel(channels, member));
+    public List<ChannelSubscription> findAllOrderByViewOrder(final Long memberId) {
+        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId);
     }
 
     @Transactional
@@ -99,16 +88,6 @@ public class ChannelSubscriptionService {
         return channelSubscriptions.findFirstByMemberIdOrderByViewOrderDesc(memberId)
                 .map(it -> it.getViewOrder() + ORDER_NEXT)
                 .orElse(ORDER_FIRST);
-    }
-
-    private List<ChannelSubscription> getChannelSubscriptionsByChannel(final List<Channel> channels,
-                                                                       final Member member) {
-        List<ChannelSubscription> subscriptions = new ArrayList<>();
-
-        for (int i = 0; i < channels.size(); i++) {
-            subscriptions.add(new ChannelSubscription(channels.get(i), member, i));
-        }
-        return subscriptions;
     }
 
     @Transactional
