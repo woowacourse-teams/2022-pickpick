@@ -1,13 +1,17 @@
 package com.pickpick.controller.event;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Map;
-import java.util.stream.Stream;
+import com.pickpick.exception.SlackEventNotFoundException;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SlackEventTest {
 
@@ -30,5 +34,12 @@ class SlackEventTest {
                 Arguments.of(Map.of("event", Map.of("type", "message", "subtype", "message_deleted")),
                         SlackEvent.MESSAGE_DELETED)
         );
+    }
+
+    @DisplayName("존재하지 않는 SlackEvent type일 경우 예외 발생")
+    @Test
+    void notExistedSlackEvent() {
+        assertThatThrownBy(() -> SlackEvent.of(Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"))))
+                .isInstanceOf(SlackEventNotFoundException.class);
     }
 }
