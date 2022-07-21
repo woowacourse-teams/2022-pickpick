@@ -3,11 +3,26 @@ import Button from "@src/components/@shared/Button";
 import { FlexColumn } from "@src/@styles/shared";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
-import { useQuery } from "react-query";
-import { getChannels } from "@src/api/channels";
+import { useMutation, useQuery } from "react-query";
+import {
+  getChannels,
+  subscribeChannel,
+  unsubscribeChannel,
+} from "@src/api/channels";
 
 function AddChannel() {
-  const { data } = useQuery("channels", getChannels);
+  const { data, refetch } = useQuery("channels", getChannels);
+  const { mutate: subscribe } = useMutation(subscribeChannel, {
+    onSettled: () => {
+      refetch();
+    },
+  });
+
+  const { mutate: unsubscribe } = useMutation(unsubscribeChannel, {
+    onSettled: () => {
+      refetch();
+    },
+  });
 
   return (
     <Styled.Container>
@@ -16,7 +31,14 @@ function AddChannel() {
       <FlexColumn gap="50px" alignItems="end">
         <Styled.ChannelListContainer>
           {data?.channels.map(({ id, name, isSubscribed }) => (
-            <Button key={id} size="medium" isActive={isSubscribed}>
+            <Button
+              key={id}
+              size="medium"
+              isActive={isSubscribed}
+              onClick={() => {
+                isSubscribed ? unsubscribe(id) : subscribe(id);
+              }}
+            >
               <>#{name}</>
             </Button>
           ))}

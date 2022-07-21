@@ -9,3 +9,23 @@ export const getChannels = async () => {
   });
   return data;
 };
+
+export const subscribeChannel = async (id: string) => {
+  await fetcher.post(
+    "/api/channel-subscription",
+    { id },
+    {
+      headers: {
+        authorization: "Bearer 1",
+      },
+    }
+  );
+};
+
+export const unsubscribeChannel = async (id: string) => {
+  await fetcher.delete(`/api/channel-subscription/${id}`, {
+    headers: {
+      authorization: "Bearer 1",
+    },
+  });
+};
