@@ -1,6 +1,6 @@
 package com.pickpick.exception;
 
-public class SubscriptionDuplicatedException extends RuntimeException {
+public class SubscriptionDuplicatedException extends BadRequestException {
 
     private static final String DEFAULT_MESSAGE = "이미 구독 중인 채널입니다.";
 

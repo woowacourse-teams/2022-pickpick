@@ -2,7 +2,7 @@ package com.pickpick.exception;
 
 import com.pickpick.controller.event.SlackEvent;
 
-public class SlackEventServiceNotFoundException extends RuntimeException {
+public class SlackEventServiceNotFoundException extends NotFoundException {
 
     private static final String DEFAULT_MESSAGE = "Service를 지원하지 않는 SlackEvent입니다.";
 

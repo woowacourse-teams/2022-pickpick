@@ -1,6 +1,6 @@
 package com.pickpick.exception;
 
-public class MemberNotFoundException extends RuntimeException {
+public class MemberNotFoundException extends NotFoundException {
 
     private static final String DEFAULT_MESSAGE = "사용자를 찾지 못했습니다";
 
