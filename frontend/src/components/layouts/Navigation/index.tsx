@@ -11,8 +11,10 @@ import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import Drawer from "@src/components/Drawer";
+import { useLocation } from "react-router-dom";
 
 function Navigation() {
+  const { pathname } = useLocation();
   const [isMenuDrawerOpened, setIsMenuDrawerOpened] = useState(false);
 
   const handleCloseDrawer = () => {
@@ -21,6 +23,15 @@ function Navigation() {
 
   const handleToggleDrawer = () => {
     setIsMenuDrawerOpened((prev) => !prev);
+  };
+
+  const getColorByCurrentPathname = (targetPathname: string) => {
+    const basePathname = pathname.slice(
+      0,
+      pathname.lastIndexOf("/") || pathname.length
+    );
+    if (targetPathname === basePathname) return "#FF9900";
+    return "#121212";
   };
 
   useEffect(() => {
@@ -37,13 +48,25 @@ function Navigation() {
         <MenuIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
       <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
-        <StarIconUnfill width="24px" height="24px" fill="#121212" />
+        <StarIconUnfill
+          width="24px"
+          height="24px"
+          fill={getColorByCurrentPathname(PATH_NAME.BOOKMARK)}
+        />
       </WrapperLink>
       <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
-        <HomeIconUnfill width="24px" height="24px" fill="#121212" />
+        <HomeIconUnfill
+          width="24px"
+          height="24px"
+          fill={getColorByCurrentPathname(PATH_NAME.FEED)}
+        />
       </WrapperLink>
       <WrapperLink to={PATH_NAME.ALARM} kind="bigIcon">
-        <AlarmIconInactive width="24px" height="24px" fill="#121212" />
+        <AlarmIconInactive
+          width="24px"
+          height="24px"
+          fill={getColorByCurrentPathname(PATH_NAME.ALARM)}
+        />
       </WrapperLink>
       <WrapperButton kind="bigIcon">
         <InfoIcon width="24px" height="24px" fill="#121212" />
