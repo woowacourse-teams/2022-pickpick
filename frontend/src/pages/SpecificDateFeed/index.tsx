@@ -15,6 +15,8 @@ function SpecificDateFeed() {
   const { date } = useParams();
   const dateArrayRef = useRef<string[]>([]);
   const wheelPosition = useRef({ default: 0, move: 0, scroll: 0 });
+  const touchPosition = useRef({ start: 0, end: 0 });
+  const scrollPosition = useRef({ default: 0 });
   const flag = useRef(false);
   const isInitialRender = useRef(true);
 
@@ -40,7 +42,10 @@ function SpecificDateFeed() {
       },
       getNextPageParam: ({ isLast, messages }) => {
         if (!isLast) {
-          return { messageId: messages.at(-1)?.id, needPastMessage: true };
+          return {
+            messageId: messages[messages.length - 1]?.id,
+            needPastMessage: true,
+          };
         }
       },
       onSettled: () => {
@@ -69,7 +74,7 @@ function SpecificDateFeed() {
     if (
       wheelPosition.current.move < -10 &&
       !flag.current &&
-      wheelPosition.current.scroll < 200
+      scrollPosition.current.default < 300
     ) {
       hasPreviousPage && fetchPreviousPage();
       flag.current = true;
@@ -84,9 +89,25 @@ function SpecificDateFeed() {
     }
   };
 
+  const onTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchPosition.current.start = event.changedTouches[0].clientY;
+  };
+
+  const onTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchPosition.current.end = event.changedTouches[0].clientY;
+
+    const { start: touchStart, end: touchEnd } = touchPosition.current;
+
+    if (touchStart - touchEnd < -50 && scrollPosition.current.default < 300) {
+      hasPreviousPage && fetchPreviousPage();
+
+      return;
+    }
+  };
+
   useEffect(() => {
     const handleScrollEvent = () => {
-      wheelPosition.current.scroll = window.scrollY;
+      scrollPosition.current.default = window.scrollY;
     };
 
     window.addEventListener("scroll", handleScrollEvent);
@@ -112,7 +133,11 @@ function SpecificDateFeed() {
   }, [date]);
 
   return (
-    <Styled.Container onWheel={onWheel}>
+    <Styled.Container
+      onWheel={onWheel}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
       <NextInfiniteScroll
         callback={fetchNextPage}
