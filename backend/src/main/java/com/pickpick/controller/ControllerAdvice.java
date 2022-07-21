@@ -24,7 +24,7 @@ public class ControllerAdvice {
         log.error("예외 발생: ", e);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public void handleRuntimeException(final RuntimeException e) {
         log.error("예상하지 못한 에러가 발생하였습니다.", e);
