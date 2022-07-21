@@ -4,7 +4,11 @@ public class ChannelNotFoundException extends RuntimeException {
 
     private static final String DEFAULT_MESSAGE = "채널을 찾지 못했습니다";
 
-    public ChannelNotFoundException() {
-        super(DEFAULT_MESSAGE);
+    public ChannelNotFoundException(final Long id) {
+        super(String.format("%s -> channel id: %d", DEFAULT_MESSAGE, id));
+    }
+
+    public ChannelNotFoundException(final String slackId) {
+        super(String.format("%s -> channel slack id: %s", DEFAULT_MESSAGE, slackId));
     }
 }

@@ -68,7 +68,7 @@ public class ChannelSubscriptionService {
     @Transactional
     public void saveAll(final List<Channel> channels, final Long memberId) {
         Member member = members.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         channelSubscriptions.deleteAllByMemberId(memberId);
 
@@ -77,11 +77,12 @@ public class ChannelSubscriptionService {
 
     @Transactional
     public void save(final ChannelSubscriptionRequest subscriptionRequest, final Long memberId) {
-        Channel channel = channels.findById(subscriptionRequest.getId())
-                .orElseThrow(ChannelNotFoundException::new);
+        Long channelId = subscriptionRequest.getId();
+        Channel channel = channels.findById(channelId)
+                .orElseThrow(() -> new ChannelNotFoundException(channelId));
 
         Member member = members.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         validateDuplicatedSubscription(channel, member);
 
@@ -128,10 +129,10 @@ public class ChannelSubscriptionService {
     @Transactional
     public void delete(final Long channelId, final Long memberId) {
         Channel channel = channels.findById(channelId)
-                .orElseThrow(ChannelNotFoundException::new);
+                .orElseThrow(() -> new ChannelNotFoundException(channelId));
 
         Member member = members.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         validateSubscriptionExist(channel, member);
 
