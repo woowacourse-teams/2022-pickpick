@@ -42,6 +42,10 @@ function Navigation() {
     document.body.style.overflowY = "auto";
   }, [isMenuDrawerOpened]);
 
+  useEffect(() => {
+    setIsMenuDrawerOpened(false);
+  }, [pathname]);
+
   return (
     <Styled.Container>
       <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
