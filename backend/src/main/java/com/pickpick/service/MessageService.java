@@ -87,7 +87,7 @@ public class MessageService {
 
         if (Objects.nonNull(messageId)) {
             Message message = messageRepository.findById(messageId)
-                    .orElseThrow(MessageNotFoundException::new);
+                    .orElseThrow(() -> new MessageNotFoundException(messageId));
 
             LocalDateTime messageDate = message.getPostedDate();
 

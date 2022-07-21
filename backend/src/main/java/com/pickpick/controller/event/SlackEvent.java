@@ -3,8 +3,9 @@ package com.pickpick.controller.event;
 import com.pickpick.exception.SlackEventNotFoundException;
 import java.util.Arrays;
 import java.util.Map;
+import lombok.Getter;
 
-
+@Getter
 public enum SlackEvent {
 
     MESSAGE_CREATED("message", ""),
@@ -27,7 +28,7 @@ public enum SlackEvent {
         return Arrays.stream(values())
                 .filter(slackEvent -> isSameType(slackEvent, type, subtype))
                 .findAny()
-                .orElseThrow(SlackEventNotFoundException::new);
+                .orElseThrow(() -> new SlackEventNotFoundException(type, subtype));
     }
 
     private static boolean isSameType(final SlackEvent event, final String type, final String subtype) {

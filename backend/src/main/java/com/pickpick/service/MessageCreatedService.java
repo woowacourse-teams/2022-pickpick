@@ -39,11 +39,13 @@ public class MessageCreatedService implements SlackEventService {
     public void execute(final Map<String, Object> requestBody) {
         MessageDto messageDto = convert(requestBody);
 
-        Member member = members.findBySlackId(messageDto.getMemberSlackId())
-                .orElseThrow(MemberNotFoundException::new);
+        String memberSlackId = messageDto.getMemberSlackId();
+        Member member = members.findBySlackId(memberSlackId)
+                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
 
-        Channel channel = channels.findBySlackId(messageDto.getChannelSlackId())
-                .orElseThrow(ChannelNotFoundException::new);
+        String channelSlackId = messageDto.getChannelSlackId();
+        Channel channel = channels.findBySlackId(channelSlackId)
+                .orElseThrow(() -> new ChannelNotFoundException(channelSlackId));
 
         messages.save(messageDto.toEntity(member, channel));
     }

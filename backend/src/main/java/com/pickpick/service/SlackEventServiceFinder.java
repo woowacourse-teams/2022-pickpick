@@ -1,10 +1,9 @@
 package com.pickpick.service;
 
 import com.pickpick.controller.event.SlackEvent;
-import com.pickpick.exception.SlackEventNotFoundException;
-import org.springframework.stereotype.Component;
-
+import com.pickpick.exception.SlackEventServiceNotFoundException;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SlackEventServiceFinder {
@@ -19,6 +18,6 @@ public class SlackEventServiceFinder {
         return slackEventServices.stream()
                 .filter(service -> service.isSameSlackEvent(slackEvent))
                 .findAny()
-                .orElseThrow(SlackEventNotFoundException::new);
+                .orElseThrow(() -> new SlackEventServiceNotFoundException(slackEvent));
     }
 }
