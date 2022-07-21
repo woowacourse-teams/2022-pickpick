@@ -13,9 +13,6 @@ require("dotenv").config({ path: join(__dirname, "./.env.development") });
 module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
-  devServer: {
-    historyApiFallback: true,
-  },
   plugins: [
     new CleanWebpackPlugin(),
     new ReactRefreshWebpackPlugin(),
