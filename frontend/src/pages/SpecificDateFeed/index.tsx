@@ -1,5 +1,5 @@
 import * as Styled from "../Feed/style";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NextInfiniteScroll from "@src/components/@shared/NextInfiniteScroll";
 import { useInfiniteQuery } from "react-query";
 import { ResponseMessages } from "@src/@types/shared";
@@ -8,17 +8,17 @@ import MessageCardSkeleton from "@src/components/MessageCardSkeleton";
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import Dropdown from "@src/components/Dropdown";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import SearchInput from "@src/components/SearchInput";
 
 function SpecificDateFeed() {
+  const { key: queryKey } = useLocation();
   const { date } = useParams();
   const dateArrayRef = useRef<string[]>([]);
   const wheelPosition = useRef({ default: 0, move: 0, scroll: 0 });
   const touchPosition = useRef({ start: 0, end: 0 });
   const scrollPosition = useRef({ default: 0 });
   const flag = useRef(false);
-  const isInitialRender = useRef(true);
 
   const {
     data,
@@ -28,9 +28,8 @@ function SpecificDateFeed() {
     hasPreviousPage,
     fetchNextPage,
     hasNextPage,
-    refetch,
   } = useInfiniteQuery<ResponseMessages>(
-    ["dateMessages"],
+    ["dateMessages", queryKey],
     getMessages({
       date,
     }),
@@ -120,17 +119,7 @@ function SpecificDateFeed() {
       top: 0,
       behavior: "smooth",
     });
-  }, [date]);
-
-  useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-
-      return;
-    }
-
-    refetch();
-  }, [date]);
+  }, [queryKey]);
 
   return (
     <Styled.Container
