@@ -6,7 +6,7 @@ import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
-import com.pickpick.exception.SubscriptionDuplicatedException;
+import com.pickpick.exception.SubscriptionDuplicateException;
 import com.pickpick.exception.SubscriptionNotExistException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class ChannelSubscriptionServiceTest {
 
+    private static final long NOT_EXISTED_CHANNEL_ID = 1L;
     @Autowired
     private ChannelSubscriptionService channelSubscriptionService;
 
@@ -40,10 +41,7 @@ class ChannelSubscriptionServiceTest {
         // given
         Member member = saveMember();
         Channel channel = saveChannel("slackId", "채널 이름");
-        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
-
-        // when
-        channelSubscriptionService.save(request, member.getId());
+        subscribeChannel(member, channel);
 
         // then
         assertThat(channelSubscriptionService.findAllOrderByViewOrder(member.getId())).hasSize(1);
@@ -52,9 +50,11 @@ class ChannelSubscriptionServiceTest {
     @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
     @Test
     void saveByNotExistedChannelId() {
+        // given
         Member member = saveMember();
-        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(1L);
+        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(NOT_EXISTED_CHANNEL_ID);
 
+        // when & then
         assertThatThrownBy(() -> channelSubscriptionService.save(request, member.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
@@ -62,38 +62,35 @@ class ChannelSubscriptionServiceTest {
     @DisplayName("이미 구독한 채널을 다시 구독 요청 시 에러 발생")
     @Test
     void saveAlreadySubscribedChannel() {
+        // given
         Member member = saveMember();
         Channel channel = saveChannel("slackId", "채널 이름");
-        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
-        channelSubscriptionService.save(request, member.getId());
+        subscribeChannel(member, channel);
 
-        assertThatThrownBy(() -> channelSubscriptionService.save(request, member.getId()))
-                .isInstanceOf(SubscriptionDuplicatedException.class);
+        // when & then
+        assertThatThrownBy(() -> subscribeChannel(member, channel))
+                .isInstanceOf(SubscriptionDuplicateException.class);
     }
 
     @DisplayName("구독한 채널 조회 시 view order 순서대로 출력")
     @Test
     void subscribeChannelOrderIsLast() {
+        // given
         Member member = saveMember();
         Channel channel1 = saveChannel("slackId1", "채널 이름1");
         Channel channel2 = saveChannel("slackId2", "채널 이름2");
         Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        
+        subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
 
-        ChannelSubscriptionRequest request1 = new ChannelSubscriptionRequest(channel1.getId());
-        ChannelSubscriptionRequest request2 = new ChannelSubscriptionRequest(channel2.getId());
-        ChannelSubscriptionRequest request3 = new ChannelSubscriptionRequest(channel3.getId());
-
-        channelSubscriptionService.save(request3, member.getId());
-        channelSubscriptionService.save(request1, member.getId());
-        channelSubscriptionService.save(request2, member.getId());
-
+        // when
         List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(member.getId());
 
-        assertThat(channelSubscriptions.get(0).getChannel()).isEqualTo(channel3);
-        assertThat(channelSubscriptions.get(1).getChannel()).isEqualTo(channel1);
-        assertThat(channelSubscriptions.get(2).getChannel()).isEqualTo(channel2);
+        // then
+        assertThat(channelSubscriptions).extracting("channel")
+                .containsExactly(channel3, channel1, channel2);
     }
-
+    
     @DisplayName("채널 구독 순서를 변경하기")
     @Test
     void updateChannelSubscriptionOrder() {
@@ -103,13 +100,7 @@ class ChannelSubscriptionServiceTest {
         Channel channel2 = saveChannel("slackId2", "채널 이름2");
         Channel channel3 = saveChannel("slackId3", "채널 이름3");
 
-        ChannelSubscriptionRequest request1 = new ChannelSubscriptionRequest(channel1.getId());
-        ChannelSubscriptionRequest request2 = new ChannelSubscriptionRequest(channel2.getId());
-        ChannelSubscriptionRequest request3 = new ChannelSubscriptionRequest(channel3.getId());
-
-        channelSubscriptionService.save(request3, member.getId());
-        channelSubscriptionService.save(request1, member.getId());
-        channelSubscriptionService.save(request2, member.getId());
+        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
 
         // when
         List<ChannelOrderRequest> request = List.of(
@@ -119,23 +110,23 @@ class ChannelSubscriptionServiceTest {
         );
         channelSubscriptionService.updateOrders(request, member.getId());
 
-        //then
         List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(member.getId());
 
-        assertThat(channelSubscriptions.get(0).getChannel()).isEqualTo(channel1);
-        assertThat(channelSubscriptions.get(1).getChannel()).isEqualTo(channel2);
-        assertThat(channelSubscriptions.get(2).getChannel()).isEqualTo(channel3);
+        //then
+        assertThat(channelSubscriptions).extracting("channel")
+                        .containsExactly(channel1, channel2, channel3);
     }
 
     @DisplayName("구독 중이 아닌 채널 구독 취소시 예외 발생")
     @Test
     void unsubscribeInvalidChannelSubscription() {
+        // given
         Member member = saveMember();
         Channel channel = saveChannel("slackId", "채널 이름");
-        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
-        channelSubscriptionService.save(request, member.getId());
+        subscribeChannel(member, channel);
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
+        // when & then
         assertThatThrownBy(() -> channelSubscriptionService.delete(channel.getId(), member.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
@@ -143,9 +134,11 @@ class ChannelSubscriptionServiceTest {
     @DisplayName("존재하지 않는 채널 아이디로 구독 취소시 예외 발생")
     @Test
     void unsubscribeNotExistedChannel() {
+        // given
         Member member = saveMember();
 
-        assertThatThrownBy(() -> channelSubscriptionService.delete(1L, member.getId()))
+        // when & then
+        assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, member.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
 
@@ -155,14 +148,17 @@ class ChannelSubscriptionServiceTest {
         // given
         Member member = saveMember();
         Channel channel = saveChannel("slackId", "채널 이름");
-        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
-        channelSubscriptionService.save(request, member.getId());
+        subscribeChannel(member, channel);
 
         // when
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
         // then
-        assertThat(channelSubscriptionService.findAll(member.getId()).get(0).isSubscribed()).isFalse();
+        boolean isSubscribed = channelSubscriptionService.findAll(member.getId())
+                .get(0)
+                .isSubscribed();
+
+        assertThat(isSubscribed).isFalse();
     }
 
     private Member saveMember() {
@@ -175,5 +171,16 @@ class ChannelSubscriptionServiceTest {
         Channel channel = new Channel(slackId, channelName);
         channels.save(channel);
         return channel;
+    }
+
+    private void subscribeChannel(Member member, Channel channel) {
+        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
+        channelSubscriptionService.save(request, member.getId());
+    }
+
+    private void subscribeChannelsInListOrder(Member member, List<Channel> channels) {
+        for (Channel channel : channels) {
+            subscribeChannel(member, channel);
+        }
     }
 }

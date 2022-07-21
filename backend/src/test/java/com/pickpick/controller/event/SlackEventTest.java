@@ -39,7 +39,11 @@ class SlackEventTest {
     @DisplayName("존재하지 않는 SlackEvent type일 경우 예외 발생")
     @Test
     void notExistedSlackEvent() {
-        assertThatThrownBy(() -> SlackEvent.of(Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"))))
+        // given
+        Map<String, Object> request = Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"));
+
+        // when & then
+        assertThatThrownBy(() -> SlackEvent.of(request))
                 .isInstanceOf(SlackEventNotFoundException.class);
     }
 }

@@ -8,7 +8,7 @@ import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.exception.SubscriptionDuplicatedException;
+import com.pickpick.exception.SubscriptionDuplicateException;
 import com.pickpick.exception.SubscriptionNotExistException;
 import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.ChannelSubscriptionRepository;
@@ -80,7 +80,7 @@ public class ChannelSubscriptionService {
 
     private void validateDuplicatedSubscription(final Channel channel, final Member member) {
         if (channelSubscriptions.existsByChannelAndMember(channel, member)) {
-            throw new SubscriptionDuplicatedException(channel.getId());
+            throw new SubscriptionDuplicateException(channel.getId());
         }
     }
 
