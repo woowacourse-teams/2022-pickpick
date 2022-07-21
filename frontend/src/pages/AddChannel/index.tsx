@@ -1,5 +1,8 @@
 import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
+import { FlexColumn } from "@src/@styles/shared";
+import WrapperLink from "@src/components/@shared/WrapperLink";
+import { PATH_NAME } from "@src/@constants";
 
 const channels = [
   { id: 1, name: "4기-공지사항", isSubscribed: true },
@@ -19,13 +22,16 @@ function AddChannel() {
     <Styled.Container>
       <h1>채널 추가</h1>
       <p>추가하고 싶으신 채널을 선택해주세요</p>
-      <Styled.ChannelListContainer>
-        {channels.map(({ id, name, isSubscribed }) => (
-          <Button key={id} size="medium" isActive={isSubscribed}>
-            <>#{name}</>
-          </Button>
-        ))}
-      </Styled.ChannelListContainer>
+      <FlexColumn gap="50px" alignItems="end">
+        <Styled.ChannelListContainer>
+          {channels.map(({ id, name, isSubscribed }) => (
+            <Button key={id} size="medium" isActive={isSubscribed}>
+              <>#{name}</>
+            </Button>
+          ))}
+        </Styled.ChannelListContainer>
+        <WrapperLink to={PATH_NAME.FEED}>다음</WrapperLink>
+      </FlexColumn>
     </Styled.Container>
   );
 }
