@@ -1,5 +1,6 @@
 package com.pickpick.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ class RestDocsTestSupport {
 
     @Autowired
     private ResourceLoader resourceLoader;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp(

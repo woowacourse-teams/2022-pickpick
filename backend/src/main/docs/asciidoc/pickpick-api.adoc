@@ -28,8 +28,26 @@ bomi.jang
 |===
 
 = 채널 API
-== 채널 구독 API
+== 채널 API
 === 전체 채널 조회 API
 
 operation::channel-subscription-controller-test/find-all[snippets='curl-request,http-request,http-response']
 
+
+== 채널 구독 API
+=== 구독중인 채널 조회 API
+
+operation::channel-subscription-controller-test/find-all-subscribed-channel[snippets='curl-request,http-request,http-response']
+
+=== 채널 구독 API
+
+operation::channel-subscription-controller-test/subscribe-channel[snippets='curl-request,http-request,http-response']
+
+=== 채널 구독 취소 API
+
+operation::channel-subscription-controller-test/unsubscribe-channel[snippets='curl-request,http-request,http-response']
+
+
+=== 구독 채널 순서 변경 API
+
+operation::channel-subscription-controller-test/update-order-of-subscribed-channel[snippets='curl-request,http-request,http-response']
