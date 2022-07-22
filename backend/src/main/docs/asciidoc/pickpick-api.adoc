@@ -31,7 +31,7 @@ bomi.jang
 == 채널 API
 === 전체 채널 조회 API
 
-operation::channel-subscription-controller-test/find-all[snippets='curl-request,http-request,http-response']
+operation::channel-controller-test/find-all[snippets='curl-request,http-request,http-response']
 
 
 == 채널 구독 API
