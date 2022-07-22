@@ -9,6 +9,7 @@ import com.pickpick.exception.MessageNotFoundException;
 import com.pickpick.repository.MessageRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -45,16 +46,15 @@ public class MessageService {
 
     private List<Message> findMessages(final SlackMessageRequest slackMessageRequest) {
         boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
-        BooleanBuilder builder = createFindMessagesCondition(slackMessageRequest);
+        int messageCount = slackMessageRequest.getMessageCount();
 
         List<Message> foundMessages = jpaQueryFactory
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
-                .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
-                .where(builder)
-                .orderBy(getTimeCondition(needPastMessage))
-                .limit(slackMessageRequest.getMessageCount())
+                .where(meetAllConditions(slackMessageRequest))
+                .orderBy(dateAscOrDescByNeedPastMessage(needPastMessage))
+                .limit(messageCount)
                 .fetch();
 
         if (needPastMessage) {
@@ -66,57 +66,68 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
-    private OrderSpecifier<LocalDateTime> getTimeCondition(final boolean needPastMessage) {
+    private BooleanExpression meetAllConditions(final SlackMessageRequest request) {
+        return channelIdsIn(request.getChannelIds())
+                .and(textContains(request.getKeyword()))
+                .and(messageIdOrDateCondition(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
+    }
+
+    private BooleanExpression channelIdsIn(final List<Long> channelIds) {
+        return QMessage.message.channel.id.in(channelIds);
+    }
+
+    private BooleanExpression textContains(final String keyword) {
+        if (StringUtils.hasText(keyword)) {
+            return QMessage.message.text.contains(keyword);
+        }
+
+        return null;
+    }
+
+    private Predicate messageIdOrDateCondition(final Long messageId,
+                                               final LocalDateTime date,
+                                               final boolean needPastMessage) {
+        if (Objects.nonNull(messageId)) {
+            return messageIdCondition(messageId, needPastMessage);
+        }
+
+        return dateCondition(date, needPastMessage);
+    }
+
+
+    private Predicate messageIdCondition(final Long messageId, final boolean needPastMessage) {
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new MessageNotFoundException(messageId));
+
+        LocalDateTime messageDate = message.getPostedDate();
+
+        if (needPastMessage) {
+            return QMessage.message.postedDate.before(messageDate);
+        }
+
+        return QMessage.message.postedDate.after(messageDate);
+    }
+
+    private Predicate dateCondition(final LocalDateTime date, final boolean needPastMessage) {
+        if (Objects.isNull(date)) {
+            return null;
+        }
+
+        if (needPastMessage) {
+            return QMessage.message.postedDate.eq(date)
+                    .or(QMessage.message.postedDate.before(date));
+        }
+
+        return QMessage.message.postedDate.eq(date)
+                .or(QMessage.message.postedDate.after(date));
+    }
+
+    private OrderSpecifier<LocalDateTime> dateAscOrDescByNeedPastMessage(final boolean needPastMessage) {
         if (needPastMessage) {
             return QMessage.message.postedDate.desc();
         }
 
         return QMessage.message.postedDate.asc();
-    }
-
-    private BooleanBuilder createFindMessagesCondition(final SlackMessageRequest slackMessageRequest) {
-        BooleanBuilder builder = new BooleanBuilder();
-
-        String keyword = slackMessageRequest.getKeyword();
-        if (StringUtils.hasText(keyword)) {
-            builder.and(QMessage.message.text.contains(keyword));
-        }
-
-        Long messageId = slackMessageRequest.getMessageId();
-        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
-
-        if (Objects.nonNull(messageId)) {
-            Message message = messageRepository.findById(messageId)
-                    .orElseThrow(() -> new MessageNotFoundException(messageId));
-
-            LocalDateTime messageDate = message.getPostedDate();
-
-            if (needPastMessage) {
-                builder.and(QMessage.message.postedDate.before(messageDate));
-            } else {
-                builder.and(QMessage.message.postedDate.after(messageDate));
-            }
-
-            return builder;
-        }
-
-        LocalDateTime date = slackMessageRequest.getDate();
-        if (Objects.nonNull(date)) {
-            if (needPastMessage) {
-                builder.and(
-                        QMessage.message.postedDate.eq(date)
-                                .or(QMessage.message.postedDate.before(date))
-                );
-                builder.and(QMessage.message.postedDate.before(date));
-            } else {
-                builder.and(
-                        QMessage.message.postedDate.eq(date)
-                                .or(QMessage.message.postedDate.after(date))
-                );
-            }
-        }
-
-        return builder;
     }
 
     private boolean isLast(final SlackMessageRequest slackMessageRequest, final List<Message> messages) {
@@ -130,7 +141,7 @@ public class MessageService {
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QMessage.message)
-                .where(QMessage.message.channel.id.in(slackMessageRequest.getChannelIds()))
+                .where(channelIdsIn(slackMessageRequest.getChannelIds()))
                 .where(isLastExpression(targetMessage, slackMessageRequest.isNeedPastMessage()))
                 .where(builder)
                 .fetchFirst();
