@@ -9,6 +9,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -32,6 +34,14 @@ class MessageControllerTest extends RestDocsTestSupport {
                 )
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
+                                requestParameters(
+                                        parameterWithName("keyword").optional().description("검색할 키워드"),
+                                        parameterWithName("date").optional().description("검색 기준 날짜"),
+                                        parameterWithName("channelIds").optional().description("검색할 채널 아이디(복수 가능)"),
+                                        parameterWithName("needPastMessage").optional().description("불러올 메시지가 더 존재하는지"),
+                                        parameterWithName("messageId").optional().description("메시지 아이디"),
+                                        parameterWithName("messageCount").optional().description("한 번에 불러올 메시지 개수(default:20)")
+                                ),
                                 responseFields(
                                         fieldWithPath("messages.[].id").type(JsonFieldType.NUMBER).description("메시지 아이디"),
                                         fieldWithPath("messages.[].memberId").type(JsonFieldType.NUMBER).description("유저 아이디"),

@@ -27,32 +27,32 @@ bomi.jang
 | `????`
 |===
 
-= 채널 API
+= 채널
 == 채널 API
 === 전체 채널 조회 API
 
-operation::channel-controller-test/find-all[snippets='http-request,http-response,response-fields']
+operation::channel-controller-test/find-all[snippets='http-request,request-headers,http-response,response-fields']
 
 
 == 채널 구독 API
 === 구독중인 채널 조회 API
 
-operation::channel-subscription-controller-test/find-all-subscribed-channel[snippets='http-request,http-response,response-fields']
+operation::channel-subscription-controller-test/find-all-subscribed-channel[snippets='http-request,request-headers,http-response,response-fields']
 
 === 채널 구독 API
 
-operation::channel-subscription-controller-test/subscribe-channel[snippets='http-request,http-response']
+operation::channel-subscription-controller-test/subscribe-channel[snippets='http-request,request-headers,request-fields,http-response']
 
 === 채널 구독 취소 API
 
-operation::channel-subscription-controller-test/unsubscribe-channel[snippets='http-request,http-response']
+operation::channel-subscription-controller-test/unsubscribe-channel[snippets='http-request,request-headers,path-parameters,http-response']
 
 
 === 구독 채널 순서 변경 API
 
-operation::channel-subscription-controller-test/update-order-of-subscribed-channel[snippets='http-request,http-response']
+operation::channel-subscription-controller-test/update-order-of-subscribed-channel[snippets='http-request,request-headers,request-fields,http-response']
 
-= 메시지 API
+= 메시지
 == 메시지 API
 === 각 검색조건을 포함한 메시지 조회 API
-operation::message-controller-test/find-all-message-with-condition[snippets='http-request,http-response,response-fields']
+operation::message-controller-test/find-all-message-with-condition[snippets='http-request,request-parameters,http-response,response-fields']
