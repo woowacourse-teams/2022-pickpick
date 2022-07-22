@@ -1,0 +1,35 @@
+= PickPick(a.k.a 줍줍) API Document
+bomi.jang
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[introduction]]
+== 소개
+줍줍 API 문서 입니다.
+
+[[introduction]]
+== 서비스환경
+해당 API서비스의 서버 도메인 환경은 다음과 같습니다.
+
+
+== Domain
+|===
+| 환경 | URI
+
+| 개발서버
+| `????`
+
+| 운영서버
+| `????`
+|===
+
+= 채널 API
+== 채널 구독 API
+=== 전체 채널 조회 API
+
+operation::channel-subscription-controller-test/find-all[snippets='curl-request,http-request,http-response']
+
