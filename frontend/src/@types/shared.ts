@@ -15,3 +15,13 @@ export interface ResponseMessages {
   isLast: boolean;
   nextPage: number;
 }
+
+export interface Channel {
+  id: string;
+  name: string;
+  isSubscribed: boolean;
+}
+
+export interface ResponseChannels {
+  channels: Channel[];
+}

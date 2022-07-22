@@ -3,29 +3,42 @@ import Button from "@src/components/@shared/Button";
 import { FlexColumn } from "@src/@styles/shared";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
-
-const channels = [
-  { id: 1, name: "4기-공지사항", isSubscribed: true },
-  { id: 2, name: "4기-잡담", isSubscribed: true },
-  { id: 3, name: "전체-잡담", isSubscribed: true },
-  { id: 4, name: "전체-공지사항", isSubscribed: true },
-  { id: 5, name: "학습블로그", isSubscribed: true },
-  { id: 6, name: "4기-공지사항", isSubscribed: true },
-  { id: 7, name: "be-4기-공지사항", isSubscribed: false },
-  { id: 8, name: "be-4기-잡담", isSubscribed: false },
-  { id: 9, name: "fe-4기-공지사항", isSubscribed: false },
-  { id: 10, name: "fe-4기-잡담", isSubscribed: false },
-];
+import { useMutation, useQuery } from "react-query";
+import {
+  getChannels,
+  subscribeChannel,
+  unsubscribeChannel,
+} from "@src/api/channels";
 
 function AddChannel() {
+  const { data, refetch } = useQuery("channels", getChannels);
+  const { mutate: subscribe } = useMutation(subscribeChannel, {
+    onSettled: () => {
+      refetch();
+    },
+  });
+
+  const { mutate: unsubscribe } = useMutation(unsubscribeChannel, {
+    onSettled: () => {
+      refetch();
+    },
+  });
+
   return (
     <Styled.Container>
       <h1>채널 추가</h1>
       <p>추가하고 싶으신 채널을 선택해주세요</p>
       <FlexColumn gap="50px" alignItems="end">
         <Styled.ChannelListContainer>
-          {channels.map(({ id, name, isSubscribed }) => (
-            <Button key={id} size="medium" isActive={isSubscribed}>
+          {data?.channels.map(({ id, name, isSubscribed }) => (
+            <Button
+              key={id}
+              size="medium"
+              isActive={isSubscribed}
+              onClick={() => {
+                isSubscribed ? unsubscribe(id) : subscribe(id);
+              }}
+            >
               <>#{name}</>
             </Button>
           ))}
