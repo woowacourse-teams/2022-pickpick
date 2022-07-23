@@ -98,4 +98,16 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         return putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
     }
+
+//    @AfterEach
+//    void unsubscribe() {
+//        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+//        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
+//
+//        channelIdToSubscribe1 = unsubscribedChannelIds.get(0);
+//        channelIdToSubscribe2 = unsubscribedChannelIds.get(1);
+//
+//        구독_요청(channelIdToSubscribe1);
+//        구독_요청(channelIdToSubscribe2);
+//    }
 }

@@ -20,7 +20,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Sql({"/truncate.sql", "/channel.sql"})
+@Sql({"/truncate.sql", "/channel.sql", "/channel-subscription.sql"})
 class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
 
     @DisplayName("멤버의 구독 중인 채널을 조회한다.")

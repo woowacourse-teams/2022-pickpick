@@ -9,9 +9,3 @@ VALUES
 
 insert into member (id, slack_id, thumbnail_url, username)
 values (2, 'U03MC231', 'https://avatars.slack-edge.com/2022-07-02/3764274541009_4d1fa8d13242781486fa_512.png', '써머');
-
-INSERT INTO `channel_subscription` (`id`, `view_order`, `channel_id`, `member_id`)
-VALUES
-    (1, 1, 2, 2),
-    (2, 2, 5, 2);
-

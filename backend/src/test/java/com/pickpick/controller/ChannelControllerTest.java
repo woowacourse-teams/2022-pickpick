@@ -13,7 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Sql({"/truncate.sql", "/channel.sql"})
+@Sql({"/truncate.sql", "/channel.sql", "/channel-subscription.sql"})
 class ChannelControllerTest extends RestDocsTestSupport {
 
     @DisplayName("구독 여부를 포함하여 채널을 조회한다.")
