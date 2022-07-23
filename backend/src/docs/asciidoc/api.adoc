@@ -1,5 +1,5 @@
 = PickPick(a.k.a 줍줍) API Document
-bomi.jang
+pickpick team
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -55,4 +55,6 @@ operation::channel-subscription-controller-test/update-order-of-subscribed-chann
 = 메시지
 == 메시지 API
 === 각 검색조건을 포함한 메시지 조회 API
+자세한 예시는 https://github.com/woowacourse-teams/2022-pickpick/wiki/메시지-조회-API-사용법에서 확인
+
 operation::message-controller-test/find-all-message-with-condition[snippets='http-request,request-parameters,http-response,response-fields']
