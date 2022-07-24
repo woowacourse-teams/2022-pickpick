@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -25,21 +24,18 @@ import org.springframework.util.StringUtils;
 @Service
 public class MessageService {
 
-    protected static final int FIRST_INDEX = 0;
-    protected static final int ONE_TO_GET_LAST_INDEX = 1;
-    
-    private final EntityManager entityManager;
-    private final MessageRepository messageRepository;
-    private JPAQueryFactory jpaQueryFactory;
+    private static final int FIRST_INDEX = 0;
+    private static final int ONE_TO_GET_LAST_INDEX = 1;
 
-    public MessageService(final EntityManager entityManager, final MessageRepository messageRepository) {
-        this.entityManager = entityManager;
+    private final MessageRepository messageRepository;
+    private final JPAQueryFactory jpaQueryFactory;
+
+    public MessageService(final MessageRepository messageRepository, final JPAQueryFactory jpaQueryFactory) {
         this.messageRepository = messageRepository;
+        this.jpaQueryFactory = jpaQueryFactory;
     }
 
     public SlackMessageResponses find(final SlackMessageRequest slackMessageRequest) {
-        jpaQueryFactory = new JPAQueryFactory(entityManager);
-
         List<Message> messages = findMessages(slackMessageRequest);
         boolean isLast = isLast(slackMessageRequest, messages);
 
