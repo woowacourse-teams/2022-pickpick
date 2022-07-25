@@ -56,7 +56,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         "channelIds가 5이고, needPastMessage가 true이고 date가 존재할 경우, 5번 채널의 해당 날짜 보다 과거 데이터 20개를 시간 내림차순으로 응답해야 한다.",
                         createQueryParams("", "2022-07-13T19:21:55", "5", "true", "", ""),
                         true,
-                        createExpectedMessageIds(5L, 1L)),
+                        createExpectedMessageIds(6L, 1L)),
                 Arguments.of(
                         "channelIds가 5이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 해당 메시지 보다 과거 데이터 20개를 시간 내림차순으로 응답해야 한다.",
                         createQueryParams("", "", "5", "true", "6", ""),
