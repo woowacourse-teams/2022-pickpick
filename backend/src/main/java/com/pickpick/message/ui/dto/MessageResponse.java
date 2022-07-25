@@ -1,12 +1,12 @@
-package com.pickpick.controller.dto;
+package com.pickpick.message.ui.dto;
 
-import com.pickpick.entity.Message;
 import com.pickpick.member.domain.Member;
+import com.pickpick.message.domain.Message;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class SlackMessageResponse {
+public class MessageResponse {
 
     private Long id;
     private Long memberId;
@@ -16,16 +16,16 @@ public class SlackMessageResponse {
     private LocalDateTime postedDate;
     private LocalDateTime modifiedDate;
 
-    private SlackMessageResponse() {
+    private MessageResponse() {
     }
 
-    public SlackMessageResponse(final Long id,
-                                final Long memberId,
-                                final String username,
-                                final String userThumbnail,
-                                final String text,
-                                final LocalDateTime postedDate,
-                                final LocalDateTime modifiedDate) {
+    public MessageResponse(final Long id,
+                           final Long memberId,
+                           final String username,
+                           final String userThumbnail,
+                           final String text,
+                           final LocalDateTime postedDate,
+                           final LocalDateTime modifiedDate) {
         this.id = id;
         this.memberId = memberId;
         this.username = username;
@@ -35,10 +35,10 @@ public class SlackMessageResponse {
         this.modifiedDate = modifiedDate;
     }
 
-    public static SlackMessageResponse from(final Message message) {
+    public static MessageResponse from(final Message message) {
         final Member member = message.getMember();
 
-        return new SlackMessageResponse(
+        return new MessageResponse(
                 message.getId(),
                 member.getId(),
                 member.getUsername(),

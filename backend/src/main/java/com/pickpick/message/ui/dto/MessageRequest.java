@@ -1,4 +1,4 @@
-package com.pickpick.controller.dto;
+package com.pickpick.message.ui.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,7 +7,7 @@ import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 @Getter
-public class SlackMessageRequest {
+public class MessageRequest {
 
     private String keyword;
     private LocalDateTime date;
@@ -16,8 +16,8 @@ public class SlackMessageRequest {
     private Long messageId;
     private int messageCount = 20;
 
-    public SlackMessageRequest(final String keyword, final String date, final List<Long> channelIds,
-                               final Boolean needPastMessage, final Long messageId, final Integer messageCount) {
+    public MessageRequest(final String keyword, final String date, final List<Long> channelIds,
+                          final Boolean needPastMessage, final Long messageId, final Integer messageCount) {
         if (StringUtils.hasText(keyword)) {
             this.keyword = keyword;
         }

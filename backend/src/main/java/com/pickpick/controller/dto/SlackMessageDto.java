@@ -1,14 +1,14 @@
 package com.pickpick.controller.dto;
 
 import com.pickpick.channel.domain.Channel;
-import com.pickpick.entity.Message;
 import com.pickpick.member.domain.Member;
+import com.pickpick.message.domain.Message;
 import com.pickpick.utils.TimeUtils;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class MessageDto {
+public class SlackMessageDto {
 
     private String memberSlackId;
     private String slackId;
@@ -17,8 +17,8 @@ public class MessageDto {
     private String text;
     private String channelSlackId;
 
-    public MessageDto(final String memberSlackId, final String slackId, final String postedDate,
-                      final String modifiedDate, final String text, final String channelSlackId) {
+    public SlackMessageDto(final String memberSlackId, final String slackId, final String postedDate,
+                           final String modifiedDate, final String text, final String channelSlackId) {
         this.memberSlackId = memberSlackId;
         this.slackId = slackId;
         this.postedDate = TimeUtils.toLocalDateTime(postedDate);

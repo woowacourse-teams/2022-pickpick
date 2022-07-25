@@ -1,8 +1,8 @@
-package com.pickpick.controller;
+package com.pickpick.message.ui;
 
-import com.pickpick.controller.dto.SlackMessageRequest;
-import com.pickpick.controller.dto.SlackMessageResponses;
-import com.pickpick.service.MessageService;
+import com.pickpick.message.application.MessageService;
+import com.pickpick.message.ui.dto.MessageRequest;
+import com.pickpick.message.ui.dto.MessageResponses;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ public class MessageController {
     }
 
     @GetMapping
-    public SlackMessageResponses findSlackMessages(@Valid SlackMessageRequest slackMessageRequest) {
-        return messageService.find(slackMessageRequest);
+    public MessageResponses findSlackMessages(@Valid MessageRequest messageRequest) {
+        return messageService.find(messageRequest);
     }
 }

@@ -1,10 +1,10 @@
 package com.pickpick.service;
 
-import com.pickpick.controller.dto.MessageDto;
+import com.pickpick.controller.dto.SlackMessageDto;
 import com.pickpick.controller.event.SlackEvent;
-import com.pickpick.entity.Message;
 import com.pickpick.exception.MessageNotFoundException;
-import com.pickpick.repository.MessageRepository;
+import com.pickpick.message.domain.Message;
+import com.pickpick.message.domain.MessageRepository;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,19 +29,19 @@ public class MessageChangedService implements SlackEventService {
 
     @Override
     public void execute(final Map<String, Object> requestBody) {
-        MessageDto messageDto = convert(requestBody);
+        SlackMessageDto slackMessageDto = convert(requestBody);
 
-        Message message = messages.findBySlackId(messageDto.getSlackId())
-                .orElseThrow(() -> new MessageNotFoundException(messageDto.getSlackId()));
+        Message message = messages.findBySlackId(slackMessageDto.getSlackId())
+                .orElseThrow(() -> new MessageNotFoundException(slackMessageDto.getSlackId()));
 
-        message.changeText(messageDto.getText(), messageDto.getModifiedDate());
+        message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate());
     }
 
-    private MessageDto convert(final Map<String, Object> requestBody) {
+    private SlackMessageDto convert(final Map<String, Object> requestBody) {
         Map<String, Object> event = (Map) requestBody.get(EVENT);
         Map<String, Object> message = (Map) event.get(MESSAGE);
 
-        return new MessageDto(
+        return new SlackMessageDto(
                 (String) message.get(USER),
                 (String) message.get(CLIENT_MSG_ID),
                 (String) message.get(TIMESTAMP),

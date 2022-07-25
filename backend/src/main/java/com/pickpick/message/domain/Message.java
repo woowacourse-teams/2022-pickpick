@@ -1,4 +1,4 @@
-package com.pickpick.entity;
+package com.pickpick.message.domain;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;

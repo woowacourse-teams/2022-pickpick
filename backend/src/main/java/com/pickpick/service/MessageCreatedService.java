@@ -2,13 +2,13 @@ package com.pickpick.service;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.controller.dto.MessageDto;
+import com.pickpick.controller.dto.SlackMessageDto;
 import com.pickpick.controller.event.SlackEvent;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.repository.MessageRepository;
+import com.pickpick.message.domain.MessageRepository;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,23 +37,23 @@ public class MessageCreatedService implements SlackEventService {
 
     @Override
     public void execute(final Map<String, Object> requestBody) {
-        MessageDto messageDto = convert(requestBody);
+        SlackMessageDto slackMessageDto = convert(requestBody);
 
-        String memberSlackId = messageDto.getMemberSlackId();
+        String memberSlackId = slackMessageDto.getMemberSlackId();
         Member member = members.findBySlackId(memberSlackId)
                 .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
 
-        String channelSlackId = messageDto.getChannelSlackId();
+        String channelSlackId = slackMessageDto.getChannelSlackId();
         Channel channel = channels.findBySlackId(channelSlackId)
                 .orElseThrow(() -> new ChannelNotFoundException(channelSlackId));
 
-        messages.save(messageDto.toEntity(member, channel));
+        messages.save(slackMessageDto.toEntity(member, channel));
     }
 
-    private MessageDto convert(final Map<String, Object> requestBody) {
+    private SlackMessageDto convert(final Map<String, Object> requestBody) {
         final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
-        return new MessageDto(
+        return new SlackMessageDto(
                 (String) event.get(USER),
                 (String) event.get(CLIENT_MSG_ID),
                 (String) event.get(TIMESTAMP),

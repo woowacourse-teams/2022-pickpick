@@ -3,9 +3,10 @@ package com.pickpick.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.controller.dto.SlackMessageRequest;
-import com.pickpick.controller.dto.SlackMessageResponse;
-import com.pickpick.controller.dto.SlackMessageResponses;
+import com.pickpick.message.application.MessageService;
+import com.pickpick.message.ui.dto.MessageRequest;
+import com.pickpick.message.ui.dto.MessageResponse;
+import com.pickpick.message.ui.dto.MessageResponses;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -34,14 +35,14 @@ class MessageServiceTest {
     @MethodSource("slackMessageRequest")
     @ParameterizedTest(name = "{0}")
     void findMessages(
-            final String description, final SlackMessageRequest slackMessageRequest,
+            final String description, final MessageRequest messageRequest,
             final List<Long> expectedMessageIds, final boolean expectedLast) {
         // given
-        SlackMessageResponses slackMessageResponses = messageService.find(slackMessageRequest);
+        MessageResponses messageResponses = messageService.find(messageRequest);
 
         // when
-        List<SlackMessageResponse> messages = slackMessageResponses.getMessages();
-        boolean last = slackMessageResponses.isLast();
+        List<MessageResponse> messages = messageResponses.getMessages();
+        boolean last = messageResponses.isLast();
 
         // then
         assertAll(
@@ -60,7 +61,7 @@ class MessageServiceTest {
         );
     }
 
-    private static SlackMessageRequest getSlackMessageRequest() {
-        return new SlackMessageRequest("", "", List.of(5L), false, 1L, 7);
+    private static MessageRequest getSlackMessageRequest() {
+        return new MessageRequest("", "", List.of(5L), false, 1L, 7);
     }
 }

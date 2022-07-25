@@ -1,12 +1,12 @@
-package com.pickpick.service;
+package com.pickpick.message.application;
 
-import com.pickpick.controller.dto.SlackMessageRequest;
-import com.pickpick.controller.dto.SlackMessageResponse;
-import com.pickpick.controller.dto.SlackMessageResponses;
-import com.pickpick.entity.Message;
 import com.pickpick.entity.QMessage;
 import com.pickpick.exception.MessageNotFoundException;
-import com.pickpick.repository.MessageRepository;
+import com.pickpick.message.domain.Message;
+import com.pickpick.message.domain.MessageRepository;
+import com.pickpick.message.ui.dto.MessageRequest;
+import com.pickpick.message.ui.dto.MessageResponse;
+import com.pickpick.message.ui.dto.MessageResponses;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -35,22 +35,22 @@ public class MessageService {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public SlackMessageResponses find(final SlackMessageRequest slackMessageRequest) {
-        List<Message> messages = findMessages(slackMessageRequest);
-        boolean isLast = isLast(slackMessageRequest, messages);
+    public MessageResponses find(final MessageRequest messageRequest) {
+        List<Message> messages = findMessages(messageRequest);
+        boolean isLast = isLast(messageRequest, messages);
 
         return toSlackMessageResponse(messages, isLast);
     }
 
-    private List<Message> findMessages(final SlackMessageRequest slackMessageRequest) {
-        boolean needPastMessage = slackMessageRequest.isNeedPastMessage();
-        int messageCount = slackMessageRequest.getMessageCount();
+    private List<Message> findMessages(final MessageRequest messageRequest) {
+        boolean needPastMessage = messageRequest.isNeedPastMessage();
+        int messageCount = messageRequest.getMessageCount();
 
         List<Message> foundMessages = jpaQueryFactory
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
-                .where(meetAllConditions(slackMessageRequest))
+                .where(meetAllConditions(messageRequest))
                 .orderBy(dateAscOrDescByNeedPastMessage(needPastMessage))
                 .limit(messageCount)
                 .fetch();
@@ -64,7 +64,7 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
-    private BooleanExpression meetAllConditions(final SlackMessageRequest request) {
+    private BooleanExpression meetAllConditions(final MessageRequest request) {
         return channelIdsIn(request.getChannelIds())
                 .and(textContains(request.getKeyword()))
                 .and(messageIdOrDateCondition(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
@@ -128,7 +128,7 @@ public class MessageService {
         return QMessage.message.postedDate.asc();
     }
 
-    private boolean isLast(final SlackMessageRequest slackMessageRequest, final List<Message> messages) {
+    private boolean isLast(final MessageRequest messageRequest, final List<Message> messages) {
         if (messages.isEmpty()) {
             return true;
         }
@@ -136,13 +136,13 @@ public class MessageService {
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QMessage.message)
-                .where(meetAllIsLastCondition(slackMessageRequest, messages))
+                .where(meetAllIsLastCondition(messageRequest, messages))
                 .fetchFirst();
 
         return Objects.isNull(result);
     }
 
-    private BooleanExpression meetAllIsLastCondition(final SlackMessageRequest request, final List<Message> messages) {
+    private BooleanExpression meetAllIsLastCondition(final MessageRequest request, final List<Message> messages) {
         Message targetMessage = getTargetMessage(messages, request.isNeedPastMessage());
 
         return channelIdsIn(request.getChannelIds())
@@ -166,13 +166,13 @@ public class MessageService {
         return QMessage.message.postedDate.after(targetMessage.getPostedDate());
     }
 
-    private SlackMessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast) {
-        return new SlackMessageResponses(toSlackMessageResponses(messages), isLast);
+    private MessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast) {
+        return new MessageResponses(toSlackMessageResponses(messages), isLast);
     }
 
-    private List<SlackMessageResponse> toSlackMessageResponses(final List<Message> messages) {
+    private List<MessageResponse> toSlackMessageResponses(final List<Message> messages) {
         return messages.stream()
-                .map(SlackMessageResponse::from)
+                .map(MessageResponse::from)
                 .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,5 @@
-package com.pickpick.repository;
+package com.pickpick.message.domain;
 
-import com.pickpick.entity.Message;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;

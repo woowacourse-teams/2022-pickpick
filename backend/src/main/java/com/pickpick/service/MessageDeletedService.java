@@ -1,7 +1,7 @@
 package com.pickpick.service;
 
 import com.pickpick.controller.event.SlackEvent;
-import com.pickpick.repository.MessageRepository;
+import com.pickpick.message.domain.MessageRepository;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

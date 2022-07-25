@@ -3,7 +3,7 @@ package com.pickpick.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.controller.dto.SlackMessageResponses;
+import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Comparator;
@@ -34,12 +34,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = get(API_URL, request);
 
         // then
-        SlackMessageResponses slackMessageResponses = response.as(SlackMessageResponses.class);
+        MessageResponses messageResponses = response.as(MessageResponses.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(slackMessageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(slackMessageResponses.getMessages())
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.getMessages())
                         .extracting("id")
                         .isEqualTo(expectedMessageIds)
         );
