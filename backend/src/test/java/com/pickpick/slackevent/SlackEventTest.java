@@ -1,4 +1,4 @@
-package com.pickpick.controller.event;
+package com.pickpick.slackevent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

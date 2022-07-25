@@ -1,4 +1,4 @@
-package com.pickpick.service;
+package com.pickpick.slackevent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
