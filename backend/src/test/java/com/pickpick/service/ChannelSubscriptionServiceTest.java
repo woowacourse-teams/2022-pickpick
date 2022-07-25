@@ -1,6 +1,7 @@
 package com.pickpick.service;
 
 import com.pickpick.controller.dto.ChannelOrderRequest;
+import com.pickpick.controller.dto.ChannelResponse;
 import com.pickpick.controller.dto.ChannelSubscriptionRequest;
 import com.pickpick.entity.Channel;
 import com.pickpick.entity.ChannelSubscription;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ChannelSubscriptionServiceTest {
 
     private static final long NOT_EXISTED_CHANNEL_ID = 1L;
+
     @Autowired
     private ChannelSubscriptionService channelSubscriptionService;
 
@@ -43,11 +46,15 @@ class ChannelSubscriptionServiceTest {
         Channel channel = saveChannel("slackId", "채널 이름");
         subscribeChannel(member, channel);
 
+        // when
+        Long memberId = member.getId();
+        List<ChannelSubscription> allOrderByViewOrder = channelSubscriptionService.findAllOrderByViewOrder(memberId);
+
         // then
-        assertThat(channelSubscriptionService.findAllOrderByViewOrder(member.getId())).hasSize(1);
+        assertThat(allOrderByViewOrder).hasSize(1);
     }
 
-    @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
+    @DisplayName("존재하지 않는 채널 ID로 채널 구독 시 에러 발생")
     @Test
     void saveByNotExistedChannelId() {
         // given
@@ -154,11 +161,12 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
         // then
-        boolean isSubscribed = channelSubscriptionService.findAll(member.getId())
-                .get(0)
-                .isSubscribed();
+        Optional<ChannelResponse> subscribedChannel = channelSubscriptionService.findAll(member.getId())
+                .stream()
+                .filter(ChannelResponse::isSubscribed)
+                .findAny();
 
-        assertThat(isSubscribed).isFalse();
+        assertThat(subscribedChannel).isEmpty();
     }
 
     private Member saveMember() {
