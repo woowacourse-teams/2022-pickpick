@@ -1,4 +1,4 @@
-package com.pickpick.controller;
+package com.pickpick.config;
 
 import com.pickpick.exception.BadRequestException;
 import com.pickpick.exception.NotFoundException;

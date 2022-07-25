@@ -1,4 +1,4 @@
-package com.pickpick.controller.event;
+package com.pickpick.slackevent.application;
 
 import com.pickpick.exception.SlackEventNotFoundException;
 import java.util.Arrays;

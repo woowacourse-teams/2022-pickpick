@@ -1,10 +1,11 @@
-package com.pickpick.service;
+package com.pickpick.slackevent.application.message;
 
-import com.pickpick.controller.dto.SlackMessageDto;
-import com.pickpick.controller.event.SlackEvent;
 import com.pickpick.exception.MessageNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
+import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package com.pickpick.controller.dto;
+package com.pickpick.slackevent.application.message.dto;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;

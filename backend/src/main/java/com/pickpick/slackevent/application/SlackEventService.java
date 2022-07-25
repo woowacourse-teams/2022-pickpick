@@ -1,6 +1,5 @@
-package com.pickpick.service;
+package com.pickpick.slackevent.application;
 
-import com.pickpick.controller.event.SlackEvent;
 import java.util.Map;
 
 public interface SlackEventService {

@@ -1,7 +1,7 @@
-package com.pickpick.controller;
+package com.pickpick.slackevent.ui;
 
-import com.pickpick.controller.event.SlackEvent;
-import com.pickpick.service.SlackEventServiceFinder;
+import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.slackevent.application.SlackEventServiceFinder;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/event")
-public class EventController {
+public class SlackEventController {
 
     private static final String URL_VERIFICATION = "url_verification";
     private static final String TYPE = "type";
@@ -20,7 +20,7 @@ public class EventController {
 
     private final SlackEventServiceFinder slackEventServiceFinder;
 
-    public EventController(final SlackEventServiceFinder slackEventServiceFinder) {
+    public SlackEventController(final SlackEventServiceFinder slackEventServiceFinder) {
         this.slackEventServiceFinder = slackEventServiceFinder;
     }
 
