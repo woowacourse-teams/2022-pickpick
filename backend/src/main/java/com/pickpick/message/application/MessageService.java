@@ -1,9 +1,9 @@
 package com.pickpick.message.application;
 
-import com.pickpick.entity.QMessage;
 import com.pickpick.exception.MessageNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
+import com.pickpick.message.domain.QMessage;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
