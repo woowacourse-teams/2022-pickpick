@@ -1,12 +1,12 @@
 package com.pickpick.service;
 
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.controller.dto.MessageDto;
 import com.pickpick.controller.event.SlackEvent;
-import com.pickpick.entity.Channel;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
 import com.pickpick.repository.MessageRepository;
 import java.util.Map;

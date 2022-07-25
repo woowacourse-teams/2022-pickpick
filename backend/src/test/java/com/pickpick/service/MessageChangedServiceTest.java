@@ -3,10 +3,10 @@ package com.pickpick.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.entity.Channel;
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.entity.Member;
 import com.pickpick.entity.Message;
-import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
 import com.pickpick.repository.MessageRepository;
 import com.pickpick.utils.TimeUtils;

@@ -1,10 +1,10 @@
-package com.pickpick.controller;
+package com.pickpick.channel.ui;
 
-import com.pickpick.controller.dto.ChannelOrderRequest;
-import com.pickpick.controller.dto.ChannelSubscriptionRequest;
-import com.pickpick.controller.dto.ChannelSubscriptionResponse;
-import com.pickpick.controller.dto.ChannelSubscriptionResponses;
-import com.pickpick.service.ChannelSubscriptionService;
+import com.pickpick.channel.application.ChannelSubscriptionService;
+import com.pickpick.channel.ui.dto.ChannelOrderRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
 import com.pickpick.utils.AuthorizationExtractor;
 import java.util.List;
 import java.util.stream.Collectors;

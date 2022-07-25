@@ -1,6 +1,5 @@
-package com.pickpick.repository;
+package com.pickpick.channel.domain;
 
-import com.pickpick.entity.Channel;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;

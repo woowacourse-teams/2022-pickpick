@@ -1,8 +1,16 @@
-package com.pickpick.entity;
+package com.pickpick.channel.domain;
 
+import com.pickpick.entity.Member;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
-
-import javax.persistence.*;
 
 @Getter
 @Table(name = "channel_subscription")

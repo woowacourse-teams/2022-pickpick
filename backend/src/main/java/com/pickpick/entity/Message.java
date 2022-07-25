@@ -1,5 +1,6 @@
 package com.pickpick.entity;
 
+import com.pickpick.channel.domain.Channel;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;

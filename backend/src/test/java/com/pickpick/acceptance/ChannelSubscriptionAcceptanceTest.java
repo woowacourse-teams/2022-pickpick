@@ -1,19 +1,18 @@
 package com.pickpick.acceptance;
 
-import com.pickpick.controller.dto.ChannelOrderRequest;
-import com.pickpick.controller.dto.ChannelSubscriptionResponse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import com.pickpick.channel.ui.dto.ChannelOrderRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Sql({"/truncate.sql", "/channel.sql"})
 @DisplayName("채널 구독 기능")

@@ -1,8 +1,7 @@
-package com.pickpick.controller.dto;
-
-import lombok.Getter;
+package com.pickpick.channel.ui.dto;
 
 import java.util.List;
+import lombok.Getter;
 
 @Getter
 public class ChannelResponses {

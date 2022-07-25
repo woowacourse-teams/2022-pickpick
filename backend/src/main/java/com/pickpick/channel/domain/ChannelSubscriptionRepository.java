@@ -1,13 +1,9 @@
-package com.pickpick.repository;
+package com.pickpick.channel.domain;
 
-import com.pickpick.entity.Channel;
-import com.pickpick.entity.ChannelSubscription;
 import com.pickpick.entity.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
-
-import java.util.List;
 
 public interface ChannelSubscriptionRepository extends Repository<ChannelSubscription, Long> {
 

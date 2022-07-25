@@ -1,4 +1,4 @@
-package com.pickpick.controller.dto;
+package com.pickpick.channel.ui.dto;
 
 import java.util.List;
 import lombok.Getter;

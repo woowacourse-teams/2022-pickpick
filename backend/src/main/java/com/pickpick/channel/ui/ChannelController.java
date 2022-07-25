@@ -1,17 +1,16 @@
-package com.pickpick.controller;
+package com.pickpick.channel.ui;
 
-import com.pickpick.controller.dto.ChannelResponses;
-import com.pickpick.service.ChannelSubscriptionService;
+import com.pickpick.channel.application.ChannelSubscriptionService;
+import com.pickpick.channel.ui.dto.ChannelResponses;
 import com.pickpick.utils.AuthorizationExtractor;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping("/api/channels")
-public class ChannelController{
+public class ChannelController {
 
     private final ChannelSubscriptionService channelSubscriptionService;
 

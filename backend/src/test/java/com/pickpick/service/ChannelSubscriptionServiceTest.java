@@ -1,25 +1,25 @@
 package com.pickpick.service;
 
-import com.pickpick.controller.dto.ChannelOrderRequest;
-import com.pickpick.controller.dto.ChannelSubscriptionRequest;
-import com.pickpick.entity.Channel;
-import com.pickpick.entity.ChannelSubscription;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.pickpick.channel.application.ChannelSubscriptionService;
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.channel.domain.ChannelSubscription;
+import com.pickpick.channel.ui.dto.ChannelOrderRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.SubscriptionDuplicateException;
 import com.pickpick.exception.SubscriptionNotExistException;
-import com.pickpick.repository.ChannelRepository;
 import com.pickpick.repository.MemberRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -80,17 +80,18 @@ class ChannelSubscriptionServiceTest {
         Channel channel1 = saveChannel("slackId1", "채널 이름1");
         Channel channel2 = saveChannel("slackId2", "채널 이름2");
         Channel channel3 = saveChannel("slackId3", "채널 이름3");
-        
+
         subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
 
         // when
-        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(member.getId());
+        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
+                member.getId());
 
         // then
         assertThat(channelSubscriptions).extracting("channel")
                 .containsExactly(channel3, channel1, channel2);
     }
-    
+
     @DisplayName("채널 구독 순서를 변경하기")
     @Test
     void updateChannelSubscriptionOrder() {
@@ -110,11 +111,12 @@ class ChannelSubscriptionServiceTest {
         );
         channelSubscriptionService.updateOrders(request, member.getId());
 
-        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(member.getId());
+        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
+                member.getId());
 
         //then
         assertThat(channelSubscriptions).extracting("channel")
-                        .containsExactly(channel1, channel2, channel3);
+                .containsExactly(channel1, channel2, channel3);
     }
 
     @DisplayName("구독 중이 아닌 채널 구독 취소시 예외 발생")

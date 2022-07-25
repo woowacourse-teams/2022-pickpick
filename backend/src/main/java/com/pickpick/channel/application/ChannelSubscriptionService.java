@@ -1,24 +1,23 @@
-package com.pickpick.service;
+package com.pickpick.channel.application;
 
-import com.pickpick.controller.dto.ChannelOrderRequest;
-import com.pickpick.controller.dto.ChannelResponse;
-import com.pickpick.controller.dto.ChannelSubscriptionRequest;
-import com.pickpick.entity.Channel;
-import com.pickpick.entity.ChannelSubscription;
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.channel.domain.ChannelSubscription;
+import com.pickpick.channel.domain.ChannelSubscriptionRepository;
+import com.pickpick.channel.ui.dto.ChannelOrderRequest;
+import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.entity.Member;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.SubscriptionDuplicateException;
 import com.pickpick.exception.SubscriptionNotExistException;
-import com.pickpick.repository.ChannelRepository;
-import com.pickpick.repository.ChannelSubscriptionRepository;
 import com.pickpick.repository.MemberRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service

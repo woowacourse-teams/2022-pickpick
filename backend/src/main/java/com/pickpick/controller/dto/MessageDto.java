@@ -1,6 +1,6 @@
 package com.pickpick.controller.dto;
 
-import com.pickpick.entity.Channel;
+import com.pickpick.channel.domain.Channel;
 import com.pickpick.entity.Member;
 import com.pickpick.entity.Message;
 import com.pickpick.utils.TimeUtils;

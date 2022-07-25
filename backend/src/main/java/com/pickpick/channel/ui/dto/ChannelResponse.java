@@ -1,11 +1,10 @@
-package com.pickpick.controller.dto;
+package com.pickpick.channel.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pickpick.entity.Channel;
+import com.pickpick.channel.domain.Channel;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 public class ChannelResponse {

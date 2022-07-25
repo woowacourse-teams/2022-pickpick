@@ -1,6 +1,6 @@
-package com.pickpick.controller.dto;
+package com.pickpick.channel.ui.dto;
 
-import com.pickpick.entity.ChannelSubscription;
+import com.pickpick.channel.domain.ChannelSubscription;
 import lombok.Builder;
 import lombok.Getter;
 
