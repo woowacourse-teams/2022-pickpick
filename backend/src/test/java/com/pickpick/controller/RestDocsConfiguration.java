@@ -7,7 +7,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 
 @TestConfiguration
-public class RestDocsConfiguration {
+class RestDocsConfiguration {
 
     @Bean
     public RestDocumentationResultHandler write() {
