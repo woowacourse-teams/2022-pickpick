@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.MY_REPO_PAT }}
+          token: ${{ secrets.RICH_GITHUB_TOKEN }}
           submodules: recursive
 
       - name: Set up JDK 11
@@ -41,8 +41,8 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
+          author_name: Github Action Test by Richie
           fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
