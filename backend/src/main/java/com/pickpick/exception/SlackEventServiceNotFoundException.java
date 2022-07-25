@@ -1,6 +1,6 @@
 package com.pickpick.exception;
 
-import com.pickpick.controller.event.SlackEvent;
+import com.pickpick.slackevent.application.SlackEvent;
 
 public class SlackEventServiceNotFoundException extends NotFoundException {
 

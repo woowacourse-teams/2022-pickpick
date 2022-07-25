@@ -1,7 +1,7 @@
 import MessageCardSkeleton from ".";
 
 export default {
-  title: "@shared/MessageCardSkeleton",
+  title: "@Component/MessageCardSkeleton",
   component: MessageCardSkeleton,
 };
 

@@ -1,17 +1,16 @@
 package com.pickpick.acceptance;
 
-import com.pickpick.controller.dto.ChannelResponse;
-import com.pickpick.controller.dto.ChannelSubscriptionRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Sql({"/truncate.sql", "/channel.sql"})
 @DisplayName("채널 기능")
@@ -58,7 +57,7 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> 유저_전체_채널_목록_조회_요청() {
-        return getWithAuth("/api/channels", 2L);
+        return getWithCreateToken("/api/channels", 2L);
     }
 
     protected List<Long> 구독중이_아닌_채널_id_목록_추출(ExtractableResponse<Response> response) {
@@ -72,11 +71,11 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
 
     protected ExtractableResponse<Response> 구독_요청(final Long channelId) {
         ChannelSubscriptionRequest channelSubscriptionRequest = new ChannelSubscriptionRequest(channelId);
-        return postWithAuth(API_CHANNEL_SUBSCRIPTION, channelSubscriptionRequest, 2L);
+        return postWithCreateToken(API_CHANNEL_SUBSCRIPTION, channelSubscriptionRequest, 2L);
     }
 
     protected ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
-        return deleteWithAuth(API_CHANNEL_SUBSCRIPTION + "/" + channelId, 2L);
+        return deleteWithCreateToken(API_CHANNEL_SUBSCRIPTION + "?channelId=" + channelId, 2L);
     }
 
     private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {

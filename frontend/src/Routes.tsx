@@ -1,13 +1,17 @@
-import AddChannel from "@src/pages/AddChannel";
-import Alarm from "@src/pages/Alarm";
-import Bookmark from "@src/pages/Bookmark";
-import Feed from "@src/pages/Feed";
-import SpecificDateFeed from "@src/pages/SpecificDateFeed";
-import Home from "@src/pages/Home";
 import NotFound from "@src/pages/NotFound";
 import { PATH_NAME } from "@src/@constants";
-
-import LayoutContainer from "@src/components/layouts/LayoutContainer";
+import LayoutContainer from "@src/components/@layouts/LayoutContainer";
+import {
+  AddChannel,
+  Alarm,
+  Bookmark,
+  Feed,
+  SpecificDateFeed,
+  Home,
+  Certification,
+} from "./pages";
+import PrivateRouter from "@src/components/PrivateRouter";
+import PublicRouter from "@src/components/PublicRouter";
 
 const routes = [
   {
@@ -16,27 +20,63 @@ const routes = [
     children: [
       {
         path: "",
-        element: <Home />,
+        element: (
+          <PublicRouter>
+            <Home />
+          </PublicRouter>
+        ),
       },
       {
         path: PATH_NAME.ADD_CHANNEL,
-        element: <AddChannel />,
+        element: (
+          <PrivateRouter>
+            <AddChannel />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.ALARM,
-        element: <Alarm />,
+        element: (
+          <PrivateRouter>
+            <Alarm />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.BOOKMARK,
-        element: <Bookmark />,
-      },
-      {
-        path: `${PATH_NAME.FEED}/:date`,
-        element: <SpecificDateFeed />,
+        element: (
+          <PrivateRouter>
+            <Bookmark />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.FEED,
-        element: <Feed />,
+        element: (
+          <PrivateRouter>
+            <Feed />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: `${PATH_NAME.FEED}/:channelId`,
+        element: (
+          <PrivateRouter>
+            <Feed />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: `${PATH_NAME.FEED}/:channelId/:date`,
+        element: (
+          <PrivateRouter>
+            <SpecificDateFeed />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: PATH_NAME.CERTIFICATION,
+        element: <Certification />,
       },
       {
         path: "*",

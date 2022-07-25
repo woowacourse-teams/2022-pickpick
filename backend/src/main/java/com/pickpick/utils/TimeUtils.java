@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class TimeUtils {
+
     private TimeUtils() {
     }
 
@@ -14,6 +15,6 @@ public class TimeUtils {
     }
 
     private static LocalDateTime toLocalDateTime(final long unixTime) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault());
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.of("Asia/Seoul"));
     }
 }

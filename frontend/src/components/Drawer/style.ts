@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.div`
   position: fixed;
@@ -10,18 +10,18 @@ export const Container = styled.div`
   padding: 20px 0;
   border-radius: 0 4px 4px 0;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};
   `}
 `;
 
 export const Hr = styled.hr`
   padding: 0 10px;
+  height: 1px;
+  border: 0;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.BORDER};
-    height: 1px;
-    border: 0;
   `}
 `;
 

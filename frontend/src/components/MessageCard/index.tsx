@@ -1,7 +1,6 @@
 import * as Styled from "./style";
 import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
 import AlarmIconActive from "@public/assets/icons/AlarmIcon-Active.svg";
-import RemoveIcon from "@public/assets/icons/RemoveIcon.svg";
 import ProfileImage from "@src/components/ProfileImage";
 import { FlexRow } from "@src/@styles/shared";
 import { parseTime } from "@src/@utils";
@@ -13,18 +12,22 @@ interface Props {
   date: string;
   text: string;
   thumbnail: string;
+  isBookmarked: boolean;
+  toggleBookmark: () => void;
 }
 
-function MessageCard({ username, date, text, thumbnail }: Props) {
+function MessageCard({
+  username,
+  date,
+  text,
+  thumbnail,
+  isBookmarked,
+  toggleBookmark,
+}: Props) {
   const [isActiveAlarmButton, setIsActiveAlarmButton] = useState(false);
-  const [isActiveStarButton, setIsActiveStarButton] = useState(false);
 
   const handleActiveAlarmButton = () => {
     setIsActiveAlarmButton((prev) => !prev);
-  };
-
-  const handleActiveStarButton = () => {
-    setIsActiveStarButton((prev) => !prev);
   };
 
   return (
@@ -57,8 +60,8 @@ function MessageCard({ username, date, text, thumbnail }: Props) {
         <IconButton
           type="button"
           icon="star"
-          isActive={isActiveStarButton}
-          onClick={handleActiveStarButton}
+          isActive={isBookmarked}
+          onClick={toggleBookmark}
         >
           <FlexRow justifyContent="center" alignItems="center" gap="5px">
             <Styled.ButtonText>즐겨찾기</Styled.ButtonText>

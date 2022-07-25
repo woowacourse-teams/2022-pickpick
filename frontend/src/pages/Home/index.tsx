@@ -2,15 +2,12 @@ import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
 import { FlexRow } from "@src/@styles/shared";
 import LogoIcon from "@public/assets/icons/pickpick.svg";
-import { useNavigate } from "react-router-dom";
-import { PATH_NAME } from "@src/@constants";
 
 function Home() {
-  const navigate = useNavigate();
-
   const handleNavigateToAddChannel = () => {
-    navigate(PATH_NAME.ADD_CHANNEL);
+    location.href = `https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&redirect_uri=${process.env.SLACK_REDIRECT_URL}&client_id=3740298320131.3743463195250`;
   };
+
   return (
     <Styled.Container>
       <Styled.GreetingContainer>

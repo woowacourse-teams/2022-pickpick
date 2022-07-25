@@ -1,4 +1,4 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
@@ -12,7 +12,7 @@ export const Container = styled.div`
   border-radius: 4px;
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.WHITE};
   `}
 `;
@@ -20,11 +20,11 @@ export const Container = styled.div`
 export const Writer = styled.p`
   text-overflow: ellipsis;
   font-weight: 600;
-  font-size: ${({ theme }: { theme: Theme }) => theme.FONT_SIZE.LARGE_BODY};
+  font-size: ${({ theme }: StyledDefaultProps) => theme.FONT_SIZE.LARGE_BODY};
 `;
 
 export const Date = styled.p`
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
     color: ${theme.COLOR.TEXT.PLACEHOLDER};
   `}
@@ -35,14 +35,14 @@ export const Message = styled.p`
   white-space: pre-wrap;
   word-break: break-all;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.BODY};
     color: ${theme.COLOR.TEXT.DEFAULT};
   `}
 `;
 
 export const ButtonText = styled.p`
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
     color: ${theme.COLOR.TEXT.WHITE};
   `}

@@ -3,27 +3,15 @@ import PlusIcon from "@public/assets/icons/PlusIcon.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import WrapperLink from "../@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
-
-const mockChannels = [
-  { id: 1, name: "4기-공지사항", isPrivate: false },
-  { id: 2, name: "4기-잡담", isPrivate: false },
-  { id: 3, name: "전체-잡담", isPrivate: false },
-  { id: 4, name: "전체-공지사항", isPrivate: false },
-  { id: 5, name: "학습블로그", isPrivate: false },
-  { id: 6, name: "4기-공지사항", isPrivate: false },
-] as Channel[];
-
-interface Channel {
-  id: number;
-  name: string;
-  isPrivate: boolean;
-}
+import { SubscribedChannel } from "@src/@types/shared";
+import { Link } from "react-router-dom";
 
 interface Props {
-  channels?: Channel[];
+  channels?: SubscribedChannel[];
+  handleCloseDrawer: () => void;
 }
 
-function Drawer({ channels = mockChannels }: Props) {
+function Drawer({ channels = [], handleCloseDrawer }: Props) {
   return (
     <Styled.Container>
       <FlexRow
@@ -33,16 +21,17 @@ function Drawer({ channels = mockChannels }: Props) {
       >
         <Styled.Title>채널</Styled.Title>
         <WrapperLink to={PATH_NAME.ADD_CHANNEL}>
-          <PlusIcon width="14px" height="14px" color="#000000" />
+          {() => <PlusIcon width="14px" height="14px" fill="#121212" />}
         </WrapperLink>
       </FlexRow>
       <Styled.Hr />
       <FlexColumn gap="11px" padding="0 20px">
         {channels.map((channel) => (
-          <Styled.ChannelName key={channel.id}>
-            {channel.isPrivate ? "🔒 " : "# "}
-            {channel.name}
-          </Styled.ChannelName>
+          <Link key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
+            <Styled.ChannelName onClick={handleCloseDrawer}>
+              #{channel.name}
+            </Styled.ChannelName>
+          </Link>
         ))}
       </FlexColumn>
     </Styled.Container>
