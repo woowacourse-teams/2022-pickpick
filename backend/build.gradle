@@ -43,7 +43,6 @@ ext {
     snippetsDir = file('build/generated-snippets')
 }
 
-// Spring Rest Docs 설정
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
@@ -80,7 +79,6 @@ build {
 tasks.named('test') {
     useJUnitPlatform()
 }
-// 끝
 
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
