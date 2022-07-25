@@ -1,6 +1,6 @@
 package com.pickpick.channel.domain;
 
-import com.pickpick.entity.Member;
+import com.pickpick.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.entity.Member;
 import com.pickpick.entity.Message;
-import com.pickpick.repository.MemberRepository;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.repository.MessageRepository;
 import com.pickpick.utils.TimeUtils;
 import java.time.LocalDateTime;

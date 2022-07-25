@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.entity.Member;
 import com.pickpick.entity.Message;
-import com.pickpick.repository.MemberRepository;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.repository.MessageRepository;
 import java.time.LocalDateTime;
 import java.util.List;

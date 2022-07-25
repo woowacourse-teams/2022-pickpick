@@ -1,4 +1,4 @@
-package com.pickpick.entity;
+package com.pickpick.member.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

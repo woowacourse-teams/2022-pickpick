@@ -1,18 +1,17 @@
-package com.pickpick.service;
+package com.pickpick.member.application;
 
-import com.pickpick.entity.Member;
-import com.pickpick.repository.MemberRepository;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.User;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MemberInitializer {
@@ -49,7 +48,8 @@ public class MemberInitializer {
                         .getMembers());
     }
 
-    private List<Member> filterMembersToSave(final List<String> savedSlackIds, final List<Member> currentWorkspaceMembers) {
+    private List<Member> filterMembersToSave(final List<String> savedSlackIds,
+                                             final List<Member> currentWorkspaceMembers) {
         return currentWorkspaceMembers.stream()
                 .filter(it -> !savedSlackIds.contains(it.getSlackId()))
                 .collect(Collectors.toList());

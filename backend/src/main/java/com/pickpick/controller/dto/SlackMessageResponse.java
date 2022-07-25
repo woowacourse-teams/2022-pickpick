@@ -1,7 +1,7 @@
 package com.pickpick.controller.dto;
 
-import com.pickpick.entity.Member;
 import com.pickpick.entity.Message;
+import com.pickpick.member.domain.Member;
 import java.time.LocalDateTime;
 import lombok.Getter;
 

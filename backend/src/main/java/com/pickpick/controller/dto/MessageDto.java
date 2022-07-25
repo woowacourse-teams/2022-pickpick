@@ -1,8 +1,8 @@
 package com.pickpick.controller.dto;
 
 import com.pickpick.channel.domain.Channel;
-import com.pickpick.entity.Member;
 import com.pickpick.entity.Message;
+import com.pickpick.member.domain.Member;
 import com.pickpick.utils.TimeUtils;
 import java.time.LocalDateTime;
 import lombok.Getter;
