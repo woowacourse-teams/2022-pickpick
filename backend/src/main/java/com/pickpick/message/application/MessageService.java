@@ -76,7 +76,7 @@ public class MessageService {
 
     private BooleanExpression textContains(final String keyword) {
         if (StringUtils.hasText(keyword)) {
-            return QMessage.message.text.contains(keyword);
+            return QMessage.message.text.containsIgnoreCase(keyword);
         }
 
         return null;
