@@ -4,28 +4,28 @@ import { fetcher } from ".";
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>("/api/channels", {
     headers: {
-      authorization: "Bearer 47",
+      authorization: "Bearer 857",
     },
   });
   return data;
 };
 
-export const subscribeChannel = async (id: string) => {
+export const subscribeChannel = async (channelId: string) => {
   await fetcher.post(
     "/api/channel-subscription",
-    { id },
+    { channelId },
     {
       headers: {
-        authorization: "Bearer 47",
+        authorization: "Bearer 857",
       },
     }
   );
 };
 
-export const unsubscribeChannel = async (id: string) => {
-  await fetcher.delete(`/api/channel-subscription/${id}`, {
+export const unsubscribeChannel = async (channelId: string) => {
+  await fetcher.delete(`/api/channel-subscription?channelId=${channelId}`, {
     headers: {
-      authorization: "Bearer 47",
+      authorization: "Bearer 857",
     },
   });
 };
