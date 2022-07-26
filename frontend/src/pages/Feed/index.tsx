@@ -8,7 +8,7 @@ import { InfiniteData, useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { Message, ResponseMessages } from "@src/@types/shared";
 import React, { useRef } from "react";
-import NextInfiniteScroll from "@src/components/@shared/NextInfiniteScroll";
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 
 function Feed() {
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
@@ -51,7 +51,7 @@ function Feed() {
     <Styled.Container>
       <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
 
-      <NextInfiniteScroll
+      <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
         endPoint={!hasNextPage}
@@ -79,7 +79,7 @@ function Feed() {
             </>
           )}
         </FlexColumn>
-      </NextInfiniteScroll>
+      </InfiniteScroll>
     </Styled.Container>
   );
 }
