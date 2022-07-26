@@ -1,14 +1,13 @@
 package com.pickpick.acceptance;
 
-import com.pickpick.entity.Member;
-import com.pickpick.repository.MemberRepository;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayName("유저 기능")
 @SuppressWarnings("NonAsciiCharacters")

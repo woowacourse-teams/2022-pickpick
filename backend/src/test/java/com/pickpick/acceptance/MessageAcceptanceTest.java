@@ -3,7 +3,7 @@ package com.pickpick.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.controller.dto.SlackMessageResponses;
+import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Comparator;
@@ -34,12 +34,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = get(API_URL, request);
 
         // then
-        SlackMessageResponses slackMessageResponses = response.as(SlackMessageResponses.class);
+        MessageResponses messageResponses = response.as(MessageResponses.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(slackMessageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(slackMessageResponses.getMessages())
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.getMessages())
                         .extracting("id")
                         .isEqualTo(expectedMessageIds)
         );
@@ -56,7 +56,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         "channelIds가 5이고, needPastMessage가 true이고 date가 존재할 경우, 5번 채널의 해당 날짜 보다 과거 데이터 20개를 시간 내림차순으로 응답해야 한다.",
                         createQueryParams("", "2022-07-13T19:21:55", "5", "true", "", ""),
                         true,
-                        createExpectedMessageIds(5L, 1L)),
+                        createExpectedMessageIds(6L, 1L)),
                 Arguments.of(
                         "channelIds가 5이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 해당 메시지 보다 과거 데이터 20개를 시간 내림차순으로 응답해야 한다.",
                         createQueryParams("", "", "5", "true", "6", ""),
