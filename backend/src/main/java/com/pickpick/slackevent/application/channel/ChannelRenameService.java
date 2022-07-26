@@ -6,10 +6,9 @@ import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.channel.dto.SlackChannelRenameDto;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.Map;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 @Transactional
 @Service

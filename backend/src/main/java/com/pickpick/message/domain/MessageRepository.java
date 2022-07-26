@@ -1,9 +1,8 @@
 package com.pickpick.message.domain;
 
-import org.springframework.data.repository.Repository;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.repository.Repository;
 
 public interface MessageRepository extends Repository<Message, Long> {
 

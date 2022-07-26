@@ -1,10 +1,9 @@
 package com.pickpick.slackevent.application;
 
 import com.pickpick.exception.SlackEventNotFoundException;
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.Map;
+import lombok.Getter;
 
 @Getter
 public enum SlackEvent {
