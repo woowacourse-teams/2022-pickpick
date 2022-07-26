@@ -1,5 +1,7 @@
 package com.pickpick.member.domain;
 
+import com.pickpick.exception.MemberInvalidThumbnailUrlException;
+import com.pickpick.exception.MemberInvalidUsernameException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +38,21 @@ public class Member {
     }
 
     public void update(final String username, final String thumbnailUrl) {
+        validateUsername(username);
+        validateThumbnailUrl(thumbnailUrl);
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    private void validateUsername(final String username) {
+        if (username == null || username.isBlank()) {
+            throw new MemberInvalidUsernameException(username);
+        }
+    }
+
+    private void validateThumbnailUrl(final String thumbnailUrl) {
+        if (thumbnailUrl == null || thumbnailUrl.isBlank()) {
+            throw new MemberInvalidThumbnailUrlException(thumbnailUrl);
+        }
     }
 }
