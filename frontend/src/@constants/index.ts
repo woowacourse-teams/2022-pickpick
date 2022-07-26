@@ -3,7 +3,7 @@ export const PATH_NAME = {
   FEED: "/feed",
   ALARM: "/alarm",
   BOOKMARK: "/bookmark",
-  ADD_CHANNEL: "/addChannel",
+  ADD_CHANNEL: "/add-channel",
 };
 
 export const QUERY_KEY = {
