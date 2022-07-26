@@ -76,7 +76,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         "channelIds가 5이고, keyword가 '호'이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 '호'가 포함된 메시지 중, 전달된 메시지 ID의 메시지보다 더 과거 메시지 20개를 시간 내림차순으로 응답해야 한다.",
                         createQueryParams("호", "", "5", "", "13", ""),
                         true,
-                        createExpectedMessageIds(7L, 4L))
+                        createExpectedMessageIds(7L, 4L)),
+                Arguments.of(
+                        "channelIds가 5이고, keyword가 'jupjup'일 경우, 5번 채널의 메시지 중 'jupjup'이 포함된 메시지 20개를 시간 내림차순으로 응답해야 한다.",
+                        createQueryParams("jupjup", "", "5", "", "", ""),
+                        true,
+                        createExpectedMessageIds(18L, 14L))
         );
     }
 
