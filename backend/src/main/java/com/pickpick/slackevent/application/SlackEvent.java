@@ -12,7 +12,8 @@ public enum SlackEvent {
     MESSAGE_CREATED("message", ""),
     MESSAGE_CHANGED("message", "message_changed"),
     MESSAGE_DELETED("message", "message_deleted"),
-    CHANNEL_RENAME("channel_rename", "");
+    CHANNEL_RENAME("channel_rename", ""),
+    CHANNEL_DELETED("channel_deleted", "");
 
     private final String type;
     private final String subtype;

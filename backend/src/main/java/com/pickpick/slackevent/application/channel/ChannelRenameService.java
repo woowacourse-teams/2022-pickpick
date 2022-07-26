@@ -24,7 +24,7 @@ public class ChannelRenameService implements SlackEventService {
     }
 
     @Override
-    public void execute(Map<String, Object> requestBody) {
+    public void execute(final Map<String, Object> requestBody) {
         SlackChannelRenameDto slackChannelRenameDto = convert(requestBody);
 
         Channel channel = channels.findBySlackId(slackChannelRenameDto.getSlackId())
@@ -43,7 +43,7 @@ public class ChannelRenameService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(SlackEvent slackEvent) {
+    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
         return SlackEvent.CHANNEL_RENAME == slackEvent;
     }
 }

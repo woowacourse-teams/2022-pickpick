@@ -25,7 +25,7 @@ public class ChannelDeletedService implements SlackEventService {
     }
 
     @Override
-    public void execute(Map<String, Object> requestBody) {
+    public void execute(final Map<String, Object> requestBody) {
         String channelSlackId = extractChannelSlackId(requestBody);
 
         channels.findBySlackId(channelSlackId)
@@ -40,7 +40,7 @@ public class ChannelDeletedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(SlackEvent slackEvent) {
-        return false;
+    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
+        return SlackEvent.CHANNEL_DELETED == slackEvent;
     }
 }
