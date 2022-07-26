@@ -34,5 +34,9 @@ public class Member {
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
     }
-}
 
+    public void update(final String username, final String thumbnailUrl) {
+        this.username = username;
+        this.thumbnailUrl = thumbnailUrl;
+    }
+}
