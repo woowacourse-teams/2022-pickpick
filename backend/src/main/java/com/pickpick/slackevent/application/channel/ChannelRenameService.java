@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 public class ChannelRenameService implements SlackEventService {
 
     private static final String CHANNEL = "channel";
+    private static final String ID = "id";
+    private static final String NAME = "name";
 
     private final ChannelRepository channels;
 
@@ -36,8 +38,8 @@ public class ChannelRenameService implements SlackEventService {
         Map<String, String> channel = (Map) requestBody.get(CHANNEL);
 
         return new SlackChannelRenameDto(
-                channel.get("id"),
-                channel.get("name")
+                channel.get(ID),
+                channel.get(NAME)
         );
     }
 

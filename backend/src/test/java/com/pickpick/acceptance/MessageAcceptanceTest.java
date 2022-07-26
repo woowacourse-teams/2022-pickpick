@@ -27,6 +27,13 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String API_URL = "/api/messages";
 
+    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
+        return LongStream.rangeClosed(startInclusive, endInclusive)
+                .boxed()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
+    }
+
     private static Stream<Arguments> methodSource() {
         return Stream.of(
                 Arguments.of(
@@ -60,13 +67,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         true,
                         createExpectedMessageIds(12L, 8L))
         );
-    }
-
-    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
-        return LongStream.rangeClosed(startInclusive, endInclusive)
-                .boxed()
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
     }
 
     private static Map<String, String> createQueryParams(

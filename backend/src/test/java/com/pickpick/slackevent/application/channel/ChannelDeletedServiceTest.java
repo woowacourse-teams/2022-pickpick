@@ -80,7 +80,7 @@ class ChannelDeletedServiceTest {
 
     @DisplayName("채널 삭제 이벤트가 전달되었지만 일치하는 채널 아이디가 존재하지 않으면 예외가 발생한다")
     @Test
-    void exceptionOccursWhenMatchedChannelIdDoesNotExistOnChannelDeletedEvent() {
+    void throwExceptionWhenChannelDoesNotExisted() {
         // given
         channels.save(SAMPLE_CHANNEL);
 
