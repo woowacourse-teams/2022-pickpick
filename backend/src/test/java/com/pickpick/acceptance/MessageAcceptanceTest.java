@@ -1,17 +1,8 @@
 package com.pickpick.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,31 +10,23 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @Sql({"/truncate.sql", "/message.sql"})
+@Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String API_URL = "/api/messages";
-
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
-                    final List<Long> expectedMessageIds) {
-        // when
-        ExtractableResponse<Response> response = get(API_URL, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
-    }
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(
@@ -98,6 +81,25 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 "needPastMessage", needPastMessage,
                 "messageId", messageId,
                 "messageCount", messageCount
+        );
+    }
+
+    @MethodSource("methodSource")
+    @ParameterizedTest(name = "{0}")
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
+                    final List<Long> expectedMessageIds) {
+        // when
+        ExtractableResponse<Response> response = get(API_URL, request);
+
+        // then
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.getMessages())
+                        .extracting("id")
+                        .isEqualTo(expectedMessageIds)
         );
     }
 }

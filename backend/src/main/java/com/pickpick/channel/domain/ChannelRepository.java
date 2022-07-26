@@ -1,8 +1,9 @@
 package com.pickpick.channel.domain;
 
+import org.springframework.data.repository.Repository;
+
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.repository.Repository;
 
 public interface ChannelRepository extends Repository<Channel, Long> {
 
@@ -15,4 +16,6 @@ public interface ChannelRepository extends Repository<Channel, Long> {
     Optional<Channel> findBySlackId(String slackId);
 
     Optional<Channel> findById(Long id);
+
+    void deleteBySlackId(String slackId);
 }
