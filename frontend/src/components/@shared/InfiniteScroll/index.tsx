@@ -7,7 +7,7 @@ export interface Props {
   endPoint: boolean;
 }
 
-function NextInfiniteScroll({ children, ...props }: Props) {
+function InfiniteScroll({ children, ...props }: Props) {
   const { targetRef: nextRef } = useIntersectionObserver(props);
 
   return (
@@ -18,4 +18,4 @@ function NextInfiniteScroll({ children, ...props }: Props) {
   );
 }
 
-export default NextInfiniteScroll;
+export default InfiniteScroll;

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Props as InfiniteScrollProps } from "@src/components/@shared/NextInfiniteScroll";
+import { Props as InfiniteScrollProps } from "@src/components/@shared/InfiniteScroll";
 
 type Props = Omit<InfiniteScrollProps, "children">;
 
