@@ -1,7 +1,18 @@
 package com.pickpick.controller;
 
-import com.pickpick.controller.dto.ChannelOrderRequest;
-import com.pickpick.controller.dto.ChannelSubscriptionRequest;
+
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.pickpick.channel.ui.dto.ChannelOrderRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
+import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,15 +21,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.List;
-
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Sql({"/truncate.sql", "/channel.sql", "/channel-subscription.sql"})
 class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
@@ -59,7 +61,7 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
                         ),
                         requestFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("구독할 채널 아이디")
+                                fieldWithPath("channelId").type(JsonFieldType.NUMBER).description("구독할 채널 아이디")
                         )
                 ));
     }
@@ -68,15 +70,17 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
     @Test
     void unsubscribeChannel() throws Exception {
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .delete("/api/channel-subscription/{id}", 2L)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer 2"))
+                        .delete("/api/channel-subscription")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 2")
+                        .param("channelId", "2")
+                )
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
                                 requestHeaders(
                                         headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
                                 ),
-                                pathParameters(
-                                        parameterWithName("id").description("채널 아이디")
+                                requestParameters(
+                                        parameterWithName("channelId").description("채널 아이디")
                                 )
                         )
                 );
