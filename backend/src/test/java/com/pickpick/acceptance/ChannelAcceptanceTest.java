@@ -1,16 +1,17 @@
 package com.pickpick.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Sql({"/truncate.sql", "/channel.sql"})
 @DisplayName("채널 기능")
@@ -75,7 +76,7 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
-        return deleteWithAuth(API_CHANNEL_SUBSCRIPTION + "/" + channelId, 2L);
+        return deleteWithAuth(API_CHANNEL_SUBSCRIPTION + "?channelId=" + channelId, 2L);
     }
 
     private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {

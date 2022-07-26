@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class ChannelSubscriptionRequest {
 
-    private Long id;
+    private Long channelId;
 
     private ChannelSubscriptionRequest() {
     }
 
-    public ChannelSubscriptionRequest(Long id) {
-        this.id = id;
+    public ChannelSubscriptionRequest(Long channelId) {
+        this.channelId = channelId;
     }
 }
