@@ -12,12 +12,13 @@ import { extractResponseMessages } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
 import DateDropDown from "@src/components/DateDropdown";
 import { nextMessagesCallback } from "@src/api/utils";
+import { QUERY_KEY } from "@src/@constants";
 
 function Feed() {
   const { initializeDateArray, isRenderDate } = useMessageDate();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteQuery<ResponseMessages>(["messages"], getMessages(), {
+    useInfiniteQuery<ResponseMessages>(QUERY_KEY.ALL_MESSAGES, getMessages(), {
       getNextPageParam: nextMessagesCallback,
       onSettled: initializeDateArray,
     });

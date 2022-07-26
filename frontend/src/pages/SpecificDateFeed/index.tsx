@@ -14,6 +14,7 @@ import useMessageDate from "@src/hooks/useMessageDate";
 import DateDropDown from "@src/components/DateDropdown";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
+import { QUERY_KEY } from "@src/@constants";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -28,7 +29,7 @@ function SpecificDateFeed() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery<ResponseMessages>(
-    ["dateMessages", queryKey],
+    [QUERY_KEY.SPECIFIC_DATE_MESSAGES, queryKey],
     getMessages({
       date,
     }),
