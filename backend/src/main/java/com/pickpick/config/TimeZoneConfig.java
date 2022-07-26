@@ -5,7 +5,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TimeConfig {
+public class TimeZoneConfig {
 
     @PostConstruct
     public void setTimeZone() {
