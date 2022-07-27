@@ -44,7 +44,7 @@ function AddChannel() {
             </Button>
           ))}
         </Styled.ChannelListContainer>
-        <WrapperLink to={PATH_NAME.FEED}>다음</WrapperLink>
+        <WrapperLink to={PATH_NAME.FEED}>{() => <span>다음</span>}</WrapperLink>
       </FlexColumn>
     </Styled.Container>
   );
