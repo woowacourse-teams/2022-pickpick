@@ -82,12 +82,9 @@ class ChannelDeletedServiceTest {
     @Test
     void throwExceptionWhenChannelDoesNotExisted() {
         // given
-        channels.save(SAMPLE_CHANNEL);
-
-        String notExistChannelId = "존재하지 않는 채널 Slack ID";
         Map<String, Object> request = Map.of(
                 "type", "channel_deleted",
-                "channel", notExistChannelId
+                "channel", "존재하지 않는 채널 Slack ID"
         );
 
         // when & then
