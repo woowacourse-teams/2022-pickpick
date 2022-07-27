@@ -8,6 +8,12 @@ export const PATH_NAME = {
 
 export const QUERY_KEY = {
   ALL_CHANNELS: "allChannels",
+  SUBSCRIBED_CHANNELS: "subscribedChannels",
   ALL_MESSAGES: "allMessages",
   SPECIFIC_DATE_MESSAGES: "specificDateMessages",
+};
+
+export const API_ENDPOINT = {
+  MESSAGES: "/api/messages",
+  CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
 };
