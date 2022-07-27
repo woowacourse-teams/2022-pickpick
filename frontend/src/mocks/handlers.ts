@@ -91,14 +91,4 @@ export const handlers = [
       })
     );
   }),
-
-  rest.get("/api/channel-subscription", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.delay(500),
-      ctx.json({
-        channels: subscribedChannels,
-      })
-    );
-  }),
 ];
