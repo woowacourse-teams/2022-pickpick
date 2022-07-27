@@ -20,29 +20,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/message.sql"})
+@Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String API_URL = "/api/messages";
 
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
-                    final List<Long> expectedMessageIds) {
-        // when
-        ExtractableResponse<Response> response = get(API_URL, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
+    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
+        return LongStream.rangeClosed(startInclusive, endInclusive)
+                .boxed()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
     }
 
     private static Stream<Arguments> methodSource() {
@@ -85,13 +74,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
-        return LongStream.rangeClosed(startInclusive, endInclusive)
-                .boxed()
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
-    }
-
     private static Map<String, String> createQueryParams(
             final String keyword, final String date, final String channelIds, final String needPastMessage,
             final String messageId, final String messageCount
@@ -103,6 +85,25 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 "needPastMessage", needPastMessage,
                 "messageId", messageId,
                 "messageCount", messageCount
+        );
+    }
+
+    @MethodSource("methodSource")
+    @ParameterizedTest(name = "{0}")
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
+                    final List<Long> expectedMessageIds) {
+        // when
+        ExtractableResponse<Response> response = get(API_URL, request);
+
+        // then
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.getMessages())
+                        .extracting("id")
+                        .isEqualTo(expectedMessageIds)
         );
     }
 }
