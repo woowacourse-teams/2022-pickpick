@@ -18,7 +18,7 @@ import { getSubscribedChannels } from "@src/api/channels";
 function Navigation() {
   const { pathname } = useLocation();
   const [isMenuDrawerOpened, setIsMenuDrawerOpened] = useState(false);
-  const { data } = useQuery(
+  const { data, refetch } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
@@ -34,6 +34,7 @@ function Navigation() {
   useEffect(() => {
     if (isMenuDrawerOpened) {
       document.body.style.overflowY = "hidden";
+      refetch();
       return;
     }
     document.body.style.overflowY = "auto";
