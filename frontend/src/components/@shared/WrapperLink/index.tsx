@@ -1,14 +1,20 @@
-import { LinkProps } from "react-router-dom";
+import { NavLinkProps } from "react-router-dom";
 import { Kind } from "../WrapperButton";
 import * as Styled from "./style";
 
-interface Props extends LinkProps {
+interface Props extends NavLinkProps {
   kind?: Kind;
-  children: JSX.Element | string;
+  children: ({ isActive }: { isActive: boolean }) => JSX.Element;
 }
 
-function WrapperLink(props: Props) {
-  return <Styled.Container {...props} />;
+function WrapperLink({ children, ...props }: Props) {
+  if (!children || typeof children !== "function") return null;
+
+  return (
+    <Styled.Container {...props}>
+      {({ isActive }) => children({ isActive })}
+    </Styled.Container>
+  );
 }
 
 export default WrapperLink;
