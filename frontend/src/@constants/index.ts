@@ -15,5 +15,6 @@ export const QUERY_KEY = {
 
 export const API_ENDPOINT = {
   MESSAGES: "/api/messages",
+  CHANNEL: "/api/channels",
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
 };

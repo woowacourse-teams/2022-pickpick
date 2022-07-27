@@ -13,6 +13,7 @@ import { QUERY_KEY } from "@src/@constants";
 
 function AddChannel() {
   const { data, refetch } = useQuery(QUERY_KEY.ALL_CHANNELS, getChannels);
+
   const { mutate: subscribe } = useMutation(subscribeChannel, {
     onSettled: () => {
       refetch();
