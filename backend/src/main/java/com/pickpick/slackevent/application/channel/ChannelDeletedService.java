@@ -1,7 +1,6 @@
 package com.pickpick.slackevent.application.channel;
 
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
@@ -26,9 +25,6 @@ public class ChannelDeletedService implements SlackEventService {
     @Override
     public void execute(final Map<String, Object> requestBody) {
         String channelSlackId = extractChannelSlackId(requestBody);
-
-        channels.findBySlackId(channelSlackId)
-                .orElseThrow(() -> new ChannelNotFoundException(channelSlackId));
 
         messages.deleteAllByChannelSlackId(channelSlackId);
         channels.deleteBySlackId(channelSlackId);

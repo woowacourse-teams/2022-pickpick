@@ -1,12 +1,10 @@
 package com.pickpick.slackevent.application.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -76,19 +74,5 @@ class ChannelDeletedServiceTest {
                 () -> assertThat(channels.findAll()).isEmpty(),
                 () -> assertThat(messages.findAll()).isEmpty()
         );
-    }
-
-    @DisplayName("채널 삭제 이벤트가 전달되었지만 일치하는 채널 아이디가 존재하지 않으면 예외가 발생한다")
-    @Test
-    void throwExceptionWhenChannelDoesNotExisted() {
-        // given
-        Map<String, Object> request = Map.of(
-                "type", "channel_deleted",
-                "channel", "존재하지 않는 채널 Slack ID"
-        );
-
-        // when & then
-        assertThatThrownBy(() -> channelDeletedService.execute(request))
-                .isInstanceOf(ChannelNotFoundException.class);
     }
 }
