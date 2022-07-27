@@ -31,15 +31,6 @@ function Navigation() {
     setIsMenuDrawerOpened((prev) => !prev);
   };
 
-  const getColorByCurrentPathname = (targetPathname: string) => {
-    const basePathname = pathname.slice(
-      0,
-      pathname.lastIndexOf("/") || pathname.length
-    );
-    if (targetPathname === basePathname) return "#FF9900";
-    return "#121212";
-  };
-
   useEffect(() => {
     if (isMenuDrawerOpened) {
       document.body.style.overflowY = "hidden";
@@ -58,25 +49,37 @@ function Navigation() {
         <MenuIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
       <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
-        <StarIconUnfill
-          width="24px"
-          height="24px"
-          fill={getColorByCurrentPathname(PATH_NAME.BOOKMARK)}
-        />
+        {({ isActive }) => {
+          return (
+            <StarIconUnfill
+              width="24px"
+              height="24px"
+              fill={isActive ? "#FF9900" : "#121212"}
+            />
+          );
+        }}
       </WrapperLink>
       <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
-        <HomeIconUnfill
-          width="24px"
-          height="24px"
-          fill={getColorByCurrentPathname(PATH_NAME.FEED)}
-        />
+        {({ isActive }) => {
+          return (
+            <HomeIconUnfill
+              width="24px"
+              height="24px"
+              fill={isActive ? "#FF9900" : "#121212"}
+            />
+          );
+        }}
       </WrapperLink>
       <WrapperLink to={PATH_NAME.ALARM} kind="bigIcon">
-        <AlarmIconInactive
-          width="24px"
-          height="24px"
-          fill={getColorByCurrentPathname(PATH_NAME.ALARM)}
-        />
+        {({ isActive }) => {
+          return (
+            <AlarmIconInactive
+              width="24px"
+              height="24px"
+              fill={isActive ? "#FF9900" : "#121212"}
+            />
+          );
+        }}
       </WrapperLink>
       <WrapperButton kind="bigIcon">
         <InfoIcon width="24px" height="24px" fill="#121212" />

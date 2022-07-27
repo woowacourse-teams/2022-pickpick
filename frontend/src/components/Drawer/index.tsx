@@ -19,7 +19,7 @@ function Drawer({ channels = [] }: Props) {
       >
         <Styled.Title>채널</Styled.Title>
         <WrapperLink to={PATH_NAME.ADD_CHANNEL}>
-          <PlusIcon width="14px" height="14px" color="#000000" />
+          {() => <PlusIcon width="14px" height="14px" fill="#121212" />}
         </WrapperLink>
       </FlexRow>
       <Styled.Hr />
