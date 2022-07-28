@@ -19,8 +19,8 @@ import com.slack.api.methods.request.conversations.ConversationsInfoRequest.Conv
 import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
 import com.slack.api.model.Conversation;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +75,8 @@ class MessageCreatedServiceTest {
     void saveChannelAndMessageDynamicallyWhenDoesNotExist() throws SlackApiException, IOException {
         // given
         members.save(SAMPLE_MEMBER);
-        List<Channel> channelsBeforeSave = channels.findAll();
-        List<Message> messagesBeforeSave = messages.findAll();
+        Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
+        Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
         ConversationsInfoResponse conversationsInfoResponse = setupMockData();
 
@@ -85,17 +85,15 @@ class MessageCreatedServiceTest {
 
         // when
         messageCreatedService.execute(MESSAGE_CREATED_REQUEST);
-        List<Channel> channelsAfterSave = channels.findAll();
-        List<Message> messagesAfterSave = messages.findAll();
-        Channel savedChannel = channelsAfterSave.get(FIRST_INDEX);
-        Message savedMessage = messagesAfterSave.get(FIRST_INDEX);
+        Optional<Channel> channelAfterSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
+        Optional<Message> messageAfterSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
         // then
         assertAll(
-                () -> assertThat(channelsAfterSave.size()).isEqualTo(channelsBeforeSave.size() + 1),
-                () -> assertThat(messagesAfterSave.size()).isEqualTo(messagesBeforeSave.size() + 1),
-                () -> assertThat(savedChannel.getSlackId()).isEqualTo(SAMPLE_CHANNEL.getSlackId()),
-                () -> assertThat(savedMessage.getSlackId()).isEqualTo(SAMPLE_MESSAGE.getSlackId())
+                () -> assertThat(channelBeforeSave).isEmpty(),
+                () -> assertThat(messageBeforeSave).isEmpty(),
+                () -> assertThat(channelAfterSave).isPresent(),
+                () -> assertThat(messageAfterSave).isPresent()
         );
     }
 
@@ -116,20 +114,20 @@ class MessageCreatedServiceTest {
         // given
         members.save(SAMPLE_MEMBER);
         channels.save(SAMPLE_CHANNEL);
-        List<Channel> channelsBeforeSave = channels.findAll();
-        List<Message> messagesBeforeSave = messages.findAll();
+        Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
+        Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
         // when
         messageCreatedService.execute(MESSAGE_CREATED_REQUEST);
-        List<Channel> channelsAfterSave = channels.findAll();
-        List<Message> messagesAfterSave = messages.findAll();
-        Message savedMessage = messagesAfterSave.get(FIRST_INDEX);
+        Optional<Channel> channelAfterSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
+        Optional<Message> messageAfterSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
         // then
         assertAll(
-                () -> assertThat(channelsAfterSave.size()).isEqualTo(channelsBeforeSave.size()),
-                () -> assertThat(messagesAfterSave.size()).isEqualTo(messagesBeforeSave.size() + 1),
-                () -> assertThat(savedMessage.getSlackId()).isEqualTo(SAMPLE_MESSAGE.getSlackId())
+                () -> assertThat(channelBeforeSave).isPresent(),
+                () -> assertThat(messageBeforeSave).isEmpty(),
+                () -> assertThat(channelAfterSave).isPresent(),
+                () -> assertThat(messageAfterSave).isPresent()
         );
     }
 }
