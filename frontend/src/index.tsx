@@ -5,6 +5,8 @@ import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 import GlobalStyle from "./@styles/GlobalStyle";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { BrowserRouter } from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary";
+import UnexpectedError from "./pages/UnexpectedError";
 
 if (process.env.NODE_ENV === "development") {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,7 +29,9 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={LIGHT_MODE_THEME}>
         <GlobalStyle />
-        <App />
+        <ErrorBoundary fallback={<UnexpectedError />}>
+          <App />
+        </ErrorBoundary>
       </ThemeProvider>
     </QueryClientProvider>
   </BrowserRouter>
