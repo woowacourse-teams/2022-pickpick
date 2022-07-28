@@ -1,4 +1,4 @@
-package com.pickpick.slackevent;
+package com.pickpick.slackevent.application.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,7 +9,6 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
-import com.pickpick.slackevent.application.message.MessageChangedService;
 import com.pickpick.utils.TimeUtils;
 import java.time.LocalDateTime;
 import java.util.List;
