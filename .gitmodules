@@ -1,3 +1,6 @@
 [submodule "backend/src/main/resources/security"]
 	path = backend/src/main/resources/security
 	url = https://github.com/2022-pickpick/security.git
+[submodule "backend/src/test/resources/security"]
+	path = backend/src/test/resources/security
+	url = https://github.com/2022-pickpick/test-security.git
