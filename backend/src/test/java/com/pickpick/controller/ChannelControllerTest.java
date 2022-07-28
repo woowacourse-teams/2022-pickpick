@@ -1,17 +1,17 @@
 package com.pickpick.controller;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Sql({"/truncate.sql", "/channel.sql", "/channel-subscription.sql"})
 class ChannelControllerTest extends RestDocsTestSupport {
@@ -30,7 +30,8 @@ class ChannelControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("channels.[].id").type(JsonFieldType.NUMBER).description("채널 아이디"),
                                 fieldWithPath("channels.[].name").type(JsonFieldType.STRING).description("채널 이름"),
-                                fieldWithPath("channels.[].isSubscribed").type(JsonFieldType.BOOLEAN).description("채널 구독 여부")
+                                fieldWithPath("channels.[].isSubscribed").type(JsonFieldType.BOOLEAN)
+                                        .description("채널 구독 여부")
                         )
                 ));
     }
