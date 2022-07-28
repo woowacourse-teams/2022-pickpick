@@ -16,11 +16,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberInitializer {
 
-    @Value("${slack.bot-token}")
-    private String slackBotToken;
-
     private final MethodsClient client = Slack.getInstance().methods();
     private final MemberRepository memberRepository;
+    @Value("${slack.bot-token}")
+    private String slackBotToken;
 
     public MemberInitializer(final MemberRepository memberRepository) {
         this.memberRepository = memberRepository;

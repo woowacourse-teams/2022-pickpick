@@ -25,3 +25,13 @@ export interface Channel {
 export interface ResponseChannels {
   channels: Channel[];
 }
+
+export interface SubscribedChannel {
+  id: string;
+  name: string;
+  order: number;
+}
+
+export interface ResponseSubscribedChannels {
+  channels: SubscribedChannel[];
+}

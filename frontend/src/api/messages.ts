@@ -1,3 +1,4 @@
+import { API_ENDPOINT } from "@src/@constants";
 import { ResponseMessages } from "@src/@types/shared";
 import { fetcher } from ".";
 
@@ -6,7 +7,9 @@ export const getMessages =
   async ({ pageParam }: any) => {
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
-        `/api/messages?channelIds=5&messageId=&needPastMessage=${true}&date=${date}`
+        `${
+          API_ENDPOINT.MESSAGES
+        }?channelIds=5&messageId=&needPastMessage=${true}&date=${date}`
       );
 
       return data;
@@ -19,7 +22,7 @@ export const getMessages =
     } = pageParam;
 
     const { data } = await fetcher.get<ResponseMessages>(
-      `/api/messages?channelIds=5&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`
+      `${API_ENDPOINT.MESSAGES}?channelIds=5&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`
     );
 
     return data;

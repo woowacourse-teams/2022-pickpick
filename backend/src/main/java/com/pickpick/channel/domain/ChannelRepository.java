@@ -15,4 +15,6 @@ public interface ChannelRepository extends Repository<Channel, Long> {
     Optional<Channel> findBySlackId(String slackId);
 
     Optional<Channel> findById(Long id);
+
+    void deleteBySlackId(String slackId);
 }

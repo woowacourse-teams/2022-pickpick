@@ -9,9 +9,3 @@ export const Container = styled.div`
   align-items: center;
   padding: 26px 20px;
 `;
-
-export const Wrapper = styled.div`
-  margin-top: 10px;
-  margin-bottom: 4px;
-  width: 100%;
-`;

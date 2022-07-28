@@ -3,5 +3,18 @@ export const PATH_NAME = {
   FEED: "/feed",
   ALARM: "/alarm",
   BOOKMARK: "/bookmark",
-  ADD_CHANNEL: "/addChannel",
+  ADD_CHANNEL: "/add-channel",
+};
+
+export const QUERY_KEY = {
+  ALL_CHANNELS: "allChannels",
+  SUBSCRIBED_CHANNELS: "subscribedChannels",
+  ALL_MESSAGES: "allMessages",
+  SPECIFIC_DATE_MESSAGES: "specificDateMessages",
+};
+
+export const API_ENDPOINT = {
+  MESSAGES: "/api/messages",
+  CHANNEL: "/api/channels",
+  CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
 };

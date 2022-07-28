@@ -51,7 +51,7 @@ public class MessageService {
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
                 .where(meetAllConditions(messageRequest))
-                .orderBy(dateAscOrDescByNeedPastMessage(needPastMessage))
+                .orderBy(arrangeDateByNeedPastMessage(needPastMessage))
                 .limit(messageCount)
                 .fetch();
 
@@ -67,7 +67,7 @@ public class MessageService {
     private BooleanExpression meetAllConditions(final MessageRequest request) {
         return channelIdsIn(request.getChannelIds())
                 .and(textContains(request.getKeyword()))
-                .and(messageIdOrDateCondition(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
+                .and(decideMessageIdOrDate(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
     }
 
     private BooleanExpression channelIdsIn(final List<Long> channelIds) {
@@ -76,15 +76,15 @@ public class MessageService {
 
     private BooleanExpression textContains(final String keyword) {
         if (StringUtils.hasText(keyword)) {
-            return QMessage.message.text.contains(keyword);
+            return QMessage.message.text.containsIgnoreCase(keyword);
         }
 
         return null;
     }
 
-    private Predicate messageIdOrDateCondition(final Long messageId,
-                                               final LocalDateTime date,
-                                               final boolean needPastMessage) {
+    private Predicate decideMessageIdOrDate(final Long messageId,
+                                            final LocalDateTime date,
+                                            final boolean needPastMessage) {
         if (Objects.nonNull(messageId)) {
             return messageIdCondition(messageId, needPastMessage);
         }
@@ -120,7 +120,7 @@ public class MessageService {
                 .or(QMessage.message.postedDate.after(date));
     }
 
-    private OrderSpecifier<LocalDateTime> dateAscOrDescByNeedPastMessage(final boolean needPastMessage) {
+    private OrderSpecifier<LocalDateTime> arrangeDateByNeedPastMessage(final boolean needPastMessage) {
         if (needPastMessage) {
             return QMessage.message.postedDate.desc();
         }
@@ -143,14 +143,14 @@ public class MessageService {
     }
 
     private BooleanExpression meetAllIsLastCondition(final MessageRequest request, final List<Message> messages) {
-        Message targetMessage = getTargetMessage(messages, request.isNeedPastMessage());
+        Message targetMessage = findTargetMessage(messages, request.isNeedPastMessage());
 
         return channelIdsIn(request.getChannelIds())
                 .and(textContains(request.getKeyword()))
-                .and(isLastExpression(targetMessage, request.isNeedPastMessage()));
+                .and(isBeforeOrAfterTarget(targetMessage.getPostedDate(), request.isNeedPastMessage()));
     }
 
-    private Message getTargetMessage(final List<Message> messages, final boolean needPastMessage) {
+    private Message findTargetMessage(final List<Message> messages, final boolean needPastMessage) {
         if (needPastMessage) {
             return messages.get(messages.size() - ONE_TO_GET_LAST_INDEX);
         }
@@ -158,12 +158,12 @@ public class MessageService {
         return messages.get(FIRST_INDEX);
     }
 
-    private BooleanExpression isLastExpression(final Message targetMessage, final boolean needPastMessage) {
+    private BooleanExpression isBeforeOrAfterTarget(final LocalDateTime targetPostDate, final boolean needPastMessage) {
         if (needPastMessage) {
-            return QMessage.message.postedDate.before(targetMessage.getPostedDate());
+            return QMessage.message.postedDate.before(targetPostDate);
         }
 
-        return QMessage.message.postedDate.after(targetMessage.getPostedDate());
+        return QMessage.message.postedDate.after(targetPostDate);
     }
 
     private MessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast) {

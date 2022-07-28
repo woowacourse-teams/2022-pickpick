@@ -7,7 +7,7 @@ import Home from "@src/pages/Home";
 import NotFound from "@src/pages/NotFound";
 import { PATH_NAME } from "@src/@constants";
 
-import LayoutContainer from "@src/components/layouts/LayoutContainer";
+import LayoutContainer from "@src/components/@layouts/LayoutContainer";
 
 const routes = [
   {

@@ -20,29 +20,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/message.sql"})
+@Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String API_URL = "/api/messages";
 
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
-                    final List<Long> expectedMessageIds) {
-        // when
-        ExtractableResponse<Response> response = get(API_URL, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
+    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
+        return LongStream.rangeClosed(startInclusive, endInclusive)
+                .boxed()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
     }
 
     private static Stream<Arguments> methodSource() {
@@ -68,23 +57,21 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         false,
                         createExpectedMessageIds(26L, 7L)),
                 Arguments.of(
-                        "channelIds가 5이고, keyword가 A일 경우, 5번 채널의 메시지 중 A가 포함된 메시지 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("A", "", "5", "", "", ""),
-                        false,
-                        createExpectedMessageIds(32L, 13L)),
-                Arguments.of(
-                        "channelIds가 5이고, keyword가 A이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 A가 포함된 메시지 중, 전달된 메시지 ID의 메시지보다 더 과거 메시지 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("A", "", "5", "", "13", ""),
+                        "channelIds가 5이고, keyword가 '줍'일 경우, 5번 채널의 메시지 중 '줍'이 포함된 메시지 20개를 시간 내림차순으로 응답해야 한다.",
+                        createQueryParams("줍", "", "5", "", "", ""),
                         true,
-                        createExpectedMessageIds(12L, 8L))
+                        createExpectedMessageIds(28L, 23L)),
+                Arguments.of(
+                        "channelIds가 5이고, keyword가 '호'이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 '호'가 포함된 메시지 중, 전달된 메시지 ID의 메시지보다 더 과거 메시지 20개를 시간 내림차순으로 응답해야 한다.",
+                        createQueryParams("호", "", "5", "", "13", ""),
+                        true,
+                        createExpectedMessageIds(7L, 4L)),
+                Arguments.of(
+                        "channelIds가 5이고, keyword가 'jupjup'일 경우, 5번 채널의 메시지 중 'jupjup'이 포함된 메시지 20개를 시간 내림차순으로 응답해야 한다.",
+                        createQueryParams("jupjup", "", "5", "", "", ""),
+                        true,
+                        createExpectedMessageIds(18L, 14L))
         );
-    }
-
-    private static List<Long> createExpectedMessageIds(final Long endInclusive, final Long startInclusive) {
-        return LongStream.rangeClosed(startInclusive, endInclusive)
-                .boxed()
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
     }
 
     private static Map<String, String> createQueryParams(
@@ -98,6 +85,25 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 "needPastMessage", needPastMessage,
                 "messageId", messageId,
                 "messageCount", messageCount
+        );
+    }
+
+    @MethodSource("methodSource")
+    @ParameterizedTest(name = "{0}")
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
+                    final List<Long> expectedMessageIds) {
+        // when
+        ExtractableResponse<Response> response = get(API_URL, request);
+
+        // then
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.getMessages())
+                        .extracting("id")
+                        .isEqualTo(expectedMessageIds)
         );
     }
 }

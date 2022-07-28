@@ -31,6 +31,20 @@ class MessageServiceTest {
         this.messageService = messageService;
     }
 
+    private static Stream<Arguments> slackMessageRequest() {
+        return Stream.of(
+                Arguments.of(
+                        "5번 채널에서 메시지ID가 1인 메시지 이후에 작성된 메시지 7개 조회",
+                        getSlackMessageRequest(),
+                        List.of(8L, 7L, 6L, 5L, 4L, 3L, 2L),
+                        false)
+        );
+    }
+
+    private static MessageRequest getSlackMessageRequest() {
+        return new MessageRequest("", "", List.of(5L), false, 1L, 7);
+    }
+
     @DisplayName("메시지 조회 요청에 따른 메시지가 응답된다")
     @MethodSource("slackMessageRequest")
     @ParameterizedTest(name = "{0}")
@@ -49,19 +63,5 @@ class MessageServiceTest {
                 () -> assertThat(messages).extracting("id").isEqualTo(expectedMessageIds),
                 () -> assertThat(last).isEqualTo(expectedLast)
         );
-    }
-
-    private static Stream<Arguments> slackMessageRequest() {
-        return Stream.of(
-                Arguments.of(
-                        "5번 채널에서 메시지ID가 1인 메시지 이후에 작성된 메시지 7개 조회",
-                        getSlackMessageRequest(),
-                        List.of(8L, 7L, 6L, 5L, 4L, 3L, 2L),
-                        false)
-        );
-    }
-
-    private static MessageRequest getSlackMessageRequest() {
-        return new MessageRequest("", "", List.of(5L), false, 1L, 7);
     }
 }
