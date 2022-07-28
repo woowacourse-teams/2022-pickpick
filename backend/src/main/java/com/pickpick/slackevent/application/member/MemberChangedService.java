@@ -50,6 +50,6 @@ public class MemberChangedService implements SlackEventService {
 
     @Override
     public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return false;
+        return slackEvent == SlackEvent.MEMBER_CHANGED;
     }
 }

@@ -23,7 +23,8 @@ class SlackEventTest {
                 Arguments.of(Map.of("event", Map.of("type", "message", "subtype", "message_deleted")),
                         SlackEvent.MESSAGE_DELETED),
                 Arguments.of(Map.of("event", Map.of("type", "channel_rename")), SlackEvent.CHANNEL_RENAME),
-                Arguments.of(Map.of("event", Map.of("type", "channel_deleted")), SlackEvent.CHANNEL_DELETED)
+                Arguments.of(Map.of("event", Map.of("type", "channel_deleted")), SlackEvent.CHANNEL_DELETED),
+                Arguments.of(Map.of("type", "user_profile_changed"), SlackEvent.MEMBER_CHANGED)
         );
     }
 

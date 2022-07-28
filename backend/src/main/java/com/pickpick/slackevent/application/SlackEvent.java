@@ -12,7 +12,8 @@ public enum SlackEvent {
     MESSAGE_CHANGED("message", "message_changed"),
     MESSAGE_DELETED("message", "message_deleted"),
     CHANNEL_RENAME("channel_rename", ""),
-    CHANNEL_DELETED("channel_deleted", "");
+    CHANNEL_DELETED("channel_deleted", ""),
+    MEMBER_CHANGED("user_profile_changed", "");
 
     private final String type;
     private final String subtype;
@@ -23,14 +24,21 @@ public enum SlackEvent {
     }
 
     public static SlackEvent of(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get("event");
-        String type = String.valueOf(event.get("type"));
-        String subtype = String.valueOf(event.getOrDefault("subtype", ""));
+        String type = findKey("type", requestBody);
+        String subtype = findKey("subtype", requestBody);
 
         return Arrays.stream(values())
                 .filter(slackEvent -> isSameType(slackEvent, type, subtype))
                 .findAny()
                 .orElseThrow(() -> new SlackEventNotFoundException(type, subtype));
+    }
+
+    private static String findKey(final String key, final Map<String, Object> requestBody) {
+        if (requestBody.containsKey("event")) {
+            Map<String, Object> event = (Map<String, Object>) requestBody.get("event");
+            return String.valueOf(event.getOrDefault(key, ""));
+        }
+        return String.valueOf(requestBody.getOrDefault(key, ""));
     }
 
     private static boolean isSameType(final SlackEvent event, final String type, final String subtype) {
