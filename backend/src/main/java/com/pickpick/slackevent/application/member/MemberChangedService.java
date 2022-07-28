@@ -9,16 +9,18 @@ import com.pickpick.slackevent.application.member.dto.MemberProfileDto;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Transactional
 @Service
 public class MemberChangedService implements SlackEventService {
 
-    public static final String USER = "user";
-    public static final String PROFILE = "profile";
-    public static final String SLACK_ID = "id";
-    public static final String DISPLAY_NAME = "display_name";
-    public static final String IMAGE_URL = "image_512";
+    private static final String USER = "user";
+    private static final String PROFILE = "profile";
+    private static final String SLACK_ID = "id";
+    private static final String DISPLAY_NAME = "display_name";
+    private static final String IMAGE_URL = "image_512";
+    private static final String REAL_NAME = "real_name";
 
     private final MemberRepository members;
 
@@ -43,9 +45,19 @@ public class MemberChangedService implements SlackEventService {
 
         return new MemberProfileDto(
                 (String) user.get(SLACK_ID),
-                (String) profile.get(DISPLAY_NAME),
+                extractUsername(profile),
                 (String) profile.get(IMAGE_URL)
         );
+    }
+
+    private String extractUsername(final Map<String, Object> profile) {
+        String username = (String) profile.get(DISPLAY_NAME);
+
+        if (!StringUtils.hasText(username)) {
+            username = (String) profile.get(REAL_NAME);
+        }
+
+        return username;
     }
 
     @Override
