@@ -1,31 +1,52 @@
-import { ResponseChannels } from "@src/@types/shared";
+import { API_ENDPOINT } from "@src/@constants";
+import {
+  ResponseChannels,
+  ResponseSubscribedChannels,
+} from "@src/@types/shared";
 import { fetcher } from ".";
 
 export const getChannels = async () => {
-  const { data } = await fetcher.get<ResponseChannels>("/api/channels", {
+  const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL, {
     headers: {
-      authorization: "Bearer 47",
+      authorization: "Bearer 2004",
     },
   });
+
   return data;
 };
 
-export const subscribeChannel = async (id: string) => {
-  await fetcher.post(
-    "/api/channel-subscription",
-    { id },
+export const getSubscribedChannels = async () => {
+  const { data } = await fetcher.get<ResponseSubscribedChannels>(
+    API_ENDPOINT.CHANNEL_SUBSCRIPTION,
     {
       headers: {
-        authorization: "Bearer 47",
+        authorization: "Bearer 2004",
+      },
+    }
+  );
+
+  return data;
+};
+
+export const subscribeChannel = async (channelId: string) => {
+  await fetcher.post(
+    API_ENDPOINT.CHANNEL_SUBSCRIPTION,
+    { channelId },
+    {
+      headers: {
+        authorization: "Bearer 2004",
       },
     }
   );
 };
 
-export const unsubscribeChannel = async (id: string) => {
-  await fetcher.delete(`/api/channel-subscription/${id}`, {
-    headers: {
-      authorization: "Bearer 47",
-    },
-  });
+export const unsubscribeChannel = async (channelId: string) => {
+  await fetcher.delete(
+    `${API_ENDPOINT.CHANNEL_SUBSCRIPTION}?channelId=${channelId}`,
+    {
+      headers: {
+        authorization: "Bearer 2004",
+      },
+    }
+  );
 };

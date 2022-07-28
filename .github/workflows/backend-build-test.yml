@@ -1,0 +1,66 @@
+name: 줍줍 백엔드 CI 테스트 자동화
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+      - develop
+    paths: 'backend/**'
+  pull_request:
+    branches:
+      - main
+      - release/*
+      - develop
+    paths: 'backend/**'
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 리포지토리를 가져옵니다
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SUBMODULE_TOKEN }}
+          submodules: recursive
+
+      - name: JDK 11을 설치합니다
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Gradle 명령 실행을 위한 권한을 부여합니다
+        run: chmod +x gradlew
+
+      - name: Gradle build를 수행합니다
+        run: ./gradlew build
+
+      - name: 테스트 결과를 PR에 코멘트로 등록합니다
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+
+      - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+          token: ${{ github.token }}
+
+      - name: build 실패 시 Slack으로 알립니다
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: 백엔드 빌드 실패 알림
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: failure()

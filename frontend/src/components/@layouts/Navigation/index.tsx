@@ -1,6 +1,6 @@
 import * as Styled from "./style";
 import { useState, useEffect } from "react";
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME, QUERY_KEY } from "@src/@constants";
 import MenuIcon from "@public/assets/icons/MenuIcon.svg";
 import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
 import HomeIconUnfill from "@public/assets/icons/HomeIcon-Unfill.svg";
@@ -12,10 +12,16 @@ import Portal from "@src/components/@shared/Portal";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import Drawer from "@src/components/Drawer";
 import { useLocation } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getSubscribedChannels } from "@src/api/channels";
 
 function Navigation() {
   const { pathname } = useLocation();
   const [isMenuDrawerOpened, setIsMenuDrawerOpened] = useState(false);
+  const { data, refetch } = useQuery(
+    QUERY_KEY.SUBSCRIBED_CHANNELS,
+    getSubscribedChannels
+  );
 
   const handleCloseDrawer = () => {
     setIsMenuDrawerOpened(false);
@@ -25,18 +31,10 @@ function Navigation() {
     setIsMenuDrawerOpened((prev) => !prev);
   };
 
-  const getColorByCurrentPathname = (targetPathname: string) => {
-    const basePathname = pathname.slice(
-      0,
-      pathname.lastIndexOf("/") || pathname.length
-    );
-    if (targetPathname === basePathname) return "#FF9900";
-    return "#121212";
-  };
-
   useEffect(() => {
     if (isMenuDrawerOpened) {
       document.body.style.overflowY = "hidden";
+      refetch();
       return;
     }
     document.body.style.overflowY = "auto";
@@ -52,25 +50,37 @@ function Navigation() {
         <MenuIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
       <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
-        <StarIconUnfill
-          width="24px"
-          height="24px"
-          fill={getColorByCurrentPathname(PATH_NAME.BOOKMARK)}
-        />
+        {({ isActive }) => {
+          return (
+            <StarIconUnfill
+              width="24px"
+              height="24px"
+              fill={isActive ? "#FF9900" : "#121212"}
+            />
+          );
+        }}
       </WrapperLink>
       <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
-        <HomeIconUnfill
-          width="24px"
-          height="24px"
-          fill={getColorByCurrentPathname(PATH_NAME.FEED)}
-        />
+        {({ isActive }) => {
+          return (
+            <HomeIconUnfill
+              width="24px"
+              height="24px"
+              fill={isActive ? "#FF9900" : "#121212"}
+            />
+          );
+        }}
       </WrapperLink>
       <WrapperLink to={PATH_NAME.ALARM} kind="bigIcon">
-        <AlarmIconInactive
-          width="24px"
-          height="24px"
-          fill={getColorByCurrentPathname(PATH_NAME.ALARM)}
-        />
+        {({ isActive }) => {
+          return (
+            <AlarmIconInactive
+              width="24px"
+              height="24px"
+              fill={isActive ? "#FF9900" : "#121212"}
+            />
+          );
+        }}
       </WrapperLink>
       <WrapperButton kind="bigIcon">
         <InfoIcon width="24px" height="24px" fill="#121212" />
@@ -78,7 +88,7 @@ function Navigation() {
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
-          <Drawer />
+          <Drawer channels={data?.channels} />
         </>
       </Portal>
     </Styled.Container>
