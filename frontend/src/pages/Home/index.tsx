@@ -11,6 +11,7 @@ function Home() {
   const handleNavigateToAddChannel = () => {
     navigate(PATH_NAME.ADD_CHANNEL);
   };
+
   return (
     <Styled.Container>
       <Styled.GreetingContainer>
