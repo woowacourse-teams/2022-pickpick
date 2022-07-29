@@ -9,7 +9,7 @@ import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseBookmarks } from "@src/@utils";
 import { nextBookmarksCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
-import { getBookmarks } from "@src/api/bookmark";
+import { getBookmarks } from "@src/api/bookmarks";
 
 function Bookmark() {
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
