@@ -10,12 +10,17 @@ import { extractResponseBookmarks } from "@src/@utils";
 import { nextBookmarksCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import { getBookmarks } from "@src/api/bookmarks";
+import useBookmark from "@src/hooks/useBookmark";
 
 function Bookmark() {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
       getNextPageParam: nextBookmarksCallback,
     });
+
+  const { handleRemoveBookmark } = useBookmark({
+    handleSettle: refetch,
+  });
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
@@ -34,11 +39,13 @@ function Bookmark() {
               ({ id, username, postedDate, text, userThumbnail }) => (
                 <MessageCard
                   key={id}
+                  id={id}
                   username={username}
                   date={postedDate}
                   text={text}
                   thumbnail={userThumbnail}
                   isBookmarked={true}
+                  toggleBookmark={handleRemoveBookmark(id)}
                 />
               )
             )}

@@ -15,6 +15,7 @@ import DateDropDown from "@src/components/DateDropdown";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
+import useBookmark from "@src/hooks/useBookmark";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -28,6 +29,7 @@ function SpecificDateFeed() {
     hasPreviousPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery<ResponseMessages>(
     [QUERY_KEY.SPECIFIC_DATE_MESSAGES, queryKey],
     getMessages({
@@ -45,6 +47,10 @@ function SpecificDateFeed() {
     scrollOffset: 300,
     touchDistanceCriterion: -50,
     wheelDistanceCriterion: -10,
+  });
+
+  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
+    handleSettle: refetch,
   });
 
   if (isError) return <div>이거슨 에러양!</div>;
@@ -82,11 +88,13 @@ function SpecificDateFeed() {
                     <DateDropDown postedDate={parsedDate} />
                   )}
                   <MessageCard
+                    id={id}
                     username={username}
                     date={postedDate}
                     text={text}
                     thumbnail={userThumbnail}
                     isBookmarked={false}
+                    toggleBookmark={handleAddBookmark(id)}
                   />
                 </React.Fragment>
               );

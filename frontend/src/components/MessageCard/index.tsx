@@ -13,18 +13,21 @@ interface Props {
   text: string;
   thumbnail: string;
   isBookmarked: boolean;
+  toggleBookmark: () => void;
 }
 
-function MessageCard({ username, date, text, thumbnail, isBookmarked }: Props) {
+function MessageCard({
+  username,
+  date,
+  text,
+  thumbnail,
+  isBookmarked,
+  toggleBookmark,
+}: Props) {
   const [isActiveAlarmButton, setIsActiveAlarmButton] = useState(false);
-  const [isActiveStarButton, setIsActiveStarButton] = useState(false);
 
   const handleActiveAlarmButton = () => {
     setIsActiveAlarmButton((prev) => !prev);
-  };
-
-  const handleActiveStarButton = () => {
-    setIsActiveStarButton((prev) => !prev);
   };
 
   return (
@@ -58,7 +61,7 @@ function MessageCard({ username, date, text, thumbnail, isBookmarked }: Props) {
           type="button"
           icon="star"
           isActive={isBookmarked}
-          onClick={handleActiveStarButton}
+          onClick={toggleBookmark}
         >
           <FlexRow justifyContent="center" alignItems="center" gap="5px">
             <Styled.ButtonText>즐겨찾기</Styled.ButtonText>
