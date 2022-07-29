@@ -1,13 +1,14 @@
-import AddChannel from "@src/pages/AddChannel";
-import Alarm from "@src/pages/Alarm";
-import Bookmark from "@src/pages/Bookmark";
-import Feed from "@src/pages/Feed";
-import SpecificDateFeed from "@src/pages/SpecificDateFeed";
-import Home from "@src/pages/Home";
 import NotFound from "@src/pages/NotFound";
 import { PATH_NAME } from "@src/@constants";
-
 import LayoutContainer from "@src/components/@layouts/LayoutContainer";
+import {
+  AddChannel,
+  Alarm,
+  Bookmark,
+  Feed,
+  SpecificDateFeed,
+  Home,
+} from "./pages";
 
 const routes = [
   {
