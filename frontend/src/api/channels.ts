@@ -8,7 +8,7 @@ import { fetcher } from ".";
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL, {
     headers: {
-      authorization: "Bearer 2004",
+      authorization: "Bearer 2892",
     },
   });
 
@@ -20,7 +20,7 @@ export const getSubscribedChannels = async () => {
     API_ENDPOINT.CHANNEL_SUBSCRIPTION,
     {
       headers: {
-        authorization: "Bearer 2004",
+        authorization: "Bearer 2892",
       },
     }
   );
@@ -34,7 +34,7 @@ export const subscribeChannel = async (channelId: string) => {
     { channelId },
     {
       headers: {
-        authorization: "Bearer 2004",
+        authorization: "Bearer 2892",
       },
     }
   );
@@ -45,7 +45,7 @@ export const unsubscribeChannel = async (channelId: string) => {
     `${API_ENDPOINT.CHANNEL_SUBSCRIPTION}?channelId=${channelId}`,
     {
       headers: {
-        authorization: "Bearer 2004",
+        authorization: "Bearer 2892",
       },
     }
   );
