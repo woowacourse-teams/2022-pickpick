@@ -2,7 +2,7 @@
 name: Feature template
 about: 신규 기능 개발 템플릿입니다
 title: "명사형으로 작성"
-labels: "\U0001F308 ALL"
+labels: 
 assignees:
 
 ---
