@@ -47,7 +47,7 @@ operation::channel-subscription-controller-test/subscribe-channel[snippets='http
 
 === 채널 구독 취소 API
 
-operation::channel-subscription-controller-test/unsubscribe-channel[snippets='http-request,request-headers,path-parameters,http-response']
+operation::channel-subscription-controller-test/unsubscribe-channel[snippets='http-request,request-headers,request-parameters,http-response']
 
 === 구독 채널 순서 변경 API
 
