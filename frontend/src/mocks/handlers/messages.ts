@@ -1,7 +1,7 @@
 import { DefaultBodyType, ResponseComposition, rest, RestContext } from "msw";
-import { messages, channels, subscribedChannels, bookmarks } from "./data";
+import { messages } from "../data/messages";
+import { SIZE } from "../utils";
 
-const SIZE = 20;
 let standardDate = "";
 
 const getPreviousResponseInfo = (
@@ -40,7 +40,7 @@ const getNextResponseInfo = (
   );
 };
 
-export const handlers = [
+const handlers = [
   rest.get("/api/messages", (req, res, ctx) => {
     const messageId = Number(req.url.searchParams.get("messageId"));
     const needPastMessage =
@@ -71,40 +71,6 @@ export const handlers = [
 
     return getPreviousResponseInfo(res, ctx, targetIndex);
   }),
-
-  rest.get("/api/channels", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.delay(500),
-      ctx.json({
-        channels,
-      })
-    );
-  }),
-
-  rest.get("/api/channel-subscription", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.delay(500),
-      ctx.json({
-        channels: subscribedChannels,
-      })
-    );
-  }),
-
-  rest.get("/api/bookmarks", (req, res, ctx) => {
-    let messageId = req.url.searchParams.get("messageId");
-    if (messageId === "") messageId = "0";
-    const nextId = Number(req.url.searchParams.get("messageId")) + 1;
-    const index = bookmarks.findIndex(({ id }) => id === nextId);
-    const newBookmarks = bookmarks.slice(index, index + SIZE);
-    return res(
-      ctx.status(200),
-      ctx.delay(500),
-      ctx.json({
-        bookmarks: newBookmarks,
-        isLast: newBookmarks.length < SIZE,
-      })
-    );
-  }),
 ];
+
+export default handlers;
