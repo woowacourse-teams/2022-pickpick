@@ -1,6 +1,6 @@
 import * as Styled from "./style";
 
-function LazyLoading() {
+function Loader() {
   return (
     <Styled.Container>
       <Styled.LeftCircle />
@@ -9,4 +9,4 @@ function LazyLoading() {
   );
 }
 
-export default LazyLoading;
+export default Loader;

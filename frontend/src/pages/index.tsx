@@ -1,4 +1,4 @@
-import LazyLoading from "@src/components/LazyLoading";
+import Loader from "@src/components/Loader";
 import { lazy, LazyExoticComponent, Suspense } from "react";
 
 interface LoadableType {
@@ -18,30 +18,30 @@ const Loadable =
 
 export const AddChannel = Loadable({
   Component: lazy(() => import("./AddChannel")),
-  LoadingStatus: () => <LazyLoading />,
+  LoadingStatus: () => <Loader />,
 });
 
 export const Alarm = Loadable({
   Component: lazy(() => import("./Alarm")),
-  LoadingStatus: () => <LazyLoading />,
+  LoadingStatus: () => <Loader />,
 });
 
 export const Bookmark = Loadable({
   Component: lazy(() => import("./Bookmark")),
-  LoadingStatus: () => <LazyLoading />,
+  LoadingStatus: () => <Loader />,
 });
 
 export const Home = Loadable({
   Component: lazy(() => import("./Home")),
-  LoadingStatus: () => <LazyLoading />,
+  LoadingStatus: () => <Loader />,
 });
 
 export const Feed = Loadable({
   Component: lazy(() => import("./Feed")),
-  LoadingStatus: () => <LazyLoading />,
+  LoadingStatus: () => <Loader />,
 });
 
 export const SpecificDateFeed = Loadable({
   Component: lazy(() => import("./SpecificDateFeed")),
-  LoadingStatus: () => <LazyLoading />,
+  LoadingStatus: () => <Loader />,
 });
