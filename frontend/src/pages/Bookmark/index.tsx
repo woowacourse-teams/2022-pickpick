@@ -38,6 +38,7 @@ function Bookmark() {
                   date={postedDate}
                   text={text}
                   thumbnail={userThumbnail}
+                  isBookmarked={true}
                 />
               )
             )}

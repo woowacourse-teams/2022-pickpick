@@ -1,7 +1,6 @@
 import * as Styled from "./style";
 import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
 import AlarmIconActive from "@public/assets/icons/AlarmIcon-Active.svg";
-import RemoveIcon from "@public/assets/icons/RemoveIcon.svg";
 import ProfileImage from "@src/components/ProfileImage";
 import { FlexRow } from "@src/@styles/shared";
 import { parseTime } from "@src/@utils";
@@ -13,9 +12,10 @@ interface Props {
   date: string;
   text: string;
   thumbnail: string;
+  isBookmarked: boolean;
 }
 
-function MessageCard({ username, date, text, thumbnail }: Props) {
+function MessageCard({ username, date, text, thumbnail, isBookmarked }: Props) {
   const [isActiveAlarmButton, setIsActiveAlarmButton] = useState(false);
   const [isActiveStarButton, setIsActiveStarButton] = useState(false);
 
@@ -57,7 +57,7 @@ function MessageCard({ username, date, text, thumbnail }: Props) {
         <IconButton
           type="button"
           icon="star"
-          isActive={isActiveStarButton}
+          isActive={isBookmarked}
           onClick={handleActiveStarButton}
         >
           <FlexRow justifyContent="center" alignItems="center" gap="5px">
