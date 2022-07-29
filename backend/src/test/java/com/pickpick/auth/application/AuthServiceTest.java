@@ -47,7 +47,7 @@ class AuthServiceTest {
         when(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .thenReturn(generateOAuthV2AccessResponse());
         when(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .thenReturn(generateUsersIdentityResponse(member));
+                .thenReturn(generateUsersIdentityResponse(member.getSlackId()));
 
         // when
         String jupjupToken = authService.login("1234");
@@ -64,10 +64,10 @@ class AuthServiceTest {
         return response;
     }
 
-    private UsersIdentityResponse generateUsersIdentityResponse(final Member member) {
+    private UsersIdentityResponse generateUsersIdentityResponse(final String slackId) {
         UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
         User user = new User();
-        user.setId(member.getSlackId());
+        user.setId(slackId);
         usersIdentityResponse.setUser(user);
         return usersIdentityResponse;
     }

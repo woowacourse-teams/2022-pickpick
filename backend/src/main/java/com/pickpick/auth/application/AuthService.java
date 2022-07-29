@@ -54,7 +54,7 @@ public class AuthService {
         }
     }
 
-    private String requestSlackToken(String code) throws IOException, SlackApiException {
+    private String requestSlackToken(final String code) throws IOException, SlackApiException {
         OAuthV2AccessRequest request = OAuthV2AccessRequest.builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
@@ -67,7 +67,7 @@ public class AuthService {
                 .getAccessToken();
     }
 
-    private String requestMemberSlackId(String token) throws IOException, SlackApiException {
+    private String requestMemberSlackId(final String token) throws IOException, SlackApiException {
         UsersIdentityRequest request = UsersIdentityRequest.builder()
                 .token(token)
                 .build();
