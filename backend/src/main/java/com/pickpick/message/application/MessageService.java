@@ -67,6 +67,7 @@ public class MessageService {
     private BooleanExpression meetAllConditions(final MessageRequest request) {
         return channelIdsIn(request.getChannelIds())
                 .and(textContains(request.getKeyword()))
+                .and(messageHasText())
                 .and(decideMessageIdOrDate(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
     }
 
@@ -90,6 +91,11 @@ public class MessageService {
         }
 
         return dateCondition(date, needPastMessage);
+    }
+
+    private BooleanExpression messageHasText() {
+        return QMessage.message.text.isNotNull()
+                .and(QMessage.message.text.isNotEmpty());
     }
 
 
