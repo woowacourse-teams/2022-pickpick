@@ -1,5 +1,5 @@
 import { DefaultBodyType, ResponseComposition, rest, RestContext } from "msw";
-import { messages, channels, subscribedChannels } from "./data";
+import { messages, channels, subscribedChannels, bookmarks } from "./data";
 
 const SIZE = 20;
 let standardDate = "";
@@ -88,6 +88,22 @@ export const handlers = [
       ctx.delay(500),
       ctx.json({
         channels: subscribedChannels,
+      })
+    );
+  }),
+
+  rest.get("/api/bookmarks", (req, res, ctx) => {
+    let messageId = req.url.searchParams.get("messageId");
+    if (messageId === "") messageId = "0";
+    const nextId = Number(req.url.searchParams.get("messageId")) + 1;
+    const index = bookmarks.findIndex(({ id }) => id === nextId);
+    const newBookmarks = bookmarks.slice(index, index + SIZE);
+    return res(
+      ctx.status(200),
+      ctx.delay(500),
+      ctx.json({
+        bookmarks: newBookmarks,
+        isLast: newBookmarks.length < SIZE,
       })
     );
   }),
