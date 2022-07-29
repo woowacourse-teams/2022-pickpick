@@ -13,3 +13,23 @@ export const getBookmarks = async ({ pageParam = "" }: any) => {
   );
   return data;
 };
+
+export const postBookmark = async (messageId: string) => {
+  await fetcher.post(
+    API_ENDPOINT.BOOKMARKS,
+    { messageId },
+    {
+      headers: {
+        authorization: "Bearer 2004",
+      },
+    }
+  );
+};
+
+export const deleteBookmark = async (messageId: string) => {
+  await fetcher.delete(`${API_ENDPOINT.BOOKMARKS}?messageId=${messageId}`, {
+    headers: {
+      authorization: "Bearer 2004",
+    },
+  });
+};
