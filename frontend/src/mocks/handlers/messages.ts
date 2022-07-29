@@ -1,7 +1,7 @@
 import { DefaultBodyType, ResponseComposition, rest, RestContext } from "msw";
-import { messages, channels, subscribedChannels } from "./data";
+import { messages } from "../data/messages";
+import { SIZE } from "../utils";
 
-const SIZE = 20;
 let standardDate = "";
 
 const getPreviousResponseInfo = (
@@ -40,7 +40,7 @@ const getNextResponseInfo = (
   );
 };
 
-export const handlers = [
+const handlers = [
   rest.get("/api/messages", (req, res, ctx) => {
     const messageId = Number(req.url.searchParams.get("messageId"));
     const needPastMessage =
@@ -71,24 +71,6 @@ export const handlers = [
 
     return getPreviousResponseInfo(res, ctx, targetIndex);
   }),
-
-  rest.get("/api/channels", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.delay(500),
-      ctx.json({
-        channels,
-      })
-    );
-  }),
-
-  rest.get("/api/channel-subscription", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.delay(500),
-      ctx.json({
-        channels: subscribedChannels,
-      })
-    );
-  }),
 ];
+
+export default handlers;

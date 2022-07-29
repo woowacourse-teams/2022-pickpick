@@ -10,6 +10,10 @@ export interface Message {
   userThumbnail: string;
 }
 
+export interface ResponseBookmarks {
+  bookmarks: Message[];
+  isLast: boolean;
+}
 export interface ResponseMessages {
   messages: Message[];
   isLast: boolean;

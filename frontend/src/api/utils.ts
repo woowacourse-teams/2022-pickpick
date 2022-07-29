@@ -1,4 +1,4 @@
-import { ResponseMessages } from "@src/@types/shared";
+import { ResponseMessages, ResponseBookmarks } from "@src/@types/shared";
 
 export const previousMessagesCallback = ({
   isLast,
@@ -18,5 +18,14 @@ export const nextMessagesCallback = ({
       messageId: messages[messages.length - 1]?.id,
       needPastMessage: true,
     };
+  }
+};
+
+export const nextBookmarksCallback = ({
+  isLast,
+  bookmarks,
+}: ResponseBookmarks) => {
+  if (!isLast) {
+    return bookmarks[bookmarks.length - 1]?.id;
   }
 };
