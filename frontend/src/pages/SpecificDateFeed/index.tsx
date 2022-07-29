@@ -88,7 +88,6 @@ function SpecificDateFeed() {
                     <DateDropDown postedDate={parsedDate} />
                   )}
                   <MessageCard
-                    id={id}
                     username={username}
                     date={postedDate}
                     text={text}

@@ -39,7 +39,6 @@ function Bookmark() {
               ({ id, username, postedDate, text, userThumbnail }) => (
                 <MessageCard
                   key={id}
-                  id={id}
                   username={username}
                   date={postedDate}
                   text={text}
