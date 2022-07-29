@@ -10,7 +10,7 @@ function UnexpectedError() {
     <Styled.Container>
       <Header />
       <Styled.Main hasMarginTop={true}>
-        <FlexColumn gap={"30px"} margin={"30vh 0"}>
+        <FlexColumn gap="30px" margin="30vh 0">
           <h1>예상치 못한 에러 발생</h1>
           <a href={PATH_NAME.FEED}>
             <Button>메인 피드로 가기</Button>
