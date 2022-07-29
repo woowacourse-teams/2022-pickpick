@@ -11,10 +11,12 @@ export const QUERY_KEY = {
   SUBSCRIBED_CHANNELS: "subscribedChannels",
   ALL_MESSAGES: "allMessages",
   SPECIFIC_DATE_MESSAGES: "specificDateMessages",
+  BOOKMARKS: "bookmarks",
 };
 
 export const API_ENDPOINT = {
   MESSAGES: "/api/messages",
   CHANNEL: "/api/channels",
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
+  BOOKMARKS: "/api/bookmarks",
 };
