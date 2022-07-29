@@ -7,6 +7,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import UnexpectedError from "./pages/UnexpectedError";
+import { RecoilRoot } from "recoil";
 
 if (process.env.NODE_ENV === "development") {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -30,7 +31,9 @@ root.render(
       <ThemeProvider theme={LIGHT_MODE_THEME}>
         <GlobalStyle />
         <ErrorBoundary fallback={<UnexpectedError />}>
-          <App />
+          <RecoilRoot>
+            <App />
+          </RecoilRoot>
         </ErrorBoundary>
       </ThemeProvider>
     </QueryClientProvider>
