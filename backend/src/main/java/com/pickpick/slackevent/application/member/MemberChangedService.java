@@ -21,6 +21,7 @@ public class MemberChangedService implements SlackEventService {
     private static final String DISPLAY_NAME = "display_name";
     private static final String IMAGE_URL = "image_512";
     private static final String REAL_NAME = "real_name";
+    private static final String EVENT = "event";
 
     private final MemberRepository members;
 
@@ -40,7 +41,8 @@ public class MemberChangedService implements SlackEventService {
     }
 
     private MemberProfileDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> user = (Map) requestBody.get(USER);
+        Map<String, Object> event = (Map) requestBody.get(EVENT);
+        Map<String, Object> user = (Map) event.get(USER);
         Map<String, Object> profile = (Map) user.get(PROFILE);
 
         return new MemberProfileDto(
