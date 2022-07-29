@@ -42,11 +42,11 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Optional<Member> expected = members.findById(member.getId());
+        Optional<Member> actual = members.findById(member.getId());
 
         assertAll(
-                () -> assertThat(expected).isNotEmpty(),
-                () -> assertThat(expected.get().getUsername()).isEqualTo(expectedName)
+                () -> assertThat(actual).isNotEmpty(),
+                () -> assertThat(actual.get().getUsername()).isEqualTo(expectedName)
         );
     }
 
@@ -64,17 +64,17 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Optional<Member> expected = members.findById(member.getId());
+        Optional<Member> actual = members.findById(member.getId());
 
         assertAll(
-                () -> assertThat(expected).isNotEmpty(),
-                () -> assertThat(expected.get().getThumbnailUrl()).isEqualTo(thumbnailUrl)
+                () -> assertThat(actual).isNotEmpty(),
+                () -> assertThat(actual.get().getThumbnailUrl()).isEqualTo(thumbnailUrl)
         );
     }
 
     private Map<String, Object> memberChangedEvent(final String realName, final String displayName,
                                                    final String thumbnailUrl) {
-        return Map.of(
+        return Map.of("event", Map.of(
                 "user", Map.of(
                         "id", SLACK_ID,
                         "profile", Map.of(
@@ -82,6 +82,7 @@ class MemberChangedServiceTest {
                                 "display_name", displayName,
                                 "image_512", thumbnailUrl
                         )
-                ));
+                )
+        ));
     }
 }

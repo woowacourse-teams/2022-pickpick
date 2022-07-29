@@ -5,7 +5,7 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
-import com.pickpick.slackevent.application.member.dto.MemberProfileDto;
+import com.pickpick.slackevent.application.member.dto.MemberProfileChangedDto;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,21 +31,21 @@ public class MemberChangedService implements SlackEventService {
 
     @Override
     public void execute(final Map<String, Object> requestBody) {
-        MemberProfileDto memberProfileDto = convert(requestBody);
+        MemberProfileChangedDto memberProfileChangedDto = convert(requestBody);
 
-        String slackId = memberProfileDto.getSlackId();
+        String slackId = memberProfileChangedDto.getSlackId();
         Member member = members.findBySlackId(slackId)
                 .orElseThrow(() -> new MemberNotFoundException(slackId));
 
-        member.update(memberProfileDto.getUsername(), memberProfileDto.getThumbnailUrl());
+        member.update(memberProfileChangedDto.getUsername(), memberProfileChangedDto.getThumbnailUrl());
     }
 
-    private MemberProfileDto convert(final Map<String, Object> requestBody) {
+    private MemberProfileChangedDto convert(final Map<String, Object> requestBody) {
         Map<String, Object> event = (Map) requestBody.get(EVENT);
         Map<String, Object> user = (Map) event.get(USER);
         Map<String, Object> profile = (Map) user.get(PROFILE);
 
-        return new MemberProfileDto(
+        return new MemberProfileChangedDto(
                 (String) user.get(SLACK_ID),
                 extractUsername(profile),
                 (String) profile.get(IMAGE_URL)
@@ -56,7 +56,7 @@ public class MemberChangedService implements SlackEventService {
         String username = (String) profile.get(DISPLAY_NAME);
 
         if (!StringUtils.hasText(username)) {
-            username = (String) profile.get(REAL_NAME);
+            return (String) profile.get(REAL_NAME);
         }
 
         return username;
@@ -64,6 +64,6 @@ public class MemberChangedService implements SlackEventService {
 
     @Override
     public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return slackEvent == SlackEvent.MEMBER_CHANGED;
+        return SlackEvent.MEMBER_CHANGED == slackEvent;
     }
 }

@@ -41,6 +41,7 @@ public class Member {
     public void update(final String username, final String thumbnailUrl) {
         validateUsername(username);
         validateThumbnailUrl(thumbnailUrl);
+
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
     }
