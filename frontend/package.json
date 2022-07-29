@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.1",
     "react-router-dom": "^6.3.0",
+    "recoil": "^0.7.4",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {
