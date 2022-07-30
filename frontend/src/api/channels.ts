@@ -4,11 +4,12 @@ import {
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
 import { fetcher } from ".";
+import { getAuthorization } from "./utils";
 
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL, {
     headers: {
-      authorization: "Bearer 2892",
+      ...getAuthorization(),
     },
   });
 
@@ -20,7 +21,7 @@ export const getSubscribedChannels = async () => {
     API_ENDPOINT.CHANNEL_SUBSCRIPTION,
     {
       headers: {
-        authorization: "Bearer 2892",
+        ...getAuthorization(),
       },
     }
   );
@@ -45,7 +46,7 @@ export const unsubscribeChannel = async (channelId: string) => {
     `${API_ENDPOINT.CHANNEL_SUBSCRIPTION}?channelId=${channelId}`,
     {
       headers: {
-        authorization: "Bearer 2892",
+        ...getAuthorization(),
       },
     }
   );

@@ -8,10 +8,13 @@ export interface Message {
   postedDate: string;
   text: string;
   userThumbnail: string;
+  isBookmarked?: boolean;
 }
 
+export type Bookmark = Omit<Message, "isBookmarked">;
+
 export interface ResponseBookmarks {
-  bookmarks: Message[];
+  bookmarks: Bookmark[];
   isLast: boolean;
 }
 export interface ResponseMessages {

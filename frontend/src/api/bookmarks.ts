@@ -1,13 +1,14 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseBookmarks } from "@src/@types/shared";
 import { fetcher } from ".";
+import { getAuthorization } from "./utils";
 
 export const getBookmarks = async ({ pageParam = "" }: any) => {
   const { data } = await fetcher.get<ResponseBookmarks>(
     `${API_ENDPOINT.BOOKMARKS}?messageId=${pageParam}`,
     {
       headers: {
-        authorization: "Bearer 1",
+        ...getAuthorization(),
       },
     }
   );
@@ -20,7 +21,7 @@ export const postBookmark = async (messageId: string) => {
     { messageId },
     {
       headers: {
-        authorization: "Bearer 2004",
+        ...getAuthorization(),
       },
     }
   );
@@ -29,7 +30,7 @@ export const postBookmark = async (messageId: string) => {
 export const deleteBookmark = async (messageId: string) => {
   await fetcher.delete(`${API_ENDPOINT.BOOKMARKS}?messageId=${messageId}`, {
     headers: {
-      authorization: "Bearer 2004",
+      ...getAuthorization(),
     },
   });
 };
