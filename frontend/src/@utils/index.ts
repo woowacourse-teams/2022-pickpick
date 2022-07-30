@@ -1,4 +1,5 @@
 import {
+  Bookmark,
   Message,
   ResponseBookmarks,
   ResponseMessages,
@@ -31,7 +32,7 @@ export const extractResponseMessages = (
 
 export const extractResponseBookmarks = (
   data?: InfiniteData<ResponseBookmarks>
-): Message[] => {
+): Bookmark[] => {
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.bookmarks);

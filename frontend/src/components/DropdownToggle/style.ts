@@ -1,4 +1,4 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
 export const Container = styled.button`
@@ -7,7 +7,7 @@ export const Container = styled.button`
   border: none;
   padding: 4px 12px;
   width: fit-content;
-  background-color: ${({ theme }: { theme: Theme }) =>
+  background-color: ${({ theme }: StyledDefaultProps) =>
     theme.COLOR.BACKGROUND.SECONDARY};
   border-radius: 50px;
   cursor: pointer;
@@ -15,7 +15,7 @@ export const Container = styled.button`
 `;
 
 export const Text = styled.p`
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
     color: ${theme.COLOR.TEXT.DEFAULT};
   `}

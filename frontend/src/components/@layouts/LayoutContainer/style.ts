@@ -1,7 +1,9 @@
 import styled, { css } from "styled-components";
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 
-export const Container = styled.div``;
+interface StyledProps extends StyledDefaultProps {
+  hasMarginTop: boolean;
+}
 
 export const Main = styled.main`
   display: flex;
@@ -10,7 +12,7 @@ export const Main = styled.main`
   align-items: center;
   height: auto;
 
-  ${({ theme, hasMarginTop }: { theme: Theme; hasMarginTop: boolean }) => css`
+  ${({ theme, hasMarginTop }: StyledProps) => css`
     background-color: ${theme.COLOR.BACKGROUND.PRIMARY};
     margin-top: ${hasMarginTop ? "74.5px" : 0};
   `}
