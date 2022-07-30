@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 class ChannelSubscriptionServiceTest {
 
     private static final long NOT_EXISTED_CHANNEL_ID = 1L;
+
     @Autowired
     private ChannelSubscriptionService channelSubscriptionService;
 
