@@ -2,7 +2,7 @@ import ProfileImage from ".";
 import MockImage from "@public/assets/images/MockImage.png";
 
 export default {
-  title: "@shared/ProfileImage",
+  title: "@Component/ProfileImage",
   component: ProfileImage,
 };
 

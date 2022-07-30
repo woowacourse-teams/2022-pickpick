@@ -1,7 +1,7 @@
 import SearchInput from ".";
 
 export default {
-  title: "@shared/SearchInput",
+  title: "@Component/SearchInput",
   component: SearchInput,
 };
 

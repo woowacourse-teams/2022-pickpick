@@ -1,12 +1,11 @@
 import * as Styled from "./style";
 
-export type Icon = "star" | "alarm" | "remove";
+export type Icon = "star" | "alarm";
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: JSX.Element | string;
   icon: Icon;
   isActive: boolean;
-  onClick: () => void;
 }
 
 function IconButton({ children, ...props }: Props) {
