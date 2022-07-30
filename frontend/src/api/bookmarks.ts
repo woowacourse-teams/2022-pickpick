@@ -3,7 +3,13 @@ import { ResponseBookmarks } from "@src/@types/shared";
 import { fetcher } from ".";
 import { getAuthorization } from "./utils";
 
-export const getBookmarks = async ({ pageParam = "" }: any) => {
+interface GetBookmarkParam {
+  pageParam?: string;
+}
+
+export const getBookmarks = async (
+  { pageParam }: GetBookmarkParam = { pageParam: "" }
+) => {
   const { data } = await fetcher.get<ResponseBookmarks>(
     `${API_ENDPOINT.BOOKMARKS}?messageId=${pageParam}`,
     {
