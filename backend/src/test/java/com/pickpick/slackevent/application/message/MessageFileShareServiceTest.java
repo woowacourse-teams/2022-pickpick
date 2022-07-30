@@ -128,7 +128,7 @@ class MessageFileShareServiceTest {
         return conversationsInfoResponse;
     }
 
-    private Map<String, Object> fileShareRequest(String text) {
+    private Map<String, Object> fileShareRequest(final String text) {
         return Map.of("event", Map.of(
                 "type", MESSAGE_FILE_SHARE.getType(),
                 "subtype", MESSAGE_FILE_SHARE.getSubtype(),

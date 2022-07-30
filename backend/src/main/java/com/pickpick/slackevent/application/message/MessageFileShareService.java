@@ -62,6 +62,19 @@ public class MessageFileShareService implements SlackEventService {
         messages.save(slackMessageDto.toEntity(member, channel));
     }
 
+    private SlackMessageDto convert(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+
+        return new SlackMessageDto(
+                (String) event.get(USER),
+                (String) event.get(CLIENT_MSG_ID),
+                (String) event.get(TIMESTAMP),
+                (String) event.get(TIMESTAMP),
+                (String) event.getOrDefault(TEXT, ""),
+                (String) event.get(CHANNEL)
+        );
+    }
+
     private Channel createChannel(final String channelSlackId) {
         try {
             Conversation conversation = slackClient.conversationsInfo(
@@ -81,21 +94,8 @@ public class MessageFileShareService implements SlackEventService {
         return new Channel(channel.getId(), channel.getName());
     }
 
-    private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
-
-        return new SlackMessageDto(
-                (String) event.get(USER),
-                (String) event.get(CLIENT_MSG_ID),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TIMESTAMP),
-                (String) event.getOrDefault(TEXT, ""),
-                (String) event.get(CHANNEL)
-        );
-    }
-
     @Override
     public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_CREATED == slackEvent;
+        return SlackEvent.MESSAGE_FILE_SHARE == slackEvent;
     }
 }
