@@ -24,7 +24,7 @@ function Feed() {
       onSettled: initializeDateArray,
     });
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
+  const { handleAddBookmark } = useBookmark({
     handleSettle: refetch,
   });
 

@@ -49,7 +49,7 @@ function SpecificDateFeed() {
     wheelDistanceCriterion: -10,
   });
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
+  const { handleAddBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
