@@ -35,7 +35,7 @@ export const subscribeChannel = async (channelId: string) => {
     { channelId },
     {
       headers: {
-        authorization: "Bearer 2892",
+        ...getAuthorization(),
       },
     }
   );
