@@ -8,7 +8,6 @@ import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,11 +76,10 @@ class MessageServiceTest {
         // when
         MessageResponses messageResponses = messageService.find(messageRequest);
         List<MessageResponse> messages = messageResponses.getMessages();
-        List<MessageResponse> emptyTextMessages = messages.stream()
-                .filter(message -> !StringUtils.hasText(message.getText()))
-                .collect(Collectors.toList());
+        boolean hasEmptyMessageResponse = messages.stream()
+                .anyMatch(message -> !StringUtils.hasText(message.getText()));
 
         // then
-        assertThat(emptyTextMessages).isEmpty();
+        assertThat(hasEmptyMessageResponse).isFalse();
     }
 }
