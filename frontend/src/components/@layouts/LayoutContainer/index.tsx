@@ -11,14 +11,14 @@ function LayoutContainer() {
   const hasHeader = () => pathname === "/" || pathname === "/addChannel";
 
   return (
-    <Styled.Container>
+    <div>
       {hasHeader() && <Header />}
       <Styled.Main hasMarginTop={hasHeader()}>
         <Outlet />
       </Styled.Main>
       <Footer />
       <Navigation />
-    </Styled.Container>
+    </div>
   );
 }
 

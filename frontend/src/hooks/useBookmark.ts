@@ -5,7 +5,14 @@ interface Props {
   handleSettle: () => void;
 }
 
-function useBookmark({ handleSettle }: Props) {
+type Handler = (messageId: string) => () => void;
+
+interface ReturnType {
+  handleAddBookmark: Handler;
+  handleRemoveBookmark: Handler;
+}
+
+function useBookmark({ handleSettle }: Props): ReturnType {
   const { mutate: addBookmark } = useMutation(postBookmark, {
     onSettled: () => {
       handleSettle();

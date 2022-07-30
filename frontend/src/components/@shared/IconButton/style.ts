@@ -1,24 +1,24 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 import { Props } from ".";
 
 const iconColorTable = {
   remove: css`
-    background-color: ${({ theme }: { theme: Theme }) =>
+    background-color: ${({ theme }: StyledDefaultProps) =>
       theme.COLOR.CONTAINER.LIGHT_RED};
   `,
   alarm: css`
-    background-color: ${({ theme }: { theme: Theme }) =>
+    background-color: ${({ theme }: StyledDefaultProps) =>
       theme.COLOR.CONTAINER.LIGHT_BLUE};
   `,
   star: css`
-    background-color: ${({ theme }: { theme: Theme }) =>
+    background-color: ${({ theme }: StyledDefaultProps) =>
       theme.COLOR.CONTAINER.LIGHT_ORANGE};
   `,
 };
 
-const backgroundColorGary = css`
-  background-color: ${({ theme }: { theme: Theme }) =>
+const inactiveStyle = css`
+  background-color: ${({ theme }: StyledDefaultProps) =>
     theme.COLOR.BACKGROUND.TERTIARY};
 `;
 
@@ -29,6 +29,6 @@ export const Container = styled.button`
   cursor: pointer;
 
   ${({ icon, isActive }: Pick<Props, "icon" | "isActive">) => css`
-    ${isActive ? iconColorTable[icon] : backgroundColorGary}
+    ${isActive ? iconColorTable[icon] : inactiveStyle}
   `};
 `;

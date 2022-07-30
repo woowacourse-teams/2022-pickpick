@@ -1,4 +1,4 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
@@ -15,7 +15,7 @@ export const Container = styled.div`
   justify-content: center;
   z-index: 1;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     color: ${theme.COLOR.TEXT.WHITE};
     background-color: ${theme.COLOR.CONTAINER.LIGHT_RED};
   `}

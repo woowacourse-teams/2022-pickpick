@@ -1,6 +1,11 @@
 import { useRef } from "react";
 
-const useMessageDate = () => {
+interface ReturnType {
+  initializeDateArray: () => void;
+  isRenderDate: (postedDate: string) => boolean;
+}
+
+function useMessageDate(): ReturnType {
   const dateArrayRef = useRef<string[]>([]);
 
   const initializeDateArray = () => {
@@ -18,6 +23,6 @@ const useMessageDate = () => {
     initializeDateArray,
     isRenderDate,
   };
-};
+}
 
 export default useMessageDate;

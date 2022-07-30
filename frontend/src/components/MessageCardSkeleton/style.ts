@@ -1,4 +1,4 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { keyframes, css } from "styled-components";
 
 const refresh = keyframes`
@@ -22,7 +22,7 @@ export const Container = styled.div`
   border-radius: 4px;
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};
   `}
 `;
