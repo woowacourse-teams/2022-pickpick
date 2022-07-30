@@ -8,13 +8,19 @@ interface Props {
   wheelDistanceCriterion: number;
 }
 
+interface ReturnType {
+  onWheel: (event: React.WheelEvent<HTMLDivElement>) => void;
+  onTouchStart: (event: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => void;
+}
+
 function useTopScreenEventHandler({
   isCallable,
   callback,
   scrollOffset,
   touchDistanceCriterion,
   wheelDistanceCriterion,
-}: Props) {
+}: Props): ReturnType {
   const wheelPosition = useRef({ default: 0, move: 0, scroll: 0 });
   const touchPosition = useRef({ start: 0, end: 0 });
   const scrollPosition = useRef({ default: 0 });
