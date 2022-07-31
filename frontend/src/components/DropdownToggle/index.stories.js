@@ -1,7 +1,7 @@
 import DropdownToggle from ".";
 
 export default {
-  title: "@shared/DropdownToggle",
+  title: "@Component/DropdownToggle",
   component: DropdownToggle,
 };
 

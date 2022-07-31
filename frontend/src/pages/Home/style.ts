@@ -1,4 +1,4 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
@@ -22,7 +22,7 @@ export const UsageContainer = styled.section`
   align-items: center;
   gap: 40px;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.BACKGROUND.SECONDARY};
   `}
 `;

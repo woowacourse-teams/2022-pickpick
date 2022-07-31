@@ -13,15 +13,20 @@ import useMessageDate from "@src/hooks/useMessageDate";
 import DateDropDown from "@src/components/DateDropdown";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
+import useBookmark from "@src/hooks/useBookmark";
 
 function Feed() {
   const { initializeDateArray, isRenderDate } = useMessageDate();
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(QUERY_KEY.ALL_MESSAGES, getMessages(), {
       getNextPageParam: nextMessagesCallback,
       onSettled: initializeDateArray,
     });
+
+  const { handleAddBookmark } = useBookmark({
+    handleSettle: refetch,
+  });
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
@@ -49,6 +54,8 @@ function Feed() {
                     date={postedDate}
                     text={text}
                     thumbnail={userThumbnail}
+                    isBookmarked={false}
+                    toggleBookmark={handleAddBookmark(id)}
                   />
                 </React.Fragment>
               );

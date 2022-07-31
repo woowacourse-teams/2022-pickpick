@@ -1,4 +1,4 @@
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
@@ -19,7 +19,7 @@ export const LeftCircle = styled.div`
 
   animation: moveLeft 2s linear infinite;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.PRIMARY.DEFAULT};
   `}
 
@@ -44,7 +44,7 @@ export const RightCircle = styled.div`
 
   animation: moveRight 2s linear infinite;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.LIGHT_ORANGE};
   `}
 

@@ -2,9 +2,23 @@ import { API_ENDPOINT } from "@src/@constants";
 import { ResponseMessages } from "@src/@types/shared";
 import { fetcher } from ".";
 
+interface PageParam {
+  messageId: string;
+  needPastMessage: boolean;
+  date: string;
+}
+
+interface FirstParam {
+  date?: string;
+}
+
+interface SecondParam {
+  pageParam?: PageParam;
+}
+
 export const getMessages =
-  ({ date = "" } = {}) =>
-  async ({ pageParam }: any) => {
+  ({ date }: FirstParam = { date: "" }) =>
+  async ({ pageParam }: SecondParam) => {
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
         `${

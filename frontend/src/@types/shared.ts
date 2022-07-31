@@ -2,14 +2,24 @@ import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export type Theme = typeof LIGHT_MODE_THEME;
 
+export interface StyledDefaultProps {
+  theme: Theme;
+}
 export interface Message {
   id: string;
   username: string;
   postedDate: string;
   text: string;
   userThumbnail: string;
+  isBookmarked?: boolean;
 }
 
+export type Bookmark = Omit<Message, "isBookmarked">;
+
+export interface ResponseBookmarks {
+  bookmarks: Bookmark[];
+  isLast: boolean;
+}
 export interface ResponseMessages {
   messages: Message[];
   isLast: boolean;

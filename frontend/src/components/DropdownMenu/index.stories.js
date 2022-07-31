@@ -1,7 +1,7 @@
 import DropdownMenu from ".";
 
 export default {
-  title: "@shared/DropdownMenu",
+  title: "@Component/DropdownMenu",
   component: DropdownMenu,
 };
 

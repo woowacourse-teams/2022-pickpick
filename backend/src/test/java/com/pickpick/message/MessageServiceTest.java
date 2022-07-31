@@ -10,6 +10,7 @@ import com.pickpick.message.ui.dto.MessageResponses;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,6 +19,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Sql({"/truncate.sql", "/message.sql"})
 @TestConstructor(autowireMode = AutowireMode.ALL)
@@ -63,5 +65,21 @@ class MessageServiceTest {
                 () -> assertThat(messages).extracting("id").isEqualTo(expectedMessageIds),
                 () -> assertThat(last).isEqualTo(expectedLast)
         );
+    }
+
+    @DisplayName("메시지 조회 시, 텍스트가 비어있는 메시지는 필터링된다")
+    @Test
+    void emptyMessagesShouldBeFiltered() {
+        // given
+        MessageRequest messageRequest = new MessageRequest("", "", List.of(5L), true, null, 200);
+
+        // when
+        MessageResponses messageResponses = messageService.find(messageRequest);
+        List<MessageResponse> messages = messageResponses.getMessages();
+        boolean hasEmptyMessageResponse = messages.stream()
+                .anyMatch(message -> !StringUtils.hasText(message.getText()));
+
+        // then
+        assertThat(hasEmptyMessageResponse).isFalse();
     }
 }

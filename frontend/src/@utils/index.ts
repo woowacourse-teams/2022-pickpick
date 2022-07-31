@@ -1,4 +1,9 @@
-import { Message, ResponseMessages } from "@src/@types/shared";
+import {
+  Bookmark,
+  Message,
+  ResponseBookmarks,
+  ResponseMessages,
+} from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
 const getTimeStandard = (time: number): string => {
@@ -23,4 +28,12 @@ export const extractResponseMessages = (
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.messages);
+};
+
+export const extractResponseBookmarks = (
+  data?: InfiniteData<ResponseBookmarks>
+): Bookmark[] => {
+  if (!data) return [];
+
+  return data.pages.flatMap((arr) => arr.bookmarks);
 };

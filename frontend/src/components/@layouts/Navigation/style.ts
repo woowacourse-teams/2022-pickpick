@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.nav`
   position: fixed;
@@ -10,6 +10,6 @@ export const Container = styled.nav`
   justify-content: space-around;
   padding: 5px;
   z-index: 1;
-  background-color: ${({ theme }: { theme: Theme }) =>
+  background-color: ${({ theme }: StyledDefaultProps) =>
     `${theme.COLOR.BACKGROUND.SECONDARY}`};
 `;

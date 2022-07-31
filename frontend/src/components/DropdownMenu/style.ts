@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { Theme } from "@src/@types/shared";
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.ul`
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
@@ -10,13 +10,13 @@ export const Container = styled.ul`
   top: 22px;
   left: 0;
 
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};
   `}
 `;
 
 export const Option = styled.li`
-  ${({ theme }: { theme: Theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.BODY};
   `}
 
