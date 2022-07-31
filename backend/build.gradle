@@ -68,8 +68,14 @@ task copyDocument(type: Copy) {
     into file("src/main/resources/static")
 }
 
-bootJar {
+task buildDocument(type: Copy) {
     dependsOn copyDocument
+    from file("src/main/resources/static")
+    into file("build/resources/main/static")
+}
+
+bootJar {
+    dependsOn buildDocument
 }
 
 tasks.named('test') {
