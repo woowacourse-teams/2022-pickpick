@@ -4,6 +4,11 @@ import GithubIcon from "@public/assets/icons/GithubIcon.svg";
 export default {
   title: "@shared/WrapperButton",
   component: WrapperButton,
+  argTypes: {
+    children: {
+      control: false,
+    },
+  },
 };
 
 const Template = (args) => <WrapperButton {...args} />;
