@@ -15,8 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
-    "chromatic": "^6.7.2",
-    "D": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.1",
@@ -46,6 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "babel-loader": "^8.2.5",
+    "chromatic": "^6.7.2",
     "clean-webpack-plugin": "^4.0.0",
     "dotenv": "^16.0.1",
     "eslint": "^8.18.0",
