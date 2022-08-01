@@ -1,0 +1,33 @@
+name: 줍줍 프론트엔드 단위 테스트
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+      - develop
+    paths: "frontend/**"
+  pull_request:
+    branches:
+      - main
+      - release/*
+      - develop
+    paths: "frontend/**"
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ env.working-directory }}
+
+      - name: Run Jest Test
+        run: npm run test
+        working-directory: ${{ env.working-directory }}
