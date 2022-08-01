@@ -1,22 +1,22 @@
+import { ISOConverter } from "@src/@utils";
+import usePortal from "@src/hooks/usePortal";
 import { Link } from "react-router-dom";
+import Dimmer from "../@shared/Dimmer";
+import Portal from "../@shared/Portal";
+import Calendar from "../Calendar";
 import * as Styled from "./style";
 
 interface Props {
   date: string;
 }
 
-const ISOConverter = (date: string) => {
-  const today = new Date();
-
-  if (date === "오늘") {
-    return today.toISOString().split("T")[0] + "T23:59:59";
-  }
-
-  const yesterday = new Date(today.setDate(today.getDate() - 1));
-  return yesterday.toISOString().split("T")[0] + "T23:59:59";
-};
-
 function DropdownMenu({ date }: Props) {
+  const {
+    isPortalOpened: isCalenderOpened,
+    handleOpenPortal: handleOpenCalendar,
+    handleClosePortal: handleCloseCalendar,
+  } = usePortal();
+
   const renderDateOption = () => {
     if (date === "오늘") {
       return (
@@ -59,8 +59,16 @@ function DropdownMenu({ date }: Props) {
       {renderDateOption()}
       <hr />
       <Styled.Option>
-        <Styled.Button type="button">특정 날짜로 이동</Styled.Button>
+        <Styled.Button type="button" onClick={handleOpenCalendar}>
+          특정 날짜로 이동
+        </Styled.Button>
       </Styled.Option>
+      <Portal isOpened={isCalenderOpened}>
+        <>
+          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
+          <Calendar />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }
