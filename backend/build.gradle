@@ -51,29 +51,31 @@ test {
 asciidoctor {
     configurations 'asciidoctorExtensions'
     inputs.dir snippetsDir
+    sources {
+        include("**/index.adoc")
+    }
+    baseDirFollowsSourceFile()
     dependsOn test
 }
 
 asciidoctor.doFirst {
-    delete file('src/main/resources/static/docs')
-}
-
-bootJar {
-    dependsOn asciidoctor
-    copy {
-        from "${asciidoctor.outputDir}"
-        into 'static/docs'
-    }
+    delete file('src/main/resources/static')
 }
 
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static/docs")
+    from file("${asciidoctor.outputDir}")
+    into file("src/main/resources/static")
 }
 
-build {
+task buildDocument(type: Copy) {
     dependsOn copyDocument
+    from file("src/main/resources/static")
+    into file("build/resources/main/static")
+}
+
+bootJar {
+    dependsOn buildDocument
 }
 
 tasks.named('test') {
