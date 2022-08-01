@@ -12,6 +12,7 @@ export const QUERY_KEY = {
   ALL_MESSAGES: "allMessages",
   SPECIFIC_DATE_MESSAGES: "specificDateMessages",
   BOOKMARKS: "bookmarks",
+  AUTHENTICATION: "authentication",
 } as const;
 
 export const API_ENDPOINT = {
@@ -19,6 +20,7 @@ export const API_ENDPOINT = {
   CHANNEL: "/api/channels",
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
   BOOKMARKS: "/api/bookmarks",
+  AUTHENTICATION: "/api/auth",
 } as const;
 
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";
