@@ -1,5 +1,7 @@
 import styled, { css, CSSProp } from "styled-components";
-import { Kind } from ".";
+import { Kind, Props } from ".";
+
+type StyledProps = Omit<Props, "children">;
 
 export const kindTable: Record<Kind, CSSProp> = {
   bigIcon: css`
@@ -17,7 +19,7 @@ export const Container = styled.button`
   border: none;
   background-color: inherit;
 
-  ${({ kind, isFuture }: { kind: Kind; isFuture?: boolean }) => css`
+  ${({ kind, isFuture }: StyledProps) => css`
     opacity: ${isFuture ? 0.3 : 1};
     cursor: ${isFuture ? "default" : "pointer"};
 
