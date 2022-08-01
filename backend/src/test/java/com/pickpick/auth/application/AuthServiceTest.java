@@ -2,7 +2,7 @@ package com.pickpick.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -44,10 +44,10 @@ class AuthServiceTest {
         Member member = new Member("slackId", "username", "thumbnail.png");
         members.save(member);
 
-        when(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .thenReturn(generateOAuthV2AccessResponse());
-        when(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .thenReturn(generateUsersIdentityResponse(member.getSlackId()));
+        given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
+                .willReturn(generateOAuthV2AccessResponse());
+        given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
+                .willReturn(generateUsersIdentityResponse(member.getSlackId()));
 
         // when
         String jupjupToken = authService.login("1234");
