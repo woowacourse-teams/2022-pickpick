@@ -4,6 +4,8 @@ type CurrentDays = (string | number)[];
 
 interface ReturnType {
   date: Date;
+  isFutureMonth: () => boolean;
+  isCurrentMonth: () => boolean;
   handleDecrementMonth: () => void;
   handleIncrementMonth: () => void;
   getCurrentDays: () => CurrentDays;
@@ -13,6 +15,14 @@ function useCalendar(): ReturnType {
   const date = useRef(new Date());
   const [_, setRerender] = useState(false);
   date.current.setDate(1);
+
+  const isFutureMonth = () =>
+    date.current.getFullYear() >= new Date().getFullYear() &&
+    date.current.getMonth() >= new Date().getMonth();
+
+  const isCurrentMonth = () =>
+    date.current.getFullYear() === new Date().getFullYear() &&
+    date.current.getMonth() === new Date().getMonth();
 
   const handleDecrementMonth = () => {
     setRerender((prev) => !prev);
@@ -40,6 +50,8 @@ function useCalendar(): ReturnType {
 
   return {
     date: date.current,
+    isFutureMonth,
+    isCurrentMonth,
     handleDecrementMonth,
     handleIncrementMonth,
     getCurrentDays,

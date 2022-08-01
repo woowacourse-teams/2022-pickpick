@@ -8,14 +8,20 @@ const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
 function Calendar() {
-  const { date, getCurrentDays, handleDecrementMonth, handleIncrementMonth } =
-    useCalendar();
+  const {
+    date,
+    getCurrentDays,
+    isFutureMonth,
+    isCurrentMonth,
+    handleDecrementMonth,
+    handleIncrementMonth,
+  } = useCalendar();
 
   return (
     <Styled.Container>
       <Styled.Month>
         <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
-          <LeftArrowIcon width="24px" height="24px" fill="#010000" />
+          <LeftArrowIcon width="24px" height="24px" fill="#8B8B8B" />
         </WrapperButton>
         <Styled.Title>
           {date.getFullYear()}년 {MONTHS[date.getMonth()]}월
@@ -23,14 +29,8 @@ function Calendar() {
         <WrapperButton
           kind="smallIcon"
           onClick={handleIncrementMonth}
-          isFuture={
-            date.getFullYear() >= new Date().getFullYear() &&
-            date.getMonth() >= new Date().getMonth()
-          }
-          disabled={
-            date.getFullYear() >= new Date().getFullYear() &&
-            date.getMonth() >= new Date().getMonth()
-          }
+          isFuture={isFutureMonth()}
+          disabled={isFutureMonth()}
         >
           <RightArrowIcon width="24px" height="24px" fill="#8B8B8B" />
         </WrapperButton>
@@ -47,16 +47,8 @@ function Calendar() {
           <Styled.Day
             key={index}
             isBlank={day === ""}
-            isCurrentDay={
-              day === new Date().getDate() &&
-              date.getFullYear() === new Date().getFullYear() &&
-              date.getMonth() === new Date().getMonth()
-            }
-            isFuture={
-              day > new Date().getDate() &&
-              date.getFullYear() >= new Date().getFullYear() &&
-              date.getMonth() >= new Date().getMonth()
-            }
+            isCurrentDay={day === new Date().getDate() && isCurrentMonth()}
+            isFuture={day > new Date().getDate() && isFutureMonth()}
           >
             {day}
             <div></div>
