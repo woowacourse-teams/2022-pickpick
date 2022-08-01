@@ -9,6 +9,7 @@ import {
   SpecificDateFeed,
   Home,
 } from "./pages";
+import PrivateRouter from "@src/components/PrivateRouter";
 
 const routes = [
   {
@@ -21,23 +22,43 @@ const routes = [
       },
       {
         path: PATH_NAME.ADD_CHANNEL,
-        element: <AddChannel />,
+        element: (
+          <PrivateRouter>
+            <AddChannel />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.ALARM,
-        element: <Alarm />,
+        element: (
+          <PrivateRouter>
+            <Alarm />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.BOOKMARK,
-        element: <Bookmark />,
+        element: (
+          <PrivateRouter>
+            <Bookmark />
+          </PrivateRouter>
+        ),
       },
       {
         path: `${PATH_NAME.FEED}/:date`,
-        element: <SpecificDateFeed />,
+        element: (
+          <PrivateRouter>
+            <SpecificDateFeed />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.FEED,
-        element: <Feed />,
+        element: (
+          <PrivateRouter>
+            <Feed />
+          </PrivateRouter>
+        ),
       },
       {
         path: "*",
