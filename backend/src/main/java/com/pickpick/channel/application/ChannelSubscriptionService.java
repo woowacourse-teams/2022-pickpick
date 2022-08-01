@@ -11,6 +11,7 @@ import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.SubscriptionDuplicateException;
 import com.pickpick.exception.SubscriptionNotExistException;
+import com.pickpick.exception.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;
@@ -91,12 +92,26 @@ public class ChannelSubscriptionService {
 
     @Transactional
     public void updateOrders(final List<ChannelOrderRequest> orderRequests, final Long memberId) {
+        validateRequest(orderRequests);
         List<ChannelSubscription> subscribedChannels = channelSubscriptions.findAllByMemberId(memberId);
         Map<Long, Integer> ordersByChannelId = getOrdersMap(orderRequests);
 
         for (ChannelSubscription subscribedChannel : subscribedChannels) {
             subscribedChannel.changeOrder(ordersByChannelId.get(subscribedChannel.getChannelId()));
         }
+    }
+
+    private void validateRequest(final List<ChannelOrderRequest> orderRequests) {
+        if (isDuplicatedViewOrder(orderRequests)) {
+            throw new SubscriptionOrderDuplicateException();
+        }
+    }
+
+    private boolean isDuplicatedViewOrder(final List<ChannelOrderRequest> orderRequests) {
+        return orderRequests.size() != orderRequests.stream()
+                .map(ChannelOrderRequest::getOrder)
+                .distinct()
+                .count();
     }
 
     private Map<Long, Integer> getOrdersMap(final List<ChannelOrderRequest> orderRequests) {
