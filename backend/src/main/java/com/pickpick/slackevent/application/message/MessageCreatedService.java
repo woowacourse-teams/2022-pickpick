@@ -15,7 +15,6 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +28,6 @@ public class MessageCreatedService implements SlackEventService {
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
     private static final String CHANNEL = "channel";
-
-    @Value("${slack.bot-token}")
-    private String slackBotToken;
 
     private final MessageRepository messages;
     private final MemberRepository members;
@@ -65,7 +61,7 @@ public class MessageCreatedService implements SlackEventService {
     private Channel createChannel(final String channelSlackId) {
         try {
             Conversation conversation = slackClient.conversationsInfo(
-                    request -> request.token(slackBotToken).channel(channelSlackId)
+                    request -> request.channel(channelSlackId)
             ).getChannel();
 
             Channel channel = toChannel(conversation);

@@ -42,7 +42,7 @@ public class MemberInitializer {
 
     private List<Member> getCurrentWorkspaceMembers() throws IOException, SlackApiException {
         return toMembers(slackClient.usersList(request -> request)
-                        .getMembers());
+                .getMembers());
     }
 
     private List<Member> filterMembersToSave(final List<String> savedSlackIds,
