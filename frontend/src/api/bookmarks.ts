@@ -1,8 +1,6 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseBookmarks } from "@src/@types/shared";
 import { fetcher } from ".";
-import { getAuthorization } from "./utils";
-
 interface GetBookmarkParam {
   pageParam?: string;
 }

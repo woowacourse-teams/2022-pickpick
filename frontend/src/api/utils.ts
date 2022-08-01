@@ -29,7 +29,3 @@ export const nextBookmarksCallback = ({
     return bookmarks[bookmarks.length - 1]?.id;
   }
 };
-
-export const getAuthorization = () => {
-  return { authorization: "Bearer 2892" };
-};

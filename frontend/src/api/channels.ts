@@ -4,7 +4,6 @@ import {
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
 import { fetcher } from ".";
-import { getAuthorization } from "./utils";
 
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL);
