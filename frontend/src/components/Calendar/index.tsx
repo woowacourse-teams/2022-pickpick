@@ -3,6 +3,8 @@ import LeftArrowIcon from "@public/assets/icons/ArrowIcon-Left.svg";
 import RightArrowIcon from "@public/assets/icons/ArrowIcon-Right.svg";
 import useCalendar from "@src/hooks/useCalendar";
 import WrapperButton from "../@shared/WrapperButton";
+import { Link } from "react-router-dom";
+import { ISOConverter } from "@src/@utils";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
@@ -44,15 +46,21 @@ function Calendar() {
 
       <Styled.Days>
         {getCurrentDays().map((day, index) => (
-          <Styled.Day
+          <Link
             key={index}
-            isBlank={day === ""}
-            isCurrentDay={day === new Date().getDate() && isCurrentMonth()}
-            isFuture={day > new Date().getDate() && isFutureMonth()}
+            to={`/feed/${ISOConverter(
+              `${date.getFullYear()}-${MONTHS[date.getMonth()]}-${day}`
+            )}`}
           >
-            {day}
-            <div></div>
-          </Styled.Day>
+            <Styled.Day
+              isBlank={day === ""}
+              isCurrentDay={day === new Date().getDate() && isCurrentMonth()}
+              isFuture={day > new Date().getDate() && isFutureMonth()}
+            >
+              {day}
+              <div></div>
+            </Styled.Day>
+          </Link>
         ))}
       </Styled.Days>
     </Styled.Container>
