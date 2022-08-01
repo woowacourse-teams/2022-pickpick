@@ -5,6 +5,7 @@ export type Kind = "bigIcon" | "smallIcon" | "text";
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: JSX.Element | string;
   kind: Kind;
+  isFuture?: boolean;
 }
 
 function WrapperButton({ children, ...props }: Props) {

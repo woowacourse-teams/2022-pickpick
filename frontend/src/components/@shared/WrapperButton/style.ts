@@ -15,8 +15,12 @@ export const kindTable: Record<Kind, CSSProp> = {
 
 export const Container = styled.button`
   border: none;
-  cursor: pointer;
   background-color: inherit;
 
-  ${({ kind }: { kind: Kind }) => kindTable[kind]}
+  ${({ kind, isFuture }: { kind: Kind; isFuture?: boolean }) => css`
+    opacity: ${isFuture ? 0.3 : 1};
+    cursor: ${isFuture ? "default" : "pointer"};
+
+    ${kindTable[kind]};
+  `}
 `;
