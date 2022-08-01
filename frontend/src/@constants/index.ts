@@ -20,3 +20,5 @@ export const API_ENDPOINT = {
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
   BOOKMARKS: "/api/bookmarks",
 } as const;
+
+export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";

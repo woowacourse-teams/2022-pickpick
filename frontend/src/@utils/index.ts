@@ -37,3 +37,23 @@ export const extractResponseBookmarks = (
 
   return data.pages.flatMap((arr) => arr.bookmarks);
 };
+
+export const setCookie = (key: string, value: string) => {
+  document.cookie = `${key}=${value};`;
+};
+
+export const getCookie = (key: string) => {
+  const matches = document.cookie.match(
+    new RegExp(
+      "(?:^|; )" +
+        // eslint-disable-next-line no-useless-escape
+        key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+        "=([^;]*)"
+    )
+  );
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+};
+
+export const deleteCookie = (key: string) => {
+  setCookie(key, "");
+};
