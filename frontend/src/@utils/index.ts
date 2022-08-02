@@ -52,15 +52,9 @@ export const setCookie = (key: string, value: string) => {
 };
 
 export const getCookie = (key: string) => {
-  const matches = document.cookie.match(
-    new RegExp(
-      "(?:^|; )" +
-        // eslint-disable-next-line no-useless-escape
-        key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-        "=([^;]*)"
-    )
-  );
-  return matches ? decodeURIComponent(matches[1]) : undefined;
+  const regex = new RegExp(`(?<=${key}=)[^;]*`);
+  const matches = document.cookie.match(regex);
+  return matches ? matches[0] : undefined;
 };
 
 export const deleteCookie = (key: string) => {
