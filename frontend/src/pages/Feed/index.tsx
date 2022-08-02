@@ -14,15 +14,23 @@ import DateDropDown from "@src/components/DateDropdown";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
+import { useParams } from "react-router-dom";
 
 function Feed() {
   const { initializeDateArray, isRenderDate } = useMessageDate();
+  const { channelId } = useParams();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages>(QUERY_KEY.ALL_MESSAGES, getMessages(), {
-      getNextPageParam: nextMessagesCallback,
-      onSettled: initializeDateArray,
-    });
+    useInfiniteQuery<ResponseMessages>(
+      QUERY_KEY.ALL_MESSAGES,
+      getMessages({
+        channelId,
+      }),
+      {
+        getNextPageParam: nextMessagesCallback,
+        onSettled: initializeDateArray,
+      }
+    );
 
   const { handleAddBookmark } = useBookmark({
     handleSettle: refetch,

@@ -19,7 +19,7 @@ import useBookmark from "@src/hooks/useBookmark";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
-  const { date } = useParams();
+  const { date, channelId } = useParams();
   const { initializeDateArray, isRenderDate } = useMessageDate();
   const {
     data,
@@ -34,6 +34,7 @@ function SpecificDateFeed() {
     [QUERY_KEY.SPECIFIC_DATE_MESSAGES, queryKey],
     getMessages({
       date,
+      channelId,
     }),
     {
       getPreviousPageParam: previousMessagesCallback,
