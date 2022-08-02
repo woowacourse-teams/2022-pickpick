@@ -27,7 +27,7 @@ public class MemberInitializer {
     @PostConstruct
     void setupMember() throws SlackApiException, IOException {
         List<String> savedSlackIds = findSavedSlackIds();
-        List<Member> currentWorkspaceMembers = getCurrentWorkspaceMembers();
+        List<Member> currentWorkspaceMembers = fetchWorkspaceMembers();
         List<Member> membersToSave = filterMembersToSave(savedSlackIds, currentWorkspaceMembers);
 
         memberRepository.saveAll(membersToSave);
@@ -40,7 +40,7 @@ public class MemberInitializer {
                 .collect(Collectors.toList());
     }
 
-    private List<Member> getCurrentWorkspaceMembers() throws IOException, SlackApiException {
+    private List<Member> fetchWorkspaceMembers() throws IOException, SlackApiException {
         return toMembers(slackClient.usersList(request -> request)
                 .getMembers());
     }
