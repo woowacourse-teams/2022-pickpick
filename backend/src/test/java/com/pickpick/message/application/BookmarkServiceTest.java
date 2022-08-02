@@ -2,7 +2,6 @@ package com.pickpick.message.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -54,9 +53,18 @@ class BookmarkServiceTest {
         messages.save(message);
 
         BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
+        int beforeSize = findBookmarksSize(member);
 
-        // when & then
-        assertDoesNotThrow(() -> bookmarkService.save(member.getId(), bookmarkRequest));
+        // when
+        bookmarkService.save(member.getId(), bookmarkRequest);
+
+        // then
+        int afterSize = findBookmarksSize(member);
+        assertThat(beforeSize + 1).isEqualTo(afterSize);
+    }
+
+    private int findBookmarksSize(final Member member) {
+        return bookmarkService.find(null, member.getId()).getBookmarks().size();
     }
 
     @DisplayName("북마크 조회")
