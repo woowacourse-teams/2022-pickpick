@@ -10,6 +10,7 @@ import {
   Home,
 } from "./pages";
 import PrivateRouter from "@src/components/PrivateRouter";
+import PublicRouter from "./components/PublicRouter";
 
 const routes = [
   {
@@ -18,7 +19,11 @@ const routes = [
     children: [
       {
         path: "",
-        element: <Home />,
+        element: (
+          <PublicRouter>
+            <Home />
+          </PublicRouter>
+        ),
       },
       {
         path: PATH_NAME.ADD_CHANNEL,
