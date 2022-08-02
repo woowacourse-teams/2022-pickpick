@@ -37,3 +37,8 @@ export const ERROR_MESSAGES = {
 export const MESSAGES = {
   LOGIN_SUCCESS: "로그인 되었습니다!",
 } as const;
+
+export const SNACKBAR_STATUS = {
+  SUCCESS: "SUCCESS",
+  FAIL: "FAIL",
+} as const;

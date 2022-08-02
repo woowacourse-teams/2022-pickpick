@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { useRecoilState } from "recoil";
 import { snackbarState } from "@src/@atoms";
 import { useEffect, useRef } from "react";
+import { SNACKBAR_STATUS } from "@src/@constants";
 
 function Snackbar() {
   const [{ isOpened, message, status }, setState] =
@@ -28,7 +29,7 @@ function Snackbar() {
         setState({
           isOpened: false,
           message: "",
-          status: "SUCCESS",
+          status: SNACKBAR_STATUS.SUCCESS,
         });
       }, 3000);
     }

@@ -1,8 +1,10 @@
 import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+import { SnackbarStatus } from "@src/@types/shared";
+import { SNACKBAR_STATUS } from "@src/@constants";
 
 interface StyledProps extends StyledDefaultProps {
-  status: "SUCCESS" | "FAIL";
+  status: SnackbarStatus;
 }
 
 export const Container = styled.div`
@@ -21,7 +23,7 @@ export const Container = styled.div`
 
   ${({ theme, status }: StyledProps) => css`
     color: ${theme.COLOR.TEXT.WHITE};
-    background-color: ${status === "SUCCESS"
+    background-color: ${status === SNACKBAR_STATUS.SUCCESS
       ? theme.COLOR.CONTAINER.LIGHT_BLUE
       : theme.COLOR.CONTAINER.LIGHT_RED};
   `}
