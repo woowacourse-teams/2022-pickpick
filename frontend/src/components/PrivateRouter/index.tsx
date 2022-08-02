@@ -13,12 +13,12 @@ function PrivateRouter({ children }: Props) {
 
   const { isError } = useQuery([QUERY_KEY.AUTHENTICATION], isAuthenticated, {
     suspense: true,
+    useErrorBoundary: false,
   });
 
   useEffect(() => {
-    if (isError) {
-      navigate(PATH_NAME.HOME);
-    }
+    if (!isError) return;
+    navigate(PATH_NAME.HOME);
   }, [isError]);
 
   return <>{children}</>;
