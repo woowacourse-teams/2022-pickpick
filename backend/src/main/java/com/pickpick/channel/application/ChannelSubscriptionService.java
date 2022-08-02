@@ -92,8 +92,8 @@ public class ChannelSubscriptionService {
 
     @Transactional
     public void updateOrders(final List<ChannelOrderRequest> orderRequests, final Long memberId) {
-        validateRequest(orderRequests);
         List<ChannelSubscription> subscribedChannels = channelSubscriptions.findAllByMemberId(memberId);
+        validateRequest(subscribedChannels, orderRequests);
         Map<Long, Integer> ordersByChannelId = getOrdersMap(orderRequests);
 
         for (ChannelSubscription subscribedChannel : subscribedChannels) {
@@ -101,9 +101,18 @@ public class ChannelSubscriptionService {
         }
     }
 
-    private void validateRequest(final List<ChannelOrderRequest> orderRequests) {
+    private void validateRequest(final List<ChannelSubscription> subscribedChannels,
+                                 final List<ChannelOrderRequest> orderRequests) {
         if (isDuplicatedViewOrder(orderRequests)) {
             throw new SubscriptionOrderDuplicateException();
+        }
+
+        if (isUnsubscribedChannelOfMember(subscribedChannels, orderRequests)) {
+            throw new SubscriptionNotExistException("멤버가 구독한 적 없는 채널의 순서를 변경할 수 없습니다.");
+        }
+
+        if (isEverySubscribedChannelNotContain(subscribedChannels, orderRequests)) {
+            throw new SubscriptionNotExistException("멤버의 모든 구독 채널 아이디가 포함되지 않았습니다.");
         }
     }
 
@@ -112,6 +121,27 @@ public class ChannelSubscriptionService {
                 .map(ChannelOrderRequest::getOrder)
                 .distinct()
                 .count();
+    }
+
+
+    private boolean isUnsubscribedChannelOfMember(final List<ChannelSubscription> subscribedChannels,
+                                                  final List<ChannelOrderRequest> orderRequests) {
+        List<Long> subscribedChannelIds = subscribedChannels.stream()
+                .map(ChannelSubscription::getChannelId)
+                .collect(Collectors.toList());
+
+        return !orderRequests.stream()
+                .allMatch(it -> subscribedChannelIds.contains(it.getId()));
+    }
+
+    private boolean isEverySubscribedChannelNotContain(final List<ChannelSubscription> subscribedChannels,
+                                                       final List<ChannelOrderRequest> orderRequests) {
+        List<Long> requestChannelId = orderRequests.stream()
+                .map(ChannelOrderRequest::getId)
+                .collect(Collectors.toList());
+
+        return !subscribedChannels.stream()
+                .allMatch(it -> requestChannelId.contains(it.getChannelId()));
     }
 
     private Map<Long, Integer> getOrdersMap(final List<ChannelOrderRequest> orderRequests) {

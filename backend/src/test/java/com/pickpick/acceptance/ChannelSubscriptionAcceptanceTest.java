@@ -11,6 +11,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -50,6 +52,57 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청();
         구독이_올바른_순서로_조회됨(subscriptionResponse, channelIdToSubscribe2, channelIdToSubscribe1);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1})
+    void 구독_채널_순서_변경_시_1보다_작은_순서가_들어올_경우_예외_발생(int invalidViewOrder) {
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channelIdToSubscribe1, invalidViewOrder),
+                new ChannelOrderRequest(channelIdToSubscribe1, 1)
+
+        );
+
+        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 구독_채널_순서_변경_시_중복된_순서가_들어올_경우_예외_발생() {
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channelIdToSubscribe1, 1),
+                new ChannelOrderRequest(channelIdToSubscribe2, 1)
+        );
+
+        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 구독_채널_순서_변경_시_해당_멤버가_구독한_적_없는_채널_ID가_포함된_경우_예외_발생() {
+        구독_취소_요청(channelIdToSubscribe1);
+
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channelIdToSubscribe1, 1),
+                new ChannelOrderRequest(channelIdToSubscribe2, 2)
+        );
+
+        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 구독_채널_순서_변경_시_해당_멤버의_모든_구독_채널이_요청에_포함되지_않을_경우_예외_발생() {
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channelIdToSubscribe1, 1)
+        );
+
+        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
