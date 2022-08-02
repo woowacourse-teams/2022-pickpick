@@ -14,22 +14,19 @@ import Drawer from "@src/components/Drawer";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getSubscribedChannels } from "@src/api/channels";
+import usePortal from "@src/hooks/usePortal";
 
 function Navigation() {
   const { pathname } = useLocation();
-  const [isMenuDrawerOpened, setIsMenuDrawerOpened] = useState(false);
+  const {
+    isPortalOpened: isMenuDrawerOpened,
+    handleClosePortal: handleCloseDrawer,
+    handleTogglePortal: handleToggleDrawer,
+  } = usePortal();
   const { data, refetch } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
-
-  const handleCloseDrawer = () => {
-    setIsMenuDrawerOpened(false);
-  };
-
-  const handleToggleDrawer = () => {
-    setIsMenuDrawerOpened((prev) => !prev);
-  };
 
   useEffect(() => {
     if (isMenuDrawerOpened) {
@@ -41,7 +38,7 @@ function Navigation() {
   }, [isMenuDrawerOpened]);
 
   useEffect(() => {
-    setIsMenuDrawerOpened(false);
+    handleCloseDrawer();
   }, [pathname]);
 
   return (
