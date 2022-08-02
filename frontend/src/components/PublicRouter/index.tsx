@@ -11,17 +11,21 @@ interface Props {
 function PublicRouter({ children }: Props) {
   const navigate = useNavigate();
 
-  const { isError } = useQuery(QUERY_KEY.AUTHENTICATION, isAuthenticated, {
-    suspense: true,
-    useErrorBoundary: false,
-  });
+  const { isLoading, isSuccess } = useQuery(
+    QUERY_KEY.AUTHENTICATION,
+    isAuthenticated,
+    {
+      useErrorBoundary: false,
+      retry: false,
+    }
+  );
 
   useEffect(() => {
-    if (isError) return;
-    navigate(PATH_NAME.FEED);
-  }, [isError]);
+    if (isSuccess) navigate(PATH_NAME.FEED);
+  }, [isSuccess]);
 
-  return <>{children}</>;
+  if (isLoading) return null;
+  return <> {children}</>;
 }
 
 export default PublicRouter;

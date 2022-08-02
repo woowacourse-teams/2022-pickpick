@@ -1,11 +1,13 @@
-import WrapperButton from "@src/components/@shared/WrapperButton";
+import useAuthentication from "@src/hooks/useAuthentication";
 import * as Styled from "./style";
 
 function Header() {
+  const { login } = useAuthentication();
+
   return (
     <Styled.Container>
       <Styled.Title>줍줍</Styled.Title>
-      <WrapperButton kind="text">로그인</WrapperButton>
+      <button onClick={login}>로그인</button>
     </Styled.Container>
   );
 }

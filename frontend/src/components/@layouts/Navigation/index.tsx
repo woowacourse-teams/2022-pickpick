@@ -1,5 +1,5 @@
 import * as Styled from "./style";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { PATH_NAME, QUERY_KEY } from "@src/@constants";
 import MenuIcon from "@public/assets/icons/MenuIcon.svg";
 import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
@@ -15,18 +15,34 @@ import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getSubscribedChannels } from "@src/api/channels";
 import usePortal from "@src/hooks/usePortal";
+import Button from "@src/components/@shared/Button";
+import useAuthentication from "@src/hooks/useAuthentication";
 
 function Navigation() {
   const { pathname } = useLocation();
+
+  const { logout } = useAuthentication();
   const {
     isPortalOpened: isMenuDrawerOpened,
     handleClosePortal: handleCloseDrawer,
     handleTogglePortal: handleToggleDrawer,
   } = usePortal();
+
+  const {
+    isPortalOpened: isLogoutButtonOpened,
+    handleClosePortal: handleCloseLogoutButton,
+    handleTogglePortal: handleToggleLogoutButton,
+  } = usePortal();
+
   const { data, refetch } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
+
+  const handleLogout = () => {
+    handleCloseLogoutButton();
+    logout();
+  };
 
   useEffect(() => {
     if (isMenuDrawerOpened) {
@@ -36,6 +52,14 @@ function Navigation() {
     }
     document.body.style.overflowY = "auto";
   }, [isMenuDrawerOpened]);
+
+  useEffect(() => {
+    if (isLogoutButtonOpened) {
+      document.body.style.overflowY = "hidden";
+      return;
+    }
+    document.body.style.overflowY = "auto";
+  }, [isLogoutButtonOpened]);
 
   useEffect(() => {
     handleCloseDrawer();
@@ -79,13 +103,21 @@ function Navigation() {
           );
         }}
       </WrapperLink>
-      <WrapperButton kind="bigIcon">
+      <WrapperButton kind="bigIcon" onClick={handleToggleLogoutButton}>
         <InfoIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
           <Drawer channels={data?.channels} />
+        </>
+      </Portal>
+      <Portal isOpened={isLogoutButtonOpened}>
+        <>
+          <Dimmer hasBackgroundColor={true} onClick={handleCloseLogoutButton} />
+          <Styled.LogoutButtonContainer>
+            <Button onClick={handleLogout}>로그아웃</Button>
+          </Styled.LogoutButtonContainer>
         </>
       </Portal>
     </Styled.Container>
