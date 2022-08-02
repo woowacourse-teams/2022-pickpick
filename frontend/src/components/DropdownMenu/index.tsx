@@ -1,5 +1,6 @@
 import { ISOConverter } from "@src/@utils";
 import usePortal from "@src/hooks/usePortal";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Dimmer from "../@shared/Dimmer";
 import Portal from "../@shared/Portal";
@@ -16,6 +17,14 @@ function DropdownMenu({ date }: Props) {
     handleOpenPortal: handleOpenCalendar,
     handleClosePortal: handleCloseCalendar,
   } = usePortal();
+
+  useEffect(() => {
+    if (isCalenderOpened) {
+      document.body.style.overflowY = "hidden";
+      return;
+    }
+    document.body.style.overflowY = "auto";
+  }, [isCalenderOpened]);
 
   const renderDateOption = () => {
     if (date === "오늘") {
