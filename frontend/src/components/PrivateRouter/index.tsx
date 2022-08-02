@@ -11,7 +11,7 @@ interface Props {
 function PrivateRouter({ children }: Props) {
   const navigate = useNavigate();
 
-  const { isError } = useQuery([QUERY_KEY.AUTHENTICATION], isAuthenticated, {
+  const { isError } = useQuery(QUERY_KEY.AUTHENTICATION, isAuthenticated, {
     suspense: true,
     useErrorBoundary: false,
   });
