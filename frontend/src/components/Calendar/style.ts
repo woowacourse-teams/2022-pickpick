@@ -14,6 +14,10 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 18px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};
