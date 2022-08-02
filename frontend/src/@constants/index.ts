@@ -24,3 +24,8 @@ export const API_ENDPOINT = {
 } as const;
 
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";
+
+export const DATE = {
+  TODAY: "오늘",
+  YESTERDAY: "어제",
+} as const;

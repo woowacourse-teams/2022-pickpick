@@ -10,7 +10,7 @@ import {
   Home,
 } from "./pages";
 import PrivateRouter from "@src/components/PrivateRouter";
-import PublicRouter from "./components/PublicRouter";
+import PublicRouter from "@src/components/PublicRouter";
 
 const routes = [
   {
@@ -50,20 +50,24 @@ const routes = [
         ),
       },
       {
-        path: `${PATH_NAME.FEED}/:date`,
-        element: (
-          <PrivateRouter>
-            <SpecificDateFeed />
-          </PrivateRouter>
-        ),
-      },
-      {
         path: PATH_NAME.FEED,
         element: (
           <PrivateRouter>
             <Feed />
           </PrivateRouter>
         ),
+      },
+      {
+        path: `${PATH_NAME.FEED}/:channelId`,
+        element: (
+          <PrivateRouter>
+            <Feed />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: `${PATH_NAME.FEED}/:channelId/:date`,
+        element: <SpecificDateFeed />,
       },
       {
         path: "*",

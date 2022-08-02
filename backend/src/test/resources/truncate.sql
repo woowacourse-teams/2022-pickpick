@@ -1,4 +1,6 @@
 delete
+from bookmark;
+delete
 from message;
 delete
 from channel_subscription;

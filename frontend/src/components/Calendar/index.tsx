@@ -9,7 +9,11 @@ import { ISOConverter } from "@src/@utils";
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
-function Calendar() {
+interface Props {
+  channelId: string;
+}
+
+function Calendar({ channelId }: Props) {
   const {
     date,
     getCurrentDays,
@@ -48,7 +52,7 @@ function Calendar() {
         {getCurrentDays().map((day, index) => (
           <Link
             key={index}
-            to={`/feed/${ISOConverter(
+            to={`/feed/${channelId}/${ISOConverter(
               `${date.getFullYear()}-${MONTHS[date.getMonth()]}-${day}`
             )}`}
           >

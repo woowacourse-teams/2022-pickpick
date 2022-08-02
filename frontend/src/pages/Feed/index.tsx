@@ -5,30 +5,57 @@ import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages } from "@src/@types/shared";
-import React from "react";
+import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import DateDropDown from "@src/components/DateDropdown";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
+import { useParams } from "react-router-dom";
+import DateDropdown from "@src/components/DateDropdown";
+import usePortal from "@src/hooks/usePortal";
+import Portal from "@src/components/@shared/Portal";
+import Dimmer from "@src/components/@shared/Dimmer";
+import Calendar from "@src/components/Calendar";
 
 function Feed() {
+  const { channelId } = useParams();
   const { initializeDateArray, isRenderDate } = useMessageDate();
 
+  const {
+    isPortalOpened: isCalenderOpened,
+    handleOpenPortal: handleOpenCalendar,
+    handleClosePortal: handleCloseCalendar,
+  } = usePortal();
+
   const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages>(QUERY_KEY.ALL_MESSAGES, getMessages(), {
-      getNextPageParam: nextMessagesCallback,
-      onSettled: initializeDateArray,
-    });
+    useInfiniteQuery<ResponseMessages>(
+      QUERY_KEY.ALL_MESSAGES,
+      getMessages({
+        channelId,
+      }),
+      {
+        getNextPageParam: nextMessagesCallback,
+        onSettled: initializeDateArray,
+      }
+    );
 
   const { handleAddBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
+
+  useEffect(() => {
+    if (isCalenderOpened) {
+      document.body.style.overflowY = "hidden";
+
+      return;
+    }
+    document.body.style.overflowY = "auto";
+  }, [isCalenderOpened]);
 
   return (
     <Styled.Container>
@@ -47,7 +74,11 @@ function Feed() {
               return (
                 <React.Fragment key={id}>
                   {isRenderDate(parsedDate) && (
-                    <DateDropDown postedDate={parsedDate} />
+                    <DateDropdown
+                      postedDate={parsedDate}
+                      channelId={channelId ?? ""}
+                      handleOpenCalendar={handleOpenCalendar}
+                    />
                   )}
                   <MessageCard
                     username={username}
@@ -65,6 +96,13 @@ function Feed() {
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>
+
+      <Portal isOpened={isCalenderOpened}>
+        <>
+          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
+          <Calendar channelId={channelId ?? ""} />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }
