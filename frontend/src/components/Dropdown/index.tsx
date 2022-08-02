@@ -1,3 +1,4 @@
+import { DATE } from "@src/@constants";
 import { useState } from "react";
 import Dimmer from "../@shared/Dimmer";
 import DropdownMenu from "../DropdownMenu";
@@ -46,13 +47,13 @@ function Dropdown({ postedDate }: Props) {
       givenDate.month === today.month &&
       givenDate.date === today.date
     )
-      return "오늘";
+      return DATE.TODAY;
     if (
       givenDate.year === today.year &&
       givenDate.month === today.month &&
       givenDate.date === today.date - 1
     )
-      return "어제";
+      return DATE.YESTERDAY;
 
     return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
   };

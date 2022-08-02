@@ -1,3 +1,4 @@
+import { DATE } from "@src/@constants";
 import { ISOConverter } from "@src/@utils";
 import usePortal from "@src/hooks/usePortal";
 import { useEffect } from "react";
@@ -29,21 +30,21 @@ function DropdownMenu({ date }: Props) {
   }, [isCalenderOpened]);
 
   const renderDateOption = () => {
-    if (date === "오늘") {
+    if (date === DATE.TODAY) {
       return (
         <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter("어제")}`}>
-            <Styled.Button type="button">어제</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
+            <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
           </Link>
         </Styled.Option>
       );
     }
 
-    if (date === "어제") {
+    if (date === DATE.YESTERDAY) {
       return (
         <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter("오늘")}`}>
-            <Styled.Button type="button">오늘</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
+            <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
           </Link>
         </Styled.Option>
       );
@@ -52,13 +53,13 @@ function DropdownMenu({ date }: Props) {
     return (
       <>
         <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter("오늘")}`}>
-            <Styled.Button type="button">오늘</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
+            <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
           </Link>
         </Styled.Option>
         <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter("어제")}`}>
-            <Styled.Button type="button">어제</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
+            <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
           </Link>
         </Styled.Option>
       </>
