@@ -4,6 +4,7 @@ import useSnackbar from "@src/hooks/useSnackbar";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import Loader from "@src/components/Loader";
 
 interface Props {
   children: JSX.Element;
@@ -17,7 +18,6 @@ function PrivateRouter({ children }: Props) {
     QUERY_KEY.AUTHENTICATION,
     isAuthenticated,
     {
-      suspense: true,
       useErrorBoundary: false,
       retry: false,
     }
@@ -29,7 +29,7 @@ function PrivateRouter({ children }: Props) {
     navigate(PATH_NAME.HOME);
   }, [isError]);
 
-  if (isLoading) return null;
+  if (isLoading || isError) return <Loader />;
   return <>{children}</>;
 }
 
