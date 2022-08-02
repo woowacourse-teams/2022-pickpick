@@ -49,9 +49,9 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 멤버_ID_1번이고_북마크_ID가_2번일_때_북마크_목록_조회() {
+    void 멤버_ID_1번이고_북마크_ID가_23번일_때_북마크_목록_조회() {
         // given
-        Map<String, Object> request = Map.of("bookmarkId", "2");
+        Map<String, Object> request = Map.of("bookmarkId", "23");
         List<Long> expectedIds = List.of(22L, 21L, 20L, 19L, 18L, 17L, 16L, 15L, 14L, 13L, 12L, 11L, 10L, 9L, 8L, 7L,
                 6L, 5L, 4L, 3L);
         boolean expectedIsLast = false;

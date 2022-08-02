@@ -16,7 +16,6 @@ import com.pickpick.message.ui.dto.BookmarkResponses;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BookmarkService {
 
+    public static final int COUNT = 20;
+    
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
     private final MemberRepository members;
@@ -59,7 +60,7 @@ public class BookmarkService {
     }
 
     private List<Bookmark> findBookmarks(final Long bookmarkId, final Long memberId) {
-        List<Bookmark> foundBookmarks = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(QBookmark.bookmark)
                 .leftJoin(QBookmark.bookmark.message)
                 .fetchJoin()
@@ -67,12 +68,9 @@ public class BookmarkService {
                 .fetchJoin()
                 .where(QBookmark.bookmark.member.id.eq(memberId))
                 .where(bookmarkIdCondition(bookmarkId))
-                .orderBy(QBookmark.bookmark.message.postedDate.asc())
-                .limit(20)
+                .orderBy(QBookmark.bookmark.message.postedDate.desc())
+                .limit(COUNT)
                 .fetch();
-
-        Collections.reverse(foundBookmarks);
-        return foundBookmarks;
     }
 
     private List<BookmarkResponse> toBookmarkResponseList(final List<Bookmark> foundBookmarks) {
@@ -91,7 +89,7 @@ public class BookmarkService {
 
         LocalDateTime messageDate = bookmark.getMessage().getPostedDate();
 
-        return QBookmark.bookmark.message.postedDate.after(messageDate);
+        return QBookmark.bookmark.message.postedDate.before(messageDate);
     }
 
     private boolean isLast(final List<Bookmark> bookmarkList, final Long memberId) {
@@ -114,6 +112,6 @@ public class BookmarkService {
 
         LocalDateTime messageDate = targetBookmark.getMessage().getPostedDate();
 
-        return QBookmark.bookmark.message.postedDate.after(messageDate);
+        return QBookmark.bookmark.message.postedDate.before(messageDate);
     }
 }

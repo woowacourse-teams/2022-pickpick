@@ -86,7 +86,7 @@ class BookmarkServiceTest {
     private static Stream<Arguments> parameterProvider() {
         return Stream.of(
                 Arguments.arguments("멤버 ID 2번으로 북마크를 조회한다", null, 2L, List.of(1L), true),
-                Arguments.arguments("멤버 ID가 1번이고 북마크 id 2번일 때 북마크 목록을 조회한다", 2L, 1L,
+                Arguments.arguments("멤버 ID가 1번이고 북마크 id 23번일 때 북마크 목록을 조회한다", 23L, 1L,
                         List.of(22L, 21L, 20L, 19L, 18L, 17L, 16L, 15L, 14L, 13L, 12L, 11L, 10L, 9L, 8L, 7L, 6L, 5L, 4L,
                                 3L), false),
                 Arguments.arguments("북마크 조회 시 가장 오래된 북마크가 포함된다면 isLast가 true이다", null, 2L, List.of(1L), true)
