@@ -17,8 +17,9 @@ function Snackbar() {
     if (isOpened) {
       if (ref.current.timeout) {
         const [showAnimation] = ref.current.element.getAnimations();
-        showAnimation.cancel();
-        showAnimation.play();
+
+        showAnimation?.cancel();
+        showAnimation?.play();
         clearTimeout(ref.current.timeout);
       }
 
