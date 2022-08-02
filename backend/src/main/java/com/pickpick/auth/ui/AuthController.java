@@ -1,11 +1,10 @@
 package com.pickpick.auth.ui;
 
 import com.pickpick.auth.application.AuthService;
+import com.pickpick.auth.ui.dto.LoginRequest;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import javax.validation.constraints.NotEmpty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,8 +18,8 @@ public class AuthController {
     }
 
     @GetMapping
-    public LoginResponse login(@RequestParam @NotEmpty final String code) {
-        String token = authService.login(code);
+    public LoginResponse login(final LoginRequest loginRequest) {
+        String token = authService.login(loginRequest);
         return new LoginResponse(token);
     }
 }

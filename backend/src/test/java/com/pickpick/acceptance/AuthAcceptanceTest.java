@@ -19,6 +19,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/member.sql"})
@@ -46,6 +47,21 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_200_확인(response);
         응답_바디에_토큰_존재(response);
+    }
+
+    @Test
+    void 사용자가_액세스_권한_요청을_거부하는_경우_로그인_실패() throws SlackApiException, IOException {
+        // given
+        when(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
+                .thenReturn(generateOAuthV2AccessResponse());
+        when(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
+                .thenReturn(generateUsersIdentityResponse(MEMBER_SLACK_ID));
+
+        // when
+        ExtractableResponse<Response> response = get(API_URL, Map.of("error", "access_denied"));
+
+        // then
+        상태코드_확인(response, HttpStatus.UNAUTHORIZED);
     }
 
     private OAuthV2AccessResponse generateOAuthV2AccessResponse() {

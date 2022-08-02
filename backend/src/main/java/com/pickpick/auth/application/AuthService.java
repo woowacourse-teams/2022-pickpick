@@ -1,7 +1,9 @@
 package com.pickpick.auth.application;
 
 import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.auth.ui.dto.LoginRequest;
 import com.pickpick.exception.MemberNotFoundException;
+import com.pickpick.exception.PermissionDeniedException;
 import com.pickpick.exception.SlackClientException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -10,6 +12,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
+    private static final String OAUTH_ERROR_MESSAGE = "access_denied";
+    
     private final String clientId;
     private final String clientSecret;
     private final String redirectUrl;
@@ -40,9 +45,11 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String login(final String code) {
+    public String login(final LoginRequest loginRequest) {
+        validateAccessDenied(loginRequest.getError());
+
         try {
-            String token = requestSlackToken(code);
+            String token = requestSlackToken(loginRequest.getCode());
             String memberSlackId = requestMemberSlackId(token);
 
             Member member = members.findBySlackId(memberSlackId)
@@ -51,6 +58,12 @@ public class AuthService {
             return jwtTokenProvider.createToken(String.valueOf(member.getId()));
         } catch (IOException | SlackApiException e) {
             throw new SlackClientException(e);
+        }
+    }
+
+    private void validateAccessDenied(final String error) {
+        if(Objects.nonNull(error) && OAUTH_ERROR_MESSAGE.equals(error)) {
+            throw new PermissionDeniedException();
         }
     }
 

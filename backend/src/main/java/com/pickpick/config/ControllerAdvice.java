@@ -2,6 +2,7 @@ package com.pickpick.config;
 
 import com.pickpick.exception.BadRequestException;
 import com.pickpick.exception.NotFoundException;
+import com.pickpick.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,12 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public void handleBadRequestException(final BadRequestException e) {
+        log.error("예외 발생: ", e);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler
+    public void handleUnauthorizedException(final UnauthorizedException e) {
         log.error("예외 발생: ", e);
     }
 
