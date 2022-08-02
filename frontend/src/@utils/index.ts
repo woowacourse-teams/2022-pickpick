@@ -1,3 +1,4 @@
+import { DATE } from "@src/@constants";
 import {
   Bookmark,
   Message,
@@ -7,11 +8,6 @@ import {
 import { InfiniteData } from "react-query";
 
 const CONVERTER_SUFFIX = "T23:59:59";
-
-const DATE = {
-  TODAY: "오늘",
-  YESTERDAY: "어제",
-} as const;
 
 const TIME = {
   AM: "오전",

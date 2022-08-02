@@ -20,3 +20,8 @@ export const API_ENDPOINT = {
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
   BOOKMARKS: "/api/bookmarks",
 } as const;
+
+export const DATE = {
+  TODAY: "오늘",
+  YESTERDAY: "어제",
+} as const;

@@ -4,6 +4,7 @@ import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import WrapperLink from "../@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
 import { SubscribedChannel } from "@src/@types/shared";
+import { Link } from "react-router-dom";
 
 interface Props {
   channels?: SubscribedChannel[];
@@ -25,9 +26,9 @@ function Drawer({ channels = [] }: Props) {
       <Styled.Hr />
       <FlexColumn gap="11px" padding="0 20px">
         {channels.map((channel) => (
-          <Styled.ChannelName key={channel.id}>
-            #{channel.name}
-          </Styled.ChannelName>
+          <Link key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
+            <Styled.ChannelName>#{channel.name}</Styled.ChannelName>
+          </Link>
         ))}
       </FlexColumn>
     </Styled.Container>

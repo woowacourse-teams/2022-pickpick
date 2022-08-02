@@ -31,5 +31,5 @@ export const nextBookmarksCallback = ({
 };
 
 export const getAuthorization = () => {
-  return { authorization: "Bearer 2892" };
+  return { authorization: "Bearer 3012" };
 };

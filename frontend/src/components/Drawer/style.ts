@@ -17,11 +17,11 @@ export const Container = styled.div`
 
 export const Hr = styled.hr`
   padding: 0 10px;
+  height: 1px;
+  border: 0;
 
   ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.BORDER};
-    height: 1px;
-    border: 0;
   `}
 `;
 

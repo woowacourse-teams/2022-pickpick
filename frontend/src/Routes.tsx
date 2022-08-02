@@ -32,12 +32,16 @@ const routes = [
         element: <Bookmark />,
       },
       {
-        path: `${PATH_NAME.FEED}/:date`,
-        element: <SpecificDateFeed />,
-      },
-      {
         path: PATH_NAME.FEED,
         element: <Feed />,
+      },
+      {
+        path: `${PATH_NAME.FEED}/:channelId`,
+        element: <Feed />,
+      },
+      {
+        path: `${PATH_NAME.FEED}/:channelId/:date`,
+        element: <SpecificDateFeed />,
       },
       {
         path: "*",
