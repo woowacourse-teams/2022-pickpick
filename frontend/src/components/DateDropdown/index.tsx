@@ -17,9 +17,11 @@ const DAY: Record<number, string> = {
 
 interface Props {
   postedDate: string;
+  channelId: string;
+  handleOpenCalendar: () => void;
 }
 
-function DateDropdown({ postedDate }: Props) {
+function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
   const [isOpened, setIsOpened] = useState(false);
 
   const getDateInformation = (givenDate: Date) => {
@@ -39,7 +41,7 @@ function DateDropdown({ postedDate }: Props) {
     setIsOpened(false);
   };
 
-  const getMessagesDate = () => {
+  const getMessagesDate = (postedDate: string): string => {
     const givenDate = getDateInformation(new Date(postedDate));
     const today = getDateInformation(new Date());
     if (
@@ -65,10 +67,16 @@ function DateDropdown({ postedDate }: Props) {
       )}
       <Styled.Container>
         <DropdownToggle
-          text={getMessagesDate()}
+          text={getMessagesDate(postedDate)}
           onClick={handleDropdownToggleClick}
         />
-        {isOpened && <DropdownMenu date={getMessagesDate()} />}
+        {isOpened && (
+          <DropdownMenu
+            date={getMessagesDate(postedDate)}
+            channelId={channelId}
+            handleOpenCalendar={handleOpenCalendar}
+          />
+        )}
       </Styled.Container>
     </>
   );

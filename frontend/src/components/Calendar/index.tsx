@@ -3,13 +3,17 @@ import LeftArrowIcon from "@public/assets/icons/ArrowIcon-Left.svg";
 import RightArrowIcon from "@public/assets/icons/ArrowIcon-Right.svg";
 import useCalendar from "@src/hooks/useCalendar";
 import WrapperButton from "../@shared/WrapperButton";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ISOConverter } from "@src/@utils";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
-function Calendar() {
+interface Props {
+  channelId: string;
+}
+
+function Calendar({ channelId }: Props) {
   const {
     date,
     getCurrentDays,
@@ -18,8 +22,6 @@ function Calendar() {
     handleDecrementMonth,
     handleIncrementMonth,
   } = useCalendar();
-
-  const { channelId } = useParams();
 
   return (
     <Styled.Container>

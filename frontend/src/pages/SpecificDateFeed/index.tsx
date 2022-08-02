@@ -16,11 +16,22 @@ import { extractResponseMessages } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
 import DateDropdown from "@src/components/DateDropdown";
+import usePortal from "@src/hooks/usePortal";
+import Portal from "@src/components/@shared/Portal";
+import Dimmer from "@src/components/@shared/Dimmer";
+import Calendar from "@src/components/Calendar";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
   const { initializeDateArray, isRenderDate } = useMessageDate();
+
+  const {
+    isPortalOpened: isCalenderOpened,
+    handleOpenPortal: handleOpenCalendar,
+    handleClosePortal: handleCloseCalendar,
+  } = usePortal();
+
   const {
     data,
     isFetching,
@@ -42,6 +53,7 @@ function SpecificDateFeed() {
       onSettled: initializeDateArray,
     }
   );
+
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,
     callback: fetchPreviousPage,
@@ -55,6 +67,15 @@ function SpecificDateFeed() {
   });
 
   if (isError) return <div>이거슨 에러양!</div>;
+
+  useEffect(() => {
+    if (isCalenderOpened) {
+      document.body.style.overflowY = "hidden";
+
+      return;
+    }
+    document.body.style.overflowY = "auto";
+  }, [isCalenderOpened]);
 
   useEffect(() => {
     window.scrollTo({
@@ -86,7 +107,11 @@ function SpecificDateFeed() {
               return (
                 <React.Fragment key={id}>
                   {isRenderDate(parsedDate) && (
-                    <DateDropdown postedDate={parsedDate} />
+                    <DateDropdown
+                      postedDate={parsedDate}
+                      channelId={channelId ?? ""}
+                      handleOpenCalendar={handleOpenCalendar}
+                    />
                   )}
                   <MessageCard
                     username={username}
@@ -104,6 +129,13 @@ function SpecificDateFeed() {
           {isFetching && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>
+
+      <Portal isOpened={isCalenderOpened}>
+        <>
+          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
+          <Calendar channelId={channelId ?? ""} />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }
