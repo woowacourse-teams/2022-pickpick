@@ -4,8 +4,10 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Bookmark;
 import com.pickpick.message.domain.Message;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class BookmarkResponse {
 
@@ -40,14 +42,14 @@ public class BookmarkResponse {
         Member member = bookmark.getMember();
         Message message = bookmark.getMessage();
 
-        return new BookmarkResponse(
-                message.getId(),
-                member.getId(),
-                member.getUsername(),
-                member.getThumbnailUrl(),
-                message.getText(),
-                message.getPostedDate(),
-                message.getModifiedDate()
-        );
+        return BookmarkResponse.builder()
+                .id(bookmark.getId())
+                .memberId(member.getId())
+                .username(member.getUsername())
+                .userThumbnail(member.getThumbnailUrl())
+                .text(message.getText())
+                .postedDate(message.getPostedDate())
+                .modifiedDate(message.getModifiedDate())
+                .build();
     }
 }
