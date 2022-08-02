@@ -29,3 +29,11 @@ export const DATE = {
   TODAY: "오늘",
   YESTERDAY: "어제",
 } as const;
+
+export const ERROR_MESSAGES = {
+  UNAUTHORIZED: "로그인이 필요한 서비스입니다.",
+} as const;
+
+export const MESSAGES = {
+  LOGIN_SUCCESS: "로그인 되었습니다!",
+} as const;

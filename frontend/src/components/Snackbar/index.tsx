@@ -5,7 +5,8 @@ import { snackbarState } from "@src/@atoms";
 import { useEffect, useRef } from "react";
 
 function Snackbar() {
-  const [{ isOpened, message }, setState] = useRecoilState(snackbarState);
+  const [{ isOpened, message, status }, setState] =
+    useRecoilState(snackbarState);
 
   const element = document.querySelector("#portal-root");
   const ref = useRef<any>({
@@ -27,6 +28,7 @@ function Snackbar() {
         setState({
           isOpened: false,
           message: "",
+          status: "SUCCESS",
         });
       }, 3000);
     }
@@ -34,7 +36,10 @@ function Snackbar() {
 
   return isOpened && element
     ? ReactDOM.createPortal(
-        <Styled.Container ref={(el) => (ref.current.element = el)}>
+        <Styled.Container
+          status={status}
+          ref={(el) => (ref.current.element = el)}
+        >
           {message}
         </Styled.Container>,
         element

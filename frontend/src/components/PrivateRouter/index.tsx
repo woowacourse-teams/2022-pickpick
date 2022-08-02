@@ -1,4 +1,4 @@
-import { PATH_NAME, QUERY_KEY } from "@src/@constants";
+import { PATH_NAME, QUERY_KEY, ERROR_MESSAGES } from "@src/@constants";
 import { isAuthenticated } from "@src/api/auth";
 import useSnackbar from "@src/hooks/useSnackbar";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ interface Props {
 
 function PrivateRouter({ children }: Props) {
   const navigate = useNavigate();
-  const openSnackbar = useSnackbar();
+  const { openFailureSnackbar } = useSnackbar();
 
   const { isLoading, isError } = useQuery(
     QUERY_KEY.AUTHENTICATION,
@@ -25,7 +25,7 @@ function PrivateRouter({ children }: Props) {
 
   useEffect(() => {
     if (!isError) return;
-    openSnackbar("로그인이 필요한 서비스 입니다.");
+    openFailureSnackbar(ERROR_MESSAGES.UNAUTHORIZED);
     navigate(PATH_NAME.HOME);
   }, [isError]);
 
