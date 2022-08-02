@@ -1,7 +1,7 @@
 import { ISOConverter } from "@src/@utils";
 import usePortal from "@src/hooks/usePortal";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Dimmer from "../@shared/Dimmer";
 import Portal from "../@shared/Portal";
 import Calendar from "../Calendar";
@@ -18,6 +18,8 @@ function DropdownMenu({ date }: Props) {
     handleClosePortal: handleCloseCalendar,
   } = usePortal();
 
+  const { channelId } = useParams();
+
   useEffect(() => {
     if (isCalenderOpened) {
       document.body.style.overflowY = "hidden";
@@ -30,7 +32,7 @@ function DropdownMenu({ date }: Props) {
     if (date === "오늘") {
       return (
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("어제")}`}>
+          <Link to={`/feed/${channelId}/${ISOConverter("어제")}`}>
             <Styled.Button type="button">어제</Styled.Button>
           </Link>
         </Styled.Option>
@@ -40,7 +42,7 @@ function DropdownMenu({ date }: Props) {
     if (date === "어제") {
       return (
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("오늘")}`}>
+          <Link to={`/feed/${channelId}/${ISOConverter("오늘")}`}>
             <Styled.Button type="button">오늘</Styled.Button>
           </Link>
         </Styled.Option>
@@ -50,12 +52,12 @@ function DropdownMenu({ date }: Props) {
     return (
       <>
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("오늘")}`}>
+          <Link to={`/feed/${channelId}/${ISOConverter("오늘")}`}>
             <Styled.Button type="button">오늘</Styled.Button>
           </Link>
         </Styled.Option>
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("어제")}`}>
+          <Link to={`/feed/${channelId}/${ISOConverter("어제")}`}>
             <Styled.Button type="button">어제</Styled.Button>
           </Link>
         </Styled.Option>

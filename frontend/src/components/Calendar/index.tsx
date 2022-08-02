@@ -3,7 +3,7 @@ import LeftArrowIcon from "@public/assets/icons/ArrowIcon-Left.svg";
 import RightArrowIcon from "@public/assets/icons/ArrowIcon-Right.svg";
 import useCalendar from "@src/hooks/useCalendar";
 import WrapperButton from "../@shared/WrapperButton";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ISOConverter } from "@src/@utils";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
@@ -18,6 +18,8 @@ function Calendar() {
     handleDecrementMonth,
     handleIncrementMonth,
   } = useCalendar();
+
+  const { channelId } = useParams();
 
   return (
     <Styled.Container>
@@ -48,7 +50,7 @@ function Calendar() {
         {getCurrentDays().map((day, index) => (
           <Link
             key={index}
-            to={`/feed/${ISOConverter(
+            to={`/feed/${channelId}/${ISOConverter(
               `${date.getFullYear()}-${MONTHS[date.getMonth()]}-${day}`
             )}`}
           >
