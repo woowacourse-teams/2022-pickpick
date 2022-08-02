@@ -11,11 +11,11 @@ import SearchInput from "@src/components/SearchInput";
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 import { previousMessagesCallback, nextMessagesCallback } from "@src/api/utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import DateDropDown from "@src/components/DateDropdown";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
+import DateDropdown from "@src/components/DateDropdown";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -86,7 +86,7 @@ function SpecificDateFeed() {
               return (
                 <React.Fragment key={id}>
                   {isRenderDate(parsedDate) && (
-                    <DateDropDown postedDate={parsedDate} />
+                    <DateDropdown postedDate={parsedDate} />
                   )}
                   <MessageCard
                     username={username}

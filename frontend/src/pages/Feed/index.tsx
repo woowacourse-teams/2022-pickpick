@@ -10,11 +10,11 @@ import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import DateDropDown from "@src/components/DateDropdown";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
 import { useParams } from "react-router-dom";
+import DateDropdown from "@src/components/DateDropdown";
 
 function Feed() {
   const { initializeDateArray, isRenderDate } = useMessageDate();
@@ -55,7 +55,7 @@ function Feed() {
               return (
                 <React.Fragment key={id}>
                   {isRenderDate(parsedDate) && (
-                    <DateDropDown postedDate={parsedDate} />
+                    <DateDropdown postedDate={parsedDate} />
                   )}
                   <MessageCard
                     username={username}
