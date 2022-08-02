@@ -41,7 +41,9 @@ class BookmarkServiceTest {
         Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
         messages.save(message);
 
-        // when
-        assertDoesNotThrow(() -> bookmarkService.save(member.getId(), new BookmarkRequest(message.getId())));
+        BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
+
+        // when & then
+        assertDoesNotThrow(() -> bookmarkService.save(member.getId(), bookmarkRequest));
     }
 }

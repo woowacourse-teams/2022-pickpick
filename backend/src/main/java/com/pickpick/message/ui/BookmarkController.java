@@ -17,14 +17,14 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
-    public BookmarkController(BookmarkService bookmarkService) {
+    public BookmarkController(final BookmarkService bookmarkService) {
         this.bookmarkService = bookmarkService;
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void save(HttpServletRequest request,
-                     @RequestBody BookmarkRequest bookmarkRequest) {
+    public void save(final HttpServletRequest request,
+                     final @RequestBody BookmarkRequest bookmarkRequest) {
         String memberId = AuthorizationExtractor.extract(request);
         bookmarkService.save(Long.parseLong(memberId), bookmarkRequest);
     }

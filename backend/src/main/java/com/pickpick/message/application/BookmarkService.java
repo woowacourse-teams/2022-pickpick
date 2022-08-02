@@ -15,18 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class BookmarkService {
+
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
     private final MemberRepository members;
 
-    public BookmarkService(BookmarkRepository bookmarks, MessageRepository messages, MemberRepository members) {
+    public BookmarkService(final BookmarkRepository bookmarks, final MessageRepository messages,
+                           final MemberRepository members) {
         this.bookmarks = bookmarks;
         this.messages = messages;
         this.members = members;
     }
 
     @Transactional
-    public void save(Long memberId, BookmarkRequest bookmarkRequest) {
+    public void save(final Long memberId, final BookmarkRequest bookmarkRequest) {
         Member member = members.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
