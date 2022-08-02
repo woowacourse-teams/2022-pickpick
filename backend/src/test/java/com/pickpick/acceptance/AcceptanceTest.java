@@ -55,19 +55,21 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
-        return RestAssured.given()
-                .queryParams(queryParams)
-                .log().all()
+    ExtractableResponse<Response> getWithAuth(final String uri, final Long memberId) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + memberId)
                 .when()
                 .get(uri)
                 .then().log().all()
                 .extract();
     }
 
-    ExtractableResponse<Response> getWithAuth(final String uri, final Long memberId) {
-        return RestAssured.given().log().all()
+    ExtractableResponse<Response> getWithAuthAndParams(final String uri, final Long memberId,
+                                                       final Map<String, Object> params) {
+        return RestAssured.given()
+                .log().all()
                 .header("Authorization", "Bearer " + memberId)
+                .queryParams(params)
                 .when()
                 .get(uri)
                 .then().log().all()
