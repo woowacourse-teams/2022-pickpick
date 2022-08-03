@@ -24,12 +24,6 @@ function Feed() {
   const { channelId } = useParams();
   const { initializeDateArray, isRenderDate } = useMessageDate();
 
-  const {
-    isPortalOpened: isCalenderOpened,
-    handleOpenPortal: handleOpenCalendar,
-    handleClosePortal: handleCloseCalendar,
-  } = usePortal();
-
   const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
       QUERY_KEY.ALL_MESSAGES,
@@ -42,20 +36,17 @@ function Feed() {
       }
     );
 
+  const {
+    isPortalOpened: isCalenderOpened,
+    handleOpenPortal: handleOpenCalendar,
+    handleClosePortal: handleCloseCalendar,
+  } = usePortal();
+
   const { handleAddBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
-
-  useEffect(() => {
-    if (isCalenderOpened) {
-      document.body.style.overflowY = "hidden";
-
-      return;
-    }
-    document.body.style.overflowY = "auto";
-  }, [isCalenderOpened]);
 
   return (
     <Styled.Container>

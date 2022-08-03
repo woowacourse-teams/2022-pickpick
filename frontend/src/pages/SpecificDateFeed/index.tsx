@@ -27,12 +27,6 @@ function SpecificDateFeed() {
   const { initializeDateArray, isRenderDate } = useMessageDate();
 
   const {
-    isPortalOpened: isCalenderOpened,
-    handleOpenPortal: handleOpenCalendar,
-    handleClosePortal: handleCloseCalendar,
-  } = usePortal();
-
-  const {
     data,
     isFetching,
     isError,
@@ -54,6 +48,12 @@ function SpecificDateFeed() {
     }
   );
 
+  const {
+    isPortalOpened: isCalenderOpened,
+    handleOpenPortal: handleOpenCalendar,
+    handleClosePortal: handleCloseCalendar,
+  } = usePortal();
+
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,
     callback: fetchPreviousPage,
@@ -67,15 +67,6 @@ function SpecificDateFeed() {
   });
 
   if (isError) return <div>이거슨 에러양!</div>;
-
-  useEffect(() => {
-    if (isCalenderOpened) {
-      document.body.style.overflowY = "hidden";
-
-      return;
-    }
-    document.body.style.overflowY = "auto";
-  }, [isCalenderOpened]);
 
   useEffect(() => {
     window.scrollTo({
