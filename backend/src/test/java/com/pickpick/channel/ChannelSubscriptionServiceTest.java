@@ -132,13 +132,13 @@ class ChannelSubscriptionServiceTest {
 
         subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
 
-        // when & then
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channel1.getId(), 1),
                 new ChannelOrderRequest(channel2.getId(), 2),
                 new ChannelOrderRequest(channel3.getId(), 2)
         );
 
+        // when & then
         assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
                 .isInstanceOf(SubscriptionOrderDuplicateException.class);
     }
@@ -146,6 +146,7 @@ class ChannelSubscriptionServiceTest {
     @DisplayName("채널 구독 순서 변경 시 해당 멤버가 구독한 적 없는 채널 아이디가 들어올 경우 예외 발생")
     @Test
     void updateChannelSubscriptionOrderWithInvalidChannelId() {
+        // given
         Member member = saveMember();
         Channel channel1 = saveChannel("slackId1", "채널 이름1");
         Channel channel2 = saveChannel("slackId2", "채널 이름2");
@@ -159,6 +160,7 @@ class ChannelSubscriptionServiceTest {
                 new ChannelOrderRequest(channel3.getId(), 3)
         );
 
+        // when & then
         assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
@@ -166,6 +168,7 @@ class ChannelSubscriptionServiceTest {
     @DisplayName("채널 구독 순서 변경 시 해당 멤버의 모든 구독 채널 아이디가 들어오지 않은 경우 예외 발생")
     @Test
     void updateChannelSubscriptionOrderWithNotEnoughChannelId() {
+        // given
         Member member = saveMember();
         Channel channel1 = saveChannel("slackId1", "채널 이름1");
         Channel channel2 = saveChannel("slackId2", "채널 이름2");
@@ -178,6 +181,7 @@ class ChannelSubscriptionServiceTest {
                 new ChannelOrderRequest(channel2.getId(), 2)
         );
 
+        // when & then
         assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
