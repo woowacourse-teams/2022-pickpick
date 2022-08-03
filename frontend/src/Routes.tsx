@@ -8,6 +8,7 @@ import {
   Feed,
   SpecificDateFeed,
   Home,
+  Certification,
 } from "./pages";
 import PrivateRouter from "@src/components/PrivateRouter";
 import PublicRouter from "@src/components/PublicRouter";
@@ -68,6 +69,10 @@ const routes = [
       {
         path: `${PATH_NAME.FEED}/:channelId/:date`,
         element: <SpecificDateFeed />,
+      },
+      {
+        path: PATH_NAME.CERTIFICATION,
+        element: <Certification />,
       },
       {
         path: "*",

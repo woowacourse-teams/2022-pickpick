@@ -4,6 +4,7 @@ export const PATH_NAME = {
   ALARM: "/alarm",
   BOOKMARK: "/bookmark",
   ADD_CHANNEL: "/add-channel",
+  CERTIFICATION: "/certification",
 } as const;
 
 export const QUERY_KEY = {
