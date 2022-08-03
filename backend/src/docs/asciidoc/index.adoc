@@ -59,4 +59,4 @@ operation::channel-subscription-controller-test/update-order-of-subscribed-chann
 
 자세한 예시는 https://github.com/woowacourse-teams/2022-pickpick/wiki/메시지-조회-API-사용법에서 확인
 
-operation::message-controller-test/find-all-message-with-condition[snippets='http-request,request-parameters,http-response,response-fields']
+operation::message-controller-test/find-all-message-with-condition[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
