@@ -22,7 +22,7 @@ import Calendar from "@src/components/Calendar";
 
 function Feed() {
   const { channelId } = useParams();
-  const { initializeDateArray, isRenderDate } = useMessageDate();
+  const { isRenderDate } = useMessageDate();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -32,7 +32,6 @@ function Feed() {
       }),
       {
         getNextPageParam: nextMessagesCallback,
-        onSettled: initializeDateArray,
       }
     );
 

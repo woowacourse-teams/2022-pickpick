@@ -24,7 +24,7 @@ import Calendar from "@src/components/Calendar";
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
-  const { initializeDateArray, isRenderDate } = useMessageDate();
+  const { isRenderDate } = useMessageDate();
 
   const {
     data,
@@ -44,7 +44,6 @@ function SpecificDateFeed() {
     {
       getPreviousPageParam: previousMessagesCallback,
       getNextPageParam: nextMessagesCallback,
-      onSettled: initializeDateArray,
     }
   );
 
