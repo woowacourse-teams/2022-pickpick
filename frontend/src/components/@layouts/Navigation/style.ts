@@ -13,3 +13,9 @@ export const Container = styled.nav`
   background-color: ${({ theme }: StyledDefaultProps) =>
     `${theme.COLOR.BACKGROUND.SECONDARY}`};
 `;
+
+export const LogoutButtonContainer = styled.div`
+  position: fixed;
+  bottom: 90px;
+  right: 10px;
+`;

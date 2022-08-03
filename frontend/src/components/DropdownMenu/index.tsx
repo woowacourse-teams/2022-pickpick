@@ -1,38 +1,31 @@
+import { DATE } from "@src/@constants";
+import { ISOConverter } from "@src/@utils";
 import { Link } from "react-router-dom";
 import * as Styled from "./style";
 
 interface Props {
   date: string;
+  channelId: string;
+  handleOpenCalendar: () => void;
 }
 
-const ISOConverter = (date: string) => {
-  const today = new Date();
-
-  if (date === "오늘") {
-    return today.toISOString().split("T")[0] + "T23:59:59";
-  }
-
-  const yesterday = new Date(today.setDate(today.getDate() - 1));
-  return yesterday.toISOString().split("T")[0] + "T23:59:59";
-};
-
-function DropdownMenu({ date }: Props) {
+function DropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
   const renderDateOption = () => {
-    if (date === "오늘") {
+    if (date === DATE.TODAY) {
       return (
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("어제")}`}>
-            <Styled.Button type="button">어제</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
+            <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
           </Link>
         </Styled.Option>
       );
     }
 
-    if (date === "어제") {
+    if (date === DATE.YESTERDAY) {
       return (
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("오늘")}`}>
-            <Styled.Button type="button">오늘</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
+            <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
           </Link>
         </Styled.Option>
       );
@@ -41,13 +34,13 @@ function DropdownMenu({ date }: Props) {
     return (
       <>
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("오늘")}`}>
-            <Styled.Button type="button">오늘</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
+            <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
           </Link>
         </Styled.Option>
         <Styled.Option>
-          <Link to={`/feed/${ISOConverter("어제")}`}>
-            <Styled.Button type="button">어제</Styled.Button>
+          <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
+            <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
           </Link>
         </Styled.Option>
       </>
@@ -59,7 +52,9 @@ function DropdownMenu({ date }: Props) {
       {renderDateOption()}
       <hr />
       <Styled.Option>
-        <Styled.Button type="button">특정 날짜로 이동</Styled.Button>
+        <Styled.Button type="button" onClick={handleOpenCalendar}>
+          특정 날짜로 이동
+        </Styled.Button>
       </Styled.Option>
     </Styled.Container>
   );

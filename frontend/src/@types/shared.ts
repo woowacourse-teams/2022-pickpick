@@ -1,3 +1,4 @@
+import { SNACKBAR_STATUS } from "@src/@constants";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export type Theme = typeof LIGHT_MODE_THEME;
@@ -45,3 +46,5 @@ export interface SubscribedChannel {
 export interface ResponseSubscribedChannels {
   channels: SubscribedChannel[];
 }
+
+export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;

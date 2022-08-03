@@ -12,7 +12,7 @@ const Loadable =
   (props: any) =>
     (
       <Suspense fallback={<LoadingStatus />}>
-        <Component {...props} />;
+        <Component {...props} />
       </Suspense>
     );
 
