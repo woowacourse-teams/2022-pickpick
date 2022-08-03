@@ -2,7 +2,7 @@ package com.pickpick.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
@@ -35,10 +35,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void 정상_로그인() throws SlackApiException, IOException {
         // given
-        when(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .thenReturn(generateOAuthV2AccessResponse());
-        when(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .thenReturn(generateUsersIdentityResponse(MEMBER_SLACK_ID));
+        given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
+                .willReturn(generateOAuthV2AccessResponse());
+        given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
+                .willReturn(generateUsersIdentityResponse(MEMBER_SLACK_ID));
 
         // when
         ExtractableResponse<Response> response = get(API_URL, Map.of("code", "1234"));
