@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.BookmarkCannotDeleteException;
+import com.pickpick.exception.BookmarkDeleteFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -146,6 +146,6 @@ class BookmarkServiceTest {
 
         // when & then
         assertThatThrownBy(() -> bookmarkService.delete(bookmark.getId(), other.getId()))
-                .isInstanceOf(BookmarkCannotDeleteException.class);
+                .isInstanceOf(BookmarkDeleteFailureException.class);
     }
 }

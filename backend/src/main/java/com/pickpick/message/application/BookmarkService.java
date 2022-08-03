@@ -1,6 +1,6 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.BookmarkCannotDeleteException;
+import com.pickpick.exception.BookmarkDeleteFailureException;
 import com.pickpick.exception.BookmarkNotFoundException;
 import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.MessageNotFoundException;
@@ -119,7 +119,7 @@ public class BookmarkService {
     @Transactional
     public void delete(final Long bookmarkId, final Long memberId) {
         bookmarks.findByIdAndMemberId(bookmarkId, memberId)
-                .orElseThrow(() -> new BookmarkCannotDeleteException(bookmarkId, memberId));
+                .orElseThrow(() -> new BookmarkDeleteFailureException(bookmarkId, memberId));
 
         bookmarks.deleteById(bookmarkId);
     }
