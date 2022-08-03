@@ -94,6 +94,9 @@ class BookmarkServiceTest {
     }
 
     private List<Long> convertToIds(final BookmarkResponses response) {
-        return response.getBookmarks().stream().map(BookmarkResponse::getId).collect(Collectors.toList());
+        return response.getBookmarks()
+                .stream()
+                .map(BookmarkResponse::getId)
+                .collect(Collectors.toList());
     }
 }
