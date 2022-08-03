@@ -73,4 +73,28 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
                 .map(BookmarkResponse::getId)
                 .collect(Collectors.toList());
     }
+
+    @Test
+    void 북마크_정상_삭제() {
+        // given
+        long bookmarkId = 2L;
+
+        // when
+        ExtractableResponse<Response> response = deleteWithAuth(API_BOOKMARK + "/" + bookmarkId, 1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void 다른_사용자의_북마크_삭제() {
+        // given
+        long bookmarkId = 1L;
+
+        // when
+        ExtractableResponse<Response> response = deleteWithAuth(API_BOOKMARK + "/" + bookmarkId, 1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.BAD_REQUEST);
+    }
 }

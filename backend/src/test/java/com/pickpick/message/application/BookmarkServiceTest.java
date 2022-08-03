@@ -1,12 +1,16 @@
 package com.pickpick.message.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.exception.BookmarkDeleteFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.message.domain.Bookmark;
+import com.pickpick.message.domain.BookmarkRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.ui.dto.BookmarkRequest;
@@ -14,6 +18,7 @@ import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +45,9 @@ class BookmarkServiceTest {
 
     @Autowired
     private ChannelRepository channels;
+
+    @Autowired
+    private BookmarkRepository bookmarks;
 
     @DisplayName("북마크를 생성한다")
     @Test
@@ -98,5 +106,46 @@ class BookmarkServiceTest {
                 .stream()
                 .map(BookmarkResponse::getId)
                 .collect(Collectors.toList());
+    }
+
+    @DisplayName("북마크 삭제")
+    @Test
+    void delete() {
+        // given
+        Member member = new Member("U1234", "사용자", "user.png");
+        members.save(member);
+        Channel channel = new Channel("C1234", "기본채널");
+        channels.save(channel);
+        Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
+        messages.save(message);
+        Bookmark bookmark = new Bookmark(member, message);
+        bookmarks.save(bookmark);
+
+        // when
+        bookmarkService.delete(bookmark.getId(), member.getId());
+
+        // then
+        Optional<Bookmark> actual = bookmarks.findById(bookmark.getId());
+        assertThat(actual).isEmpty();
+    }
+
+    @DisplayName("다른 사용자의 북마크 삭제시 예외")
+    @Test
+    void deleteOtherMembers() {
+        // given
+        Member owner = new Member("U1234", "사용자", "user.png");
+        members.save(owner);
+        Member other = new Member("U1235", "다른 사용자", "user.png");
+        members.save(other);
+        Channel channel = new Channel("C1234", "기본채널");
+        channels.save(channel);
+        Message message = new Message("M1234", "메시지", owner, channel, LocalDateTime.now(), LocalDateTime.now());
+        messages.save(message);
+        Bookmark bookmark = new Bookmark(owner, message);
+        bookmarks.save(bookmark);
+
+        // when & then
+        assertThatThrownBy(() -> bookmarkService.delete(bookmark.getId(), other.getId()))
+                .isInstanceOf(BookmarkDeleteFailureException.class);
     }
 }
