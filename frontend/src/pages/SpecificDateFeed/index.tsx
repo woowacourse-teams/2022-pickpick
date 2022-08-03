@@ -16,7 +16,7 @@ import { extractResponseMessages } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
 import DateDropdown from "@src/components/DateDropdown";
-import usePortal from "@src/hooks/usePortal";
+import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
@@ -24,13 +24,7 @@ import Calendar from "@src/components/Calendar";
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
-  const { initializeDateArray, isRenderDate } = useMessageDate();
-
-  const {
-    isPortalOpened: isCalenderOpened,
-    handleOpenPortal: handleOpenCalendar,
-    handleClosePortal: handleCloseCalendar,
-  } = usePortal();
+  const { isRenderDate } = useMessageDate();
 
   const {
     data,
@@ -50,9 +44,14 @@ function SpecificDateFeed() {
     {
       getPreviousPageParam: previousMessagesCallback,
       getNextPageParam: nextMessagesCallback,
-      onSettled: initializeDateArray,
     }
   );
+
+  const {
+    isModalOpened: isCalenderOpened,
+    handleOpenModal: handleOpenCalendar,
+    handleCloseModal: handleCloseCalendar,
+  } = useModal();
 
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,
@@ -67,15 +66,6 @@ function SpecificDateFeed() {
   });
 
   if (isError) return <div>이거슨 에러양!</div>;
-
-  useEffect(() => {
-    if (isCalenderOpened) {
-      document.body.style.overflowY = "hidden";
-
-      return;
-    }
-    document.body.style.overflowY = "auto";
-  }, [isCalenderOpened]);
 
   useEffect(() => {
     window.scrollTo({

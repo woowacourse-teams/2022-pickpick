@@ -14,52 +14,35 @@ import Drawer from "@src/components/Drawer";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getSubscribedChannels } from "@src/api/channels";
-import usePortal from "@src/hooks/usePortal";
+import useModal from "@src/hooks/useModal";
 import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
 
 function Navigation() {
   const { pathname } = useLocation();
-
   const { logout } = useAuthentication();
-  const {
-    isPortalOpened: isMenuDrawerOpened,
-    handleClosePortal: handleCloseDrawer,
-    handleTogglePortal: handleToggleDrawer,
-  } = usePortal();
-
-  const {
-    isPortalOpened: isLogoutButtonOpened,
-    handleClosePortal: handleCloseLogoutButton,
-    handleTogglePortal: handleToggleLogoutButton,
-  } = usePortal();
 
   const { data, refetch } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
 
+  const {
+    isModalOpened: isMenuDrawerOpened,
+    handleCloseModal: handleCloseDrawer,
+    handleToggleModal: handleToggleDrawer,
+  } = useModal(refetch);
+
+  const {
+    isModalOpened: isLogoutButtonOpened,
+    handleCloseModal: handleCloseLogoutButton,
+    handleToggleModal: handleToggleLogoutButton,
+  } = useModal();
+
   const handleLogout = () => {
     handleCloseLogoutButton();
     logout();
   };
-
-  useEffect(() => {
-    if (isMenuDrawerOpened) {
-      document.body.style.overflowY = "hidden";
-      refetch();
-      return;
-    }
-    document.body.style.overflowY = "auto";
-  }, [isMenuDrawerOpened]);
-
-  useEffect(() => {
-    if (isLogoutButtonOpened) {
-      document.body.style.overflowY = "hidden";
-      return;
-    }
-    document.body.style.overflowY = "auto";
-  }, [isLogoutButtonOpened]);
 
   useEffect(() => {
     handleCloseDrawer();
@@ -70,6 +53,7 @@ function Navigation() {
       <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
         <MenuIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
+
       <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
         {({ isActive }) => {
           return (
@@ -81,6 +65,7 @@ function Navigation() {
           );
         }}
       </WrapperLink>
+
       <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
         {({ isActive }) => {
           return (
@@ -92,6 +77,7 @@ function Navigation() {
           );
         }}
       </WrapperLink>
+
       <WrapperLink to={PATH_NAME.ALARM} kind="bigIcon">
         {({ isActive }) => {
           return (
@@ -103,15 +89,18 @@ function Navigation() {
           );
         }}
       </WrapperLink>
+
       <WrapperButton kind="bigIcon" onClick={handleToggleLogoutButton}>
         <InfoIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
+
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
           <Drawer channels={data?.channels} />
         </>
       </Portal>
+
       <Portal isOpened={isLogoutButtonOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseLogoutButton} />
