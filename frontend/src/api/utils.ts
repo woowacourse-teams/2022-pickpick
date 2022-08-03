@@ -1,4 +1,13 @@
+import { ACCESS_TOKEN_KEY } from "@src/@constants";
 import { ResponseMessages, ResponseBookmarks } from "@src/@types/shared";
+import { getCookie } from "@src/@utils";
+
+export const getHeaders = () => {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    authorization: `Bearer ${getCookie(ACCESS_TOKEN_KEY)}`,
+  };
+};
 
 export const previousMessagesCallback = ({
   isLast,
@@ -28,8 +37,4 @@ export const nextBookmarksCallback = ({
   if (!isLast) {
     return bookmarks[bookmarks.length - 1]?.id;
   }
-};
-
-export const getAuthorization = () => {
-  return { authorization: "Bearer 3012" };
 };

@@ -1,8 +1,7 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseBookmarks } from "@src/@types/shared";
 import { fetcher } from ".";
-import { getAuthorization } from "./utils";
-
+import { getHeaders } from "./utils";
 interface GetBookmarkParam {
   pageParam?: string;
 }
@@ -13,9 +12,7 @@ export const getBookmarks = async (
   const { data } = await fetcher.get<ResponseBookmarks>(
     `${API_ENDPOINT.BOOKMARKS}?bookmarkId=${pageParam}`,
     {
-      headers: {
-        ...getAuthorization(),
-      },
+      headers: getHeaders(),
     }
   );
   return data;
@@ -26,17 +23,13 @@ export const postBookmark = async (messageId: string) => {
     API_ENDPOINT.BOOKMARKS,
     { messageId },
     {
-      headers: {
-        ...getAuthorization(),
-      },
+      headers: getHeaders(),
     }
   );
 };
 
 export const deleteBookmark = async (bookmarkId: string) => {
   await fetcher.delete(`${API_ENDPOINT.BOOKMARKS}/${bookmarkId}`, {
-    headers: {
-      ...getAuthorization(),
-    },
+    headers: getHeaders(),
   });
 };
