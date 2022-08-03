@@ -58,7 +58,9 @@ class MessageControllerTest extends RestDocsTestSupport {
                                                 .description("메시지 게시 날짜"),
                                         fieldWithPath("messages.[].modifiedDate").type(JsonFieldType.STRING)
                                                 .description("메시지 수정 날짜"),
-                                        fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 메시지 여부")
+                                        fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 메시지 여부"),
+                                        fieldWithPath("isNeedPastMessage").type(JsonFieldType.BOOLEAN)
+                                                .description("위/아래 스크롤 방향")
                                 )
                         )
                 );

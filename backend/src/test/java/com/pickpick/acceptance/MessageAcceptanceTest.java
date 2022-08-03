@@ -13,9 +13,11 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -105,5 +107,26 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         .extracting("id")
                         .isEqualTo(expectedMessageIds)
         );
+    }
+
+    @ValueSource(strings = {"", "true"})
+    @ParameterizedTest
+    void 메시지_조회_시_needPastMessage_true_응답_확인(String needPastMessage) {
+        Map request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
+        ExtractableResponse<Response> response = get(API_URL, request);
+
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertThat(messageResponses.isNeedPastMessage()).isTrue();
+    }
+
+    @Test
+    void 메시지_조회_시_needPastMessage가_False일_경우_응답_확인() {
+        Map request = createQueryParams("jupjup", "", "5", "false", "", "");
+        ExtractableResponse<Response> response = get(API_URL, request);
+
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertThat(messageResponses.isNeedPastMessage()).isFalse();
     }
 }

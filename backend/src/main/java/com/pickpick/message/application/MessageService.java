@@ -39,7 +39,7 @@ public class MessageService {
         List<Message> messages = findMessages(messageRequest);
         boolean isLast = isLast(messageRequest, messages);
 
-        return toSlackMessageResponse(messages, isLast);
+        return toSlackMessageResponse(messages, isLast, messageRequest.isNeedPastMessage());
     }
 
     private List<Message> findMessages(final MessageRequest messageRequest) {
@@ -172,8 +172,9 @@ public class MessageService {
         return QMessage.message.postedDate.after(targetPostDate);
     }
 
-    private MessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast) {
-        return new MessageResponses(toSlackMessageResponses(messages), isLast);
+    private MessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast,
+                                                    final boolean needPastMessage) {
+        return new MessageResponses(toSlackMessageResponses(messages), isLast, needPastMessage);
     }
 
     private List<MessageResponse> toSlackMessageResponses(final List<Message> messages) {
