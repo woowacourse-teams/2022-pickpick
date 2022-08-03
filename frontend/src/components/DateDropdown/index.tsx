@@ -1,4 +1,5 @@
 import { DATE } from "@src/@constants";
+import useModal from "@src/hooks/useModal";
 import { useState } from "react";
 import Dimmer from "../@shared/Dimmer";
 import DropdownMenu from "../DropdownMenu";
@@ -22,7 +23,11 @@ interface Props {
 }
 
 function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
-  const [isOpened, setIsOpened] = useState(false);
+  const {
+    isModalOpened: isDateDropdownOpened,
+    handleCloseModal: handleCloseDateDropdown,
+    handleToggleModal: handleToggleDateDropdown,
+  } = useModal();
 
   const getDateInformation = (givenDate: Date) => {
     const year = givenDate.getFullYear();
@@ -31,14 +36,6 @@ function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
     const day = DAY[givenDate.getDay()];
 
     return { year, month, date, day };
-  };
-
-  const handleDropdownToggleClick = () => {
-    setIsOpened((prev) => !prev);
-  };
-
-  const handleDimmerClick = () => {
-    setIsOpened(false);
   };
 
   const getMessagesDate = (postedDate: string): string => {
@@ -62,15 +59,15 @@ function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
 
   return (
     <>
-      {isOpened && (
-        <Dimmer hasBackgroundColor={false} onClick={handleDimmerClick} />
+      {isDateDropdownOpened && (
+        <Dimmer hasBackgroundColor={false} onClick={handleCloseDateDropdown} />
       )}
       <Styled.Container>
         <DropdownToggle
           text={getMessagesDate(postedDate)}
-          onClick={handleDropdownToggleClick}
+          onClick={handleToggleDateDropdown}
         />
-        {isOpened && (
+        {isDateDropdownOpened && (
           <DropdownMenu
             date={getMessagesDate(postedDate)}
             channelId={channelId}
