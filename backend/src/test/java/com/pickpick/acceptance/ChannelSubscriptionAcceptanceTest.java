@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/channel.sql"})
@@ -46,7 +45,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
     @Test
     void 구독_채널_순서_변경() {
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청();
+        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청();
 
         상태코드_200_확인(response);
 
@@ -60,12 +59,11 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channelIdToSubscribe1, invalidViewOrder),
                 new ChannelOrderRequest(channelIdToSubscribe1, 1)
-
         );
 
-        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_400_확인(response);
     }
 
     @Test
@@ -75,9 +73,9 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
                 new ChannelOrderRequest(channelIdToSubscribe2, 1)
         );
 
-        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_400_확인(response);
     }
 
     @Test
@@ -89,9 +87,9 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
                 new ChannelOrderRequest(channelIdToSubscribe2, 2)
         );
 
-        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_400_확인(response);
     }
 
     @Test
@@ -100,16 +98,16 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
                 new ChannelOrderRequest(channelIdToSubscribe1, 1)
         );
 
-        ExtractableResponse<Response> response = putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_400_확인(response);
     }
 
     @Test
     void 구독_중인_채널_다시_구독_요청() {
         ExtractableResponse<Response> response = 구독_요청(channelIdToSubscribe1);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_400_확인(response);
     }
 
     @Test
@@ -117,7 +115,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         구독_취소_요청(channelIdToSubscribe1);
         ExtractableResponse<Response> response = 구독_취소_요청(channelIdToSubscribe1);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_400_확인(response);
     }
 
 
@@ -142,12 +140,16 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         });
     }
 
-    private ExtractableResponse<Response> 구독_채널_순서_변경_요청() {
+    private ExtractableResponse<Response> 구독_채널_순서_변경_요청(final List<ChannelOrderRequest> request) {
+        return putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+    }
+
+    private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청() {
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channelIdToSubscribe2, 1),
                 new ChannelOrderRequest(channelIdToSubscribe1, 2)
         );
 
-        return putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+        return 구독_채널_순서_변경_요청(request);
     }
 }

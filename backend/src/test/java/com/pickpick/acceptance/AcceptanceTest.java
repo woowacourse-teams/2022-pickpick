@@ -97,4 +97,9 @@ class AcceptanceTest {
     void 상태코드_200_확인(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
+
+    void 상태코드_400_확인(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }
