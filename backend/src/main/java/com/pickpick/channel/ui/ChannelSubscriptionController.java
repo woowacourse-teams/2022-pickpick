@@ -1,14 +1,13 @@
 package com.pickpick.channel.ui;
 
+import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.channel.application.ChannelSubscriptionService;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
-import com.pickpick.utils.AuthorizationExtractor;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,31 +28,29 @@ public class ChannelSubscriptionController {
     }
 
     @GetMapping
-    public ChannelSubscriptionResponses getAllChannels(HttpServletRequest request) {
-        String memberId = AuthorizationExtractor.extract(request);
+    public ChannelSubscriptionResponses getAllChannels(final @AuthenticationPrincipal Long memberId) {
         return new ChannelSubscriptionResponses(
-                channelSubscriptionService.findAllOrderByViewOrder(Long.parseLong(memberId))
+                channelSubscriptionService.findAllOrderByViewOrder(memberId)
                         .stream()
                         .map(ChannelSubscriptionResponse::from)
                         .collect(Collectors.toList()));
     }
 
     @PostMapping
-    public void subscribeChannel(HttpServletRequest request,
-                                 @RequestBody ChannelSubscriptionRequest subscriptionRequest) {
-        String memberId = AuthorizationExtractor.extract(request);
-        channelSubscriptionService.save(subscriptionRequest, Long.parseLong(memberId));
+    public void subscribeChannel(final @AuthenticationPrincipal Long memberId,
+                                 final @RequestBody ChannelSubscriptionRequest subscriptionRequest) {
+        channelSubscriptionService.save(subscriptionRequest, memberId);
     }
 
     @PutMapping
-    public void updateViewOrders(HttpServletRequest request, @RequestBody List<ChannelOrderRequest> orderRequests) {
-        String memberId = AuthorizationExtractor.extract(request);
-        channelSubscriptionService.updateOrders(orderRequests, Long.parseLong(memberId));
+    public void updateViewOrders(final @AuthenticationPrincipal Long memberId,
+                                 final @RequestBody List<ChannelOrderRequest> orderRequests) {
+        channelSubscriptionService.updateOrders(orderRequests, memberId);
     }
 
     @DeleteMapping
-    public void unsubscribeChannel(HttpServletRequest request, @RequestParam Long channelId) {
-        String memberId = AuthorizationExtractor.extract(request);
-        channelSubscriptionService.delete(channelId, Long.parseLong(memberId));
+    public void unsubscribeChannel(final @AuthenticationPrincipal Long memberId,
+                                   final @RequestParam Long channelId) {
+        channelSubscriptionService.delete(channelId, memberId);
     }
 }

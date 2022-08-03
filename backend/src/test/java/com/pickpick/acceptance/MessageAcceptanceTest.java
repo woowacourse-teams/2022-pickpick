@@ -109,7 +109,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
                     final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
         // when
-        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithCreateToken(API_URL, MEMBER_ID, request);
 
         // then
         MessageResponses messageResponses = response.as(MessageResponses.class);
@@ -128,7 +128,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     void 메시지_조회_시_needPastMessage_true_응답_확인(final String needPastMessage) {
         Map request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
-        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithCreateToken(API_URL, MEMBER_ID, request);
 
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
@@ -138,7 +138,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 메시지_조회_시_needPastMessage가_False일_경우_응답_확인() {
         Map request = createQueryParams("jupjup", "", "5", "false", "", "");
-        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithCreateToken(API_URL, MEMBER_ID, request);
 
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
