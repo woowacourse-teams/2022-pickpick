@@ -1,6 +1,5 @@
 import { DATE } from "@src/@constants";
 import useModal from "@src/hooks/useModal";
-import { useState } from "react";
 import Dimmer from "../@shared/Dimmer";
 import DropdownMenu from "../DropdownMenu";
 import DropdownToggle from "../DropdownToggle";
