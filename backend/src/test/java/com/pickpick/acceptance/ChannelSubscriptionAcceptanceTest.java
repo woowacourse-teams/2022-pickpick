@@ -58,7 +58,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     void 구독_채널_순서_변경_시_1보다_작은_순서가_들어올_경우_예외_발생(int invalidViewOrder) {
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channelIdToSubscribe1, invalidViewOrder),
-                new ChannelOrderRequest(channelIdToSubscribe1, 1)
+                new ChannelOrderRequest(channelIdToSubscribe2, 1)
         );
 
         ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
