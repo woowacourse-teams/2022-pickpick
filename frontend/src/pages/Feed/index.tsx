@@ -5,7 +5,7 @@ import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages } from "@src/@types/shared";
-import React, { useEffect } from "react";
+import React from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
@@ -15,7 +15,7 @@ import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
 import { useParams } from "react-router-dom";
 import DateDropdown from "@src/components/DateDropdown";
-import usePortal from "@src/hooks/usePortal";
+import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
@@ -37,10 +37,10 @@ function Feed() {
     );
 
   const {
-    isPortalOpened: isCalenderOpened,
-    handleOpenPortal: handleOpenCalendar,
-    handleClosePortal: handleCloseCalendar,
-  } = usePortal();
+    isModalOpened: isCalenderOpened,
+    handleOpenModal: handleOpenCalendar,
+    handleCloseModal: handleCloseCalendar,
+  } = useModal();
 
   const { handleAddBookmark } = useBookmark({
     handleSettle: refetch,

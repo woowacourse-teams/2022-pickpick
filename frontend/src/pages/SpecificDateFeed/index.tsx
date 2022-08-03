@@ -16,7 +16,7 @@ import { extractResponseMessages } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
 import DateDropdown from "@src/components/DateDropdown";
-import usePortal from "@src/hooks/usePortal";
+import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
@@ -49,10 +49,10 @@ function SpecificDateFeed() {
   );
 
   const {
-    isPortalOpened: isCalenderOpened,
-    handleOpenPortal: handleOpenCalendar,
-    handleClosePortal: handleCloseCalendar,
-  } = usePortal();
+    isModalOpened: isCalenderOpened,
+    handleOpenModal: handleOpenCalendar,
+    handleCloseModal: handleCloseCalendar,
+  } = useModal();
 
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,

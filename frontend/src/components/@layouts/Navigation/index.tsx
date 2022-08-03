@@ -14,7 +14,7 @@ import Drawer from "@src/components/Drawer";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getSubscribedChannels } from "@src/api/channels";
-import usePortal from "@src/hooks/usePortal";
+import useModal from "@src/hooks/useModal";
 import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
 
@@ -28,16 +28,16 @@ function Navigation() {
   );
 
   const {
-    isPortalOpened: isMenuDrawerOpened,
-    handleClosePortal: handleCloseDrawer,
-    handleTogglePortal: handleToggleDrawer,
-  } = usePortal(refetch);
+    isModalOpened: isMenuDrawerOpened,
+    handleCloseModal: handleCloseDrawer,
+    handleToggleModal: handleToggleDrawer,
+  } = useModal(refetch);
 
   const {
-    isPortalOpened: isLogoutButtonOpened,
-    handleClosePortal: handleCloseLogoutButton,
-    handleTogglePortal: handleToggleLogoutButton,
-  } = usePortal();
+    isModalOpened: isLogoutButtonOpened,
+    handleCloseModal: handleCloseLogoutButton,
+    handleToggleModal: handleToggleLogoutButton,
+  } = useModal();
 
   const handleLogout = () => {
     handleCloseLogoutButton();
