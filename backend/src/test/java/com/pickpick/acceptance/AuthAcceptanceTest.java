@@ -120,7 +120,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 시그니처가_다_토큰_검증() {
+    void 시그니처가_다른_토큰_검증() {
         // given
         JwtTokenProvider jwtTokenProvider = new JwtTokenProvider("other" + secretKey, 60000);
         String invalidToken = jwtTokenProvider.createToken("1");
