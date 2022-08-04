@@ -11,12 +11,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationInterceptor(JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationInterceptor(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
+                             final Object handler) {
         if (CorsUtils.isCorsRequest(request)) {
             return true;
         }

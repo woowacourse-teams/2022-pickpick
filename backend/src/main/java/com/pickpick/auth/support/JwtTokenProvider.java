@@ -37,13 +37,13 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(String token) {
+    public String getPayload(final String token) {
         return parseClaims(token)
                 .getBody()
                 .getSubject();
     }
 
-    public void validateToken(String token) {
+    public void validateToken(final String token) {
         try {
             parseClaims(token);
         } catch (ExpiredJwtException e) {

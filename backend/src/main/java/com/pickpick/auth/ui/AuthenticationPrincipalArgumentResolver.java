@@ -14,24 +14,24 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationPrincipalArgumentResolver(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         String token = AuthorizationExtractor.extract(toHttpServletRequest(webRequest));
         jwtTokenProvider.validateToken(token);
         return Long.valueOf(jwtTokenProvider.getPayload(token));
     }
 
-    private HttpServletRequest toHttpServletRequest(NativeWebRequest webRequest) {
+    private HttpServletRequest toHttpServletRequest(final NativeWebRequest webRequest) {
         return webRequest.getNativeRequest(HttpServletRequest.class);
     }
 }
