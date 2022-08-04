@@ -13,7 +13,7 @@ import useMessageDate from "@src/hooks/useMessageDate";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import DateDropdown from "@src/components/DateDropdown";
 import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
@@ -23,10 +23,11 @@ import Calendar from "@src/components/Calendar";
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
+  const { key: queryKey } = useLocation();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
-      QUERY_KEY.ALL_MESSAGES,
+      [QUERY_KEY.ALL_MESSAGES, queryKey],
       getMessages({
         channelId,
       }),
