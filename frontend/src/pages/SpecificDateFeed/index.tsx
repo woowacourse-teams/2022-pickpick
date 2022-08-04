@@ -61,7 +61,7 @@ function SpecificDateFeed() {
     wheelDistanceCriterion: -10,
   });
 
-  const { handleAddBookmark } = useBookmark({
+  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
@@ -91,7 +91,14 @@ function SpecificDateFeed() {
           {isFetching && <MessagesLoadingStatus length={20} />}
 
           {extractResponseMessages(data).map(
-            ({ id, username, postedDate, text, userThumbnail }) => {
+            ({
+              id,
+              username,
+              postedDate,
+              text,
+              userThumbnail,
+              isBookmarked,
+            }) => {
               const parsedDate = postedDate.split("T")[0];
 
               return (
@@ -109,7 +116,11 @@ function SpecificDateFeed() {
                     text={text}
                     thumbnail={userThumbnail}
                     isBookmarked={false}
-                    toggleBookmark={handleAddBookmark(id)}
+                    toggleBookmark={
+                      isBookmarked
+                        ? handleRemoveBookmark(id)
+                        : handleAddBookmark(id)
+                    }
                   />
                 </React.Fragment>
               );
