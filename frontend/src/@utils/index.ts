@@ -1,4 +1,4 @@
-import { DATE } from "@src/@constants";
+import { DATE, DAY } from "@src/@constants";
 import {
   Bookmark,
   Message,
@@ -80,4 +80,32 @@ export const ISOConverter = (date: string): string => {
     2,
     "0"
   )}${CONVERTER_SUFFIX}`;
+};
+
+const getDateInformation = (givenDate: Date) => {
+  const year = givenDate.getFullYear();
+  const month = givenDate.getMonth() + 1;
+  const date = givenDate.getDate();
+  const day = DAY[givenDate.getDay()];
+
+  return { year, month, date, day };
+};
+
+export const getMessagesDate = (postedDate: string): string => {
+  const givenDate = getDateInformation(new Date(postedDate));
+  const today = getDateInformation(new Date());
+  if (
+    givenDate.year === today.year &&
+    givenDate.month === today.month &&
+    givenDate.date === today.date
+  )
+    return DATE.TODAY;
+  if (
+    givenDate.year === today.year &&
+    givenDate.month === today.month &&
+    givenDate.date === today.date - 1
+  )
+    return DATE.YESTERDAY;
+
+  return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
 };
