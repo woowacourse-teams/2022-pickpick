@@ -2,8 +2,13 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
+import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.MessageNotFoundException;
 import com.pickpick.exception.SubscriptionNotFoundException;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.message.domain.Bookmark;
+import com.pickpick.message.domain.BookmarkRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QMessage;
@@ -15,9 +20,11 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +39,19 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final ChannelSubscriptionRepository channelSubscriptions;
+    private final MemberRepository members;
+    private final BookmarkRepository bookmarks;
     private final JPAQueryFactory jpaQueryFactory;
 
     public MessageService(final MessageRepository messageRepository,
                           final ChannelSubscriptionRepository channelSubscriptions,
+                          final MemberRepository members,
+                          final BookmarkRepository bookmarks,
                           final JPAQueryFactory jpaQueryFactory) {
         this.messageRepository = messageRepository;
         this.channelSubscriptions = channelSubscriptions;
+        this.members = members;
+        this.bookmarks = bookmarks;
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
@@ -48,7 +61,10 @@ public class MessageService {
         List<Message> messages = findMessages(channelIds, messageRequest);
         boolean isLast = isLast(channelIds, messageRequest, messages);
 
-        return toSlackMessageResponse(messages, isLast, messageRequest.isNeedPastMessage());
+        Member member = members.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        return toSlackMessageResponse(messages, isLast, messageRequest.isNeedPastMessage(), member);
     }
 
     private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
@@ -195,13 +211,30 @@ public class MessageService {
     }
 
     private MessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast,
-                                                    final boolean needPastMessage) {
-        return new MessageResponses(toSlackMessageResponses(messages), isLast, needPastMessage);
+                                                    final boolean needPastMessage, final Member member) {
+        return new MessageResponses(toSlackMessageResponses(messages, member), isLast, needPastMessage);
     }
 
-    private List<MessageResponse> toSlackMessageResponses(final List<Message> messages) {
-        return messages.stream()
-                .map(MessageResponse::from)
-                .collect(Collectors.toList());
+    private List<MessageResponse> toSlackMessageResponses(final List<Message> messages, final Member member) {
+        List<MessageResponse> messageResponses = new ArrayList<>();
+
+        for (Message message : messages) {
+            Optional<Bookmark> bookmark = bookmarks.findByMessageIdAndMemberId(message.getId(), member.getId());
+            boolean isBookmarked = bookmark.isPresent();
+
+            MessageResponse messageResponse = new MessageResponse(
+                    message.getId(),
+                    member.getId(),
+                    member.getUsername(),
+                    member.getThumbnailUrl(),
+                    message.getText(),
+                    message.getPostedDate(),
+                    message.getModifiedDate(),
+                    isBookmarked
+            );
+            messageResponses.add(messageResponse);
+        }
+
+        return messageResponses;
     }
 }

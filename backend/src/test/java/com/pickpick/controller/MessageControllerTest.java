@@ -32,7 +32,7 @@ class MessageControllerTest extends RestDocsTestSupport {
     @BeforeEach
     void setup() {
         given(jwtTokenProvider.getPayload(any(String.class)))
-                .willReturn("2");
+                .willReturn("1");
     }
 
     @DisplayName("메시지를 조회한다.")
@@ -48,7 +48,7 @@ class MessageControllerTest extends RestDocsTestSupport {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/messages")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer 2")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
                         .params(requestParam)
                 )
                 .andExpect(status().isOk())
@@ -79,6 +79,8 @@ class MessageControllerTest extends RestDocsTestSupport {
                                                 .description("메시지 게시 날짜"),
                                         fieldWithPath("messages.[].modifiedDate").type(JsonFieldType.STRING)
                                                 .description("메시지 수정 날짜"),
+                                        fieldWithPath("messages.[].isBookmarked").type(JsonFieldType.BOOLEAN)
+                                                .description("북마크 여부"),
                                         fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 메시지 여부"),
                                         fieldWithPath("isNeedPastMessage").type(JsonFieldType.BOOLEAN)
                                                 .description("위/아래 스크롤 방향")

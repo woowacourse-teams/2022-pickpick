@@ -11,5 +11,7 @@ public interface BookmarkRepository extends Repository<Bookmark, Long> {
 
     Optional<Bookmark> findByIdAndMemberId(Long id, Long memberId);
 
+    Optional<Bookmark> findByMessageIdAndMemberId(Long messageId, Long memberId);
+
     void deleteById(Long id);
 }
