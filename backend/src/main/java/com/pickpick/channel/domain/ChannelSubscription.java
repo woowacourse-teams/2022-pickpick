@@ -18,6 +18,8 @@ import lombok.Getter;
 @Entity
 public class ChannelSubscription {
 
+    private static final int MIN_ORDER = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +50,7 @@ public class ChannelSubscription {
     }
 
     private void validateOrder(final int order) {
-        if (order < 1) {
+        if (order < MIN_ORDER) {
             throw new SubscriptionOrderMinException();
         }
     }

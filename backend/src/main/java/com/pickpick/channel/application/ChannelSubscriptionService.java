@@ -123,7 +123,6 @@ public class ChannelSubscriptionService {
                 .count();
     }
 
-
     private boolean isUnsubscribedChannelOfMember(final List<ChannelSubscription> subscribedChannels,
                                                   final List<ChannelOrderRequest> orderRequests) {
         List<Long> subscribedChannelIds = subscribedChannels.stream()
