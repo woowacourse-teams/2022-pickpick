@@ -3,15 +3,17 @@ import {
   ResponseChannels,
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
-import { fetcher } from ".";
+import { privateFetcher } from ".";
 
 export const getChannels = async () => {
-  const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL);
+  const { data } = await privateFetcher.get<ResponseChannels>(
+    API_ENDPOINT.CHANNEL
+  );
   return data;
 };
 
 export const getSubscribedChannels = async () => {
-  const { data } = await fetcher.get<ResponseSubscribedChannels>(
+  const { data } = await privateFetcher.get<ResponseSubscribedChannels>(
     API_ENDPOINT.CHANNEL_SUBSCRIPTION
   );
 
@@ -19,11 +21,11 @@ export const getSubscribedChannels = async () => {
 };
 
 export const subscribeChannel = async (channelId: string) => {
-  await fetcher.post(API_ENDPOINT.CHANNEL_SUBSCRIPTION, { channelId });
+  await privateFetcher.post(API_ENDPOINT.CHANNEL_SUBSCRIPTION, { channelId });
 };
 
 export const unsubscribeChannel = async (channelId: string) => {
-  await fetcher.delete(
+  await privateFetcher.delete(
     `${API_ENDPOINT.CHANNEL_SUBSCRIPTION}?channelId=${channelId}`
   );
 };
