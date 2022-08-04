@@ -54,7 +54,7 @@ export const setCookie = (key: string, value: string) => {
 export const getCookie = (key: string) => {
   const regex = new RegExp(`(?<=${key}=)[^;]*`); // key(좌항)에 해당하는 우항을 가져온다. 세미콜론은 제외한다.
   const matches = document.cookie.match(regex);
-  return matches ? matches[0] : undefined;
+  return matches ? matches[0] : "";
 };
 
 export const deleteCookie = (key: string) => {
