@@ -48,3 +48,7 @@ export interface ResponseSubscribedChannels {
 }
 
 export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;
+
+export interface ResponseToken {
+  token: string;
+}
