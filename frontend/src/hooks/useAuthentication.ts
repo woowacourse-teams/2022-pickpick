@@ -14,10 +14,14 @@ function useAuthentication() {
   const navigate = useNavigate();
   const { openSuccessSnackbar } = useSnackbar();
 
-  const login = (token: string) => {
+  const login = (token: string, isFirstLogin: boolean) => {
     setCookie(ACCESS_TOKEN_KEY, token);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
     openSuccessSnackbar(MESSAGES.LOGIN_SUCCESS);
+    if (isFirstLogin) {
+      navigate(PATH_NAME.ADD_CHANNEL);
+      return;
+    }
     navigate(PATH_NAME.FEED);
   };
 

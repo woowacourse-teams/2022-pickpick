@@ -51,4 +51,5 @@ export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;
 
 export interface ResponseToken {
   token: string;
+  isFirstLogin: boolean;
 }
