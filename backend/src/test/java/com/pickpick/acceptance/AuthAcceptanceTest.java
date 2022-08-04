@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.pickpick.auth.support.JwtTokenProvider;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
@@ -12,12 +13,14 @@ import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
 import com.slack.api.methods.response.users.UsersIdentityResponse;
 import com.slack.api.methods.response.users.UsersIdentityResponse.User;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -27,7 +30,11 @@ import org.springframework.test.context.jdbc.Sql;
 public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String API_URL = "/api/slack-login";
+    private static final String API_CERTIFICATION_URL = "/api/certification";
     private static final String MEMBER_SLACK_ID = "U03MC231";
+
+    @Value("${security.jwt.token.secret-key}")
+    private String secretKey;
 
     @MockBean
     private MethodsClient slackClient;
@@ -66,5 +73,62 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private void 응답_바디에_토큰_존재(final ExtractableResponse<Response> response) {
         assertThat(response.jsonPath().getString("token")).isNotBlank();
+    }
+
+    @Test
+    void 유효한_토큰_검증() {
+        // given & when
+        ExtractableResponse<Response> response = getWithCreateToken(API_CERTIFICATION_URL, 2L);
+
+        // then
+        상태코드_200_확인(response);
+    }
+
+    @Test
+    void 유효하지_않은_토큰_검증() {
+        // given
+        String invalidToken = "abcde12345";
+
+        // when
+        ExtractableResponse<Response> response = getWithToken(API_CERTIFICATION_URL, invalidToken);
+
+        // then
+        상태코드_400_확인(response);
+    }
+
+    private ExtractableResponse<Response> getWithToken(final String uri, final String token) {
+        return RestAssured.given()
+                .header("Authorization", "Bearer " + token)
+                .log().all()
+                .when()
+                .get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    @Test
+    void 만료된_토큰_검증() {
+        // given
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(secretKey, 0);
+        String invalidToken = jwtTokenProvider.createToken("1");
+
+        // when
+        ExtractableResponse<Response> response = getWithToken(API_CERTIFICATION_URL, invalidToken);
+
+        // then
+        상태코드_400_확인(response);
+    }
+
+    @Test
+    void 시그니처가_다_토큰_검증() {
+        // given
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider("other" + secretKey, 60000);
+        String invalidToken = jwtTokenProvider.createToken("1");
+
+        // when
+        ExtractableResponse<Response> response = getWithToken(API_CERTIFICATION_URL, invalidToken);
+
+        // then
+        상태코드_400_확인(response);
     }
 }

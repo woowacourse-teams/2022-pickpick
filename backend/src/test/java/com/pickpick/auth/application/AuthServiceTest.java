@@ -1,9 +1,13 @@
 package com.pickpick.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.exception.InvalidTokenException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.slack.api.methods.MethodsClient;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,14 +33,20 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class AuthServiceTest {
 
-    @Autowired
-    private AuthService authService;
-
     @MockBean
     private MethodsClient slackClient;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private MemberRepository members;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+    @Value("${security.jwt.token.secret-key}")
+    private String secretKey;
 
     @DisplayName("로그인")
     @Test
@@ -70,5 +81,53 @@ class AuthServiceTest {
         user.setId(slackId);
         usersIdentityResponse.setUser(user);
         return usersIdentityResponse;
+    }
+
+    @DisplayName("유효한 토큰을 검증한다.")
+    @Test
+    void verifyToken() {
+        // given
+        String token = jwtTokenProvider.createToken("1");
+
+        // when & then
+        assertDoesNotThrow(() -> authService.verifyToken(token));
+    }
+
+    @DisplayName("유효하지 않은 토큰을 검증한다.")
+    @Test
+    void verifyInvalidToken() {
+        // given
+        String token = "invalid token";
+
+        // when & then
+        assertThatThrownBy(() -> authService.verifyToken(token))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessageContaining("유효하지 않은 토큰입니다.");
+    }
+
+    @DisplayName("만료된 토큰을 검증한다.")
+    @Test
+    void verifyExpiredToken() {
+        // given
+        JwtTokenProvider expiredJwtTokenProvider = new JwtTokenProvider(secretKey, 0);
+        String token = expiredJwtTokenProvider.createToken("1");
+
+        // when & then
+        assertThatThrownBy(() -> authService.verifyToken(token))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessageContaining("만료된 토큰입니다.");
+    }
+
+    @DisplayName("시그니처가 다른 토큰을 검증한다.")
+    @Test
+    void verifyDifferentSignatureToken() {
+        // given
+        JwtTokenProvider otherJwtTokenProvider = new JwtTokenProvider("another secret key 123467891236789231", 600000);
+        String token = otherJwtTokenProvider.createToken("1");
+
+        // when & then
+        assertThatThrownBy(() -> authService.verifyToken(token))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessageContaining("유효하지 않은 토큰입니다.");
     }
 }
