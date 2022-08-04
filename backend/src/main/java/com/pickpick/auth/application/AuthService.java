@@ -1,6 +1,7 @@
 package com.pickpick.auth.application;
 
 import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.SlackClientException;
 import com.pickpick.member.domain.Member;
@@ -40,7 +41,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String login(final String code) {
+    public LoginResponse login(final String code) {
         try {
             String token = requestSlackToken(code);
             String memberSlackId = requestMemberSlackId(token);
@@ -48,7 +49,13 @@ public class AuthService {
             Member member = members.findBySlackId(memberSlackId)
                     .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
 
-            return jwtTokenProvider.createToken(String.valueOf(member.getId()));
+            boolean isFirstLogin = member.isFirstLogin();
+            member.markLoggedIn();
+
+            return LoginResponse.builder()
+                    .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
+                    .firstLogin(isFirstLogin)
+                    .build();
         } catch (IOException | SlackApiException e) {
             throw new SlackClientException(e);
         }

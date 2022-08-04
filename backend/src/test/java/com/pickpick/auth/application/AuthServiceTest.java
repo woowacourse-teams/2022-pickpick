@@ -2,11 +2,13 @@ package com.pickpick.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.exception.InvalidTokenException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -48,7 +50,7 @@ class AuthServiceTest {
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
-    @DisplayName("로그인")
+    @DisplayName("최초 로그인 시 토큰과 isFirstLogin true, 두번째 이후부턴 토큰과 false가 반환되어야 한다")
     @Test
     void login() throws SlackApiException, IOException {
         // given
@@ -61,10 +63,16 @@ class AuthServiceTest {
                 .willReturn(generateUsersIdentityResponse(member.getSlackId()));
 
         // when
-        String jupjupToken = authService.login("1234");
+        LoginResponse firstLoginResponse = authService.login("1234");
+        LoginResponse secondLoginResponse = authService.login("1234");
 
         // then
-        assertThat(jupjupToken).isNotBlank();
+        assertAll(
+                () -> assertThat(firstLoginResponse.getToken()).isNotEmpty(),
+                () -> assertThat(firstLoginResponse.isFirstLogin()).isTrue(),
+                () -> assertThat(secondLoginResponse.getToken()).isNotEmpty(),
+                () -> assertThat(secondLoginResponse.isFirstLogin()).isFalse()
+        );
     }
 
     private OAuthV2AccessResponse generateOAuthV2AccessResponse() {

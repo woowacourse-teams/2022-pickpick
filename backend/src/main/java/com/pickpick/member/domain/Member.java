@@ -29,6 +29,9 @@ public class Member {
     @Column(name = "thumbnail_url", length = 2048, nullable = false)
     private String thumbnailUrl;
 
+    @Column(name = "first_login", nullable = false)
+    private boolean isFirstLogin = true;
+
     protected Member() {
     }
 
@@ -36,6 +39,10 @@ public class Member {
         this.slackId = slackId;
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public void markLoggedIn() {
+        this.isFirstLogin = false;
     }
 
     public void update(final String username, final String thumbnailUrl) {
