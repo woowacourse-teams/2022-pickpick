@@ -15,12 +15,13 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MessageCreatedService implements SlackEventService {
+public class MessageFileShareService implements SlackEventService {
 
     private static final String EVENT = "event";
     private static final String USER = "user";
@@ -33,12 +34,12 @@ public class MessageCreatedService implements SlackEventService {
     private final MemberRepository members;
     private final ChannelRepository channels;
     private final MethodsClient slackClient;
-    
+
     @Value("${slack.bot-token}")
     private String slackBotToken;
 
-    public MessageCreatedService(final MessageRepository messages, final MemberRepository members,
-                                 final ChannelRepository channels, final MethodsClient slackClient) {
+    public MessageFileShareService(final MessageRepository messages, final MemberRepository members,
+                                   final ChannelRepository channels, final MethodsClient slackClient) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
@@ -61,10 +62,23 @@ public class MessageCreatedService implements SlackEventService {
         messages.save(slackMessageDto.toEntity(member, channel));
     }
 
+    private SlackMessageDto convert(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+
+        return new SlackMessageDto(
+                (String) event.get(USER),
+                (String) event.get(CLIENT_MSG_ID),
+                (String) event.get(TIMESTAMP),
+                (String) event.get(TIMESTAMP),
+                (String) event.getOrDefault(TEXT, ""),
+                (String) event.get(CHANNEL)
+        );
+    }
+
     private Channel createChannel(final String channelSlackId) {
         try {
             Conversation conversation = slackClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
+                    request -> request.token(slackBotToken).channel(channelSlackId)
             ).getChannel();
 
             Channel channel = toChannel(conversation);
@@ -80,21 +94,8 @@ public class MessageCreatedService implements SlackEventService {
         return new Channel(channel.getId(), channel.getName());
     }
 
-    private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
-
-        return new SlackMessageDto(
-                (String) event.get(USER),
-                (String) event.get(CLIENT_MSG_ID),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TEXT),
-                (String) event.get(CHANNEL)
-        );
-    }
-
     @Override
     public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_CREATED == slackEvent;
+        return SlackEvent.MESSAGE_FILE_SHARE == slackEvent;
     }
 }
