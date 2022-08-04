@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "HTTPS=true webpack serve --open --config webpack.prod.js",
+    "start": "HTTPS=true webpack serve --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "test": "jest",
     "storybook": "start-storybook -p 6006",
