@@ -1,5 +1,6 @@
 package com.pickpick.channel.domain;
 
+import com.pickpick.exception.SubscriptionOrderMinException;
 import com.pickpick.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +43,14 @@ public class ChannelSubscription {
     }
 
     public void changeOrder(int order) {
+        validateOrder(order);
         this.viewOrder = order;
+    }
+
+    private void validateOrder(final int order) {
+        if (order < 1) {
+            throw new SubscriptionOrderMinException();
+        }
     }
 
     public Long getChannelId() {

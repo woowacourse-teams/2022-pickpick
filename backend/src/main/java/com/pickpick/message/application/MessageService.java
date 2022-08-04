@@ -1,6 +1,9 @@
 package com.pickpick.message.application;
 
+import com.pickpick.channel.domain.ChannelSubscription;
+import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.exception.MessageNotFoundException;
+import com.pickpick.exception.SubscriptionNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QMessage;
@@ -28,21 +31,38 @@ public class MessageService {
     private static final int ONE_TO_GET_LAST_INDEX = 1;
 
     private final MessageRepository messageRepository;
+    private final ChannelSubscriptionRepository channelSubscriptions;
     private final JPAQueryFactory jpaQueryFactory;
 
-    public MessageService(final MessageRepository messageRepository, final JPAQueryFactory jpaQueryFactory) {
+    public MessageService(final MessageRepository messageRepository,
+                          final ChannelSubscriptionRepository channelSubscriptions,
+                          final JPAQueryFactory jpaQueryFactory) {
         this.messageRepository = messageRepository;
+        this.channelSubscriptions = channelSubscriptions;
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public MessageResponses find(final MessageRequest messageRequest) {
-        List<Message> messages = findMessages(messageRequest);
-        boolean isLast = isLast(messageRequest, messages);
+    public MessageResponses find(final Long memberId, final MessageRequest messageRequest) {
+        List<Long> channelIds = findChannelId(memberId, messageRequest);
+
+        List<Message> messages = findMessages(channelIds, messageRequest);
+        boolean isLast = isLast(channelIds, messageRequest, messages);
 
         return toSlackMessageResponse(messages, isLast, messageRequest.isNeedPastMessage());
     }
 
-    private List<Message> findMessages(final MessageRequest messageRequest) {
+    private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
+        if (Objects.nonNull(messageRequest.getChannelIds()) && !messageRequest.getChannelIds().isEmpty()) {
+            return messageRequest.getChannelIds();
+        }
+
+        ChannelSubscription firstSubscription = channelSubscriptions.findFirstByMemberIdOrderByViewOrderAsc(memberId)
+                .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
+
+        return List.of(firstSubscription.getChannelId());
+    }
+
+    private List<Message> findMessages(final List<Long> channelIds, final MessageRequest messageRequest) {
         boolean needPastMessage = messageRequest.isNeedPastMessage();
         int messageCount = messageRequest.getMessageCount();
 
@@ -50,7 +70,7 @@ public class MessageService {
                 .selectFrom(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .fetchJoin()
-                .where(meetAllConditions(messageRequest))
+                .where(meetAllConditions(channelIds, messageRequest))
                 .orderBy(arrangeDateByNeedPastMessage(needPastMessage))
                 .limit(messageCount)
                 .fetch();
@@ -64,8 +84,8 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
-    private BooleanExpression meetAllConditions(final MessageRequest request) {
-        return channelIdsIn(request.getChannelIds())
+    private BooleanExpression meetAllConditions(final List<Long> channelIds, final MessageRequest request) {
+        return channelIdsIn(channelIds)
                 .and(textContains(request.getKeyword()))
                 .and(messageHasText())
                 .and(decideMessageIdOrDate(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
@@ -134,7 +154,8 @@ public class MessageService {
         return QMessage.message.postedDate.asc();
     }
 
-    private boolean isLast(final MessageRequest messageRequest, final List<Message> messages) {
+    private boolean isLast(final List<Long> channelIds, final MessageRequest messageRequest,
+                           final List<Message> messages) {
         if (messages.isEmpty()) {
             return true;
         }
@@ -142,16 +163,17 @@ public class MessageService {
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QMessage.message)
-                .where(meetAllIsLastCondition(messageRequest, messages))
+                .where(meetAllIsLastCondition(channelIds, messageRequest, messages))
                 .fetchFirst();
 
         return Objects.isNull(result);
     }
 
-    private BooleanExpression meetAllIsLastCondition(final MessageRequest request, final List<Message> messages) {
+    private BooleanExpression meetAllIsLastCondition(final List<Long> channelIds, final MessageRequest request,
+                                                     final List<Message> messages) {
         Message targetMessage = findTargetMessage(messages, request.isNeedPastMessage());
 
-        return channelIdsIn(request.getChannelIds())
+        return channelIdsIn(channelIds)
                 .and(textContains(request.getKeyword()))
                 .and(isBeforeOrAfterTarget(targetMessage.getPostedDate(), request.isNeedPastMessage()));
     }

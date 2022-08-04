@@ -12,6 +12,7 @@ import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.exception.ChannelNotFoundException;
 import com.pickpick.exception.SubscriptionDuplicateException;
 import com.pickpick.exception.SubscriptionNotExistException;
+import com.pickpick.exception.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;
@@ -118,6 +119,71 @@ class ChannelSubscriptionServiceTest {
         //then
         assertThat(channelSubscriptions).extracting("channel")
                 .containsExactly(channel1, channel2, channel3);
+    }
+
+    @DisplayName("채널 구독 순서 변경 시 중복 viewOrder가 들어올 경우 에러 발생")
+    @Test
+    void updateChannelSubscriptionOrderWithDuplicateViewOrder() {
+        // given
+        Member member = saveMember();
+        Channel channel1 = saveChannel("slackId1", "채널 이름1");
+        Channel channel2 = saveChannel("slackId2", "채널 이름2");
+        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+
+        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channel1.getId(), 1),
+                new ChannelOrderRequest(channel2.getId(), 2),
+                new ChannelOrderRequest(channel3.getId(), 2)
+        );
+
+        // when & then
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+                .isInstanceOf(SubscriptionOrderDuplicateException.class);
+    }
+
+    @DisplayName("채널 구독 순서 변경 시 해당 멤버가 구독한 적 없는 채널 아이디가 들어올 경우 예외 발생")
+    @Test
+    void updateChannelSubscriptionOrderWithInvalidChannelId() {
+        // given
+        Member member = saveMember();
+        Channel channel1 = saveChannel("slackId1", "채널 이름1");
+        Channel channel2 = saveChannel("slackId2", "채널 이름2");
+        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+
+        subscribeChannelsInListOrder(member, List.of(channel1, channel2));
+
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channel1.getId(), 1),
+                new ChannelOrderRequest(channel2.getId(), 2),
+                new ChannelOrderRequest(channel3.getId(), 3)
+        );
+
+        // when & then
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+                .isInstanceOf(SubscriptionNotExistException.class);
+    }
+
+    @DisplayName("채널 구독 순서 변경 시 해당 멤버의 모든 구독 채널 아이디가 들어오지 않은 경우 예외 발생")
+    @Test
+    void updateChannelSubscriptionOrderWithNotEnoughChannelId() {
+        // given
+        Member member = saveMember();
+        Channel channel1 = saveChannel("slackId1", "채널 이름1");
+        Channel channel2 = saveChannel("slackId2", "채널 이름2");
+        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+
+        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+
+        List<ChannelOrderRequest> request = List.of(
+                new ChannelOrderRequest(channel1.getId(), 1),
+                new ChannelOrderRequest(channel2.getId(), 2)
+        );
+
+        // when & then
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+                .isInstanceOf(SubscriptionNotExistException.class);
     }
 
     @DisplayName("구독 중이 아닌 채널 구독 취소시 예외 발생")

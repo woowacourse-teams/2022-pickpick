@@ -1,11 +1,14 @@
 package com.pickpick.controller;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -32,9 +35,13 @@ class MessageControllerTest extends RestDocsTestSupport {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/messages")
                         .params(requestParam)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 2")
                 )
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
+                                ),
                                 requestParameters(
                                         parameterWithName("keyword").optional().description("검색할 키워드"),
                                         parameterWithName("date").optional().description("검색 기준 날짜"),
