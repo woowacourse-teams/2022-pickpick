@@ -22,7 +22,7 @@ export const API_ENDPOINT = {
   CHANNEL: "/api/channels",
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
   BOOKMARKS: "/api/bookmarks",
-  AUTHENTICATION: "/api/auth",
+  CERTIFICATION: "/api/certification",
   SLACK_LOGIN: "/api/slack-login",
 } as const;
 

@@ -1,8 +1,8 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { privateFetcher, publicFetcher } from ".";
 
-export const isAuthenticated = async () => {
-  const data = await privateFetcher.get("/api/auth");
+export const isCertificated = async () => {
+  const data = await privateFetcher.get(API_ENDPOINT.CERTIFICATION);
   return data;
 };
 
