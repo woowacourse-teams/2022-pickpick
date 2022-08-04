@@ -1,6 +1,4 @@
-import { DATE } from "@src/@constants";
-import { ISOConverter } from "@src/@utils";
-import { Link } from "react-router-dom";
+import DateDropdownOption from "../DateDropdownOption";
 import * as Styled from "./style";
 
 interface Props {
@@ -10,46 +8,9 @@ interface Props {
 }
 
 function DateDropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
-  const renderDateOption = () => {
-    if (date === DATE.TODAY) {
-      return (
-        <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
-            <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
-          </Link>
-        </Styled.Option>
-      );
-    }
-
-    if (date === DATE.YESTERDAY) {
-      return (
-        <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
-            <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
-          </Link>
-        </Styled.Option>
-      );
-    }
-
-    return (
-      <>
-        <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
-            <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
-          </Link>
-        </Styled.Option>
-        <Styled.Option>
-          <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
-            <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
-          </Link>
-        </Styled.Option>
-      </>
-    );
-  };
-
   return (
     <Styled.Container>
-      {renderDateOption()}
+      <DateDropdownOption channelId={channelId} date={date} />
       <hr />
       <Styled.Option>
         <Styled.Button type="button" onClick={handleOpenCalendar}>
