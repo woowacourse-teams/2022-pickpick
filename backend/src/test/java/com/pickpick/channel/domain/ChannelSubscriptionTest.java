@@ -2,7 +2,7 @@ package com.pickpick.channel.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.pickpick.exception.SubscriptionOrderMinException;
+import com.pickpick.exception.SubscriptionInvalidOrderException;
 import com.pickpick.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +21,6 @@ class ChannelSubscriptionTest {
 
         // when & then
         assertThatThrownBy(() -> channelSubscription.changeOrder(invalidOrder))
-                .isInstanceOf(SubscriptionOrderMinException.class);
+                .isInstanceOf(SubscriptionInvalidOrderException.class);
     }
 }

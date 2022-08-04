@@ -1,6 +1,6 @@
 package com.pickpick.channel.domain;
 
-import com.pickpick.exception.SubscriptionOrderMinException;
+import com.pickpick.exception.SubscriptionInvalidOrderException;
 import com.pickpick.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,7 +51,7 @@ public class ChannelSubscription {
 
     private void validateOrder(final int order) {
         if (order < MIN_ORDER) {
-            throw new SubscriptionOrderMinException();
+            throw new SubscriptionInvalidOrderException();
         }
     }
 
