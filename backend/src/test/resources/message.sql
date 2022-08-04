@@ -2,8 +2,8 @@ insert into channel (id, name, slack_id)
 values (5, '임시 채널', 'ABC1234'),
        (3, '공지사항 채널', 'DEF5678');
 
-insert into member (id, slack_id, thumbnail_url, username)
-values (1, 'U03MC231', 'https://summer.png', '써머');
+insert into member (id, slack_id, thumbnail_url, username, first_login)
+values (1, 'U03MC231', 'https://summer.png', '써머', false);
 
 insert into channel_subscription(id, view_order, channel_id, member_id)
 values (1, 2, 3, 1),

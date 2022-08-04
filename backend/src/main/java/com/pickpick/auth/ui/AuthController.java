@@ -22,8 +22,7 @@ public class AuthController {
 
     @GetMapping("/slack-login")
     public LoginResponse login(@RequestParam @NotEmpty final String code) {
-        String token = authService.login(code);
-        return new LoginResponse(token);
+        return authService.login(code);
     }
 
     @GetMapping("/certification")
