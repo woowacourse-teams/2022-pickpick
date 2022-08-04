@@ -24,7 +24,7 @@ export const getMessages =
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
-          channelId ?? ""
+          !channelId || channelId === "main" ? "" : channelId
         }&messageId=&needPastMessage=${true}&date=${date ?? ""}`,
         {
           headers: { ...getPrivateHeaders() },

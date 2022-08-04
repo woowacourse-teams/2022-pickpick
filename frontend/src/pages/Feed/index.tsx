@@ -29,7 +29,7 @@ function Feed() {
     useInfiniteQuery<ResponseMessages>(
       [QUERY_KEY.ALL_MESSAGES, queryKey],
       getMessages({
-        channelId: channelId === "main" ? "" : channelId,
+        channelId,
       }),
       {
         getNextPageParam: nextMessagesCallback,
