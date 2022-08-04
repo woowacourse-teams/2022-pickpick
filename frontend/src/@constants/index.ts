@@ -33,6 +33,16 @@ export const DATE = {
   YESTERDAY: "어제",
 } as const;
 
+export const DAY: Record<number, string> = {
+  0: "일요일",
+  1: "월요일",
+  2: "화요일",
+  3: "수요일",
+  4: "목요일",
+  5: "금요일",
+  6: "토요일",
+};
+
 export const ERROR_MESSAGES = {
   UNAUTHORIZED: "로그인이 필요한 서비스입니다.",
 } as const;

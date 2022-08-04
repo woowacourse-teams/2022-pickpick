@@ -6,7 +6,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
 }
 
-function DropdownToggle({ text, ...props }: Props) {
+function DateDropdownToggle({ text, ...props }: Props) {
   return (
     <Styled.Container {...props}>
       <FlexRow gap="8px">
@@ -17,4 +17,4 @@ function DropdownToggle({ text, ...props }: Props) {
   );
 }
 
-export default DropdownToggle;
+export default DateDropdownToggle;
