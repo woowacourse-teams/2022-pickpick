@@ -29,7 +29,7 @@ function Feed() {
     useInfiniteQuery<ResponseMessages>(
       [QUERY_KEY.ALL_MESSAGES, queryKey],
       getMessages({
-        channelId,
+        channelId: channelId === "main" ? "" : channelId,
       }),
       {
         getNextPageParam: nextMessagesCallback,
@@ -74,7 +74,7 @@ function Feed() {
                   {isRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
-                      channelId={channelId ?? ""}
+                      channelId={channelId ?? "main"}
                       handleOpenCalendar={handleOpenCalendar}
                     />
                   )}
@@ -103,7 +103,7 @@ function Feed() {
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
           <Calendar
-            channelId={channelId ?? ""}
+            channelId={channelId ?? "main"}
             handleCloseCalendar={handleCloseCalendar}
           />
         </>
