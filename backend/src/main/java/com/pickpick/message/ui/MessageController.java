@@ -1,10 +1,9 @@
 package com.pickpick.message.ui;
 
+import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.MessageService;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponses;
-import com.pickpick.utils.AuthorizationExtractor;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +20,8 @@ public class MessageController {
     }
 
     @GetMapping
-    public MessageResponses findSlackMessages(HttpServletRequest httpServletRequest,
-                                              @Valid MessageRequest messageRequest) {
-
-        String memberId = AuthorizationExtractor.extract(httpServletRequest);
-
-        return messageService.find(Long.parseLong(memberId), messageRequest);
+    public MessageResponses findSlackMessages(final @AuthenticationPrincipal Long memberId,
+                                              final @Valid MessageRequest messageRequest) {
+        return messageService.find(memberId, messageRequest);
     }
 }

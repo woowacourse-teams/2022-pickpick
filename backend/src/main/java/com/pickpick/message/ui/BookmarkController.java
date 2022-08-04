@@ -1,10 +1,9 @@
 package com.pickpick.message.ui;
 
+import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.BookmarkService;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponses;
-import com.pickpick.utils.AuthorizationExtractor;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,24 +27,21 @@ public class BookmarkController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void save(final HttpServletRequest request,
+    public void save(final @AuthenticationPrincipal Long memberId,
                      final @RequestBody BookmarkRequest bookmarkRequest) {
-        String memberId = AuthorizationExtractor.extract(request);
-        bookmarkService.save(Long.parseLong(memberId), bookmarkRequest);
+        bookmarkService.save(memberId, bookmarkRequest);
     }
 
     @GetMapping
-    public BookmarkResponses find(final HttpServletRequest request,
+    public BookmarkResponses find(final @AuthenticationPrincipal Long memberId,
                                   final @RequestParam(required = false) Long bookmarkId) {
-        String memberId = AuthorizationExtractor.extract(request);
-        return bookmarkService.find(bookmarkId, Long.parseLong(memberId));
+        return bookmarkService.find(bookmarkId, memberId);
     }
 
     @DeleteMapping("/{bookmarkId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(final HttpServletRequest request,
+    public void delete(final @AuthenticationPrincipal Long memberId,
                        final @PathVariable Long bookmarkId) {
-        String memberId = AuthorizationExtractor.extract(request);
-        bookmarkService.delete(bookmarkId, Long.parseLong(memberId));
+        bookmarkService.delete(bookmarkId, memberId);
     }
 }

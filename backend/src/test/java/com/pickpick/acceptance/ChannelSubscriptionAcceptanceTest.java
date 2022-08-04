@@ -120,7 +120,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
 
     private ExtractableResponse<Response> 유저_구독_채널_목록_조회_요청() {
-        return getWithAuth(API_CHANNEL_SUBSCRIPTION, 2L);
+        return getWithCreateToken(API_CHANNEL_SUBSCRIPTION, 2L);
     }
 
     private void 구독이_올바른_순서로_조회됨(
@@ -141,7 +141,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private ExtractableResponse<Response> 구독_채널_순서_변경_요청(final List<ChannelOrderRequest> request) {
-        return putWithAuth(API_CHANNEL_SUBSCRIPTION, request, 2L);
+        return putWithCreateToken(API_CHANNEL_SUBSCRIPTION, request, 2L);
     }
 
     private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청() {
