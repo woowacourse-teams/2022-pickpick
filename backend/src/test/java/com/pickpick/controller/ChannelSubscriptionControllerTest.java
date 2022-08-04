@@ -1,6 +1,8 @@
 package com.pickpick.controller;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -10,12 +12,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import java.util.List;
 import org.apache.http.HttpHeaders;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -24,6 +29,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Sql({"/truncate.sql", "/channel.sql", "/channel-subscription.sql"})
 class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
+    @BeforeEach
+    void setup() {
+        given(jwtTokenProvider.getPayload(any(String.class)))
+                .willReturn("2");
+    }
 
     @DisplayName("멤버의 구독 중인 채널을 조회한다.")
     @Test

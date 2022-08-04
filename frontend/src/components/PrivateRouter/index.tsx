@@ -1,5 +1,5 @@
 import { PATH_NAME, QUERY_KEY, ERROR_MESSAGES } from "@src/@constants";
-import { isAuthenticated } from "@src/api/auth";
+import { isCertificated } from "@src/api/auth";
 import useSnackbar from "@src/hooks/useSnackbar";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
@@ -16,7 +16,7 @@ function PrivateRouter({ children }: Props) {
 
   const { isLoading, isError } = useQuery(
     QUERY_KEY.AUTHENTICATION,
-    isAuthenticated,
+    isCertificated,
     {
       useErrorBoundary: false,
       retry: false,

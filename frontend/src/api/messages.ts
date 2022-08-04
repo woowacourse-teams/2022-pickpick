@@ -1,7 +1,6 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseMessages } from "@src/@types/shared";
-import { fetcher } from ".";
-import { getHeaders } from "./utils";
+import { privateFetcher } from ".";
 
 interface PageParam {
   messageId: string;
@@ -22,7 +21,7 @@ export const getMessages =
   ({ date, channelId }: HighOrderParam = { date: "", channelId: "" }) =>
   async ({ pageParam }: ReturnFunctionParam) => {
     if (!pageParam) {
-      const { data } = await fetcher.get<ResponseMessages>(
+      const { data } = await privateFetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
           channelId ?? ""
         }&messageId=&needPastMessage=${true}&date=${date ?? ""}`
@@ -37,11 +36,8 @@ export const getMessages =
       date: currentDate = "",
     } = pageParam;
 
-    const { data } = await fetcher.get<ResponseMessages>(
-      `${API_ENDPOINT.MESSAGES}?channelIds=${channelId}&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
-      {
-        headers: getHeaders(),
-      }
+    const { data } = await privateFetcher.get<ResponseMessages>(
+      `${API_ENDPOINT.MESSAGES}?channelIds=${channelId}&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`
     );
 
     return data;

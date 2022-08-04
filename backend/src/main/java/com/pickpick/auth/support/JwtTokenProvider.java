@@ -1,5 +1,9 @@
 package com.pickpick.auth.support;
 
+import com.pickpick.exception.InvalidTokenException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -31,5 +35,28 @@ public class JwtTokenProvider {
                 .setExpiration(validity)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public void validateToken(final String token) {
+        try {
+            parseClaims(token);
+        } catch (ExpiredJwtException e) {
+            throw new InvalidTokenException("만료된 토큰입니다.");
+        } catch (Exception e) {
+            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+        }
+    }
+
+    public String getPayload(final String token) {
+        return parseClaims(token)
+                .getBody()
+                .getSubject();
+    }
+
+    private Jws<Claims> parseClaims(final String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
     }
 }

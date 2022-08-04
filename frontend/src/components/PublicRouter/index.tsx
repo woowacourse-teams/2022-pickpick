@@ -1,5 +1,5 @@
 import { PATH_NAME, QUERY_KEY } from "@src/@constants";
-import { isAuthenticated } from "@src/api/auth";
+import { isCertificated } from "@src/api/auth";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ function PublicRouter({ children }: Props) {
 
   const { isLoading, isSuccess } = useQuery(
     QUERY_KEY.AUTHENTICATION,
-    isAuthenticated,
+    isCertificated,
     {
       useErrorBoundary: false,
       retry: false,
