@@ -25,7 +25,10 @@ export const getMessages =
       const { data } = await fetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
           channelId ?? ""
-        }&messageId=&needPastMessage=${true}&date=${date ?? ""}`
+        }&messageId=&needPastMessage=${true}&date=${date ?? ""}`,
+        {
+          headers: { ...getPrivateHeaders() },
+        }
       );
 
       return data;
