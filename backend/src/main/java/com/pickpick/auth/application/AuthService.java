@@ -76,4 +76,8 @@ public class AuthService {
                 .getUser()
                 .getId();
     }
+
+    public void verifyToken(final String token) {
+        jwtTokenProvider.validateToken(token);
+    }
 }
