@@ -1,8 +1,13 @@
 insert into channel (id, name, slack_id)
-values (5, '임시 채널', 'ABC1234');
+values (5, '임시 채널', 'ABC1234'),
+       (3, '공지사항 채널', 'DEF5678');
 
-insert into member (id, slack_id, thumbnail_url, username)
-values (1, 'U03MC231', 'https://summer.png', '써머');
+insert into member (id, slack_id, thumbnail_url, username, first_login)
+values (1, 'U03MC231', 'https://summer.png', '써머', false);
+
+insert into channel_subscription(id, view_order, channel_id, member_id)
+values (1, 2, 3, 1),
+       (2, 1, 5, 1);
 
 insert into message (id, modified_date, posted_date, text, member_id, channel_id, slack_message_id)
 values (1, '2022-07-12 14:21:55', '2022-07-12 14:21:55', 'Sample Text', 1, 5, 'ABC1231'),
@@ -44,3 +49,8 @@ values (1, '2022-07-12 14:21:55', '2022-07-12 14:21:55', 'Sample Text', 1, 5, 'A
        (37, '2022-07-20 15:21:55', '2022-07-20 15:21:55', 'Sample Text', 1, 5, 'ABC12337'),
        (38, '2022-07-20 17:21:55', '2022-07-20 17:21:55', 'Sample Text', 1, 5, 'ABC12338'),
        (39, '2022-07-29 17:21:55', '2022-07-29 17:21:55', '', 1, 5, 'ABC12338');
+
+insert into bookmark(id, member_id, message_id)
+values (1, 1, 1),
+      (2, 1, 5),
+      (3, 1, 10);

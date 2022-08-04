@@ -10,21 +10,39 @@ import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import DateDropDown from "@src/components/DateDropdown";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
+import { useLocation, useParams } from "react-router-dom";
+import DateDropdown from "@src/components/DateDropdown";
+import useModal from "@src/hooks/useModal";
+import Portal from "@src/components/@shared/Portal";
+import Dimmer from "@src/components/@shared/Dimmer";
+import Calendar from "@src/components/Calendar";
 
 function Feed() {
-  const { initializeDateArray, isRenderDate } = useMessageDate();
+  const { channelId } = useParams();
+  const { isRenderDate } = useMessageDate();
+  const { key: queryKey } = useLocation();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages>(QUERY_KEY.ALL_MESSAGES, getMessages(), {
-      getNextPageParam: nextMessagesCallback,
-      onSettled: initializeDateArray,
-    });
+    useInfiniteQuery<ResponseMessages>(
+      [QUERY_KEY.ALL_MESSAGES, queryKey],
+      getMessages({
+        channelId: channelId === "main" ? "" : channelId,
+      }),
+      {
+        getNextPageParam: nextMessagesCallback,
+      }
+    );
 
-  const { handleAddBookmark } = useBookmark({
+  const {
+    isModalOpened: isCalenderOpened,
+    handleOpenModal: handleOpenCalendar,
+    handleCloseModal: handleCloseCalendar,
+  } = useModal();
+
+  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
@@ -41,21 +59,36 @@ function Feed() {
       >
         <FlexColumn gap="4px" width="100%">
           {extractResponseMessages(data).map(
-            ({ id, username, postedDate, text, userThumbnail }) => {
+            ({
+              id,
+              username,
+              postedDate,
+              text,
+              userThumbnail,
+              isBookmarked,
+            }) => {
               const parsedDate = postedDate.split("T")[0];
 
               return (
                 <React.Fragment key={id}>
                   {isRenderDate(parsedDate) && (
-                    <DateDropDown postedDate={parsedDate} />
+                    <DateDropdown
+                      postedDate={parsedDate}
+                      channelId={channelId ?? "main"}
+                      handleOpenCalendar={handleOpenCalendar}
+                    />
                   )}
                   <MessageCard
                     username={username}
                     date={postedDate}
                     text={text}
                     thumbnail={userThumbnail}
-                    isBookmarked={false}
-                    toggleBookmark={handleAddBookmark(id)}
+                    isBookmarked={isBookmarked}
+                    toggleBookmark={
+                      isBookmarked
+                        ? handleRemoveBookmark(id)
+                        : handleAddBookmark(id)
+                    }
                   />
                 </React.Fragment>
               );
@@ -65,6 +98,16 @@ function Feed() {
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>
+
+      <Portal isOpened={isCalenderOpened}>
+        <>
+          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
+          <Calendar
+            channelId={channelId ?? "main"}
+            handleCloseCalendar={handleCloseCalendar}
+          />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }

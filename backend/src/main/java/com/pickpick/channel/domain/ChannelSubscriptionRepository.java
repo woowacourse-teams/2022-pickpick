@@ -17,6 +17,8 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     Optional<ChannelSubscription> findFirstByMemberIdOrderByViewOrderDesc(Long memberId);
 
+    Optional<ChannelSubscription> findFirstByMemberIdOrderByViewOrderAsc(Long memberId);
+
     boolean existsByChannelAndMember(Channel channel, Member member);
 
     void deleteAllByMemberId(Long memberId);

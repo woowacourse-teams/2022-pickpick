@@ -11,16 +11,21 @@ import SearchInput from "@src/components/SearchInput";
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 import { previousMessagesCallback, nextMessagesCallback } from "@src/api/utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import DateDropDown from "@src/components/DateDropdown";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
+import DateDropdown from "@src/components/DateDropdown";
+import useModal from "@src/hooks/useModal";
+import Portal from "@src/components/@shared/Portal";
+import Dimmer from "@src/components/@shared/Dimmer";
+import Calendar from "@src/components/Calendar";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
-  const { date } = useParams();
-  const { initializeDateArray, isRenderDate } = useMessageDate();
+  const { date, channelId } = useParams();
+  const { isRenderDate } = useMessageDate();
+
   const {
     data,
     isFetching,
@@ -34,13 +39,20 @@ function SpecificDateFeed() {
     [QUERY_KEY.SPECIFIC_DATE_MESSAGES, queryKey],
     getMessages({
       date,
+      channelId,
     }),
     {
       getPreviousPageParam: previousMessagesCallback,
       getNextPageParam: nextMessagesCallback,
-      onSettled: initializeDateArray,
     }
   );
+
+  const {
+    isModalOpened: isCalenderOpened,
+    handleOpenModal: handleOpenCalendar,
+    handleCloseModal: handleCloseCalendar,
+  } = useModal();
+
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,
     callback: fetchPreviousPage,
@@ -49,7 +61,7 @@ function SpecificDateFeed() {
     wheelDistanceCriterion: -10,
   });
 
-  const { handleAddBookmark } = useBookmark({
+  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
@@ -79,13 +91,24 @@ function SpecificDateFeed() {
           {isFetching && <MessagesLoadingStatus length={20} />}
 
           {extractResponseMessages(data).map(
-            ({ id, username, postedDate, text, userThumbnail }) => {
+            ({
+              id,
+              username,
+              postedDate,
+              text,
+              userThumbnail,
+              isBookmarked,
+            }) => {
               const parsedDate = postedDate.split("T")[0];
 
               return (
                 <React.Fragment key={id}>
                   {isRenderDate(parsedDate) && (
-                    <DateDropDown postedDate={parsedDate} />
+                    <DateDropdown
+                      postedDate={parsedDate}
+                      channelId={channelId ?? ""}
+                      handleOpenCalendar={handleOpenCalendar}
+                    />
                   )}
                   <MessageCard
                     username={username}
@@ -93,7 +116,11 @@ function SpecificDateFeed() {
                     text={text}
                     thumbnail={userThumbnail}
                     isBookmarked={false}
-                    toggleBookmark={handleAddBookmark(id)}
+                    toggleBookmark={
+                      isBookmarked
+                        ? handleRemoveBookmark(id)
+                        : handleAddBookmark(id)
+                    }
                   />
                 </React.Fragment>
               );
@@ -103,6 +130,16 @@ function SpecificDateFeed() {
           {isFetching && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>
+
+      <Portal isOpened={isCalenderOpened}>
+        <>
+          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
+          <Calendar
+            channelId={channelId ?? ""}
+            handleCloseCalendar={handleCloseCalendar}
+          />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }

@@ -2,6 +2,7 @@ package com.pickpick.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.pickpick.auth.support.JwtTokenProvider;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ class AcceptanceTest {
         RestAssured.port = port;
     }
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     ExtractableResponse<Response> post(final String uri, final Object object) {
         return RestAssured.given().log().all()
                 .body(object)
@@ -36,9 +41,11 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> postWithAuth(final String uri, final Object object, final Long memberId) {
+    ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object, final Long memberId) {
+        String token = createToken(memberId);
+
         return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + memberId)
+                .header("Authorization", "Bearer " + token)
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -65,18 +72,35 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> getWithAuth(final String uri, final Long memberId) {
+    ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
+        String token = createToken(memberId);
+
         return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + memberId)
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .get(uri)
                 .then().log().all()
                 .extract();
     }
 
-    ExtractableResponse<Response> putWithAuth(final String uri, final Object object, final Long memberId) {
+    ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
+                                                     final Map<String, Object> request) {
+        String token = createToken(memberId);
+
         return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + memberId)
+                .queryParams(request)
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object, final Long memberId) {
+        String token = createToken(memberId);
+
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -85,16 +109,30 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> deleteWithAuth(final String uri, final Long memberId) {
+    ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
+        String token = createToken(memberId);
+
         return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + memberId)
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .delete(uri)
                 .then().log().all()
                 .extract();
     }
 
+    private String createToken(final Long memberId) {
+        return jwtTokenProvider.createToken(String.valueOf(memberId));
+    }
+
     void 상태코드_200_확인(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    void 상태코드_400_확인(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
+        assertThat(response.statusCode()).isEqualTo(httpStatus.value());
     }
 }

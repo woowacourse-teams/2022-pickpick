@@ -12,7 +12,7 @@ const Loadable =
   (props: any) =>
     (
       <Suspense fallback={<LoadingStatus />}>
-        <Component {...props} />;
+        <Component {...props} />
       </Suspense>
     );
 
@@ -43,5 +43,10 @@ export const Feed = Loadable({
 
 export const SpecificDateFeed = Loadable({
   Component: lazy(() => import("./SpecificDateFeed")),
+  LoadingStatus: () => <Loader />,
+});
+
+export const Certification = Loadable({
+  Component: lazy(() => import("./Certification")),
   LoadingStatus: () => <Loader />,
 });

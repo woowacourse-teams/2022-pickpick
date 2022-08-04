@@ -2,7 +2,6 @@ package com.pickpick.member.application;
 
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.User;
@@ -10,25 +9,25 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Profile("prod")
 @Component
 public class MemberInitializer {
 
-    private final MethodsClient client = Slack.getInstance().methods();
+    private final MethodsClient slackClient;
     private final MemberRepository memberRepository;
-    @Value("${slack.bot-token}")
-    private String slackBotToken;
 
-    public MemberInitializer(final MemberRepository memberRepository) {
+    public MemberInitializer(final MethodsClient slackClient, final MemberRepository memberRepository) {
+        this.slackClient = slackClient;
         this.memberRepository = memberRepository;
     }
 
     @PostConstruct
     void setupMember() throws SlackApiException, IOException {
         List<String> savedSlackIds = findSavedSlackIds();
-        List<Member> currentWorkspaceMembers = getCurrentWorkspaceMembers();
+        List<Member> currentWorkspaceMembers = fetchWorkspaceMembers();
         List<Member> membersToSave = filterMembersToSave(savedSlackIds, currentWorkspaceMembers);
 
         memberRepository.saveAll(membersToSave);
@@ -41,10 +40,9 @@ public class MemberInitializer {
                 .collect(Collectors.toList());
     }
 
-    private List<Member> getCurrentWorkspaceMembers() throws IOException, SlackApiException {
-        return toMembers(
-                client.usersList(request -> request.token(slackBotToken))
-                        .getMembers());
+    private List<Member> fetchWorkspaceMembers() throws IOException, SlackApiException {
+        return toMembers(slackClient.usersList(request -> request)
+                .getMembers());
     }
 
     private List<Member> filterMembersToSave(final List<String> savedSlackIds,

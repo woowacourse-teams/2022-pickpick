@@ -1,5 +1,6 @@
 package com.pickpick.message.ui;
 
+import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.MessageService;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponses;
@@ -19,7 +20,8 @@ public class MessageController {
     }
 
     @GetMapping
-    public MessageResponses findSlackMessages(@Valid MessageRequest messageRequest) {
-        return messageService.find(messageRequest);
+    public MessageResponses findSlackMessages(final @AuthenticationPrincipal Long memberId,
+                                              final @Valid MessageRequest messageRequest) {
+        return messageService.find(memberId, messageRequest);
     }
 }

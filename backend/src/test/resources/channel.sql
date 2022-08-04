@@ -6,5 +6,6 @@ VALUES (1, '백엔드-잡담', 'C03NNNFNY01'),
        (5, 'test-be-4기-공지', 'C03MV690W2X'),
        (6, 'test-fe-4기-공지', 'C03MEKQJBAB');
 
-insert into member (id, slack_id, thumbnail_url, username)
-values (2, 'U03MC231', 'https://avatars.slack-edge.com/2022-07-02/3764274541009_4d1fa8d13242781486fa_512.png', '써머');
+insert into member (id, slack_id, thumbnail_url, username, first_login)
+values (2, 'U03MC231', 'https://avatars.slack-edge.com/2022-07-02/3764274541009_4d1fa8d13242781486fa_512.png', '써머',
+        false);

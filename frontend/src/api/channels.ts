@@ -4,15 +4,12 @@ import {
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
 import { fetcher } from ".";
-import { getAuthorization } from "./utils";
+import { getPrivateHeaders } from "./utils";
 
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL, {
-    headers: {
-      ...getAuthorization(),
-    },
+    headers: { ...getPrivateHeaders() },
   });
-
   return data;
 };
 
@@ -20,9 +17,7 @@ export const getSubscribedChannels = async () => {
   const { data } = await fetcher.get<ResponseSubscribedChannels>(
     API_ENDPOINT.CHANNEL_SUBSCRIPTION,
     {
-      headers: {
-        ...getAuthorization(),
-      },
+      headers: { ...getPrivateHeaders() },
     }
   );
 
@@ -34,9 +29,7 @@ export const subscribeChannel = async (channelId: string) => {
     API_ENDPOINT.CHANNEL_SUBSCRIPTION,
     { channelId },
     {
-      headers: {
-        ...getAuthorization(),
-      },
+      headers: { ...getPrivateHeaders() },
     }
   );
 };
@@ -45,9 +38,7 @@ export const unsubscribeChannel = async (channelId: string) => {
   await fetcher.delete(
     `${API_ENDPOINT.CHANNEL_SUBSCRIPTION}?channelId=${channelId}`,
     {
-      headers: {
-        ...getAuthorization(),
-      },
+      headers: { ...getPrivateHeaders() },
     }
   );
 };

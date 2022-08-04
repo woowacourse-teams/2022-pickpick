@@ -7,4 +7,8 @@ public class SubscriptionNotExistException extends BadRequestException {
     public SubscriptionNotExistException(final Long id) {
         super(String.format("%s -> subscription id: %d", DEFAULT_MESSAGE, id));
     }
+
+    public SubscriptionNotExistException(String message) {
+        super(message);
+    }
 }

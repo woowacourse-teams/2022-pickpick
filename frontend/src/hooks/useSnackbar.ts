@@ -1,20 +1,33 @@
 import { snackbarState } from "@src/@atoms";
 import { useRecoilState } from "recoil";
 
+type openHandler = (message: string) => void;
+
 interface ReturnType {
-  openSnackbar: (message: string) => void;
+  openSuccessSnackbar: openHandler;
+  openFailureSnackbar: openHandler;
 }
 
 function useSnackbar(): ReturnType {
   const [_, setState] = useRecoilState(snackbarState);
 
-  const openSnackbar = (message: string) => {
+  const openSuccessSnackbar = (message: string) => {
     setState({
       isOpened: true,
       message,
+      status: "SUCCESS",
     });
   };
-  return { openSnackbar };
+
+  const openFailureSnackbar = (message: string) => {
+    setState({
+      isOpened: true,
+      message,
+      status: "FAIL",
+    });
+  };
+
+  return { openSuccessSnackbar, openFailureSnackbar };
 }
 
 export default useSnackbar;
