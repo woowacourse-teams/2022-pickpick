@@ -19,7 +19,7 @@ function PrivateRouter({ children }: Props) {
     isCertificated,
     {
       useErrorBoundary: false,
-      retry: 3,
+      retry: false,
     }
   );
 
