@@ -9,7 +9,7 @@ export const getBookmarks = async (
   { pageParam }: GetBookmarkParam = { pageParam: "" }
 ) => {
   const { data } = await privateFetcher.get<ResponseBookmarks>(
-    `${API_ENDPOINT.BOOKMARKS}?bookmarkId=${pageParam}`
+    `${API_ENDPOINT.BOOKMARKS}?bookmarkId=${pageParam ?? ""}`
   );
   return data;
 };
