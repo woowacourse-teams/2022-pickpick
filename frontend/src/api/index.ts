@@ -1,6 +1,13 @@
 import axios from "axios";
 
-export const fetcher = axios.create({
+export const publicFetcher = axios.create({
+  baseURL: process.env.API_URL,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
+});
+
+export const privateFetcher = axios.create({
   baseURL: process.env.API_URL,
   headers: {
     "Access-Control-Allow-Origin": "*",
