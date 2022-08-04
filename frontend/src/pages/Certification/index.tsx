@@ -1,17 +1,27 @@
 import Loader from "@src/components/Loader";
-import { PATH_NAME } from "@src/@constants";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { PATH_NAME, QUERY_KEY } from "@src/@constants";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import useSnackbar from "@src/hooks/useSnackbar";
-
-// 여기서 바로 요청을 get 요청으로 Token 값을 가져와서 쏜다.
-// 만약, 요청 성공이면, FEED 로 이동
-// 요청 실패면, 실패했다고 스낵바로 알려주고, 메인페이지로 다시 리다이렉트
+import { slackLogin } from "@src/api/auth";
+import useGetSearchParam from "@src/hooks/useGetSearchParam";
 
 function Certification() {
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  // code = searchParams.get('code');
+  const slackCode = useGetSearchParam("code");
+  const navigate = useNavigate();
+  const { openSuccessSnackbar, openFailureSnackbar } = useSnackbar();
+
+  const data = useQuery(QUERY_KEY.SLACK_LOGIN, () => slackLogin(slackCode), {
+    retry: false,
+    onSuccess: () => {
+      openSuccessSnackbar("로그인에 성공했습니다.");
+      navigate(PATH_NAME.FEED);
+    },
+    onError: () => {
+      openFailureSnackbar("문제가 발생했습니다.");
+      navigate(PATH_NAME.HOME);
+    },
+  });
   return <Loader />;
 }
 
