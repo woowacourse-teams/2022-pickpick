@@ -7,7 +7,7 @@ import {
 } from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
-const getTimeStandard = (time: number): string => {
+export const getTimeStandard = (time: number): string => {
   if (time < TIME.NOON) return `${TIME.AM} ${time}`;
   if (time === TIME.NOON) return `${TIME.PM} ${TIME.NOON}`;
 
