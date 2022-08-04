@@ -4,6 +4,7 @@ export const PATH_NAME = {
   ALARM: "/alarm",
   BOOKMARK: "/bookmark",
   ADD_CHANNEL: "/add-channel",
+  CERTIFICATION: "/certification",
 } as const;
 
 export const QUERY_KEY = {
@@ -13,6 +14,7 @@ export const QUERY_KEY = {
   SPECIFIC_DATE_MESSAGES: "specificDateMessages",
   BOOKMARKS: "bookmarks",
   AUTHENTICATION: "authentication",
+  SLACK_LOGIN: "slackLogin",
 } as const;
 
 export const API_ENDPOINT = {
@@ -21,6 +23,7 @@ export const API_ENDPOINT = {
   CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
   BOOKMARKS: "/api/bookmarks",
   AUTHENTICATION: "/api/auth",
+  SLACK_LOGIN: "/api/slack-login",
 } as const;
 
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";

@@ -1,13 +1,12 @@
-import useAuthentication from "@src/hooks/useAuthentication";
 import * as Styled from "./style";
 
 function Header() {
-  const { login } = useAuthentication();
-
   return (
     <Styled.Container>
       <Styled.Title>줍줍</Styled.Title>
-      <button onClick={login}>로그인</button>
+      <a href="https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&r[…]upjup.site/api/slack-login&client_id=3740298320131.3743463195250">
+        로그인
+      </a>
     </Styled.Container>
   );
 }

@@ -45,3 +45,8 @@ export const SpecificDateFeed = Loadable({
   Component: lazy(() => import("./SpecificDateFeed")),
   LoadingStatus: () => <Loader />,
 });
+
+export const Certification = Loadable({
+  Component: lazy(() => import("./Certification")),
+  LoadingStatus: () => <Loader />,
+});
