@@ -29,7 +29,7 @@ function Certification() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      login(data.token);
+      login(data.token, data.isFirstLogin);
     }
   }, [isSuccess, data]);
   return <Loader />;
