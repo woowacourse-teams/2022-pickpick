@@ -1,8 +1,8 @@
 import { getMessagesDate } from "@src/@utils";
 import useModal from "@src/hooks/useModal";
 import Dimmer from "../@shared/Dimmer";
-import DropdownMenu from "../DropdownMenu";
-import DropdownToggle from "../DropdownToggle";
+import DateDropdownMenu from "../DateDropdownMenu";
+import DateDropdownToggle from "../DateDropdownToggle";
 import * as Styled from "./style";
 
 interface Props {
@@ -24,12 +24,12 @@ function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
         <Dimmer hasBackgroundColor={false} onClick={handleCloseDateDropdown} />
       )}
       <Styled.Container>
-        <DropdownToggle
+        <DateDropdownToggle
           text={getMessagesDate(postedDate)}
           onClick={handleToggleDateDropdown}
         />
         {isDateDropdownOpened && (
-          <DropdownMenu
+          <DateDropdownMenu
             date={getMessagesDate(postedDate)}
             channelId={channelId}
             handleOpenCalendar={handleOpenCalendar}

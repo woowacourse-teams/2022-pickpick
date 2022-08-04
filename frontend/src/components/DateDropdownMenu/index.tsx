@@ -9,7 +9,7 @@ interface Props {
   handleOpenCalendar: () => void;
 }
 
-function DropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
+function DateDropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
   const renderDateOption = () => {
     if (date === DATE.TODAY) {
       return (
@@ -60,4 +60,4 @@ function DropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
   );
 }
 
-export default DropdownMenu;
+export default DateDropdownMenu;
