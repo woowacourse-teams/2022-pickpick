@@ -68,7 +68,11 @@ const routes = [
       },
       {
         path: `${PATH_NAME.FEED}/:channelId/:date`,
-        element: <SpecificDateFeed />,
+        element: (
+          <PrivateRouter>
+            <SpecificDateFeed />
+          </PrivateRouter>
+        ),
       },
       {
         path: PATH_NAME.CERTIFICATION,

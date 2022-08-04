@@ -18,6 +18,7 @@ function useAuthentication() {
     setCookie(ACCESS_TOKEN_KEY, token);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
     openSuccessSnackbar(MESSAGES.LOGIN_SUCCESS);
+    navigate(PATH_NAME.FEED);
   };
 
   const logout = () => {
