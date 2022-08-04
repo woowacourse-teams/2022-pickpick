@@ -7,7 +7,6 @@ import { fetcher } from ".";
 
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL);
-
   return data;
 };
 
