@@ -8,9 +8,10 @@ import { Link } from "react-router-dom";
 
 interface Props {
   channels?: SubscribedChannel[];
+  handleCloseDrawer: () => void;
 }
 
-function Drawer({ channels = [] }: Props) {
+function Drawer({ channels = [], handleCloseDrawer }: Props) {
   return (
     <Styled.Container>
       <FlexRow
@@ -27,7 +28,9 @@ function Drawer({ channels = [] }: Props) {
       <FlexColumn gap="11px" padding="0 20px">
         {channels.map((channel) => (
           <Link key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
-            <Styled.ChannelName>#{channel.name}</Styled.ChannelName>
+            <Styled.ChannelName onClick={handleCloseDrawer}>
+              #{channel.name}
+            </Styled.ChannelName>
           </Link>
         ))}
       </FlexColumn>

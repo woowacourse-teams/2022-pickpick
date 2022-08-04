@@ -93,12 +93,17 @@ function Navigation() {
       <WrapperButton kind="bigIcon" onClick={handleToggleLogoutButton}>
         <InfoIcon width="24px" height="24px" fill="#121212" />
       </WrapperButton>
+
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
-          <Drawer channels={data?.channels} />
+          <Drawer
+            channels={data?.channels}
+            handleCloseDrawer={handleCloseDrawer}
+          />
         </>
       </Portal>
+
       <Portal isOpened={isLogoutButtonOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseLogoutButton} />
