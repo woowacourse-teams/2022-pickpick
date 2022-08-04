@@ -11,9 +11,10 @@ const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
 interface Props {
   channelId: string;
+  handleCloseCalendar: () => void;
 }
 
-function Calendar({ channelId }: Props) {
+function Calendar({ channelId, handleCloseCalendar }: Props) {
   const {
     date,
     getCurrentDays,
@@ -60,6 +61,7 @@ function Calendar({ channelId }: Props) {
               isBlank={day === ""}
               isCurrentDay={day === new Date().getDate() && isCurrentMonth()}
               isFuture={day > new Date().getDate() && isFutureMonth()}
+              onClick={handleCloseCalendar}
             >
               {day}
               <div></div>

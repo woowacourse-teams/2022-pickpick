@@ -123,7 +123,10 @@ function SpecificDateFeed() {
       <Portal isOpened={isCalenderOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
-          <Calendar channelId={channelId ?? ""} />
+          <Calendar
+            channelId={channelId ?? ""}
+            handleCloseCalendar={handleCloseCalendar}
+          />
         </>
       </Portal>
     </Styled.Container>
