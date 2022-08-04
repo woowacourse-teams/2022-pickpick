@@ -30,25 +30,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
     private static final String API_URL = "/api/messages";
     private static final long MEMBER_ID = 1L;
 
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
-                    final List<Long> expectedMessageIds) {
-        // when
-        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
-    }
-
     private static Stream<Arguments> methodSource() {
         return Stream.of(
                 Arguments.of(
@@ -97,7 +78,8 @@ class MessageAcceptanceTest extends AcceptanceTest {
                         "쿼리 파라미터가 전혀 전달되지 않았을 경우, 회원의 채널 정렬 상 첫번째 채널의 최신 20개 메시지를 작성시간 내림차순으로 응답해야 한다.",
                         createQueryParams("", "", "", "", "", ""),
                         false,
-                        createExpectedMessageIds(38L, 19L))
+                        createExpectedMessageIds(38L, 19L),
+                        true)
         );
     }
 
@@ -120,12 +102,14 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
+    }
+
     @MethodSource("methodSource")
     @ParameterizedTest(name = "{0}")
     void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
                     final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
         // when
-        ExtractableResponse<Response> response = get(API_URL, request);
+        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
 
         // then
         MessageResponses messageResponses = response.as(MessageResponses.class);
@@ -144,7 +128,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     void 메시지_조회_시_needPastMessage_true_응답_확인(final String needPastMessage) {
         Map request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
-        ExtractableResponse<Response> response = get(API_URL, request);
+        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
 
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
@@ -154,7 +138,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 메시지_조회_시_needPastMessage가_False일_경우_응답_확인() {
         Map request = createQueryParams("jupjup", "", "5", "false", "", "");
-        ExtractableResponse<Response> response = get(API_URL, request);
+        ExtractableResponse<Response> response = getWithAuthAndParams(API_URL, MEMBER_ID, request);
 
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
