@@ -41,7 +41,7 @@ function Feed() {
     handleCloseModal: handleCloseCalendar,
   } = useModal();
 
-  const { handleAddBookmark } = useBookmark({
+  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
@@ -58,7 +58,14 @@ function Feed() {
       >
         <FlexColumn gap="4px" width="100%">
           {extractResponseMessages(data).map(
-            ({ id, username, postedDate, text, userThumbnail }) => {
+            ({
+              id,
+              username,
+              postedDate,
+              text,
+              userThumbnail,
+              isBookmarked,
+            }) => {
               const parsedDate = postedDate.split("T")[0];
 
               return (
@@ -75,8 +82,12 @@ function Feed() {
                     date={postedDate}
                     text={text}
                     thumbnail={userThumbnail}
-                    isBookmarked={false}
-                    toggleBookmark={handleAddBookmark(id)}
+                    isBookmarked={isBookmarked}
+                    toggleBookmark={
+                      isBookmarked
+                        ? handleRemoveBookmark(id)
+                        : handleAddBookmark(id)
+                    }
                   />
                 </React.Fragment>
               );

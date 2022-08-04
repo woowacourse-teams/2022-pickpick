@@ -12,7 +12,7 @@ export interface Message {
   postedDate: string;
   text: string;
   userThumbnail: string;
-  isBookmarked?: boolean;
+  isBookmarked: boolean;
 }
 
 export type Bookmark = Omit<Message, "isBookmarked">;
