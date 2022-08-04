@@ -37,12 +37,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(final String token) {
-        return parseClaims(token)
-                .getBody()
-                .getSubject();
-    }
-
     public void validateToken(final String token) {
         try {
             parseClaims(token);
@@ -51,6 +45,12 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             throw new InvalidTokenException("유효하지 않은 토큰입니다.");
         }
+    }
+
+    public String getPayload(final String token) {
+        return parseClaims(token)
+                .getBody()
+                .getSubject();
     }
 
     private Jws<Claims> parseClaims(final String token) {
