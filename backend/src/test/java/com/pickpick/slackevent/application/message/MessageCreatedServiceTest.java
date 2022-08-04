@@ -53,6 +53,7 @@ class MessageCreatedServiceTest {
                     "ts", "1234567890",
                     "client_msg_id", SAMPLE_MESSAGE.getSlackId())
             );
+    private static final int FIRST_INDEX = 0;
 
     @Autowired
     private MessageCreatedService messageCreatedService;

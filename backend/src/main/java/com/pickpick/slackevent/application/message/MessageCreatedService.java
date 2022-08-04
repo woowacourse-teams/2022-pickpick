@@ -33,9 +33,6 @@ public class MessageCreatedService implements SlackEventService {
     private final MemberRepository members;
     private final ChannelRepository channels;
     private final MethodsClient slackClient;
-    
-    @Value("${slack.bot-token}")
-    private String slackBotToken;
 
     public MessageCreatedService(final MessageRepository messages, final MemberRepository members,
                                  final ChannelRepository channels, final MethodsClient slackClient) {
@@ -81,7 +78,7 @@ public class MessageCreatedService implements SlackEventService {
     }
 
     private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+        final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
         return new SlackMessageDto(
                 (String) event.get(USER),
