@@ -6,21 +6,20 @@ import useSnackbar from "@src/hooks/useSnackbar";
 import { slackLogin } from "@src/api/auth";
 import useGetSearchParam from "@src/hooks/useGetSearchParam";
 import { ResponseToken } from "@src/@types/shared";
+import useAuthentication from "@src/hooks/useAuthentication";
+import { useEffect } from "react";
 
 function Certification() {
   const slackCode = useGetSearchParam("code");
+  const { login } = useAuthentication();
   const navigate = useNavigate();
-  const { openSuccessSnackbar, openFailureSnackbar } = useSnackbar();
+  const { openFailureSnackbar } = useSnackbar();
 
-  const data = useQuery<ResponseToken>(
+  const { isSuccess, data } = useQuery<ResponseToken>(
     QUERY_KEY.SLACK_LOGIN,
     () => slackLogin(slackCode),
     {
       retry: false,
-      onSuccess: () => {
-        openSuccessSnackbar("로그인에 성공했습니다.");
-        navigate(PATH_NAME.FEED);
-      },
       onError: () => {
         openFailureSnackbar("문제가 발생했습니다.");
         navigate(PATH_NAME.HOME);
@@ -28,6 +27,11 @@ function Certification() {
     }
   );
 
+  useEffect(() => {
+    if (isSuccess && data) {
+      login(data.token);
+    }
+  }, [isSuccess, data]);
   return <Loader />;
 }
 
