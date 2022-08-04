@@ -33,6 +33,14 @@ export const DATE = {
   YESTERDAY: "어제",
 } as const;
 
+export const TIME = {
+  AM: "오전",
+  PM: "오후",
+  NOON: 12,
+} as const;
+
+export const CONVERTER_SUFFIX = "T23:59:59";
+
 export const DAY: Record<number, string> = {
   0: "일요일",
   1: "월요일",

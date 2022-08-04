@@ -21,10 +21,10 @@ export interface ResponseBookmarks {
   bookmarks: Bookmark[];
   isLast: boolean;
 }
+
 export interface ResponseMessages {
   messages: Message[];
   isLast: boolean;
-  nextPage: number;
 }
 
 export interface Channel {

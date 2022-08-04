@@ -1,4 +1,4 @@
-import { DATE, DAY } from "@src/@constants";
+import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
 import {
   Bookmark,
   Message,
@@ -7,15 +7,7 @@ import {
 } from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
-const CONVERTER_SUFFIX = "T23:59:59";
-
-const TIME = {
-  AM: "오전",
-  PM: "오후",
-  NOON: 12,
-} as const;
-
-const getTimeStandard = (time: number): string => {
+export const getTimeStandard = (time: number): string => {
   if (time < TIME.NOON) return `${TIME.AM} ${time}`;
   if (time === TIME.NOON) return `${TIME.PM} ${TIME.NOON}`;
 
@@ -54,6 +46,7 @@ export const setCookie = (key: string, value: string) => {
 export const getCookie = (key: string) => {
   const regex = new RegExp(`(?<=${key}=)[^;]*`); // key(좌항)에 해당하는 우항을 가져온다. 세미콜론은 제외한다.
   const matches = document.cookie.match(regex);
+
   return matches ? matches[0] : "";
 };
 

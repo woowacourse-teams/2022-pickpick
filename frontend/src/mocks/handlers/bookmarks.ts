@@ -37,7 +37,6 @@ const handlers = [
 
   rest.delete("/api/bookmarks", (req, res, ctx) => {
     const messageId = Number(req.url.searchParams.get("messageId"));
-    console.log(messageId, bookmarks);
     const newBookmarks = bookmarks.filter(
       ({ id }: { id: number }) => id !== messageId
     );
