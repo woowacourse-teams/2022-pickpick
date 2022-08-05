@@ -5,8 +5,7 @@ import LogoIcon from "@public/assets/icons/pickpick.svg";
 
 function Home() {
   const handleNavigateToAddChannel = () => {
-    location.href =
-      "https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&r[…]upjup.site/api/slack-login&client_id=3740298320131.3743463195250";
+    location.href = `https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&redirect_uri=${process.env.SLACK_REDIRECT_URL}&client_id=3740298320131.3743463195250`;
   };
 
   return (
