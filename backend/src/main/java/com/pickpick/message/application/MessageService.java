@@ -224,9 +224,9 @@ public class MessageService {
 
             MessageResponse messageResponse = new MessageResponse(
                     message.getId(),
-                    member.getId(),
-                    member.getUsername(),
-                    member.getThumbnailUrl(),
+                    message.getMember().getId(),
+                    message.getMember().getUsername(),
+                    message.getMember().getThumbnailUrl(),
                     message.getText(),
                     message.getPostedDate(),
                     message.getModifiedDate(),
