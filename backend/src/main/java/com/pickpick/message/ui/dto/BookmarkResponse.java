@@ -1,6 +1,5 @@
 package com.pickpick.message.ui.dto;
 
-import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Bookmark;
 import com.pickpick.message.domain.Message;
 import java.time.LocalDateTime;
@@ -39,14 +38,13 @@ public class BookmarkResponse {
     }
 
     public static BookmarkResponse from(final Bookmark bookmark) {
-        Member member = bookmark.getMember();
         Message message = bookmark.getMessage();
 
         return BookmarkResponse.builder()
                 .id(bookmark.getId())
-                .memberId(member.getId())
-                .username(member.getUsername())
-                .userThumbnail(member.getThumbnailUrl())
+                .memberId(message.getMember().getId())
+                .username(message.getMember().getUsername())
+                .userThumbnail(message.getMember().getThumbnailUrl())
                 .text(message.getText())
                 .postedDate(message.getPostedDate())
                 .modifiedDate(message.getModifiedDate())
