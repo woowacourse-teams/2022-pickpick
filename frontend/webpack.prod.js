@@ -13,6 +13,9 @@ module.exports = merge(common, {
   plugins: [
     new DefinePlugin({
       "process.env.API_URL": JSON.stringify(process.env.API_URL),
+      "process.env.SLACK_REDIRECT_URL": JSON.stringify(
+        process.env.SLACK_REDIRECT_URL
+      ),
     }),
   ],
 });
