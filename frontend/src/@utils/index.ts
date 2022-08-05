@@ -51,7 +51,7 @@ export const getCookie = (key: string) => {
 };
 
 export const deleteCookie = (key: string) => {
-  setCookie(key, "");
+  document.cookie = key + "=; Max-Age=0";
 };
 
 export const ISOConverter = (date: string): string => {
