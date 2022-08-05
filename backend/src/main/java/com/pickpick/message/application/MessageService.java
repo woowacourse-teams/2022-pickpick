@@ -236,7 +236,7 @@ public class MessageService {
                 .memberId(member.getId())
                 .username(member.getUsername())
                 .userThumbnail(member.getThumbnailUrl())
-                .text(member.getThumbnailUrl())
+                .text(message.getText())
                 .postedDate(message.getPostedDate())
                 .modifiedDate(message.getModifiedDate())
                 .isBookmarked(isBookmarked)
