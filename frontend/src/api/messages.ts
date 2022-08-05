@@ -19,7 +19,7 @@ interface ReturnFunctionParam {
 }
 
 export const getMessages =
-  ({ date, channelId }: HighOrderParam = { date: "", channelId: "" }) =>
+  ({ date = "", channelId = "" }: HighOrderParam) =>
   async ({ pageParam }: ReturnFunctionParam) => {
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
@@ -41,7 +41,9 @@ export const getMessages =
     } = pageParam;
 
     const { data } = await fetcher.get<ResponseMessages>(
-      `${API_ENDPOINT.MESSAGES}?channelIds=${channelId}&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
+      `${API_ENDPOINT.MESSAGES}?channelIds=${
+        !channelId || channelId === "main" ? "" : channelId
+      }&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
       {
         headers: { ...getPrivateHeaders() },
       }
