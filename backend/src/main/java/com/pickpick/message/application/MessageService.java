@@ -222,19 +222,24 @@ public class MessageService {
             Optional<Bookmark> bookmark = bookmarks.findByMessageIdAndMemberId(message.getId(), member.getId());
             boolean isBookmarked = bookmark.isPresent();
 
-            MessageResponse messageResponse = new MessageResponse(
-                    message.getId(),
-                    message.getMember().getId(),
-                    message.getMember().getUsername(),
-                    message.getMember().getThumbnailUrl(),
-                    message.getText(),
-                    message.getPostedDate(),
-                    message.getModifiedDate(),
-                    isBookmarked
-            );
-            messageResponses.add(messageResponse);
+            messageResponses.add(toMessageResponse(message, isBookmarked));
         }
 
         return messageResponses;
+    }
+
+    private MessageResponse toMessageResponse(final Message message, final boolean isBookmarked) {
+        Member member = message.getMember();
+
+        return MessageResponse.builder()
+                .id(message.getId())
+                .memberId(member.getId())
+                .username(member.getUsername())
+                .userThumbnail(member.getThumbnailUrl())
+                .text(member.getThumbnailUrl())
+                .postedDate(message.getPostedDate())
+                .modifiedDate(message.getModifiedDate())
+                .isBookmarked(isBookmarked)
+                .build();
     }
 }
