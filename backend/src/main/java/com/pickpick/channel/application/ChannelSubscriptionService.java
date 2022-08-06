@@ -111,7 +111,7 @@ public class ChannelSubscriptionService {
             throw new SubscriptionNotExistException("멤버가 구독한 적 없는 채널의 순서를 변경할 수 없습니다.");
         }
 
-        if (isEverySubscribedChannelNotContain(subscribedChannels, orderRequests)) {
+        if (isEverySubscriptionExceptionNotIncluded(subscribedChannels, orderRequests)) {
             throw new SubscriptionNotExistException("멤버의 모든 구독 채널 아이디가 포함되지 않았습니다.");
         }
     }
@@ -123,7 +123,6 @@ public class ChannelSubscriptionService {
                 .count();
     }
 
-
     private boolean isUnsubscribedChannelOfMember(final List<ChannelSubscription> subscribedChannels,
                                                   final List<ChannelOrderRequest> orderRequests) {
         List<Long> subscribedChannelIds = subscribedChannels.stream()
@@ -134,8 +133,8 @@ public class ChannelSubscriptionService {
                 .allMatch(it -> subscribedChannelIds.contains(it.getId()));
     }
 
-    private boolean isEverySubscribedChannelNotContain(final List<ChannelSubscription> subscribedChannels,
-                                                       final List<ChannelOrderRequest> orderRequests) {
+    private boolean isEverySubscriptionExceptionNotIncluded(final List<ChannelSubscription> subscribedChannels,
+                                                            final List<ChannelOrderRequest> orderRequests) {
         List<Long> requestChannelId = orderRequests.stream()
                 .map(ChannelOrderRequest::getId)
                 .collect(Collectors.toList());
