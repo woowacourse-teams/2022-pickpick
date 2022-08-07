@@ -60,6 +60,16 @@ jobs:
           report_paths: '**/build/test-results/test/TEST-*.xml'
           token: ${{ github.token }}
 
+      - name: 테스트 커버리지를 PR에 코멘트로 등록합니다
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.2
+        with:
+          title: 📝 테스트 커버리지 리포트입니다
+          paths: ${{ github.workspace }}/backend/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 50
+          min-coverage-changed-files: 50
+
       - name: build 실패 시 Slack으로 알립니다
         uses: 8398a7/action-slack@v3
         with:

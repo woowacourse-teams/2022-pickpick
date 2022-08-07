@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id 'jacoco'
 }
 
 group = 'com.pickpick'
@@ -54,6 +55,7 @@ ext {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 asciidoctor {
@@ -100,4 +102,16 @@ sourceSets {
 }
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
 }
