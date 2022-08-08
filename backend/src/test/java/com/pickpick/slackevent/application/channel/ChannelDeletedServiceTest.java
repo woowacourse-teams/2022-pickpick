@@ -33,6 +33,7 @@ class ChannelDeletedServiceTest {
             LocalDateTime.now(),
             LocalDateTime.now()
     );
+
     private static final Message SAMPLE_MESSAGE_2 = new Message(
             "bbbb1f84-8acf-46ab-b93d-85177cee3e99",
             "두번째 메시지 전송!",

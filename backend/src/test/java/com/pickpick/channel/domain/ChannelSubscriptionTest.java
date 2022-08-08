@@ -13,7 +13,7 @@ class ChannelSubscriptionTest {
     @DisplayName("채널 구독 순서는 1 미만일 수 없다.")
     @ValueSource(ints = {0, -1})
     @ParameterizedTest
-    void changeOrder(int invalidOrder) {
+    void changeOrder(final int invalidOrder) {
         // given
         Channel channel = new Channel("slackId", "채널 이름");
         Member member = new Member("slackId", "유저 이름", "Profile.png");

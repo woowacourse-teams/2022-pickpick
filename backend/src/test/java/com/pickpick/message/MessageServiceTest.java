@@ -18,25 +18,40 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Sql({"/truncate.sql", "/message.sql"})
-@TestConstructor(autowireMode = AutowireMode.ALL)
 @Transactional
 @SpringBootTest
 class MessageServiceTest {
 
     private static final long MEMBER_ID = 1L;
 
-    private final MessageService messageService;
+    @Autowired
+    private MessageService messageService;
 
-    public MessageServiceTest(final MessageService messageService) {
-        this.messageService = messageService;
+    @DisplayName("메시지 조회 요청에 따른 메시지가 응답된다")
+    @MethodSource("slackMessageRequest")
+    @ParameterizedTest(name = "{0}")
+    void findMessages(
+            final String description, final MessageRequest messageRequest,
+            final List<Long> expectedMessageIds, final boolean expectedLast) {
+        // given
+        MessageResponses messageResponses = messageService.find(MEMBER_ID, messageRequest);
+
+        // when
+        List<MessageResponse> messages = messageResponses.getMessages();
+        boolean last = messageResponses.isLast();
+
+        // then
+        assertAll(
+                () -> assertThat(messages).extracting("id").isEqualTo(expectedMessageIds),
+                () -> assertThat(last).isEqualTo(expectedLast)
+        );
     }
 
     private static Stream<Arguments> slackMessageRequest() {
@@ -64,26 +79,6 @@ class MessageServiceTest {
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
-    }
-
-    @DisplayName("메시지 조회 요청에 따른 메시지가 응답된다")
-    @MethodSource("slackMessageRequest")
-    @ParameterizedTest(name = "{0}")
-    void findMessages(
-            final String description, final MessageRequest messageRequest,
-            final List<Long> expectedMessageIds, final boolean expectedLast) {
-        // given
-        MessageResponses messageResponses = messageService.find(MEMBER_ID, messageRequest);
-
-        // when
-        List<MessageResponse> messages = messageResponses.getMessages();
-        boolean last = messageResponses.isLast();
-
-        // then
-        assertAll(
-                () -> assertThat(messages).extracting("id").isEqualTo(expectedMessageIds),
-                () -> assertThat(last).isEqualTo(expectedLast)
-        );
     }
 
     @DisplayName("메시지 조회 시, 텍스트가 비어있는 메시지는 필터링된다")
