@@ -2,6 +2,7 @@ package com.pickpick.auth.application;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
+import com.pickpick.config.SlackProperties;
 import com.pickpick.exception.SlackClientException;
 import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
@@ -12,33 +13,23 @@ import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class AuthService {
 
-    private final String clientId;
-    private final String clientSecret;
-    private final String redirectUrl;
-
     private final MemberRepository members;
     private final MethodsClient slackClient;
     private final JwtTokenProvider jwtTokenProvider;
+    private final SlackProperties slackProperties;
 
-    public AuthService(@Value("${slack.client-id}") final String clientId,
-                       @Value("${slack.client-secret}") final String clientSecret,
-                       @Value("${slack.redirect-url}") final String redirectUrl,
-                       final MemberRepository members,
-                       final MethodsClient slackClient,
-                       final JwtTokenProvider jwtTokenProvider) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
+    public AuthService(final MemberRepository members, final MethodsClient slackClient,
+                       final JwtTokenProvider jwtTokenProvider, final SlackProperties slackProperties) {
         this.members = members;
         this.slackClient = slackClient;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.slackProperties = slackProperties;
     }
 
     public LoginResponse login(final String code) {
@@ -63,9 +54,9 @@ public class AuthService {
 
     private String requestSlackToken(final String code) throws IOException, SlackApiException {
         OAuthV2AccessRequest request = OAuthV2AccessRequest.builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .redirectUri(redirectUrl)
+                .clientId(slackProperties.getClientId())
+                .clientSecret(slackProperties.getClientSecret())
+                .redirectUri(slackProperties.getRedirectUrl())
                 .code(code)
                 .build();
 
