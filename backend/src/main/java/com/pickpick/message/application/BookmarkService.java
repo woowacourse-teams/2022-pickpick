@@ -117,10 +117,10 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void delete(final Long bookmarkId, final Long memberId) {
-        bookmarks.findByIdAndMemberId(bookmarkId, memberId)
-                .orElseThrow(() -> new BookmarkDeleteFailureException(bookmarkId, memberId));
+    public void delete(final Long messageId, final Long memberId) {
+        Bookmark bookmark = bookmarks.findByMessageIdAndMemberId(messageId, memberId)
+                .orElseThrow(() -> new BookmarkDeleteFailureException(messageId, memberId));
 
-        bookmarks.deleteById(bookmarkId);
+        bookmarks.deleteById(bookmark.getId());
     }
 }
