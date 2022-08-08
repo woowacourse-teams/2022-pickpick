@@ -7,7 +7,13 @@ function ProfileImage({
   src,
   ...props
 }: React.ImgHTMLAttributes<HTMLImageElement>) {
-  return <Styled.Container src={src || DefaultProfileImage} {...props} />;
+  return (
+    <Styled.Container
+      src={src || DefaultProfileImage}
+      {...props}
+      loading="lazy"
+    />
+  );
 }
 
 export default ProfileImage;
