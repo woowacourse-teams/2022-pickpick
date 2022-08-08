@@ -49,8 +49,4 @@ class RestDocsTestSupport {
                 .alwaysDo(restDocs)
                 .build();
     }
-
-    protected static String readJson(final String path) throws IOException {
-        return new String(Files.readAllBytes(Paths.get("src/test/resources", path)));
-    }
 }

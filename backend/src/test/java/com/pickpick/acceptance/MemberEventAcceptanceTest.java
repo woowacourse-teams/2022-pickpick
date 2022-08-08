@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/member.sql"})
-@DisplayName("멤버 기능")
+@DisplayName("멤버 이벤트 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MemberEventAcceptanceTest extends AcceptanceTest {
 
-    private static final String API_URL = "/api/event";
+    private static final String MEMBER_EVENT_API_URL = "/api/event";
 
     @Test
     void 멤버_수정_발생_시_프로필_이미지와_이름이_업데이트_된다() {
@@ -21,7 +21,7 @@ class MemberEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> memberUpdatedRequest = createEventRequest("실제이름", "표시이름", "test.png");
 
         // when
-        ExtractableResponse<Response> memberChangedResponse = post(API_URL, memberUpdatedRequest);
+        ExtractableResponse<Response> memberChangedResponse = post(MEMBER_EVENT_API_URL, memberUpdatedRequest);
 
         // then
         상태코드_200_확인(memberChangedResponse);

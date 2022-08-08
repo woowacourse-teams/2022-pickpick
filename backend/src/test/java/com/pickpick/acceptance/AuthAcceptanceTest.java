@@ -25,12 +25,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/member.sql"})
-@DisplayName("인증 기능")
+@DisplayName("인증 인가 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    private static final String API_URL = "/api/slack-login";
-    private static final String API_CERTIFICATION_URL = "/api/certification";
+    private static final String LOGIN_API_URL = "/api/slack-login";
+    private static final String CERTIFICATION_API_URL = "/api/certification";
     private static final String MEMBER_SLACK_ID = "U03MC231";
 
     @Value("${security.jwt.token.secret-key}")
@@ -48,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .willReturn(generateUsersIdentityResponse(MEMBER_SLACK_ID));
 
         // when
-        ExtractableResponse<Response> response = get(API_URL, Map.of("code", "1234"));
+        ExtractableResponse<Response> response = get(LOGIN_API_URL, Map.of("code", "1234"));
 
         // then
         상태코드_200_확인(response);
@@ -78,7 +78,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void 유효한_토큰_검증() {
         // given & when
-        ExtractableResponse<Response> response = getWithCreateToken(API_CERTIFICATION_URL, 2L);
+        ExtractableResponse<Response> response = getWithCreateToken(CERTIFICATION_API_URL, 2L);
 
         // then
         상태코드_200_확인(response);
@@ -90,7 +90,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = "abcde12345";
 
         // when
-        ExtractableResponse<Response> response = getWithToken(API_CERTIFICATION_URL, invalidToken);
+        ExtractableResponse<Response> response = getWithToken(CERTIFICATION_API_URL, invalidToken);
 
         // then
         상태코드_400_확인(response);
@@ -113,7 +113,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(API_CERTIFICATION_URL, invalidToken);
+        ExtractableResponse<Response> response = getWithToken(CERTIFICATION_API_URL, invalidToken);
 
         // then
         상태코드_400_확인(response);
@@ -126,7 +126,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(API_CERTIFICATION_URL, invalidToken);
+        ExtractableResponse<Response> response = getWithToken(CERTIFICATION_API_URL, invalidToken);
 
         // then
         상태코드_400_확인(response);

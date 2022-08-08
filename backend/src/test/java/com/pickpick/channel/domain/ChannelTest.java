@@ -12,7 +12,7 @@ class ChannelTest {
     @DisplayName("채널 이름은 빈 문자열, 또는 null로 변경할 수 없다")
     @NullAndEmptySource
     @ParameterizedTest
-    void changeName(String invalidName) {
+    void changeName(final String invalidName) {
         // given
         Channel channel = new Channel("slackId", "채널 이름");
 

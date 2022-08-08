@@ -18,7 +18,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/message.sql"})
@@ -27,8 +26,28 @@ import org.springframework.test.context.jdbc.Sql;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
-    private static final String API_URL = "/api/messages";
+    private static final String MESSAGE_API_URL = "/api/messages";
     private static final long MEMBER_ID = 1L;
+
+    @MethodSource("methodSource")
+    @ParameterizedTest(name = "{0}")
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
+                    final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
+        // given & when
+        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+
+        // then
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertAll(
+                () -> 상태코드_200_확인(response),
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
+                () -> assertThat(messageResponses.getMessages())
+                        .extracting("id")
+                        .isEqualTo(expectedMessageIds)
+        );
+    }
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(
@@ -83,7 +102,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private static Map<String, String> createQueryParams(
+    private static Map<String, Object> createQueryParams(
             final String keyword, final String date, final String channelIds, final String needPastMessage,
             final String messageId, final String messageCount
     ) {
@@ -104,44 +123,32 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
     }
 
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
-                    final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
-        // when
-        ExtractableResponse<Response> response = getWithCreateToken(API_URL, MEMBER_ID, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
-    }
-
     @ValueSource(strings = {"", "true"})
     @ParameterizedTest
     void 메시지_조회_시_needPastMessage_true_응답_확인(final String needPastMessage) {
-        Map request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
-        ExtractableResponse<Response> response = getWithCreateToken(API_URL, MEMBER_ID, request);
+        // given
+        Map<String, Object> request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
 
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
+        // then
+        상태코드_200_확인(response);
         assertThat(messageResponses.isNeedPastMessage()).isTrue();
     }
 
     @Test
     void 메시지_조회_시_needPastMessage가_False일_경우_응답_확인() {
-        Map request = createQueryParams("jupjup", "", "5", "false", "", "");
-        ExtractableResponse<Response> response = getWithCreateToken(API_URL, MEMBER_ID, request);
+        // given
+        Map<String, Object> request = createQueryParams("jupjup", "", "5", "false", "", "");
 
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
+        // then
+        상태코드_200_확인(response);
         assertThat(messageResponses.isNeedPastMessage()).isFalse();
     }
 }
