@@ -2,7 +2,7 @@ package com.pickpick.channel.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.pickpick.exception.SlackBadRequestException;
+import com.pickpick.exception.channel.ChannelInvalidNameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -18,7 +18,6 @@ class ChannelTest {
 
         // when & then
         assertThatThrownBy(() -> channel.changeName(invalidName))
-                .isInstanceOf(SlackBadRequestException.class)
-                .hasMessageContaining("채널 이름이 유효하지 않습니다");
+                .isInstanceOf(ChannelInvalidNameException.class);
     }
 }

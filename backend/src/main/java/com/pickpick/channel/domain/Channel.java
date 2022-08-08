@@ -1,6 +1,6 @@
 package com.pickpick.channel.domain;
 
-import com.pickpick.exception.SlackBadRequestException;
+import com.pickpick.exception.channel.ChannelInvalidNameException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,7 +40,7 @@ public class Channel {
 
     private void validateName(final String name) {
         if (!StringUtils.hasText(name)) {
-            throw new SlackBadRequestException(String.format("채널명 변경 - 채널 이름이 유효하지 않습니다. %s", name));
+            throw new ChannelInvalidNameException(name);
         }
     }
 }

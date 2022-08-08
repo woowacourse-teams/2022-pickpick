@@ -1,6 +1,6 @@
 package com.pickpick.auth.support;
 
-import com.pickpick.exception.InvalidTokenException;
+import com.pickpick.exception.auth.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;

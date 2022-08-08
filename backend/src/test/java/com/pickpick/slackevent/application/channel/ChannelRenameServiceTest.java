@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.ChannelNotFoundException;
+import com.pickpick.exception.channel.ChannelNotFoundException;
 import java.util.Map;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;

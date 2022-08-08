@@ -1,7 +1,7 @@
 package com.pickpick.member.domain;
 
-import com.pickpick.exception.MemberInvalidThumbnailUrlException;
-import com.pickpick.exception.MemberInvalidUsernameException;
+import com.pickpick.exception.member.MemberInvalidThumbnailUrlException;
+import com.pickpick.exception.member.MemberInvalidUsernameException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

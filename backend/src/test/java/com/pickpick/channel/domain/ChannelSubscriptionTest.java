@@ -2,7 +2,7 @@ package com.pickpick.channel.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.pickpick.exception.SubscriptionInvalidOrderException;
+import com.pickpick.exception.channel.SubscriptionInvalidOrderException;
 import com.pickpick.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

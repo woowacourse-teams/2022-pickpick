@@ -2,7 +2,7 @@ package com.pickpick.slackevent.application.channel;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.ChannelNotFoundException;
+import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.channel.dto.SlackChannelRenameDto;
