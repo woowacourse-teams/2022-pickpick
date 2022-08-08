@@ -9,8 +9,8 @@ interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
 function ProfileImage({ src, ...props }: Props) {
   return (
     <Styled.Container
-      src={src || DefaultProfileImage}
       {...props}
+      src={src || DefaultProfileImage}
       loading="lazy"
     />
   );
