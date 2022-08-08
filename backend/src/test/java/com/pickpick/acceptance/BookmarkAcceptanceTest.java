@@ -19,12 +19,12 @@ import org.springframework.test.context.jdbc.Sql;
 @SuppressWarnings("NonAsciiCharacters")
 public class BookmarkAcceptanceTest extends AcceptanceTest {
 
-    private static final String API_BOOKMARK = "/api/bookmarks";
+    private static final String BOOKMARK_API_URL = "/api/bookmarks";
 
     @Test
     void 북마크_생성() {
         // given & when
-        ExtractableResponse<Response> response = postWithCreateToken(API_BOOKMARK, Map.of("messageId", 1), 1L);
+        ExtractableResponse<Response> response = postWithCreateToken(BOOKMARK_API_URL, Map.of("messageId", 1), 1L);
 
         // then
         상태코드_확인(response, HttpStatus.CREATED);
@@ -38,7 +38,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         boolean expectedIsLast = true;
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(API_BOOKMARK, 2L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 2L, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -57,7 +57,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         boolean expectedIsLast = false;
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(API_BOOKMARK, 1L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 1L, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -80,7 +80,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long bookmarkId = 2L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(API_BOOKMARK + "/" + bookmarkId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "/" + bookmarkId, 1L);
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
@@ -92,7 +92,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long bookmarkId = 1L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(API_BOOKMARK + "/" + bookmarkId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "/" + bookmarkId, 1L);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@DisplayName("유저 기능")
+@DisplayName("멤버 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberAcceptanceTest extends AcceptanceTest {
 
@@ -18,7 +18,10 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 프로젝트_기동_시점에_유저가_저장되어_있어야_한다() {
+        // given
         List<Member> members = memberRepository.findAll();
+
+        // when & then
         assertThat(members.isEmpty()).isFalse();
     }
 }
