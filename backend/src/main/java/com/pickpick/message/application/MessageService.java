@@ -68,14 +68,20 @@ public class MessageService {
     }
 
     private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
-        if (Objects.nonNull(messageRequest.getChannelIds()) && !messageRequest.getChannelIds().isEmpty()) {
-            return messageRequest.getChannelIds();
+        List<Long> channelIds = messageRequest.getChannelIds();
+
+        if (isNonNullNorEmpty(channelIds)) {
+            return channelIds;
         }
 
         ChannelSubscription firstSubscription = channelSubscriptions.findFirstByMemberIdOrderByViewOrderAsc(memberId)
                 .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
 
         return List.of(firstSubscription.getChannelId());
+    }
+
+    private static boolean isNonNullNorEmpty(final List<Long> channelIds) {
+        return Objects.nonNull(channelIds) && !channelIds.isEmpty();
     }
 
     private List<Message> findMessages(final List<Long> channelIds, final MessageRequest messageRequest) {
