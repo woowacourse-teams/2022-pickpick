@@ -1,5 +1,6 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.slackevent;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -14,6 +15,33 @@ import org.springframework.test.context.jdbc.Sql;
 class MessageEventAcceptanceTest extends AcceptanceTest {
 
     private static final String MESSAGE_EVENT_API_URL = "/api/event";
+
+    private static Map<String, Object> createEventRequest(final String subtype) {
+        String user = "U03MC231";
+        String timestamp = "1234567890.123456";
+        String text = "메시지 전송!";
+        String slackMessageId = "db8a1f84-8acf-46ab-b93d-85177cee3e97";
+
+        String type = "event_callback";
+        Map<String, Object> event = Map.of(
+                "type", "message",
+                "subtype", subtype,
+                "channel", "ABC1234",
+                "previous_message", Map.of("client_msg_id", slackMessageId),
+                "message", Map.of(
+                        "user", user,
+                        "ts", timestamp,
+                        "text", text,
+                        "client_msg_id", slackMessageId
+                ),
+                "client_msg_id", slackMessageId,
+                "text", text,
+                "user", user,
+                "ts", timestamp
+        );
+
+        return Map.of("type", type, "event", event);
+    }
 
     @Test
     void URL_검증_요청_시_challenge_를_응답한다() {
@@ -71,32 +99,5 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_200_확인(response);
-    }
-
-    private static Map<String, Object> createEventRequest(final String subtype) {
-        String user = "U03MC231";
-        String timestamp = "1234567890.123456";
-        String text = "메시지 전송!";
-        String slackMessageId = "db8a1f84-8acf-46ab-b93d-85177cee3e97";
-
-        String type = "event_callback";
-        Map<String, Object> event = Map.of(
-                "type", "message",
-                "subtype", subtype,
-                "channel", "ABC1234",
-                "previous_message", Map.of("client_msg_id", slackMessageId),
-                "message", Map.of(
-                        "user", user,
-                        "ts", timestamp,
-                        "text", text,
-                        "client_msg_id", slackMessageId
-                ),
-                "client_msg_id", slackMessageId,
-                "text", text,
-                "user", user,
-                "ts", timestamp
-        );
-
-        return Map.of("type", type, "event", event);
     }
 }

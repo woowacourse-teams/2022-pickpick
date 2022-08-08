@@ -1,9 +1,10 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;

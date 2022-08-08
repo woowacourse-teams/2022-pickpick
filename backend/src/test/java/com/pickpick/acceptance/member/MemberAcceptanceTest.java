@@ -1,7 +1,8 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.member;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;

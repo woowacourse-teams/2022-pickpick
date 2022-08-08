@@ -1,9 +1,6 @@
-package com.pickpick.controller;
+package com.pickpick.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +21,20 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
-class RestDocsTestSupport {
+public class RestDocsTestSupport {
 
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     protected RestDocumentationResultHandler restDocs;
-
+    @Autowired
+    protected ObjectMapper objectMapper;
     @Autowired
     private ResourceLoader resourceLoader;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
-
     @BeforeEach
-    void setUp(
+    public void setUp(
             final WebApplicationContext context,
             final RestDocumentationContextProvider provider
     ) {

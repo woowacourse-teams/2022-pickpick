@@ -1,4 +1,4 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

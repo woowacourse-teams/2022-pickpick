@@ -1,8 +1,9 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -28,26 +29,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String MESSAGE_API_URL = "/api/messages";
     private static final long MEMBER_ID = 1L;
-
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
-                    final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
-        // given & when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> 상태코드_200_확인(response),
-                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
-                () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
-    }
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(
@@ -121,6 +102,26 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
+    }
+
+    @MethodSource("methodSource")
+    @ParameterizedTest(name = "{0}")
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedIsLast,
+                    final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
+        // given & when
+        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+
+        // then
+        MessageResponses messageResponses = response.as(MessageResponses.class);
+
+        assertAll(
+                () -> 상태코드_200_확인(response),
+                () -> assertThat(messageResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
+                () -> assertThat(messageResponses.getMessages())
+                        .extracting("id")
+                        .isEqualTo(expectedMessageIds)
+        );
     }
 
     @ValueSource(strings = {"", "true"})

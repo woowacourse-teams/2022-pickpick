@@ -1,5 +1,6 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.slackevent;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

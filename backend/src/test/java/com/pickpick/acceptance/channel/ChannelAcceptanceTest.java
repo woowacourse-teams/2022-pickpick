@@ -1,7 +1,8 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import io.restassured.response.ExtractableResponse;

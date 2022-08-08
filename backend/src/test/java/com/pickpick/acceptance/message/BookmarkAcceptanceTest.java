@@ -1,7 +1,8 @@
-package com.pickpick.acceptance;
+package com.pickpick.acceptance.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import io.restassured.response.ExtractableResponse;
