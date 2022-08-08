@@ -12,6 +12,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
 import java.io.IOException;
+import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,11 @@ public class AuthService {
         this.slackProperties = slackProperties;
     }
 
+    public void verifyToken(final String token) {
+        jwtTokenProvider.validateToken(token);
+    }
+
+    @Transactional
     public LoginResponse login(final String code) {
         try {
             String token = requestSlackToken(code);
@@ -73,9 +79,5 @@ public class AuthService {
         return slackClient.usersIdentity(request)
                 .getUser()
                 .getId();
-    }
-
-    public void verifyToken(final String token) {
-        jwtTokenProvider.validateToken(token);
     }
 }
