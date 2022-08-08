@@ -41,7 +41,7 @@ class MemberJoinServiceTest {
         assertThat(isSameSlackEvent).isEqualTo(expected);
     }
 
-    @DisplayName("MEMBER_JOIN 이벤트가 전달되면, 신규 멤버를 저장한다")
+    @DisplayName("신규 멤버를 저장한다")
     @CsvSource(value = {"김진짜, 표시 이름, 표시 이름", "김진짜, '', 김진짜"})
     @ParameterizedTest(name = "RealName: {0}, DisplayName: {1} -> ExpectedName: {2}")
     void teamJoinEvent(final String realName, final String displayName, final String expectedName) {
