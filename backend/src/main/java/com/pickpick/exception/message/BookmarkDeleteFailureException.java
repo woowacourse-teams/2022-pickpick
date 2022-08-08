@@ -1,4 +1,6 @@
-package com.pickpick.exception;
+package com.pickpick.exception.message;
+
+import com.pickpick.exception.BadRequestException;
 
 public class BookmarkDeleteFailureException extends BadRequestException {
 

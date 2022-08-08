@@ -1,4 +1,6 @@
-package com.pickpick.exception;
+package com.pickpick.exception.member;
+
+import com.pickpick.exception.NotFoundException;
 
 public class MemberNotFoundException extends NotFoundException {
 

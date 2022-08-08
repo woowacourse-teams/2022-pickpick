@@ -1,4 +1,6 @@
-package com.pickpick.exception;
+package com.pickpick.exception.channel;
+
+import com.pickpick.exception.NotFoundException;
 
 public class ChannelNotFoundException extends NotFoundException {
 

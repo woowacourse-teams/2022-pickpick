@@ -2,9 +2,9 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.exception.MessageNotFoundException;
-import com.pickpick.exception.SubscriptionNotFoundException;
+import com.pickpick.exception.channel.SubscriptionNotFoundException;
+import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;

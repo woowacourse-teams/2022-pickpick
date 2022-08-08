@@ -2,8 +2,8 @@ package com.pickpick.auth.application;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.SlackClientException;
+import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.slack.api.methods.MethodsClient;

@@ -1,4 +1,6 @@
-package com.pickpick.exception;
+package com.pickpick.exception.message;
+
+import com.pickpick.exception.NotFoundException;
 
 public class MessageNotFoundException extends NotFoundException {
 

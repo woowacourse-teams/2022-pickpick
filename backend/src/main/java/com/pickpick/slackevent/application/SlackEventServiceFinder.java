@@ -1,6 +1,6 @@
 package com.pickpick.slackevent.application;
 
-import com.pickpick.exception.SlackEventServiceNotFoundException;
+import com.pickpick.exception.slackevent.SlackEventServiceNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,6 @@
-package com.pickpick.exception;
+package com.pickpick.exception.member;
+
+import com.pickpick.exception.BadRequestException;
 
 public class MemberInvalidThumbnailUrlException extends BadRequestException {
 

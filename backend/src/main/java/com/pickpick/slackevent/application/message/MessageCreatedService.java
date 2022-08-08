@@ -2,8 +2,8 @@ package com.pickpick.slackevent.application.message;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.MemberNotFoundException;
 import com.pickpick.exception.SlackClientException;
+import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;

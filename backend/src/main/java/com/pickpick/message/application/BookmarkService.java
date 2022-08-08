@@ -1,9 +1,9 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.BookmarkDeleteFailureException;
-import com.pickpick.exception.BookmarkNotFoundException;
-import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.exception.MessageNotFoundException;
+import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.exception.message.BookmarkDeleteFailureException;
+import com.pickpick.exception.message.BookmarkNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookmarkService {
 
     public static final int COUNT = 20;
-    
+
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
     private final MemberRepository members;

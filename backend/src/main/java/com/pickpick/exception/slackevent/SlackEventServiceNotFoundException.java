@@ -1,5 +1,6 @@
-package com.pickpick.exception;
+package com.pickpick.exception.slackevent;
 
+import com.pickpick.exception.NotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 
 public class SlackEventServiceNotFoundException extends NotFoundException {
