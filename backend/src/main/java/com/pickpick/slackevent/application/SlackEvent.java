@@ -14,6 +14,7 @@ public enum SlackEvent {
     CHANNEL_RENAME("channel_rename", ""),
     CHANNEL_DELETED("channel_deleted", ""),
     MEMBER_CHANGED("user_profile_changed", ""),
+    MEMBER_JOIN("team_join", ""),
     ;
 
     private final String type;
