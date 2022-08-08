@@ -78,22 +78,22 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     @Test
     void 북마크_정상_삭제() {
         // given
-        long bookmarkId = 2L;
+        long messageId = 2L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "/" + bookmarkId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId, 1L);
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
     }
 
     @Test
-    void 다른_사용자의_북마크_삭제() {
+    void 사용자에게_존재하지_않는_북마크_삭제() {
         // given
-        long bookmarkId = 1L;
+        long messageId = 1L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "/" + bookmarkId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId, 1L);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);

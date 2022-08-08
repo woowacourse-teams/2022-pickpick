@@ -122,7 +122,7 @@ class BookmarkServiceTest {
         bookmarks.save(bookmark);
 
         // when
-        bookmarkService.delete(bookmark.getId(), member.getId());
+        bookmarkService.delete(message.getId(), member.getId());
 
         // then
         Optional<Bookmark> actual = bookmarks.findById(bookmark.getId());
