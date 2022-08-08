@@ -1,4 +1,4 @@
-package com.pickpick.message;
+package com.pickpick.message.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

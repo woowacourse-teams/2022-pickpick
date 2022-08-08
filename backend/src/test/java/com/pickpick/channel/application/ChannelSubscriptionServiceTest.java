@@ -1,4 +1,4 @@
-package com.pickpick.channel;
+package com.pickpick.channel.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
