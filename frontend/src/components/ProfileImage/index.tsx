@@ -2,11 +2,11 @@ import React from "react";
 import DefaultProfileImage from "@public/assets/images/DefaultProfileImage.png";
 import * as Styled from "./style";
 
-function ProfileImage({
-  // eslint-disable-next-line react/prop-types
-  src,
-  ...props
-}: React.ImgHTMLAttributes<HTMLImageElement>) {
+interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
+  src?: string;
+}
+
+function ProfileImage({ src, ...props }: Props) {
   return (
     <Styled.Container
       src={src || DefaultProfileImage}
