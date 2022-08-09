@@ -62,6 +62,7 @@ operation::channel-subscription-controller-test/update-order-of-subscribed-chann
 operation::message-controller-test/find-all-message-with-condition[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 == 북마크 API
+
 === 북마크 조회 API
 
 operation::bookmark-controller-test/find[snippets='http-request,request-headers,http-response,response-fields']
@@ -73,3 +74,9 @@ operation::bookmark-controller-test/save[snippets='http-request,request-headers,
 === 북마크 삭제 API
 
 operation::bookmark-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
+
+== 리마인더 API
+
+=== 리마인더 조회 API
+
+operation::reminder-controller-test/find[snippets='http-request,request-headers,request-parameters,http-response,response-fields']

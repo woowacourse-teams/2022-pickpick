@@ -1,0 +1,105 @@
+package com.pickpick.acceptance.message;
+
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.message.ui.dto.ReminderResponse;
+import com.pickpick.message.ui.dto.ReminderResponses;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
+
+@Sql({"/truncate.sql", "/reminder.sql"})
+@DisplayName("리마인더 기능")
+@SuppressWarnings("NonAsciiCharacters")
+public class ReminderAcceptanceTest extends AcceptanceTest {
+
+    private static final String REMINDER_API_URL = "/api/reminders";
+
+    @Test
+    void 멤버_ID_2번으로_리마인더_목록_조회() {
+        // given
+        Map<String, Object> request = Map.of("reminderId", "");
+        List<Long> expectedIds = List.of(1L);
+        boolean expectedIsLast = true;
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
+        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
+        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+    }
+
+    @Test
+    void 멤버_ID_1번이고_리마인더_ID_10번일_때_리마인더_목록_조회() {
+        // given
+        Map<String, Object> request = Map.of("reminderId", "10");
+        List<Long> expectedIds = List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L);
+        boolean expectedIsLast = true;
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
+        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
+        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+    }
+
+    @Test
+    void 리마인더_조회_시_가장_최신인_리마인더가_포함된다면_isLast가_True다() {
+        // given
+        Map<String, Object> request = Map.of("reminderId", "");
+        List<Long> expectedIds = List.of(1L);
+        boolean expectedIsLast = true;
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
+        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
+        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+    }
+
+    @Test
+    void 리마인더_조회_시_가장_최신인_리마인더가_포함되지_않는다면_isLast가_False다() {
+        // given
+        Map<String, Object> request = Map.of("reminderId", "2");
+        List<Long> expectedIds = List.of(
+                3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L);
+        boolean expectedIsLast = false;
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
+        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
+        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+    }
+
+    private List<Long> convertToIds(final ReminderResponses response) {
+        return response.getReminders()
+                .stream()
+                .map(ReminderResponse::getId)
+                .collect(Collectors.toList());
+    }
+}
