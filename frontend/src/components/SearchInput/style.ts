@@ -33,3 +33,23 @@ export const Input = styled.input`
     `}
   }
 `;
+
+export const SearchButton = styled.button`
+  border: none;
+  border-radius: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0.25rem 0.938rem;
+
+  ${({ theme }: StyledDefaultProps) => css`
+    font-size: ${theme.FONT_SIZE.CAPTION};
+    background-color: ${theme.COLOR.BACKGROUND.TERTIARY};
+  `}
+
+  &:hover {
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.TEXT.WHITE};
+      background-color: ${theme.COLOR.PRIMARY.DEFAULT};
+    `}
+  }
+`;

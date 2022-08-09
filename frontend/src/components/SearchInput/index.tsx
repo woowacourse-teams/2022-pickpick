@@ -5,19 +5,15 @@ import { FlexRow } from "@src/@styles/shared";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   children?: JSX.Element | string | boolean;
-  isSearchInputFocused?: boolean;
 }
 
-function SearchInput({ children, isSearchInputFocused, ...props }: Props) {
+function SearchInput({ children, ...props }: Props) {
   return (
     <Styled.Container>
-      <FlexRow
-        gap="6px"
-        marginBottom={isSearchInputFocused ? "10px" : "0"}
-        alignItems="center"
-      >
+      <FlexRow gap="6px" alignItems="center">
         <SearchIcon width="20px" height="20px" fill="#8B8B8B" />
         <Styled.Input {...props} />
+        <Styled.SearchButton type="button">검색</Styled.SearchButton>
       </FlexRow>
       {children}
     </Styled.Container>
