@@ -20,14 +20,14 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/slack-login")
-    public LoginResponse login(@RequestParam @NotEmpty final String code) {
-        return authService.login(code);
-    }
-
     @GetMapping("/certification")
     public void verifyToken(final HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
         authService.verifyToken(token);
+    }
+
+    @GetMapping("/slack-login")
+    public LoginResponse login(@RequestParam @NotEmpty final String code) {
+        return authService.login(code);
     }
 }
