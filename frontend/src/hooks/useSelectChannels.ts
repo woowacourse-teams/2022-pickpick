@@ -7,7 +7,7 @@ interface Props {
   defaultChannelId?: number;
 }
 
-function useChannelIds({ defaultChannelId }: Props) {
+function useSelectChannels({ defaultChannelId }: Props) {
   const [channelIds, setChannelIds] = useState<(number | undefined)[]>([]);
 
   const { data: channelsData } = useQuery(
@@ -72,4 +72,4 @@ function useChannelIds({ defaultChannelId }: Props) {
   };
 }
 
-export default useChannelIds;
+export default useSelectChannels;
