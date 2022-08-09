@@ -3,13 +3,15 @@ import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
   padding: 10px 14px;
-  background-color: ${({ theme }: StyledDefaultProps) =>
-    theme.COLOR.BACKGROUND.SECONDARY};
   width: 100%;
   border-radius: 4px;
+
+  ${({ theme }: StyledDefaultProps) => css`
+    background-color: ${theme.COLOR.BACKGROUND.SECONDARY};
+  `}
 `;
 
 export const Input = styled.input`
@@ -17,6 +19,7 @@ export const Input = styled.input`
   outline: none;
   border: none;
   width: 100%;
+
   ${({ theme }: StyledDefaultProps) => css`
     color: ${theme.COLOR.TEXT.DEFAULT};
     font-size: ${theme.FONT_SIZE.PLACEHOLDER};
