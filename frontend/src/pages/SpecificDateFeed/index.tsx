@@ -20,6 +20,7 @@ import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
+import EmptyStatus from "@src/components/EmptyStatus";
 import SearchOptions from "@src/components/SearchOptions";
 import useChannelIds from "@src/hooks/useChannelIds";
 
@@ -31,6 +32,7 @@ function SpecificDateFeed() {
   const {
     data,
     isFetching,
+    isSuccess,
     isError,
     fetchPreviousPage,
     hasPreviousPage,
@@ -87,6 +89,8 @@ function SpecificDateFeed() {
     });
   }, [queryKey]);
 
+  const parsedData = extractResponseMessages(data);
+
   return (
     <Styled.Container
       onWheel={onWheel}
@@ -118,8 +122,8 @@ function SpecificDateFeed() {
       >
         <FlexColumn gap="4px" width="100%">
           {isFetching && <MessagesLoadingStatus length={20} />}
-
-          {extractResponseMessages(data).map(
+          {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+          {parsedData.map(
             ({
               id,
               username,

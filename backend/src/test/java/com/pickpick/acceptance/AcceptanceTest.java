@@ -18,20 +18,19 @@ import org.springframework.http.MediaType;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AcceptanceTest {
+public class AcceptanceTest {
 
     @LocalServerPort
     int port;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
     }
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    ExtractableResponse<Response> post(final String uri, final Object object) {
+    protected ExtractableResponse<Response> post(final String uri, final Object object) {
         return RestAssured.given().log().all()
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +40,8 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object, final Long memberId) {
+    protected ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object,
+                                                                final Long memberId) {
         String token = createToken(memberId);
 
         return RestAssured.given().log().all()
@@ -54,7 +54,7 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> get(final String uri) {
+    protected ExtractableResponse<Response> get(final String uri) {
         return RestAssured.given().log().all()
                 .when()
                 .get(uri)
@@ -62,7 +62,7 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
+    protected ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
         return RestAssured.given()
                 .queryParams(queryParams)
                 .log().all()
@@ -72,7 +72,7 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
+    protected ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
         String token = createToken(memberId);
 
         return RestAssured.given().log().all()
@@ -83,8 +83,8 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
-                                                     final Map<String, Object> request) {
+    protected ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
+                                                               final Map<String, Object> request) {
         String token = createToken(memberId);
 
         return RestAssured.given().log().all()
@@ -96,7 +96,8 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object, final Long memberId) {
+    protected ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object,
+                                                               final Long memberId) {
         String token = createToken(memberId);
 
         return RestAssured.given().log().all()
@@ -109,7 +110,7 @@ class AcceptanceTest {
                 .extract();
     }
 
-    ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
+    protected ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
         String token = createToken(memberId);
 
         return RestAssured.given().log().all()
@@ -124,15 +125,15 @@ class AcceptanceTest {
         return jwtTokenProvider.createToken(String.valueOf(memberId));
     }
 
-    void 상태코드_200_확인(final ExtractableResponse<Response> response) {
+    protected void 상태코드_200_확인(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    void 상태코드_400_확인(final ExtractableResponse<Response> response) {
+    protected void 상태코드_400_확인(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
+    protected void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
         assertThat(response.statusCode()).isEqualTo(httpStatus.value());
     }
 }

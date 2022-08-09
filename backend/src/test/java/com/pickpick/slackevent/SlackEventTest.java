@@ -3,7 +3,7 @@ package com.pickpick.slackevent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.pickpick.exception.SlackEventNotFoundException;
+import com.pickpick.exception.slackevent.SlackEventNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -31,7 +31,7 @@ class SlackEventTest {
     @DisplayName("type과 subtype에 따라 SlackEvent 탐색")
     @ParameterizedTest
     @MethodSource("methodSource")
-    void findSlackEventByTypeAndSubtype(Map<String, Object> request, SlackEvent expected) {
+    void findSlackEventByTypeAndSubtype(final Map<String, Object> request, final SlackEvent expected) {
         // given & when
         SlackEvent actual = SlackEvent.of(request);
 

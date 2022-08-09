@@ -1,6 +1,6 @@
 package com.pickpick.slackevent.application.message;
 
-import com.pickpick.exception.MessageNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;

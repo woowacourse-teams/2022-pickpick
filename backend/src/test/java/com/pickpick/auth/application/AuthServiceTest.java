@@ -9,7 +9,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import com.pickpick.exception.InvalidTokenException;
+import com.pickpick.exception.auth.InvalidTokenException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.slack.api.methods.MethodsClient;

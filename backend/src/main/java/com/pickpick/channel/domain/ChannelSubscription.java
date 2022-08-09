@@ -1,6 +1,6 @@
 package com.pickpick.channel.domain;
 
-import com.pickpick.exception.SubscriptionInvalidOrderException;
+import com.pickpick.exception.channel.SubscriptionInvalidOrderException;
 import com.pickpick.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -2,9 +2,9 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.exception.MessageNotFoundException;
-import com.pickpick.exception.SubscriptionNotFoundException;
+import com.pickpick.exception.channel.SubscriptionNotFoundException;
+import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -68,14 +68,20 @@ public class MessageService {
     }
 
     private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
-        if (Objects.nonNull(messageRequest.getChannelIds()) && !messageRequest.getChannelIds().isEmpty()) {
-            return messageRequest.getChannelIds();
+        List<Long> channelIds = messageRequest.getChannelIds();
+
+        if (isNonNullNorEmpty(channelIds)) {
+            return channelIds;
         }
 
         ChannelSubscription firstSubscription = channelSubscriptions.findFirstByMemberIdOrderByViewOrderAsc(memberId)
                 .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
 
         return List.of(firstSubscription.getChannelId());
+    }
+
+    private static boolean isNonNullNorEmpty(final List<Long> channelIds) {
+        return Objects.nonNull(channelIds) && !channelIds.isEmpty();
     }
 
     private List<Message> findMessages(final List<Long> channelIds, final MessageRequest messageRequest) {

@@ -1,8 +1,19 @@
 import React from "react";
+import DefaultProfileImage from "@public/assets/images/DefaultProfileImage.png";
 import * as Styled from "./style";
 
-function ProfileImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
-  return <Styled.Container {...props} />;
+interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
+  src?: string;
+}
+
+function ProfileImage({ src, ...props }: Props) {
+  return (
+    <Styled.Container
+      {...props}
+      src={src || DefaultProfileImage}
+      loading="lazy"
+    />
+  );
 }
 
 export default ProfileImage;

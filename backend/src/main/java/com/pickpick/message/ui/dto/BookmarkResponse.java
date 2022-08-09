@@ -41,7 +41,7 @@ public class BookmarkResponse {
         Message message = bookmark.getMessage();
 
         return BookmarkResponse.builder()
-                .id(bookmark.getId())
+                .id(message.getId())
                 .memberId(message.getMember().getId())
                 .username(message.getMember().getUsername())
                 .userThumbnail(message.getMember().getThumbnailUrl())
