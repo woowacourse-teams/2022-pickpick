@@ -69,7 +69,6 @@ function Feed() {
       <SearchInput
         placeholder="검색 할 키워드를 입력해주세요."
         onFocus={handleOpenSearchOptions}
-        isSearchInputFocused={isSearchInputFocused}
       >
         {channelsData && defaultChannel && isSearchInputFocused && (
           <SearchOptions
