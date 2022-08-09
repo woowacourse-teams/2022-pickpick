@@ -18,13 +18,13 @@ const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 
 root.render(
   <BrowserRouter>
-    <RecoilRoot>
-      <ThemeProvider theme={LIGHT_MODE_THEME}>
-        <GlobalStyle />
-        <ErrorBoundary fallback={<UnexpectedError />}>
+    <ThemeProvider theme={LIGHT_MODE_THEME}>
+      <GlobalStyle />
+      <ErrorBoundary fallback={<UnexpectedError />}>
+        <RecoilRoot>
           <App />
-        </ErrorBoundary>
-      </ThemeProvider>
-    </RecoilRoot>
+        </RecoilRoot>
+      </ErrorBoundary>
+    </ThemeProvider>
   </BrowserRouter>
 );
