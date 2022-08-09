@@ -55,7 +55,7 @@ function Feed() {
     handleCloseSearchOptions,
     handleToggleChannelId,
     handleToggleAllChannelIds,
-  } = useChannelIds(channelId ? Number(channelId) : 0);
+  } = useChannelIds({ defaultChannelId: channelId ? Number(channelId) : 0 });
 
   const {
     isModalOpened: isCalenderOpened,

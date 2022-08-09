@@ -60,7 +60,7 @@ function SpecificDateFeed() {
     handleCloseSearchOptions,
     handleToggleChannelId,
     handleToggleAllChannelIds,
-  } = useChannelIds(Number(channelId ?? 0));
+  } = useChannelIds({ defaultChannelId: channelId ? Number(channelId) : 0 });
 
   const {
     isModalOpened: isCalenderOpened,

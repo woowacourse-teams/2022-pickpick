@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import useModal from "./useModal";
 
-function useChannelIds(channelId: number | undefined) {
+interface Props {
+  defaultChannelId?: number;
+}
+
+function useChannelIds({ defaultChannelId }: Props) {
   const [channelIds, setChannelIds] = useState<(number | undefined)[]>([]);
 
   const { data: channelsData } = useQuery(
@@ -19,11 +23,11 @@ function useChannelIds(channelId: number | undefined) {
   } = useModal();
 
   const defaultChannel = channelsData?.channels.filter((channel) => {
-    if (channelId === 0) {
+    if (defaultChannelId === 0) {
       return channel.id === channelsData?.channels[0].id;
     }
 
-    return channel.id === channelId;
+    return channel.id === defaultChannelId;
   })[0];
 
   const handleToggleAllChannelIds = () => {
@@ -61,8 +65,10 @@ function useChannelIds(channelId: number | undefined) {
   };
 
   useEffect(() => {
-    setChannelIds([channelId === 0 ? channelsData?.channels[0].id : channelId]);
-  }, [channelId]);
+    setChannelIds([
+      defaultChannelId === 0 ? channelsData?.channels[0].id : defaultChannelId,
+    ]);
+  }, [defaultChannelId]);
 
   return {
     isSearchInputFocused,
