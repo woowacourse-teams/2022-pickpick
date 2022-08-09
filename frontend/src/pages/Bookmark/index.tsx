@@ -36,8 +36,6 @@ function Bookmark() {
 
   return (
     <Styled.Container>
-      <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
-
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}

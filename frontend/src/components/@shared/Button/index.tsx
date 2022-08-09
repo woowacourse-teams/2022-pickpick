@@ -1,7 +1,7 @@
 import React from "react";
 import * as Styled from "./style";
 
-export type Size = "medium" | "large";
+export type Size = "small" | "medium" | "large";
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: JSX.Element | string;
