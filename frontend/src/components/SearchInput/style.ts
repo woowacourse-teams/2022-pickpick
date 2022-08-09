@@ -8,6 +8,7 @@ export const Container = styled.div`
   padding: 10px 14px;
   width: 100%;
   border-radius: 4px;
+  z-index: 1;
 
   ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.BACKGROUND.SECONDARY};
