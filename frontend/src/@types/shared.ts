@@ -38,7 +38,7 @@ export interface ResponseChannels {
 }
 
 export interface SubscribedChannel {
-  id: string;
+  id: number;
   name: string;
   order: number;
 }
