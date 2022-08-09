@@ -1,4 +1,3 @@
-import { FlexRow } from "@src/@styles/shared";
 import {
   ResponseSubscribedChannels,
   SubscribedChannel,
@@ -23,12 +22,12 @@ function SearchOptions({
 }: Props) {
   return (
     <Styled.Container>
-      <p>검색에 포함할 채널을 선택해주세요.</p>
+      <Styled.Text>검색에 포함할 채널을 선택해주세요.</Styled.Text>
 
-      <FlexRow gap="5px" overflow="auto">
+      <Styled.ScrollContainer>
         <Button
           isActive={channelIds.length === data.channels.length}
-          size="medium"
+          size="small"
           onClick={handleToggleAllChannelIds}
         >
           {channelIds.length === data.channels.length
@@ -39,7 +38,7 @@ function SearchOptions({
         <Button
           key={defaultChannel.name}
           isActive={channelIds.includes(defaultChannel.id)}
-          size="medium"
+          size="small"
           onClick={() => handleToggleChannelId(defaultChannel.id)}
         >
           <>#{defaultChannel.name}</>
@@ -51,13 +50,13 @@ function SearchOptions({
             <Button
               key={channel.name}
               isActive={channelIds.includes(channel.id)}
-              size="medium"
+              size="small"
               onClick={() => handleToggleChannelId(channel.id)}
             >
               <>#{channel.name}</>
             </Button>
           ))}
-      </FlexRow>
+      </Styled.ScrollContainer>
     </Styled.Container>
   );
 }
