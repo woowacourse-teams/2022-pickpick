@@ -3,7 +3,6 @@ import App from "./App";
 import { ThemeProvider } from "styled-components";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 import GlobalStyle from "./@styles/GlobalStyle";
-import { QueryClientProvider, QueryClient } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import UnexpectedError from "./pages/UnexpectedError";
@@ -15,27 +14,17 @@ if (process.env.NODE_ENV === "development") {
   worker.start();
 }
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 
 root.render(
   <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
+    <RecoilRoot>
       <ThemeProvider theme={LIGHT_MODE_THEME}>
         <GlobalStyle />
         <ErrorBoundary fallback={<UnexpectedError />}>
-          <RecoilRoot>
-            <App />
-          </RecoilRoot>
+          <App />
         </ErrorBoundary>
       </ThemeProvider>
-    </QueryClientProvider>
+    </RecoilRoot>
   </BrowserRouter>
 );
