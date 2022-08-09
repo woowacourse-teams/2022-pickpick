@@ -1,5 +1,6 @@
 package com.pickpick.auth.support;
 
+import com.pickpick.exception.auth.ExpiredTokenException;
 import com.pickpick.exception.auth.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,9 +42,9 @@ public class JwtTokenProvider {
         try {
             parseClaims(token);
         } catch (ExpiredJwtException e) {
-            throw new InvalidTokenException("만료된 토큰입니다.");
+            throw new ExpiredTokenException();
         } catch (Exception e) {
-            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+            throw new InvalidTokenException();
         }
     }
 
