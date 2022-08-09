@@ -20,6 +20,8 @@ import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
+import SearchOptions from "@src/components/SearchOptions";
+import useChannelIds from "@src/hooks/useChannelIds";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -46,6 +48,17 @@ function SpecificDateFeed() {
       getNextPageParam: nextMessagesCallback,
     }
   );
+
+  const {
+    isSearchInputFocused,
+    channelsData,
+    channelIds,
+    defaultChannel,
+    handleOpenSearchOptions,
+    handleCloseSearchOptions,
+    handleToggleChannelId,
+    handleToggleAllChannelIds,
+  } = useChannelIds(Number(channelId ?? 0));
 
   const {
     isModalOpened: isCalenderOpened,
@@ -80,7 +93,24 @@ function SpecificDateFeed() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
+      {isSearchInputFocused && (
+        <Dimmer hasBackgroundColor={false} onClick={handleCloseSearchOptions} />
+      )}
+      <SearchInput
+        placeholder="검색 할 키워드를 입력해주세요."
+        onFocus={handleOpenSearchOptions}
+        isSearchInputFocused={isSearchInputFocused}
+      >
+        {channelsData && defaultChannel && isSearchInputFocused && (
+          <SearchOptions
+            data={channelsData}
+            defaultChannel={defaultChannel}
+            channelIds={channelIds}
+            handleToggleChannelId={handleToggleChannelId}
+            handleToggleAllChannelIds={handleToggleAllChannelIds}
+          />
+        )}
+      </SearchInput>
 
       <InfiniteScroll
         callback={fetchNextPage}

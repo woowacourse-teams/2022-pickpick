@@ -19,6 +19,8 @@ import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
+import SearchOptions from "@src/components/SearchOptions";
+import useChannelIds from "@src/hooks/useChannelIds";
 
 function Feed() {
   const { channelId } = useParams();
@@ -37,6 +39,17 @@ function Feed() {
     );
 
   const {
+    isSearchInputFocused,
+    channelsData,
+    channelIds,
+    defaultChannel,
+    handleOpenSearchOptions,
+    handleCloseSearchOptions,
+    handleToggleChannelId,
+    handleToggleAllChannelIds,
+  } = useChannelIds(channelId ? Number(channelId) : 0);
+
+  const {
     isModalOpened: isCalenderOpened,
     handleOpenModal: handleOpenCalendar,
     handleCloseModal: handleCloseCalendar,
@@ -50,7 +63,24 @@ function Feed() {
 
   return (
     <Styled.Container>
-      <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
+      {isSearchInputFocused && (
+        <Dimmer hasBackgroundColor={false} onClick={handleCloseSearchOptions} />
+      )}
+      <SearchInput
+        placeholder="검색 할 키워드를 입력해주세요."
+        onFocus={handleOpenSearchOptions}
+        isSearchInputFocused={isSearchInputFocused}
+      >
+        {channelsData && defaultChannel && isSearchInputFocused && (
+          <SearchOptions
+            data={channelsData}
+            defaultChannel={defaultChannel}
+            channelIds={channelIds}
+            handleToggleChannelId={handleToggleChannelId}
+            handleToggleAllChannelIds={handleToggleAllChannelIds}
+          />
+        )}
+      </SearchInput>
 
       <InfiniteScroll
         callback={fetchNextPage}
