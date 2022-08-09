@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,7 +42,6 @@ class ReminderServiceTest {
     @MethodSource("parameterProvider")
     void findBookmarks(final String subscription, final Long reminderId, final Long memberId,
                        final List<Long> expectedIds, final boolean expectedIsLast) {
-        System.out.println(LocalDateTime.now());
         // given & when
         ReminderResponses response = reminderService.find(reminderId, memberId);
 

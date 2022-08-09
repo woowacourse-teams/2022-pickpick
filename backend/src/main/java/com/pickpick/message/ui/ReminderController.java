@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/reminders")
 public class ReminderController {
 
-
     private final ReminderService reminderService;
 
     public ReminderController(final ReminderService reminderService) {

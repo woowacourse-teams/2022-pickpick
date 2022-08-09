@@ -56,7 +56,6 @@ public class ReminderService {
                 .collect(Collectors.toList());
     }
 
-
     private BooleanExpression remindDateCondition(final Long reminderId) {
         if (Objects.isNull(reminderId)) {
             return QReminder.reminder.remindDate.after(LocalDateTime.now());

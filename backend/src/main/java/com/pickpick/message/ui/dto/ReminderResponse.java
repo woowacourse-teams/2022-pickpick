@@ -24,8 +24,7 @@ public class ReminderResponse {
 
     @Builder
     public ReminderResponse(final Long id, final Long messageId, final String username, final String userThumbnail,
-                            final String text,
-                            final LocalDateTime postedDate, final LocalDateTime modifiedDate,
+                            final String text, final LocalDateTime postedDate, final LocalDateTime modifiedDate,
                             final LocalDateTime remindDate) {
         this.id = id;
         this.messageId = messageId;

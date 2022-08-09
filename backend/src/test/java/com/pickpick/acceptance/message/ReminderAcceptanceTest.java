@@ -2,6 +2,7 @@ package com.pickpick.acceptance.message;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.message.ui.dto.ReminderResponse;
@@ -37,8 +38,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
-        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
-        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+        assertAll(
+                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
+        );
     }
 
     @Test
@@ -55,8 +58,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
-        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
-        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+        assertAll(
+                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
+        );
     }
 
     @Test
@@ -73,8 +78,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
-        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
-        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+        assertAll(
+                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
+        );
     }
 
     @Test
@@ -92,8 +99,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
-        assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast);
-        assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds);
+        assertAll(
+                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
+        );
     }
 
     private List<Long> convertToIds(final ReminderResponses response) {
