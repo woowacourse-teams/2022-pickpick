@@ -19,22 +19,30 @@ import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
+import EmptyStatus from "@src/components/EmptyStatus";
 
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages>(
-      [QUERY_KEY.ALL_MESSAGES, queryKey],
-      getMessages({
-        channelId,
-      }),
-      {
-        getNextPageParam: nextMessagesCallback,
-      }
-    );
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery<ResponseMessages>(
+    [QUERY_KEY.ALL_MESSAGES, queryKey],
+    getMessages({
+      channelId,
+    }),
+    {
+      getNextPageParam: nextMessagesCallback,
+    }
+  );
 
   const {
     isModalOpened: isCalenderOpened,
@@ -46,19 +54,21 @@ function Feed() {
     handleSettle: refetch,
   });
 
+  const parsedData = extractResponseMessages(data);
+
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
   return (
     <Styled.Container>
       <SearchInput placeholder="검색 할 키워드를 입력해주세요." />
-
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
         endPoint={!hasNextPage}
       >
         <FlexColumn gap="4px" width="100%">
-          {extractResponseMessages(data).map(
+          {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+          {parsedData.map(
             ({
               id,
               username,

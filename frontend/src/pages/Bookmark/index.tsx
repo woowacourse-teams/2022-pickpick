@@ -11,16 +11,26 @@ import { nextBookmarksCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import { getBookmarks } from "@src/api/bookmarks";
 import useBookmark from "@src/hooks/useBookmark";
+import EmptyStatus from "@src/components/EmptyStatus";
 
 function Bookmark() {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
-      getNextPageParam: nextBookmarksCallback,
-    });
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
+    getNextPageParam: nextBookmarksCallback,
+  });
 
   const { handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
+
+  const parsedData = extractResponseBookmarks(data);
 
   if (isError) return <div>이거슨 에러양!!!!</div>;
 
@@ -35,7 +45,8 @@ function Bookmark() {
       >
         <FlexColumn gap="4px" width="100%">
           <>
-            {extractResponseBookmarks(data).map(
+            {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+            {parsedData.map(
               ({ id, username, postedDate, text, userThumbnail }) => (
                 <MessageCard
                   key={id}
