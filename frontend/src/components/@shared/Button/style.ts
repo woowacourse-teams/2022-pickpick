@@ -24,18 +24,19 @@ const colorTable = {
   inactive: css`
     font-weight: 400;
     ${({ theme }: StyledDefaultProps) => css`
-    color: ${theme.COLOR.TEXT.DEFAULT};
-    background-color: ${theme.COLOR.BACKGROUND.TERTIARY}};
-  `}
+      color: ${theme.COLOR.TEXT.DEFAULT};
+      background-color: ${theme.COLOR.BACKGROUND.TERTIARY};
+    `}
   `,
 };
 
 export const Container = styled.button`
   border: none;
   border-radius: 50px;
+  white-space: nowrap;
   cursor: pointer;
 
-  ${({ size, isActive }: Pick<Props, "size" | "isActive">) => css`
+  ${({ size, isActive }: Pick<Props, "size" | "isActive" | "onClick">) => css`
     ${colorTable[isActive ? "active" : "inactive"]}
     ${sizeTable[size]};
   `}

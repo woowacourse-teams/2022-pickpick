@@ -7,6 +7,7 @@ export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: JSX.Element | string;
   size: Size;
   isActive: boolean;
+  onClick?: () => void;
 }
 
 function Button({ children, ...props }: Props) {
