@@ -1,4 +1,4 @@
-import { SNACKBAR_STATUS } from "@src/@constants";
+import { SNACKBAR_STATUS, ERROR_CODE } from "@src/@constants";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export type Theme = typeof LIGHT_MODE_THEME;
@@ -52,4 +52,9 @@ export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;
 export interface ResponseToken {
   token: string;
   isFirstLogin: boolean;
+}
+
+export interface CustomError {
+  code: keyof typeof ERROR_CODE;
+  message: string;
 }
