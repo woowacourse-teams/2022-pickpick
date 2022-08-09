@@ -28,23 +28,16 @@ function Feed() {
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
 
-  const {
-    data,
-    isLoading,
-    isSuccess,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery<ResponseMessages>(
-    [QUERY_KEY.ALL_MESSAGES, queryKey],
-    getMessages({
-      channelId,
-    }),
-    {
-      getNextPageParam: nextMessagesCallback,
-    }
-  );
+  const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
+    useInfiniteQuery<ResponseMessages>(
+      [QUERY_KEY.ALL_MESSAGES, queryKey],
+      getMessages({
+        channelId,
+      }),
+      {
+        getNextPageParam: nextMessagesCallback,
+      }
+    );
 
   const {
     channelsData,
@@ -71,8 +64,6 @@ function Feed() {
   });
 
   const parsedData = extractResponseMessages(data);
-
-  if (isError) return <div>이거슨 에러양!!!!</div>;
 
   return (
     <Styled.Container>

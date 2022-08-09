@@ -33,7 +33,6 @@ function SpecificDateFeed() {
     data,
     isFetching,
     isSuccess,
-    isError,
     fetchPreviousPage,
     hasPreviousPage,
     fetchNextPage,
@@ -82,8 +81,6 @@ function SpecificDateFeed() {
   const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
-
-  if (isError) return <div>이거슨 에러양!</div>;
 
   useEffect(() => {
     window.scrollTo({
