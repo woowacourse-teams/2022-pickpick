@@ -15,7 +15,7 @@ interface Props {
 
 function SearchOptions({
   data,
-  defaultChannel,
+  defaultChannel: { name: defaultName, id: defaultId },
   channelIds,
   handleToggleChannelId,
   handleToggleAllChannelIds,
@@ -36,24 +36,24 @@ function SearchOptions({
         </Button>
 
         <Button
-          key={defaultChannel.name}
-          isActive={channelIds.includes(defaultChannel.id)}
+          key={defaultName}
+          isActive={channelIds.includes(defaultId)}
           size="small"
-          onClick={() => handleToggleChannelId(defaultChannel.id)}
+          onClick={() => handleToggleChannelId(defaultId)}
         >
-          <>#{defaultChannel.name}</>
+          <>#{defaultName}</>
         </Button>
 
         {data.channels
-          .filter((channel) => channel.id !== defaultChannel.id)
-          .map((channel) => (
+          .filter((channel) => channel.id !== defaultId)
+          .map(({ name, id }) => (
             <Button
-              key={channel.name}
-              isActive={channelIds.includes(channel.id)}
+              key={name}
+              isActive={channelIds.includes(id)}
               size="small"
-              onClick={() => handleToggleChannelId(channel.id)}
+              onClick={() => handleToggleChannelId(id)}
             >
-              <>#{channel.name}</>
+              <>#{name}</>
             </Button>
           ))}
       </Styled.ScrollContainer>
