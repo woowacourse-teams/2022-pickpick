@@ -29,6 +29,7 @@ function SearchOptions({
           isActive={channelIds.length === data.channels.length}
           size="small"
           onClick={handleToggleAllChannelIds}
+          type="button"
         >
           {channelIds.length === data.channels.length
             ? "전체 해제"
@@ -40,6 +41,7 @@ function SearchOptions({
           isActive={channelIds.includes(defaultId)}
           size="small"
           onClick={() => handleToggleChannelId(defaultId)}
+          type="button"
         >
           <>#{defaultName}</>
         </Button>
@@ -52,6 +54,7 @@ function SearchOptions({
               isActive={channelIds.includes(id)}
               size="small"
               onClick={() => handleToggleChannelId(id)}
+              type="button"
             >
               <>#{name}</>
             </Button>
