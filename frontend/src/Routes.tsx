@@ -12,6 +12,7 @@ import {
 } from "./pages";
 import PrivateRouter from "@src/components/PrivateRouter";
 import PublicRouter from "@src/components/PublicRouter";
+import SearchResult from "./pages/SearchResult";
 
 const routes = [
   {
@@ -77,6 +78,10 @@ const routes = [
       {
         path: PATH_NAME.CERTIFICATION,
         element: <Certification />,
+      },
+      {
+        path: PATH_NAME.SEARCH_RESULT,
+        element: <SearchResult />,
       },
       {
         path: "*",
