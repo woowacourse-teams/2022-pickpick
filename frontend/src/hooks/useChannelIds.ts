@@ -2,7 +2,6 @@ import { QUERY_KEY } from "@src/@constants";
 import { getSubscribedChannels } from "@src/api/channels";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import useModal from "./useModal";
 
 interface Props {
   defaultChannelId?: number;
@@ -15,12 +14,6 @@ function useChannelIds({ defaultChannelId }: Props) {
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
-
-  const {
-    isModalOpened: isSearchInputFocused,
-    handleOpenModal: handleOpenSearchOptions,
-    handleCloseModal: handleCloseSearchOptions,
-  } = useModal();
 
   const defaultChannel = channelsData?.channels.filter((channel) => {
     if (defaultChannelId === 0) {
@@ -71,12 +64,9 @@ function useChannelIds({ defaultChannelId }: Props) {
   }, [defaultChannelId]);
 
   return {
-    isSearchInputFocused,
     channelsData,
     channelIds,
     defaultChannel,
-    handleOpenSearchOptions,
-    handleCloseSearchOptions,
     handleToggleChannelId,
     handleToggleAllChannelIds,
   };

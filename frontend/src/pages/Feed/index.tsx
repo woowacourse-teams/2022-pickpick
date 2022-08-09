@@ -47,15 +47,18 @@ function Feed() {
   );
 
   const {
-    isSearchInputFocused,
     channelsData,
     channelIds,
     defaultChannel,
-    handleOpenSearchOptions,
-    handleCloseSearchOptions,
     handleToggleChannelId,
     handleToggleAllChannelIds,
   } = useChannelIds({ defaultChannelId: channelId ? Number(channelId) : 0 });
+
+  const {
+    isModalOpened: isSearchInputFocused,
+    handleOpenModal: handleOpenSearchOptions,
+    handleCloseModal: handleCloseSearchOptions,
+  } = useModal();
 
   const {
     isModalOpened: isCalenderOpened,
