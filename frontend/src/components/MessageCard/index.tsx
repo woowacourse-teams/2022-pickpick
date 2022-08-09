@@ -34,7 +34,6 @@ function MessageCard({
     <Styled.Container>
       <FlexRow columnGap="8px" width="100%">
         <ProfileImage src={thumbnail} alt={`${username} 프로필 사진`} />
-
         <div>
           <FlexRow columnGap="4px" alignItems="center">
             <Styled.Writer>{username}</Styled.Writer>
