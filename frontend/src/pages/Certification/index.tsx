@@ -28,6 +28,8 @@ function Certification() {
   }, [isSuccess, data]);
 
   useEffect(() => {
+    if (!isError) return;
+
     navigate(PATH_NAME.HOME);
   }, [isError]);
 
