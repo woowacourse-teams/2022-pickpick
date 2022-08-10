@@ -81,7 +81,11 @@ const routes = [
       },
       {
         path: PATH_NAME.SEARCH_RESULT,
-        element: <SearchResult />,
+        element: (
+          <PrivateRouter>
+            <SearchResult />
+          </PrivateRouter>
+        ),
       },
       {
         path: "*",
