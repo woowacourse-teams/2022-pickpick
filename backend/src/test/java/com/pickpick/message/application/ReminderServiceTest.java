@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,9 @@ import org.springframework.test.context.jdbc.Sql;
 @DataJpaTest
 class ReminderServiceTest {
 
+    private static MockedStatic<LocalDateTime> localDateTimeMockedStatic;
     @Autowired
     private ReminderService reminderService;
-
-
-    @InjectMocks
-    private LocalDateTime localDateTime;
 
     private static Stream<Arguments> parameterProvider() {
         return Stream.of(
@@ -47,27 +45,32 @@ class ReminderServiceTest {
         );
     }
 
+    @BeforeAll
+    static void setMock() {
+        localDateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
+        LocalDateTime currentLocalDate = LocalDateTime.of(2022, 8, 10, 0, 0, 0);
+        localDateTimeMockedStatic.when(LocalDateTime::now).thenReturn(currentLocalDate);
+    }
+
+    @AfterAll
+    static void closeMock() {
+        localDateTimeMockedStatic.close();
+    }
+
     @DisplayName("리마인더 조회")
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameterProvider")
     void findReminders(final String subscription, final Long reminderId, final Long memberId,
                        final List<Long> expectedIds, final boolean expectedIsLast) {
-        try (MockedStatic<LocalDateTime> localDateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class,
-                Mockito.CALLS_REAL_METHODS)) {
-            // given
-            LocalDateTime currentLocalDate = LocalDateTime.of(2022, 8, 10, 0, 0, 0);
-            localDateTimeMockedStatic.when(LocalDateTime::now).thenReturn(currentLocalDate);
+        // given & when
+        ReminderResponses response = reminderService.find(reminderId, memberId);
 
-            // when
-            ReminderResponses response = reminderService.find(reminderId, memberId);
-
-            // then
-            List<Long> ids = convertToIds(response);
-            assertAll(
-                    () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
-                    () -> assertThat(response.isLast()).isEqualTo(expectedIsLast)
-            );
-        }
+        // then
+        List<Long> ids = convertToIds(response);
+        assertAll(
+                () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
+                () -> assertThat(response.isLast()).isEqualTo(expectedIsLast)
+        );
     }
 
     private List<Long> convertToIds(final ReminderResponses response) {
@@ -80,21 +83,14 @@ class ReminderServiceTest {
     @DisplayName("오늘 날짜보다 더 오래된 날짜에 리마인드한 내역은 조회되지 않는다.")
     @Test
     void findWithoutOldRemindDate() {
-        try (MockedStatic<LocalDateTime> localDateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class,
-                Mockito.CALLS_REAL_METHODS)) {
-            // given
-            LocalDateTime currentLocalDate = LocalDateTime.of(2022, 8, 10, 0, 0, 0);
-            localDateTimeMockedStatic.when(LocalDateTime::now).thenReturn(currentLocalDate);
+        // given & when
+        ReminderResponses response = reminderService.find(null, 1L);
 
-            // when
-            ReminderResponses response = reminderService.find(null, 1L);
-
-            // then
-            List<Long> ids = convertToIds(response);
-            assertAll(
-                    () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
-                    () -> assertThat(response.isLast()).isFalse()
-            );
-        }
+        // then
+        List<Long> ids = convertToIds(response);
+        assertAll(
+                () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
+                () -> assertThat(response.isLast()).isFalse()
+        );
     }
 }
