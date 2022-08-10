@@ -24,6 +24,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Sql({"/truncate.sql", "/reminder.sql"})
 public class ReminderControllerTest extends RestDocsTestSupport {
@@ -96,6 +98,27 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("reminders.[].remindDate").type(JsonFieldType.STRING)
                                         .description("리마인드 날짜"),
                                 fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 리마인드 메시지 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("리마인더를 삭제한다")
+    @Test
+    void delete() throws Exception {
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.set("messageId", "2");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(REMINDER_API_URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
+                        .params(requestParams)
+                )
+                .andExpect(status().isNoContent())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
+                        ),
+                        requestParameters(
+                                parameterWithName("messageId").description("리마인더 삭제할 메세지 아이디")
                         )
                 ));
     }

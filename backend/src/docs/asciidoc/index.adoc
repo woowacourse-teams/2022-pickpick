@@ -84,3 +84,7 @@ operation::reminder-controller-test/find[snippets='http-request,request-headers,
 === 리마인더 추가 API
 
 operation::reminder-controller-test/save[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 리마인더 삭제 API
+
+operation::bookmark-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']

@@ -21,19 +21,12 @@ interface ReturnType {
 
 function useSelectChannels({ defaultChannelId }: Props): ReturnType {
   const [channelIds, setChannelIds] = useState<(number | undefined)[]>([]);
+  const [defaultChannel, setDefaultChannel] = useState<SubscribedChannel>();
 
   const { data: channelsData } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
-
-  const defaultChannel = channelsData?.channels.filter((channel) => {
-    if (defaultChannelId === 0) {
-      return channel.id === channelsData?.channels[0].id;
-    }
-
-    return channel.id === defaultChannelId;
-  })[0];
 
   const handleToggleAllChannelIds = () => {
     if (!channelsData) return;
@@ -70,10 +63,26 @@ function useSelectChannels({ defaultChannelId }: Props): ReturnType {
   };
 
   useEffect(() => {
+    if (!channelsData) return;
+
     setChannelIds([
-      defaultChannelId === 0 ? channelsData?.channels[0].id : defaultChannelId,
+      defaultChannelId === 0 ? channelsData.channels[0].id : defaultChannelId,
     ]);
-  }, [defaultChannelId]);
+  }, [channelsData, defaultChannelId]);
+
+  useEffect(() => {
+    if (!channelsData) return;
+
+    setDefaultChannel({
+      ...channelsData.channels.filter((channel) => {
+        if (defaultChannelId === 0) {
+          return channel.id === channelsData.channels[0].id;
+        }
+
+        return channel.id === defaultChannelId;
+      })[0],
+    });
+  }, [channelsData, defaultChannelId]);
 
   return {
     channelIds,

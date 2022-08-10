@@ -1,6 +1,7 @@
 package com.pickpick.message.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
@@ -11,10 +12,14 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.exception.message.ReminderDeleteFailureException;
+import com.pickpick.message.domain.Reminder;
+import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
@@ -37,6 +42,7 @@ import org.springframework.test.context.jdbc.Sql;
 class ReminderServiceTest {
 
     private static MockedStatic<LocalDateTime> localDateTimeMockedStatic;
+
     @Autowired
     private ReminderService reminderService;
 
@@ -48,6 +54,9 @@ class ReminderServiceTest {
 
     @Autowired
     private ChannelRepository channels;
+
+    @Autowired
+    private ReminderRepository reminders;
 
     private static Stream<Arguments> parameterProvider() {
         return Stream.of(
@@ -135,5 +144,24 @@ class ReminderServiceTest {
                 () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
                 () -> assertThat(response.isLast()).isFalse()
         );
+    }
+
+    @DisplayName("리마인더 삭제")
+    @Test
+    void delete() {
+        // given & when
+        reminderService.delete(1L, 2L);
+
+        // then
+        Optional<Reminder> actual = reminders.findById(1L);
+        assertThat(actual).isEmpty();
+    }
+
+    @DisplayName("다른 사용자의 리마인더 삭제시 예외")
+    @Test
+    void deleteOtherMembers() {
+        // given & when & then
+        assertThatThrownBy(() -> reminderService.delete(1L, 1L))
+                .isInstanceOf(ReminderDeleteFailureException.class);
     }
 }

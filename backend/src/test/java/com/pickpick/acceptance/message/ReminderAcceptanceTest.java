@@ -121,4 +121,30 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
                 .map(ReminderResponse::getId)
                 .collect(Collectors.toList());
     }
+
+    @Test
+    void 리마인더_정상_삭제() {
+        // given
+        long messageId = 2L;
+
+        // when
+        ExtractableResponse<Response> response = deleteWithCreateToken(REMINDER_API_URL + "?messageId=" + messageId,
+                1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void 사용자에게_존재하지_않는_리마인더_삭제() {
+        // given
+        long messageId = 1L;
+
+        // when
+        ExtractableResponse<Response> response = deleteWithCreateToken(REMINDER_API_URL + "?messageId=" + messageId,
+                1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.BAD_REQUEST);
+    }
 }
