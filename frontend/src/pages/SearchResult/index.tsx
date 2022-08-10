@@ -48,8 +48,6 @@ function SearchResult() {
 
   const parsedData = extractResponseMessages(data);
 
-  if (isError) return <div>이거슨 에러양!!!!</div>;
-
   return (
     <Styled.Container>
       <InfiniteScroll
