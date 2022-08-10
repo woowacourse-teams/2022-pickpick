@@ -36,8 +36,7 @@ public class Reminder {
     protected Reminder() {
     }
 
-    public Reminder(final Long id, final Member member, final Message message, final LocalDateTime remindDate) {
-        this.id = id;
+    public Reminder(final Member member, final Message message, final LocalDateTime remindDate) {
         this.member = member;
         this.message = message;
         this.remindDate = remindDate;
