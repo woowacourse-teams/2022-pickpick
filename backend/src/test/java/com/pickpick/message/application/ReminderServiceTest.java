@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -49,7 +50,7 @@ class ReminderServiceTest {
     @DisplayName("리마인더 조회")
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameterProvider")
-    void findBookmarks(final String subscription, final Long reminderId, final Long memberId,
+    void findReminders(final String subscription, final Long reminderId, final Long memberId,
                        final List<Long> expectedIds, final boolean expectedIsLast) {
         try (MockedStatic<LocalDateTime> localDateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class,
                 Mockito.CALLS_REAL_METHODS)) {
@@ -74,5 +75,26 @@ class ReminderServiceTest {
                 .stream()
                 .map(ReminderResponse::getId)
                 .collect(Collectors.toList());
+    }
+
+    @DisplayName("오늘 날짜보다 더 오래된 날짜에 리마인드한 내역은 조회되지 않는다.")
+    @Test
+    void findWithoutOldRemindDate() {
+        try (MockedStatic<LocalDateTime> localDateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class,
+                Mockito.CALLS_REAL_METHODS)) {
+            // given
+            LocalDateTime currentLocalDate = LocalDateTime.of(2022, 8, 10, 0, 0, 0);
+            localDateTimeMockedStatic.when(LocalDateTime::now).thenReturn(currentLocalDate);
+
+            // when
+            ReminderResponses response = reminderService.find(null, 1L);
+
+            // then
+            List<Long> ids = convertToIds(response);
+            assertAll(
+                    () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
+                    () -> assertThat(response.isLast()).isFalse()
+            );
+        }
     }
 }
