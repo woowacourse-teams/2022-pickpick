@@ -9,89 +9,96 @@ import {
   SpecificDateFeed,
   Home,
   Certification,
+  SearchResult,
 } from "./pages";
 import PrivateRouter from "@src/components/PrivateRouter";
 import PublicRouter from "@src/components/PublicRouter";
-import SearchResult from "./pages/SearchResult";
 
 const routes = [
   {
+    path: "",
+    element: (
+      <PublicRouter>
+        <LayoutContainer>
+          <Home />
+        </LayoutContainer>
+      </PublicRouter>
+    ),
+  },
+  {
     path: PATH_NAME.HOME,
-    element: <LayoutContainer />,
+    element: <PrivateRouter />,
     children: [
-      {
-        path: "",
-        element: (
-          <PublicRouter>
-            <Home />
-          </PublicRouter>
-        ),
-      },
       {
         path: PATH_NAME.ADD_CHANNEL,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <AddChannel />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: PATH_NAME.ALARM,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Alarm />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: PATH_NAME.BOOKMARK,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Bookmark />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: PATH_NAME.FEED,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Feed />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: `${PATH_NAME.FEED}/:channelId`,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Feed />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: `${PATH_NAME.FEED}/:channelId/:date`,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <SpecificDateFeed />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
-      {
-        path: PATH_NAME.CERTIFICATION,
-        element: <Certification />,
-      },
+
       {
         path: PATH_NAME.SEARCH_RESULT,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <SearchResult />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: "*",
-        element: <NotFound />,
+        element: (
+          <LayoutContainer>
+            <NotFound />
+          </LayoutContainer>
+        ),
       },
     ],
+  },
+  {
+    path: PATH_NAME.CERTIFICATION,
+    element: <Certification />,
   },
 ];
 
