@@ -50,3 +50,8 @@ export const Certification = Loadable({
   Component: lazy(() => import("./Certification")),
   LoadingStatus: () => <Loader />,
 });
+
+export const SearchResult = Loadable({
+  Component: lazy(() => import("./SearchResult")),
+  LoadingStatus: () => <Loader />,
+});
