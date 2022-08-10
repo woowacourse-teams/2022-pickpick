@@ -5,6 +5,7 @@ export const PATH_NAME = {
   BOOKMARK: "/bookmark",
   ADD_CHANNEL: "/add-channel",
   CERTIFICATION: "/certification",
+  SEARCH_RESULT: "/search-result",
 } as const;
 
 export const QUERY_KEY = {

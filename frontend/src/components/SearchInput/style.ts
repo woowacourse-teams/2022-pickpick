@@ -1,19 +1,7 @@
 import styled, { css } from "styled-components";
 import { StyledDefaultProps } from "@src/@types/shared";
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 14px;
-  width: 100%;
-  border-radius: 4px;
-  z-index: 1;
-
-  ${({ theme }: StyledDefaultProps) => css`
-    background-color: ${theme.COLOR.BACKGROUND.SECONDARY};
-  `}
-`;
+export const Container = styled.div``;
 
 export const Input = styled.input`
   display: inline-block;

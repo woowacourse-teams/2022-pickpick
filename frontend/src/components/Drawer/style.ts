@@ -9,6 +9,7 @@ export const Container = styled.div`
   height: calc(100% - 78px);
   padding: 20px 0;
   border-radius: 0 4px 4px 0;
+  z-index: 1;
 
   ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};

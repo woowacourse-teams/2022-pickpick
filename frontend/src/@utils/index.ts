@@ -102,3 +102,19 @@ export const getMessagesDate = (postedDate: string): string => {
 
   return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
 };
+
+export const convertSeparatorToKey = ({
+  value,
+  separator,
+  key,
+}: {
+  value: string;
+  separator: string;
+  key: string;
+}) => {
+  if (value.search(separator) === -1) {
+    return value;
+  }
+  // eslint-disable-next-line
+  return value.replace(/\,/g, key);
+};

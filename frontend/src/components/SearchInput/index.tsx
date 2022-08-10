@@ -13,7 +13,7 @@ function SearchInput({ children, ...props }: Props) {
       <FlexRow gap="6px" alignItems="center">
         <SearchIcon width="20px" height="20px" fill="#8B8B8B" />
         <Styled.Input {...props} />
-        <Styled.SearchButton type="button">검색</Styled.SearchButton>
+        <Styled.SearchButton type="submit">검색</Styled.SearchButton>
       </FlexRow>
       {children}
     </Styled.Container>

@@ -39,7 +39,12 @@ function useModal(refetch?: Refetch): ReturnType {
 
       return;
     }
+
     document.body.style.overflowY = "auto";
+
+    return () => {
+      document.body.style.overflowY = "auto";
+    };
   }, [isModalOpened]);
 
   return {

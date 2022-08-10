@@ -1,4 +1,8 @@
 import { QUERY_KEY } from "@src/@constants";
+import {
+  ResponseSubscribedChannels,
+  SubscribedChannel,
+} from "@src/@types/shared";
 import { getSubscribedChannels } from "@src/api/channels";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -7,7 +11,15 @@ interface Props {
   defaultChannelId?: number;
 }
 
-function useChannelIds({ defaultChannelId }: Props) {
+interface ReturnType {
+  channelIds: (number | undefined)[];
+  channelsData: ResponseSubscribedChannels | undefined;
+  defaultChannel: SubscribedChannel | undefined;
+  handleToggleChannelId: (id: number) => void;
+  handleToggleAllChannelIds: () => void;
+}
+
+function useSelectChannels({ defaultChannelId }: Props): ReturnType {
   const [channelIds, setChannelIds] = useState<(number | undefined)[]>([]);
 
   const { data: channelsData } = useQuery(
@@ -64,12 +76,12 @@ function useChannelIds({ defaultChannelId }: Props) {
   }, [defaultChannelId]);
 
   return {
-    channelsData,
     channelIds,
+    channelsData,
     defaultChannel,
     handleToggleChannelId,
     handleToggleAllChannelIds,
   };
 }
 
-export default useChannelIds;
+export default useSelectChannels;

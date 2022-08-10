@@ -12,6 +12,7 @@ interface PageParam {
 interface HighOrderParam {
   date?: string;
   channelId?: string;
+  keyword?: string;
 }
 
 interface ReturnFunctionParam {
@@ -19,13 +20,15 @@ interface ReturnFunctionParam {
 }
 
 export const getMessages =
-  ({ date = "", channelId = "" }: HighOrderParam) =>
+  ({ date = "", channelId = "", keyword = "" }: HighOrderParam) =>
   async ({ pageParam }: ReturnFunctionParam) => {
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
           !channelId || channelId === "main" ? "" : channelId
-        }&messageId=&needPastMessage=${true}&date=${date ?? ""}`,
+        }&keyword=${keyword}&messageId=&needPastMessage=${true}&date=${
+          date ?? ""
+        }`,
         {
           headers: { ...getPrivateHeaders() },
         }
@@ -43,7 +46,7 @@ export const getMessages =
     const { data } = await fetcher.get<ResponseMessages>(
       `${API_ENDPOINT.MESSAGES}?channelIds=${
         !channelId || channelId === "main" ? "" : channelId
-      }&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
+      }&keyword=${keyword}&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
       {
         headers: { ...getPrivateHeaders() },
       }
