@@ -3,6 +3,8 @@ import Dimmer from "../@shared/Dimmer";
 
 interface ChildrenProps {
   isDropdownOpened: boolean;
+  handleOpenDropdown: () => void;
+  handleCloseDropdown: () => void;
   handleToggleDropdown: () => void;
 }
 
@@ -12,9 +14,10 @@ interface Props {
 
 function Dropdown({ children }: Props) {
   const {
-    isDropdownOpened: isDropdownOpened,
-    handleCloseDropdown: handleCloseDropdown,
-    handleToggleDropdown: handleToggleDropdown,
+    isDropdownOpened,
+    handleOpenDropdown,
+    handleCloseDropdown,
+    handleToggleDropdown,
   } = useDropdown();
 
   return (
@@ -22,7 +25,12 @@ function Dropdown({ children }: Props) {
       {isDropdownOpened && (
         <Dimmer hasBackgroundColor={false} onClick={handleCloseDropdown} />
       )}
-      {children({ isDropdownOpened, handleToggleDropdown })}
+      {children({
+        isDropdownOpened,
+        handleOpenDropdown,
+        handleCloseDropdown,
+        handleToggleDropdown,
+      })}
     </>
   );
 }
