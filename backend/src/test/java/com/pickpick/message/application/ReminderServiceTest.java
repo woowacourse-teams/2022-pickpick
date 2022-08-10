@@ -3,6 +3,7 @@ package com.pickpick.message.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.config.QuerydslConfig;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import java.util.List;
@@ -13,13 +14,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 @Sql({"/truncate.sql", "/reminder.sql"})
-@Transactional
-@SpringBootTest
+@Import(value = {ReminderService.class, QuerydslConfig.class})
+@DataJpaTest
 class ReminderServiceTest {
 
     @Autowired
