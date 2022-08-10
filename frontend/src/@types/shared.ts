@@ -1,4 +1,4 @@
-import { SNACKBAR_STATUS, ERROR_CODE } from "@src/@constants";
+import { SNACKBAR_STATUS, ERROR_MESSAGE_BY_CODE } from "@src/@constants";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export type Theme = typeof LIGHT_MODE_THEME;
@@ -55,6 +55,6 @@ export interface ResponseToken {
 }
 
 export interface CustomError {
-  code: keyof typeof ERROR_CODE;
+  code: keyof typeof ERROR_MESSAGE_BY_CODE;
   message: string;
 }
