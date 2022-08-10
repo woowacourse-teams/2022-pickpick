@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BookmarkService {
 
-    public static final int COUNT = 20;
+    private static final int COUNT = 20;
 
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
