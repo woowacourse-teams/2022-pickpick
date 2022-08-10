@@ -3,28 +3,25 @@ package com.pickpick.message.application;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.exception.channel.SubscriptionNotFoundException;
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.exception.message.MessageNotFoundException;
-import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.message.domain.Bookmark;
-import com.pickpick.message.domain.BookmarkRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
+import com.pickpick.message.domain.QBookmark;
 import com.pickpick.message.domain.QMessage;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
+import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,34 +34,28 @@ public class MessageService {
     private static final int FIRST_INDEX = 0;
     private static final int ONE_TO_GET_LAST_INDEX = 1;
 
-    private final MessageRepository messageRepository;
+    private final MessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final MemberRepository members;
-    private final BookmarkRepository bookmarks;
     private final JPAQueryFactory jpaQueryFactory;
 
-    public MessageService(final MessageRepository messageRepository,
+    public MessageService(final MessageRepository messages,
                           final ChannelSubscriptionRepository channelSubscriptions,
                           final MemberRepository members,
-                          final BookmarkRepository bookmarks,
                           final JPAQueryFactory jpaQueryFactory) {
-        this.messageRepository = messageRepository;
+        this.messages = messages;
         this.channelSubscriptions = channelSubscriptions;
         this.members = members;
-        this.bookmarks = bookmarks;
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
     public MessageResponses find(final Long memberId, final MessageRequest messageRequest) {
         List<Long> channelIds = findChannelId(memberId, messageRequest);
 
-        List<Message> messages = findMessages(channelIds, messageRequest);
-        boolean isLast = isLast(channelIds, messageRequest, messages);
+        List<MessageResponse> messageResponses = findMessages(channelIds, messageRequest);
+        boolean isLast = isLast(channelIds, messageRequest, messageResponses);
 
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
-        return toSlackMessageResponse(messages, isLast, messageRequest.isNeedPastMessage(), member);
+        return new MessageResponses(messageResponses, isLast, messageRequest.isNeedPastMessage());
     }
 
     private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
@@ -84,26 +75,40 @@ public class MessageService {
         return Objects.nonNull(channelIds) && !channelIds.isEmpty();
     }
 
-    private List<Message> findMessages(final List<Long> channelIds, final MessageRequest messageRequest) {
+    private List<MessageResponse> findMessages(final List<Long> channelIds, final MessageRequest messageRequest) {
         boolean needPastMessage = messageRequest.isNeedPastMessage();
         int messageCount = messageRequest.getMessageCount();
 
-        List<Message> foundMessages = jpaQueryFactory
-                .selectFrom(QMessage.message)
+        List<MessageResponse> messageResponses = jpaQueryFactory
+                .select(getMessageResponseConstructor())
+                .from(QMessage.message)
                 .leftJoin(QMessage.message.member)
-                .fetchJoin()
+                .leftJoin(QBookmark.bookmark)
+                .on(QMessage.message.id.eq(QBookmark.bookmark.message.id))
                 .where(meetAllConditions(channelIds, messageRequest))
                 .orderBy(arrangeDateByNeedPastMessage(needPastMessage))
                 .limit(messageCount)
                 .fetch();
 
         if (needPastMessage) {
-            return foundMessages;
+            return messageResponses;
         }
 
-        return foundMessages.stream()
-                .sorted(Comparator.comparing(Message::getPostedDate).reversed())
+        return messageResponses.stream()
+                .sorted(Comparator.comparing(MessageResponse::getPostedDate).reversed())
                 .collect(Collectors.toList());
+    }
+
+    private ConstructorExpression<MessageResponse> getMessageResponseConstructor() {
+        return Projections.constructor(MessageResponse.class,
+                QMessage.message.id,
+                QMessage.message.member.id,
+                QMessage.message.member.username,
+                QMessage.message.member.thumbnailUrl,
+                QMessage.message.text,
+                QMessage.message.postedDate,
+                QMessage.message.modifiedDate,
+                QBookmark.bookmark.id);
     }
 
     private BooleanExpression meetAllConditions(final List<Long> channelIds, final MessageRequest request) {
@@ -142,7 +147,7 @@ public class MessageService {
 
 
     private Predicate messageIdCondition(final Long messageId, final boolean needPastMessage) {
-        Message message = messageRepository.findById(messageId)
+        Message message = messages.findById(messageId)
                 .orElseThrow(() -> new MessageNotFoundException(messageId));
 
         LocalDateTime messageDate = message.getPostedDate();
@@ -177,7 +182,7 @@ public class MessageService {
     }
 
     private boolean isLast(final List<Long> channelIds, final MessageRequest messageRequest,
-                           final List<Message> messages) {
+                           final List<MessageResponse> messages) {
         if (messages.isEmpty()) {
             return true;
         }
@@ -192,15 +197,15 @@ public class MessageService {
     }
 
     private BooleanExpression meetAllIsLastCondition(final List<Long> channelIds, final MessageRequest request,
-                                                     final List<Message> messages) {
-        Message targetMessage = findTargetMessage(messages, request.isNeedPastMessage());
+                                                     final List<MessageResponse> messages) {
+        MessageResponse targetMessage = findTargetMessage(messages, request.isNeedPastMessage());
 
         return channelIdsIn(channelIds)
                 .and(textContains(request.getKeyword()))
                 .and(isBeforeOrAfterTarget(targetMessage.getPostedDate(), request.isNeedPastMessage()));
     }
 
-    private Message findTargetMessage(final List<Message> messages, final boolean needPastMessage) {
+    private MessageResponse findTargetMessage(final List<MessageResponse> messages, final boolean needPastMessage) {
         if (needPastMessage) {
             return messages.get(messages.size() - ONE_TO_GET_LAST_INDEX);
         }
@@ -214,38 +219,5 @@ public class MessageService {
         }
 
         return QMessage.message.postedDate.after(targetPostDate);
-    }
-
-    private MessageResponses toSlackMessageResponse(final List<Message> messages, final boolean isLast,
-                                                    final boolean needPastMessage, final Member member) {
-        return new MessageResponses(toSlackMessageResponses(messages, member), isLast, needPastMessage);
-    }
-
-    private List<MessageResponse> toSlackMessageResponses(final List<Message> messages, final Member member) {
-        List<MessageResponse> messageResponses = new ArrayList<>();
-
-        for (Message message : messages) {
-            Optional<Bookmark> bookmark = bookmarks.findByMessageIdAndMemberId(message.getId(), member.getId());
-            boolean isBookmarked = bookmark.isPresent();
-
-            messageResponses.add(toMessageResponse(message, isBookmarked));
-        }
-
-        return messageResponses;
-    }
-
-    private MessageResponse toMessageResponse(final Message message, final boolean isBookmarked) {
-        Member member = message.getMember();
-
-        return MessageResponse.builder()
-                .id(message.getId())
-                .memberId(member.getId())
-                .username(member.getUsername())
-                .userThumbnail(member.getThumbnailUrl())
-                .text(message.getText())
-                .postedDate(message.getPostedDate())
-                .modifiedDate(message.getModifiedDate())
-                .isBookmarked(isBookmarked)
-                .build();
     }
 }
