@@ -80,3 +80,7 @@ operation::bookmark-controller-test/delete[snippets='http-request,request-header
 === 리마인더 조회 API
 
 operation::reminder-controller-test/find[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== 리마인더 삭제 API
+
+operation::bookmark-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']

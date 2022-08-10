@@ -1,5 +1,6 @@
 package com.pickpick.message.application;
 
+import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
@@ -87,5 +88,13 @@ public class ReminderService {
         LocalDateTime remindDate = targetReminder.getRemindDate();
 
         return QReminder.reminder.remindDate.after(remindDate);
+    }
+
+    @Transactional
+    public void delete(final Long messageId, final Long memberId) {
+        Reminder reminder = reminders.findByMessageIdAndMemberId(messageId, memberId)
+                .orElseThrow(() -> new ReminderDeleteFailureException(messageId, memberId));
+
+        reminders.deleteById(reminder.getId());
     }
 }
