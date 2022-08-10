@@ -14,25 +14,16 @@ import useBookmark from "@src/hooks/useBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
 
 function Bookmark() {
-  const {
-    data,
-    isLoading,
-    isSuccess,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
-    getNextPageParam: nextBookmarksCallback,
-  });
+  const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
+    useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
+      getNextPageParam: nextBookmarksCallback,
+    });
 
   const { handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
   });
 
   const parsedData = extractResponseBookmarks(data);
-
-  if (isError) return <div>이거슨 에러양!!!!</div>;
 
   return (
     <Styled.Container>

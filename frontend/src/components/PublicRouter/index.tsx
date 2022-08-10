@@ -16,7 +16,6 @@ function PublicRouter({ children }: Props) {
     QUERY_KEY.AUTHENTICATION,
     isCertificated,
     {
-      useErrorBoundary: false,
       retry: false,
     }
   );
