@@ -19,10 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ReminderService {
 
-    public static final int COUNT = 20;
+    private static final int COUNT = 20;
 
     private final ReminderRepository reminders;
-
     private final JPAQueryFactory jpaQueryFactory;
 
     public ReminderService(final ReminderRepository reminders, final JPAQueryFactory jpaQueryFactory) {
