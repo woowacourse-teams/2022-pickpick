@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
@@ -12,11 +13,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.config.RestDocsTestSupport;
+import com.pickpick.message.ui.dto.ReminderRequest;
+import java.time.LocalDateTime;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,6 +37,30 @@ public class ReminderControllerTest extends RestDocsTestSupport {
     void setup() {
         given(jwtTokenProvider.getPayload(any(String.class)))
                 .willReturn("1");
+    }
+
+    @DisplayName("리마인더를 추가한다")
+    @Test
+    void save() throws Exception {
+        String body = objectMapper.writeValueAsString(
+                new ReminderRequest(1L, LocalDateTime.now().plusDays(2))
+        );
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(REMINDER_API_URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
+                        ),
+                        requestFields(
+                                fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("리마인더할 메세지 아이디"),
+                                fieldWithPath("reminderDate").type(JsonFieldType.STRING).description("리마인더할 날짜")
+                        )
+                ));
     }
 
     @DisplayName("리마인더를 조회한다")

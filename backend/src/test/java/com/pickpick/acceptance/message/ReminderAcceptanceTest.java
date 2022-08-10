@@ -25,6 +25,16 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     private static final String REMINDER_API_URL = "/api/reminders";
 
     @Test
+    void 리마인더_생성() {
+        // given & when
+        ExtractableResponse<Response> response = postWithCreateToken(REMINDER_API_URL,
+                Map.of("messageId", 1, "reminderDate", "2022-08-10T19:21:55"), 1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.CREATED);
+    }
+
+    @Test
     void 멤버_ID_2번으로_리마인더_목록_조회() {
         // given
         Map<String, Object> request = Map.of("reminderId", "");
