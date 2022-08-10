@@ -28,11 +28,11 @@ function SearchForm({ channelId }: Props) {
 
   return (
     <Dropdown>
-      {({ isDropdownOpened, handleToggleDropdown }) => (
+      {({ isDropdownOpened, handleOpenDropdown }) => (
         <Styled.Container onSubmit={handleSubmitSearchKeyword}>
           <SearchInput
             placeholder="검색 할 키워드를 입력해주세요."
-            onFocus={handleToggleDropdown}
+            onFocus={handleOpenDropdown}
             onChange={handleChangeSearchKeyword}
             value={searchKeyword}
           >
