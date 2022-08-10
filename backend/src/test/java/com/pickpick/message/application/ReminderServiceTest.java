@@ -7,14 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.QuerydslConfig;
+import com.pickpick.exception.message.ReminderDeleteFailureException;
+import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
-import com.pickpick.message.ui.dto.ReminderRequest;
-import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import java.time.LocalDateTime;
@@ -144,6 +145,37 @@ class ReminderServiceTest {
                 () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
                 () -> assertThat(response.isLast()).isFalse()
         );
+    }
+
+    @DisplayName("리마인더 수정")
+    @Test
+    void update() {
+        // given
+        LocalDateTime updateTime = LocalDateTime.now().plusDays(1);
+        long memberId = 1L;
+        long messageId = 2L;
+
+        // when
+        reminderService.update(memberId, new ReminderRequest(messageId, updateTime));
+
+        // then
+        Optional<Reminder> expected = reminders.findByMessageIdAndMemberId(messageId, memberId);
+
+        assertAll(
+                () -> assertThat(expected).isPresent(),
+                () -> assertThat(expected.get().getRemindDate()).isEqualTo(updateTime)
+        );
+    }
+
+    @DisplayName("다른 사용자의 리마인더 수정시 예외")
+    @Test
+    void updateOtherMembers() {
+        // given
+        ReminderRequest request = new ReminderRequest(1L, LocalDateTime.now().plusDays(1));
+
+        // when & then
+        assertThatThrownBy(() -> reminderService.update(1L, request))
+                .isInstanceOf(ReminderUpdateFailureException.class);
     }
 
     @DisplayName("리마인더 삭제")

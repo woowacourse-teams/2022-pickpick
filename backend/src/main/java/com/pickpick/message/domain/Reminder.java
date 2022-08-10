@@ -41,4 +41,8 @@ public class Reminder {
         this.message = message;
         this.remindDate = remindDate;
     }
+
+    public void updateRemindDate(final LocalDateTime remindDate) {
+        this.remindDate = remindDate;
+    }
 }

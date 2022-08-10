@@ -59,8 +59,8 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
                         ),
                         requestFields(
-                                fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("리마인더할 메세지 아이디"),
-                                fieldWithPath("reminderDate").type(JsonFieldType.STRING).description("리마인더할 날짜")
+                                fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("리마인드할 메세지 아이디"),
+                                fieldWithPath("reminderDate").type(JsonFieldType.STRING).description("리마인드할 날짜")
                         )
                 ));
     }
@@ -97,7 +97,32 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                                         .description("메시지 수정 날짜"),
                                 fieldWithPath("reminders.[].remindDate").type(JsonFieldType.STRING)
                                         .description("리마인드 날짜"),
-                                fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 리마인드 메시지 여부")
+                                fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 리마인더 메시지 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("리마인더를 수정한다")
+    @Test
+    void update() throws Exception {
+        String body = objectMapper.writeValueAsString(
+                new ReminderRequest(2L, LocalDateTime.now().plusDays(2))
+        );
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(REMINDER_API_URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
+                        ),
+                        requestFields(
+                                fieldWithPath("messageId").type(JsonFieldType.NUMBER)
+                                        .description("수정 예정인 리마인더의 메세지 아이디"),
+                                fieldWithPath("reminderDate").type(JsonFieldType.STRING).description("수정할 날짜")
                         )
                 ));
     }
@@ -118,7 +143,7 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
                         ),
                         requestParameters(
-                                parameterWithName("messageId").description("리마인더 삭제할 메세지 아이디")
+                                parameterWithName("messageId").description("삭제 예정인 리마인더의 메세지 아이디")
                         )
                 ));
     }

@@ -9,6 +9,7 @@ import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -120,6 +121,30 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
                 .stream()
                 .map(ReminderResponse::getId)
                 .collect(Collectors.toList());
+    }
+
+    @Test
+    void 리마인더_정상_수정() {
+        // given
+        Map<String, Object> request = Map.of("messageId", "2", "reminderDate", LocalDateTime.now().toString());
+
+        // when
+        ExtractableResponse<Response> response = putWithCreateToken(REMINDER_API_URL, request, 1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+    }
+
+    @Test
+    void 사용자에게_존재하지_않는_리마인더_수정() {
+        // given
+        Map<String, Object> request = Map.of("messageId", "1", "reminderDate", LocalDateTime.now().toString());
+
+        // when
+        ExtractableResponse<Response> response = putWithCreateToken(REMINDER_API_URL, request, 1L);
+
+        // then
+        상태코드_확인(response, HttpStatus.BAD_REQUEST);
     }
 
     @Test
