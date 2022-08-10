@@ -5,6 +5,7 @@ import routes from "./Routes";
 import { QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import queryClient from "./queryClient";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 function App() {
   const { handleError } = useApiError();
@@ -26,6 +27,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       {element}
       <Snackbar />
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
     </QueryClientProvider>
   );
 }
