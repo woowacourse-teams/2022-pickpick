@@ -28,6 +28,7 @@ public class MessageCreatedService implements SlackEventService {
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
     private static final String CHANNEL = "channel";
+    private static final String THREAD_TIMESTAMP = "thread_ts";
 
     private final MessageRepository messages;
     private final MemberRepository members;
@@ -44,6 +45,10 @@ public class MessageCreatedService implements SlackEventService {
 
     @Override
     public void execute(final Map<String, Object> requestBody) {
+        if (isReplyEvent(requestBody)) {
+            return;
+        }
+
         SlackMessageDto slackMessageDto = convert(requestBody);
 
         String memberSlackId = slackMessageDto.getMemberSlackId();
@@ -56,6 +61,12 @@ public class MessageCreatedService implements SlackEventService {
                 .orElseGet(() -> createChannel(channelSlackId));
 
         messages.save(slackMessageDto.toEntity(member, channel));
+    }
+
+    private boolean isReplyEvent(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+
+        return event.containsKey(THREAD_TIMESTAMP);
     }
 
     private Channel createChannel(final String channelSlackId) {
@@ -78,7 +89,7 @@ public class MessageCreatedService implements SlackEventService {
     }
 
     private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
         return new SlackMessageDto(
                 (String) event.get(USER),
