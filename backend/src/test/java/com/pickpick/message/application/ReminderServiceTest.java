@@ -4,10 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.QuerydslConfig;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
+import com.pickpick.exception.message.ReminderUpdateFailureException;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.message.domain.Message;
+import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import java.time.LocalDateTime;
@@ -40,6 +48,15 @@ class ReminderServiceTest {
     private ReminderService reminderService;
 
     @Autowired
+    private MemberRepository members;
+
+    @Autowired
+    private MessageRepository messages;
+
+    @Autowired
+    private ChannelRepository channels;
+
+    @Autowired
     private ReminderRepository reminders;
 
     private static Stream<Arguments> parameterProvider() {
@@ -64,6 +81,33 @@ class ReminderServiceTest {
     @AfterAll
     static void closeMock() {
         localDateTimeMockedStatic.close();
+    }
+
+    @DisplayName("리마인더를 생성한다")
+    @Sql("/truncate.sql")
+    @Test
+    void save() {
+        // given
+        Member member = new Member("U1234", "사용자", "user.png");
+        members.save(member);
+        Channel channel = new Channel("C1234", "기본채널");
+        channels.save(channel);
+        Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
+        messages.save(message);
+
+        ReminderRequest reminderRequest = new ReminderRequest(message.getId(), LocalDateTime.now().plusDays(1));
+        int beforeSize = findReminderSize(member);
+
+        // when
+        reminderService.save(member.getId(), reminderRequest);
+
+        // then
+        int afterSize = findReminderSize(member);
+        assertThat(beforeSize + 1).isEqualTo(afterSize);
+    }
+
+    private int findReminderSize(final Member member) {
+        return reminderService.find(null, member.getId()).getReminders().size();
     }
 
     @DisplayName("리마인더 조회")
@@ -101,6 +145,37 @@ class ReminderServiceTest {
                 () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
                 () -> assertThat(response.isLast()).isFalse()
         );
+    }
+
+    @DisplayName("리마인더 수정")
+    @Test
+    void update() {
+        // given
+        LocalDateTime updateTime = LocalDateTime.now().plusDays(1);
+        long memberId = 1L;
+        long messageId = 2L;
+
+        // when
+        reminderService.update(memberId, new ReminderRequest(messageId, updateTime));
+
+        // then
+        Optional<Reminder> expected = reminders.findByMessageIdAndMemberId(messageId, memberId);
+
+        assertAll(
+                () -> assertThat(expected).isPresent(),
+                () -> assertThat(expected.get().getRemindDate()).isEqualTo(updateTime)
+        );
+    }
+
+    @DisplayName("다른 사용자의 리마인더 수정시 예외")
+    @Test
+    void updateOtherMembers() {
+        // given
+        ReminderRequest request = new ReminderRequest(1L, LocalDateTime.now().plusDays(1));
+
+        // when & then
+        assertThatThrownBy(() -> reminderService.update(1L, request))
+                .isInstanceOf(ReminderUpdateFailureException.class);
     }
 
     @DisplayName("리마인더 삭제")

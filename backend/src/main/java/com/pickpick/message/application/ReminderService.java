@@ -1,10 +1,18 @@
 package com.pickpick.message.application;
 
+import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
+import com.pickpick.exception.message.ReminderUpdateFailureException;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.message.domain.Message;
+import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,11 +31,28 @@ public class ReminderService {
     private static final int COUNT = 20;
 
     private final ReminderRepository reminders;
+    private final MemberRepository members;
+    private final MessageRepository messages;
     private final JPAQueryFactory jpaQueryFactory;
 
-    public ReminderService(final ReminderRepository reminders, final JPAQueryFactory jpaQueryFactory) {
+    public ReminderService(final ReminderRepository reminders, final MemberRepository members,
+                           final MessageRepository messages, final JPAQueryFactory jpaQueryFactory) {
         this.reminders = reminders;
+        this.members = members;
+        this.messages = messages;
         this.jpaQueryFactory = jpaQueryFactory;
+    }
+
+    @Transactional
+    public void save(final Long memberId, final ReminderRequest reminderRequest) {
+        Member member = members.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        Message message = messages.findById(reminderRequest.getMessageId())
+                .orElseThrow(() -> new MessageNotFoundException(reminderRequest.getMessageId()));
+
+        Reminder reminder = new Reminder(member, message, reminderRequest.getReminderDate());
+        reminders.save(reminder);
     }
 
     public ReminderResponses find(final Long reminderId, final Long memberId) {
@@ -88,6 +113,14 @@ public class ReminderService {
         LocalDateTime remindDate = targetReminder.getRemindDate();
 
         return QReminder.reminder.remindDate.after(remindDate);
+    }
+
+    @Transactional
+    public void update(final Long memberId, final ReminderRequest reminderRequest) {
+        Reminder reminder = reminders.findByMessageIdAndMemberId(reminderRequest.getMessageId(), memberId)
+                .orElseThrow(() -> new ReminderUpdateFailureException(reminderRequest.getMessageId(), memberId));
+
+        reminder.updateRemindDate(reminderRequest.getReminderDate());
     }
 
     @Transactional
