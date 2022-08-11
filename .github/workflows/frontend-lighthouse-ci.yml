@@ -37,7 +37,7 @@ jobs:
         id: format_lighthouse_score
         uses: actions/github-script@v3
         with:
-          github-token: ${{secrets.LHCI_PERMISSION_TOKEN}}
+          github-token: ${{ secrets.LHCI_PERMISSION_TOKEN }}
           script: |
 
             const fs = require('fs');
