@@ -28,7 +28,7 @@ function AddChannel() {
 
   return (
     <Styled.Container>
-      <h1>채널 추가</h1>
+      <h1>채널 추가test</h1>
       <p>추가하고 싶으신 채널을 선택해주세요</p>
       <FlexColumn gap="50px" alignItems="end">
         <Styled.ChannelListContainer>
