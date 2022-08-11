@@ -1,4 +1,4 @@
-name: 프론트엔드 Google Lighthouse 성능 측정 자동화
+name: 줍줍 프론트엔드 Google Lighthouse 성능 측정 자동화
 on:
   pull_request:
     branches:
