@@ -1,7 +1,9 @@
 package com.pickpick.message.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -38,5 +40,24 @@ public class MessageResponse {
         this.postedDate = postedDate;
         this.modifiedDate = modifiedDate;
         this.bookmarked = isBookmarked;
+    }
+
+    @QueryProjection
+    public MessageResponse(final Long id,
+                           final Long memberId,
+                           final String username,
+                           final String userThumbnail,
+                           final String text,
+                           final LocalDateTime postedDate,
+                           final LocalDateTime modifiedDate,
+                           final Long bookmarkId) {
+        this.id = id;
+        this.memberId = memberId;
+        this.username = username;
+        this.userThumbnail = userThumbnail;
+        this.text = text;
+        this.postedDate = postedDate;
+        this.modifiedDate = modifiedDate;
+        this.bookmarked = !Objects.isNull(bookmarkId);
     }
 }
