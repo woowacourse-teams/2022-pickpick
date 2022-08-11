@@ -1,0 +1,107 @@
+name: 줍줍 프론트엔드 Google Lighthouse 성능 측정 자동화
+on:
+  pull_request:
+    branches:
+      - main
+      - release/*
+      - develop
+    paths: "frontend/**"
+
+jobs:
+  lhci:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: npm install, build
+        run: |
+          npm install
+          npm run build
+        working-directory: ${{ env.working-directory }}
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.8.x
+          lhci autorun
+        working-directory: ${{ env.working-directory }}
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync("./frontend/lhci_reports/manifest.json"));
+            let comments = "";
+            results.forEach((result) => {
+              const { summary, jsonPath } = result;
+              const details = JSON.parse(fs.readFileSync(jsonPath));
+              const { audits } = details;
+              
+              const formatResult = (res) => Math.round(res * 100);
+              Object.keys(summary).forEach(
+                (key) => (summary[key] = formatResult(summary[key]))
+              );
+
+            const score = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
+              
+            const comment = [
+                `⚡️ 줍줍 Lighthouse 성능 측정 결과`,
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${score(summary.performance)} Performance | ${summary.performance} |`,
+                `| ${score(summary.accessibility)} Accessibility | ${summary.accessibility} |`,
+                `| ${score(summary["best-practices"])} Best-Practices | ${summary["best-practices"]} |`,
+                `| ${score(summary.seo)} SEO | ${summary.seo} |`,
+                `| ${score(summary.pwa)} PWA | ${summary.pwa} |`
+              ].join("\n");
+
+            const detail = [
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${score(
+                  audits["first-contentful-paint"].score * 100
+                )} First Contentful Paint | ${
+                  audits["first-contentful-paint"].displayValue
+                } |`,
+                `| ${score(
+                  audits["largest-contentful-paint"].score * 100
+                )} Largest Contentful Paint | ${
+                  audits["largest-contentful-paint"].displayValue
+                } |`,
+                `| ${score(
+                  audits["first-meaningful-paint"].score * 100
+                )} First Meaningful Paint | ${
+                  audits["first-meaningful-paint"].displayValue
+                } |`,
+                `| ${score(
+                  audits["speed-index"].score * 100
+                )} Speed Index | ${
+                  audits["speed-index"].displayValue
+                } |`,
+                `| ${score(
+                  audits["total-blocking-time"].score * 100
+                )} Total Blocking Time | ${
+                  audits["total-blocking-time"].displayValue
+                } |`,
+              ].join("\n");
+              
+              comments += comment + "\n" +"\n"+ detail + "\n";
+            });
+            core.setOutput('comments', comments)
+
+      - name: comment PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ${{ steps.format_lighthouse_score.outputs.comments}}
