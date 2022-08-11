@@ -2,7 +2,7 @@ package com.pickpick.slackevent.application.message;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.SlackClientException;
+import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -69,7 +69,7 @@ public class MessageCreatedService implements SlackEventService {
 
             return channel;
         } catch (IOException | SlackApiException e) {
-            throw new SlackClientException(e);
+            throw new SlackApiCallException(e);
         }
     }
 
