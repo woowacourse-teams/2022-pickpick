@@ -145,7 +145,10 @@ class ReminderServiceTest {
     @Test
     void update() {
         // given
-        LocalDateTime updateTime = LocalDateTime.now().plusDays(1);
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        LocalDateTime updateTime = LocalDateTime.now(clock).plusDays(1);
         long memberId = 1L;
         long messageId = 2L;
 
@@ -165,7 +168,10 @@ class ReminderServiceTest {
     @Test
     void updateOtherMembers() {
         // given
-        ReminderRequest request = new ReminderRequest(1L, LocalDateTime.now().plusDays(1));
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        ReminderRequest request = new ReminderRequest(1L, LocalDateTime.now(clock).plusDays(1));
 
         // when & then
         assertThatThrownBy(() -> reminderService.update(1L, request))
