@@ -75,9 +75,9 @@ public class MessageCreatedService implements SlackEventService {
                     request -> request.channel(channelSlackId)
             ).getChannel();
 
-            Channel channel = channels.save(toChannel(conversation));
+            Channel channel = toChannel(conversation);
 
-            return channel;
+            return channels.save(channel);
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(e);
         }
