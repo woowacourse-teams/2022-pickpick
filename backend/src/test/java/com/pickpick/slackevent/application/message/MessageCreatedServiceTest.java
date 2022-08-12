@@ -53,6 +53,16 @@ class MessageCreatedServiceTest {
                     "ts", "1234567890",
                     "client_msg_id", SAMPLE_MESSAGE.getSlackId())
             );
+    private static final Map<String, Object> MESSAGE_REPLIED_REQUEST =
+            Map.of("event", Map.of(
+                    "type", "message",
+                    "channel", SAMPLE_CHANNEL.getSlackId(),
+                    "text", SAMPLE_MESSAGE.getText(),
+                    "user", SAMPLE_MEMBER.getSlackId(),
+                    "ts", "1234567890",
+                    "client_msg_id", SAMPLE_MESSAGE.getSlackId(),
+                    "thread_ts", "1234599999")
+            );
     private static final int FIRST_INDEX = 0;
 
     @Autowired
@@ -129,5 +139,21 @@ class MessageCreatedServiceTest {
                 () -> assertThat(channelAfterSave).isPresent(),
                 () -> assertThat(messageAfterSave).isPresent()
         );
+    }
+    
+    @DisplayName("메시지 댓글 생성 이벤트는 전달되어도 내용을 저장하지 않는다")
+    @Test
+    void doNotSaveReplyMessage() {
+        //given
+        members.save(SAMPLE_MEMBER);
+        channels.save(SAMPLE_CHANNEL);
+
+        // when
+        messageCreatedService.execute(MESSAGE_REPLIED_REQUEST);
+
+        // then
+        Optional<Message> message = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+
+        assertThat(message).isEmpty();
     }
 }
