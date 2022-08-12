@@ -53,8 +53,7 @@ class AuthServiceTest {
     @Test
     void login() throws SlackApiException, IOException {
         // given
-        Member member = new Member("slackId", "username", "thumbnail.png");
-        members.save(member);
+        Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .willReturn(generateOAuthV2AccessResponse());

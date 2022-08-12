@@ -10,7 +10,7 @@ public interface MemberRepository extends Repository<Member, Long> {
 
     Optional<Member> findBySlackId(String slackId);
 
-    void save(Member member);
+    Member save(Member member);
 
     void saveAll(Iterable<Member> members);
 
