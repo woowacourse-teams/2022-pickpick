@@ -27,8 +27,7 @@ class ChannelRenameServiceTest {
     @Test
     void channelNameShouldBeChangedOnChannelRenameEvent() {
         // given
-        Channel channel = new Channel("slackId", "channelName");
-        channels.save(channel);
+        Channel channel = channels.save(new Channel("slackId", "channelName"));
 
         String expectedChannelName = "변경된 채널 이름";
         Map<String, Object> request = Map.of(

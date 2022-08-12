@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.slackevent.application.member.MemberChangedService;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -33,8 +32,7 @@ class MemberChangedServiceTest {
     @ParameterizedTest(name = "{1}이 들어오는 경우 {2}")
     void changedUsername(final String realName, final String displayName, final String expectedName) {
         // given
-        Member member = new Member(SLACK_ID, "사용자", "test.png");
-        members.save(member);
+        Member member = members.save(new Member(SLACK_ID, "사용자", "test.png"));
 
         Map<String, Object> request = memberChangedEvent(realName, displayName, "test.png");
 
@@ -54,8 +52,7 @@ class MemberChangedServiceTest {
     @Test
     void changedThumbnailUrl() {
         // given
-        Member member = new Member(SLACK_ID, "사용자", "test.png");
-        members.save(member);
+        Member member = members.save(new Member(SLACK_ID, "사용자", "test.png"));
 
         String thumbnailUrl = "new_test.png";
         Map<String, Object> request = memberChangedEvent("사용자", "표시 이름", thumbnailUrl);
