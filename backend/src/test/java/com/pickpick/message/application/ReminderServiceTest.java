@@ -3,10 +3,10 @@ package com.pickpick.message.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.config.QuerydslConfig;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.member.domain.Member;
@@ -18,31 +18,26 @@ import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/reminder.sql"})
-@Import(value = {ReminderService.class, QuerydslConfig.class})
-@DataJpaTest
+@SpringBootTest
 class ReminderServiceTest {
-
-    private static MockedStatic<LocalDateTime> localDateTimeMockedStatic;
 
     @Autowired
     private ReminderService reminderService;
@@ -59,6 +54,9 @@ class ReminderServiceTest {
     @Autowired
     private ReminderRepository reminders;
 
+    @SpyBean
+    private Clock clock;
+
     private static Stream<Arguments> parameterProvider() {
         return Stream.of(
                 Arguments.arguments("멤버 ID 2번으로 리마인더를 조회한다", null, 2L, List.of(1L), true),
@@ -69,18 +67,6 @@ class ReminderServiceTest {
                         List.of(3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L,
                                 22L), false)
         );
-    }
-
-    @BeforeAll
-    static void setMock() {
-        localDateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
-        LocalDateTime currentLocalDate = LocalDateTime.of(2022, 8, 10, 0, 0, 0);
-        localDateTimeMockedStatic.when(LocalDateTime::now).thenReturn(currentLocalDate);
-    }
-
-    @AfterAll
-    static void closeMock() {
-        localDateTimeMockedStatic.close();
     }
 
     @DisplayName("리마인더를 생성한다")
@@ -115,7 +101,11 @@ class ReminderServiceTest {
     @MethodSource("parameterProvider")
     void findReminders(final String subscription, final Long reminderId, final Long memberId,
                        final List<Long> expectedIds, final boolean expectedIsLast) {
-        // given & when
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        // when
         ReminderResponses response = reminderService.find(reminderId, memberId);
 
         // then
@@ -136,7 +126,11 @@ class ReminderServiceTest {
     @DisplayName("오늘 날짜보다 더 오래된 날짜에 리마인드한 내역은 조회되지 않는다.")
     @Test
     void findWithoutOldRemindDate() {
-        // given & when
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        // when
         ReminderResponses response = reminderService.find(null, 1L);
 
         // then

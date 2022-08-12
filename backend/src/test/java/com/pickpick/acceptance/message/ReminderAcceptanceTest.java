@@ -3,18 +3,22 @@ package com.pickpick.acceptance.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -24,6 +28,9 @@ import org.springframework.test.context.jdbc.Sql;
 public class ReminderAcceptanceTest extends AcceptanceTest {
 
     private static final String REMINDER_API_URL = "/api/reminders";
+
+    @SpyBean
+    private Clock clock;
 
     @Test
     void 리마인더_생성() {
@@ -38,6 +45,9 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 멤버_ID_2번으로_리마인더_목록_조회() {
         // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
         Map<String, Object> request = Map.of("reminderId", "");
         List<Long> expectedIds = List.of(1L);
         boolean expectedIsLast = true;
@@ -58,6 +68,9 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 멤버_ID_1번이고_리마인더_ID_10번일_때_리마인더_목록_조회() {
         // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
         Map<String, Object> request = Map.of("reminderId", "10");
         List<Long> expectedIds = List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L);
         boolean expectedIsLast = true;
@@ -78,6 +91,9 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_조회_시_가장_최신인_리마인더가_포함된다면_isLast가_True다() {
         // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
         Map<String, Object> request = Map.of("reminderId", "");
         List<Long> expectedIds = List.of(1L);
         boolean expectedIsLast = true;
@@ -98,6 +114,9 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_조회_시_가장_최신인_리마인더가_포함되지_않는다면_isLast가_False다() {
         // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
         Map<String, Object> request = Map.of("reminderId", "2");
         List<Long> expectedIds = List.of(
                 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L);

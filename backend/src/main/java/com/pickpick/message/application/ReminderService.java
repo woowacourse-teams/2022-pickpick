@@ -17,6 +17,7 @@ import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -34,13 +35,15 @@ public class ReminderService {
     private final MemberRepository members;
     private final MessageRepository messages;
     private final JPAQueryFactory jpaQueryFactory;
+    private final Clock clock;
 
     public ReminderService(final ReminderRepository reminders, final MemberRepository members,
-                           final MessageRepository messages, final JPAQueryFactory jpaQueryFactory) {
+                           final MessageRepository messages, final JPAQueryFactory jpaQueryFactory, final Clock clock) {
         this.reminders = reminders;
         this.members = members;
         this.messages = messages;
         this.jpaQueryFactory = jpaQueryFactory;
+        this.clock = clock;
     }
 
     @Transactional
@@ -83,7 +86,7 @@ public class ReminderService {
 
     private BooleanExpression remindDateCondition(final Long reminderId) {
         if (Objects.isNull(reminderId)) {
-            return QReminder.reminder.remindDate.after(LocalDateTime.now());
+            return QReminder.reminder.remindDate.after(LocalDateTime.now(clock));
         }
 
         Reminder reminder = reminders.findById(reminderId)

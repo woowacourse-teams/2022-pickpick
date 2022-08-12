@@ -14,12 +14,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.config.RestDocsTestSupport;
 import com.pickpick.message.ui.dto.ReminderRequest;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.jdbc.Sql;
@@ -31,6 +34,9 @@ import org.springframework.util.MultiValueMap;
 public class ReminderControllerTest extends RestDocsTestSupport {
 
     private static final String REMINDER_API_URL = "/api/reminders";
+
+    @SpyBean
+    private Clock clock;
 
     @MockBean
     private JwtTokenProvider jwtTokenProvider;
@@ -68,6 +74,9 @@ public class ReminderControllerTest extends RestDocsTestSupport {
     @DisplayName("리마인더를 조회한다")
     @Test
     void find() throws Exception {
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
         mockMvc.perform(MockMvcRequestBuilders
                         .get(REMINDER_API_URL)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
