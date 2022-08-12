@@ -88,7 +88,7 @@ public class MessageService {
                 .leftJoin(QBookmark.bookmark)
                 .on(QMessage.message.id.eq(QBookmark.bookmark.message.id))
                 .leftJoin(QReminder.reminder)
-                .on(reminderCondition(memberId))
+                .on(remainReminder(memberId))
                 .where(meetAllConditions(channelIds, messageRequest))
                 .orderBy(arrangeDateByNeedPastMessage(needPastMessage))
                 .limit(messageCount)
@@ -116,7 +116,7 @@ public class MessageService {
                 QReminder.reminder.id);
     }
 
-    private BooleanExpression reminderCondition(final Long memberId) {
+    private BooleanExpression remainReminder(final Long memberId) {
         return QReminder.reminder.member.id.eq(memberId)
                 .and(QReminder.reminder.message.id.eq(QMessage.message.id))
                 .and(QReminder.reminder.remindDate.after(LocalDateTime.now(clock)));
