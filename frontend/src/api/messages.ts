@@ -26,11 +26,15 @@ export const getMessages =
       const { data } = await fetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
           !channelId || channelId === "main" ? "" : channelId
-        }&keyword=${keyword}&messageId=&needPastMessage=${true}&date=${
-          date ?? ""
         }`,
         {
           headers: { ...getPrivateHeaders() },
+          params: {
+            keyword: keyword ?? "",
+            messageId: "",
+            needPastMessage: true,
+            date: date ?? "",
+          },
         }
       );
 
@@ -46,9 +50,15 @@ export const getMessages =
     const { data } = await fetcher.get<ResponseMessages>(
       `${API_ENDPOINT.MESSAGES}?channelIds=${
         !channelId || channelId === "main" ? "" : channelId
-      }&keyword=${keyword}&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
+      }`,
       {
         headers: { ...getPrivateHeaders() },
+        params: {
+          keyword,
+          messageId,
+          needPastMessage,
+          date: currentDate,
+        },
       }
     );
 
