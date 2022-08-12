@@ -65,7 +65,7 @@ public class MessageResponse {
         this.text = text;
         this.postedDate = postedDate;
         this.modifiedDate = modifiedDate;
-        this.bookmarked = !Objects.isNull(bookmarkId);
-        this.setReminded = !Objects.isNull(reminderId);
+        this.bookmarked = Objects.nonNull(bookmarkId);
+        this.setReminded = Objects.nonNull(reminderId);
     }
 }
