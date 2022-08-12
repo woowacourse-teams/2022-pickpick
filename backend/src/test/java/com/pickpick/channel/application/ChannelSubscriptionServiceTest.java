@@ -230,8 +230,7 @@ class ChannelSubscriptionServiceTest {
     }
 
     private Member saveMember() {
-        Member member = new Member("TESTMEMBER", "테스트 계정", "test.png");
-        members.save(member);
+        Member member = members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
         return member;
     }
 
