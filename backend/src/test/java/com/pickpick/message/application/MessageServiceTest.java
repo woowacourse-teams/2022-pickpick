@@ -2,11 +2,13 @@ package com.pickpick.message.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
-import com.pickpick.message.application.MessageService;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,6 +36,9 @@ class MessageServiceTest {
 
     @Autowired
     private MessageService messageService;
+
+    @SpyBean
+    private Clock clock;
 
     @DisplayName("메시지 조회 요청에 따른 메시지가 응답된다")
     @MethodSource("slackMessageRequest")
@@ -95,5 +101,40 @@ class MessageServiceTest {
 
         // then
         assertThat(hasEmptyMessageResponse).isFalse();
+    }
+
+    @DisplayName("메시지 조회 시 리마인더 여부 함께 조회된다")
+    @MethodSource("messageRequestWithReminder")
+    @ParameterizedTest(name = "{0}")
+    void findSetRemindedMessage(final String description, final String nowDate, final MessageRequest messageRequest,
+                                final boolean expected) {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse(nowDate));
+
+        // when
+        MessageResponse message = messageService.find(MEMBER_ID, messageRequest)
+                .getMessages()
+                .get(0);
+
+        // then
+        assertThat(message.isSetReminded()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> messageRequestWithReminder() {
+        return Stream.of(
+                Arguments.of("현재 시간보다 오래된 리마인더가 존재하면 isSetReminded가 false이다",
+                        "2022-08-13T00:00:00Z",
+                        new MessageRequest("", "", List.of(5L), true, null, 1),
+                        false),
+                Arguments.of("현재 시간보다 최신인 리마인더가 존재하면 isSetReminded가 true이다",
+                        "2022-08-10T00:00:00Z",
+                        new MessageRequest("", "", List.of(5L), true, null, 1),
+                        true),
+                Arguments.of("현재 시간과 동일한 리마인더가 존재하면 isSetReminded가 false이다",
+                        "2022-08-12T14:20:00Z",
+                        new MessageRequest("", "", List.of(5L), true, null, 1),
+                        false)
+        );
     }
 }
