@@ -236,8 +236,7 @@ class ChannelSubscriptionServiceTest {
     }
 
     private Channel saveChannel(final String slackId, final String channelName) {
-        Channel channel = new Channel(slackId, channelName);
-        channels.save(channel);
+        Channel channel = channels.save(new Channel(slackId, channelName));
         return channel;
     }
 

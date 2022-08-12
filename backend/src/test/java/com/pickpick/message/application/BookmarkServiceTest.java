@@ -65,8 +65,7 @@ class BookmarkServiceTest {
         // given
         Member member = new Member("U1234", "사용자", "user.png");
         members.save(member);
-        Channel channel = new Channel("C1234", "기본채널");
-        channels.save(channel);
+        Channel channel = channels.save(new Channel("C1234", "기본채널"));
         Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
         messages.save(message);
 
@@ -114,8 +113,7 @@ class BookmarkServiceTest {
         // given
         Member member = new Member("U1234", "사용자", "user.png");
         members.save(member);
-        Channel channel = new Channel("C1234", "기본채널");
-        channels.save(channel);
+        Channel channel = channels.save(new Channel("C1234", "기본채널"));
         Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
         messages.save(message);
         Bookmark bookmark = new Bookmark(member, message);
@@ -137,8 +135,7 @@ class BookmarkServiceTest {
         members.save(owner);
         Member other = new Member("U1235", "다른 사용자", "user.png");
         members.save(other);
-        Channel channel = new Channel("C1234", "기본채널");
-        channels.save(channel);
+        Channel channel = channels.save(new Channel("C1234", "기본채널"));
         Message message = new Message("M1234", "메시지", owner, channel, LocalDateTime.now(), LocalDateTime.now());
         messages.save(message);
         Bookmark bookmark = new Bookmark(owner, message);

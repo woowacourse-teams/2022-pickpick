@@ -6,7 +6,7 @@ import org.springframework.data.repository.Repository;
 
 public interface ChannelRepository extends Repository<Channel, Long> {
 
-    void save(Channel channel);
+    Channel save(Channel channel);
 
     List<Channel> findAll();
 
