@@ -25,6 +25,7 @@ jobs:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
         with:
+          fetch-depth: 0
           token: ${{ secrets.SUBMODULE_TOKEN }}
           submodules: recursive
 
