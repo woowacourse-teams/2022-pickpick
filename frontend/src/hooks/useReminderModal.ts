@@ -50,26 +50,34 @@ function useReminderModal() {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
 
   const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
-  const [checkedHour, setCheckedHour] = useState(parsedHour.toString());
-  const [checkedMinute, setCheckedMinute] = useState(parsedMinute.toString());
+  const [checkedHour, setCheckedHour] = useState(`${parsedHour.toString()}시`);
+  const [checkedMinute, setCheckedMinute] = useState(
+    `${parsedMinute.toString()}분`
+  );
 
-  const [checkedYear, setCheckedYear] = useState(year.toString());
-  const [checkedMonth, setCheckedMonth] = useState(month.toString());
-  const [checkedDate, setCheckedDate] = useState(date.toString());
+  const [checkedYear, setCheckedYear] = useState(`${year.toString()}년`);
+  const [checkedMonth, setCheckedMonth] = useState(`${month.toString()}월`);
+  const [checkedDate, setCheckedDate] = useState(`${date.toString()}일`);
 
   const meridiems = ["오전", "오후"];
-  const hours = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
+  const hours = Array.from(
+    { length: 12 },
+    (_, index) => `${(index + 1).toString()}시`
   );
-  const minutes = Array.from({ length: 6 }, (_, index) =>
-    (index * 10).toString()
+  const minutes = Array.from(
+    { length: 6 },
+    (_, index) => `${(index * 10).toString()}분`
   );
-  const years = [year, year + 1, year + 2].map((year) => year.toString());
-  const months = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
+  const years = [year, year + 1, year + 2].map(
+    (year) => `${year.toString()}년`
   );
-  const dates = Array.from({ length: lastDate }, (_, index) =>
-    (index + 1).toString()
+  const months = Array.from(
+    { length: 12 },
+    (_, index) => `${(index + 1).toString()}월`
+  );
+  const dates = Array.from(
+    { length: lastDate },
+    (_, index) => `${(index + 1).toString()}일`
   );
 
   const handleChangeMeridiem = (event: ChangeEvent<HTMLInputElement>) => {
@@ -121,21 +129,21 @@ function useReminderModal() {
   useEffect(() => {
     if (yearRef.current) {
       yearRef.current.scrollTo({
-        top: (Number(checkedYear) - year) * 22,
+        top: (Number(checkedYear.replace("년", "")) - year) * 22,
         behavior: "smooth",
       });
     }
 
     if (monthRef.current) {
       monthRef.current.scrollTo({
-        top: (Number(checkedMonth) - 1) * 22.5,
+        top: (Number(checkedMonth.replace("월", "")) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (dateRef.current) {
       dateRef.current.scrollTo({
-        top: (Number(checkedDate) - 1) * 22.5,
+        top: (Number(checkedDate.replace("일", "")) - 1) * 22.5,
         behavior: "smooth",
       });
     }
@@ -149,14 +157,14 @@ function useReminderModal() {
 
     if (hourRef.current) {
       hourRef.current.scrollTo({
-        top: (Number(checkedHour) - 1) * 22.5,
+        top: (Number(checkedHour.replace("시", "")) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (minuteRef.current) {
       minuteRef.current.scrollTo({
-        top: (Number(checkedMinute) / 10) * 22.7,
+        top: (Number(checkedMinute.replace("분", "")) / 10) * 22.7,
         behavior: "smooth",
       });
     }
