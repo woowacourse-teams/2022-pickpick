@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import { StyledDefaultProps } from "@src/@types/shared";
+import styled, { css } from "styled-components";
 
 export const Container = styled.input`
     appearance: none;
@@ -20,7 +21,6 @@ export const Container = styled.input`
     z-index: 2;
     width: 24px;
     height: 24px;
-    background-color:black;
     left: 4px;
     top: 4px;
     border-radius: 50%;
@@ -29,14 +29,19 @@ export const Container = styled.input`
     word-spacing: 37px;
     color: #fff;
     white-space: nowrap;
+   
     transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.TEXT.DEFAULT};
+      background-color: ${theme.COLOR.CONTAINER.DEFAULT};
+    `}
     }
 
   &:checked{
     background-color:grey;
     &::before{
         left: 32px;
-        background-color:white;
+
         content: url('https://shivanarrthine.com/public/images/icons/sun.svg');
       }|
   }

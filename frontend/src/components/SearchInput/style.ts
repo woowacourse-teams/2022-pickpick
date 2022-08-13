@@ -8,6 +8,7 @@ export const Input = styled.input`
   outline: none;
   border: none;
   width: 100%;
+  background-color: transparent;
 
   ${({ theme }: StyledDefaultProps) => css`
     color: ${theme.COLOR.TEXT.DEFAULT};
