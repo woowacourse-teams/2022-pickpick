@@ -12,7 +12,6 @@ export const Container = styled.input`
     outline: none;
     border: none;
     cursor: pointer;
-    background-color:grey;
 
     &::before { 
     content: url('https://shivanarrthine.com/public/images/icons/moon.svg');
@@ -38,10 +37,8 @@ export const Container = styled.input`
     }
 
   &:checked{
-    background-color:grey;
     &::before{
         left: 32px;
-
         content: url('https://shivanarrthine.com/public/images/icons/sun.svg');
       }|
   }
