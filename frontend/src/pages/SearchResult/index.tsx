@@ -19,28 +19,21 @@ function SearchResult() {
   const keyword = searchParams.get("keyword") ?? "";
   const channelIds = searchParams.get("channelIds") ?? "";
 
-  const {
-    data,
-    isLoading,
-    isSuccess,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery<ResponseMessages>(
-    QUERY_KEY.ALL_MESSAGES,
-    getMessages({
-      channelId: convertSeparatorToKey({
-        key: "&channelIds=",
-        separator: ",",
-        value: channelIds,
+  const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
+    useInfiniteQuery<ResponseMessages>(
+      QUERY_KEY.ALL_MESSAGES,
+      getMessages({
+        channelId: convertSeparatorToKey({
+          key: "&channelIds=",
+          separator: ",",
+          value: channelIds,
+        }),
+        keyword,
       }),
-      keyword,
-    }),
-    {
-      getNextPageParam: nextMessagesCallback,
-    }
-  );
+      {
+        getNextPageParam: nextMessagesCallback,
+      }
+    );
 
   const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
