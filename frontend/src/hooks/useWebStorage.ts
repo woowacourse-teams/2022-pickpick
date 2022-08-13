@@ -1,12 +1,17 @@
-type StorageKind = "LOCAL" | "SESSION";
+export const STORAGE_KIND = {
+  LOCAL: "LOCAL",
+  SESSION: "SESSION",
+} as const;
+
+type Storage = keyof typeof STORAGE_KIND;
 
 interface Props {
   key: string;
-  kind: StorageKind;
+  kind: Storage;
 }
 
 function useWebStorage<T>({ key, kind }: Props) {
-  const storage = kind === "LOCAL" ? localStorage : sessionStorage;
+  const storage = kind === STORAGE_KIND.LOCAL ? localStorage : sessionStorage;
 
   function get(): T {
     return JSON.parse(storage.getItem(key) ?? "[]");

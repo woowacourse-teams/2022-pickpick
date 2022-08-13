@@ -1,16 +1,30 @@
 import { useEffect, useState } from "react";
-import useWebStorage from "@src/hooks/useWebStorage";
-type Theme = "LIGHT" | "DARK";
+import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
 
-function useTheme() {
+export const THEME_KIND = {
+  LIGHT: "LIGHT",
+  DARK: "DARK",
+} as const;
+
+type Theme = keyof typeof THEME_KIND;
+
+interface ReturnType {
+  theme: Theme;
+  handleToggleTheme: () => void;
+}
+
+function useTheme(): ReturnType {
   const [getStoredTheme, setStoredTheme] = useWebStorage<Theme>({
     key: "theme",
-    kind: "LOCAL",
+    kind: STORAGE_KIND.LOCAL,
   });
-  const [theme, setTheme] = useState<Theme>(getStoredTheme() ?? "LIGHT");
+  const [theme, setTheme] = useState<Theme>(
+    getStoredTheme() ?? THEME_KIND.LIGHT
+  );
 
   const handleToggleTheme = () => {
-    const nextTheme = theme === "LIGHT" ? "DARK" : "LIGHT";
+    const nextTheme =
+      theme === THEME_KIND.LIGHT ? THEME_KIND.DARK : THEME_KIND.LIGHT;
     handleChangeTheme(nextTheme);
   };
 
@@ -21,7 +35,7 @@ function useTheme() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches)
-      handleChangeTheme("DARK");
+      handleChangeTheme(THEME_KIND.DARK);
   }, []);
 
   return { theme, handleToggleTheme };
