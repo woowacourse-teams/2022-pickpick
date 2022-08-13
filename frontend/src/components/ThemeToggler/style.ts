@@ -1,0 +1,43 @@
+import styled from "styled-components";
+
+export const Container = styled.input`
+    appearance: none;
+    width: 62px;
+    height: 32px;
+    display: inline-block;
+    position: relative;
+    border-radius: 50px;
+    overflow: hidden;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color:grey;
+
+    &::before { 
+    content: url('https://shivanarrthine.com/public/images/icons/moon.svg');
+    display: block;
+    position: absolute;
+    z-index: 2;
+    width: 24px;
+    height: 24px;
+    background-color:black;
+    left: 4px;
+    top: 4px;
+    border-radius: 50%;
+    text-indent: 4px;
+    line-height: 29px;
+    word-spacing: 37px;
+    color: #fff;
+    white-space: nowrap;
+    transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+    }
+
+  &:checked{
+    background-color:grey;
+    &::before{
+        left: 32px;
+        background-color:white;
+        content: url('https://shivanarrthine.com/public/images/icons/sun.svg');
+      }|
+  }
+`;
