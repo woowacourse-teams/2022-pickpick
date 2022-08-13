@@ -7,20 +7,20 @@ import {
 } from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
-export const getTimeStandard = (time: number): string => {
-  if (time < TIME.NOON) return `${TIME.AM} ${time}`;
-  if (time === TIME.NOON) return `${TIME.PM} ${TIME.NOON}`;
+export const getMeridiemTime = (time: number) => {
+  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time };
+  if (time === TIME.NOON) return { meridiem: TIME.PM, hour: TIME.NOON };
 
-  return `${TIME.PM} ${time - TIME.NOON}`;
+  return { meridiem: TIME.PM, hour: time - TIME.NOON };
 };
 
 export const parseTime = (date: string): string => {
   const dateInstance = new Date(date);
   const hour = dateInstance.getHours();
   const minute = dateInstance.getMinutes();
-  const timeStandard = getTimeStandard(Number(hour));
+  const { meridiem, hour: parsedHour } = getMeridiemTime(Number(hour));
 
-  return `${timeStandard}:${minute}`;
+  return `${meridiem} ${parsedHour}:${minute.toString().padStart(2, "0")}`;
 };
 
 export const extractResponseMessages = (
@@ -75,13 +75,15 @@ export const ISOConverter = (date: string): string => {
   )}${CONVERTER_SUFFIX}`;
 };
 
-const getDateInformation = (givenDate: Date) => {
+export const getDateInformation = (givenDate: Date) => {
   const year = givenDate.getFullYear();
   const month = givenDate.getMonth() + 1;
   const date = givenDate.getDate();
   const day = DAY[givenDate.getDay()];
+  const hour = givenDate.getHours();
+  const minute = givenDate.getMinutes();
 
-  return { year, month, date, day };
+  return { year, month, date, day, hour, minute };
 };
 
 export const getMessagesDate = (postedDate: string): string => {
