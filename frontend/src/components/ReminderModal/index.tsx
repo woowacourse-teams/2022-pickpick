@@ -1,10 +1,11 @@
 import * as Styled from "./style";
 import Calendar from "@public/assets/icons/Calendar.svg";
-import DownArrowIcon from "@public/assets/icons/ArrowIcon-Down.svg";
 import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useReminderModal from "@src/hooks/useReminderModal";
+import ReminderModalOptions from "../ReminderModalOptions";
+import ReminderModalDropdownToggle from "../ReminderModalToggleDropdown";
 
 export type ButtonText = "생성" | "수정" | "취소";
 
@@ -48,67 +49,45 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
             <FlexColumn marginBottom="10px">
               <Styled.Subtitle>언제</Styled.Subtitle>
 
-              <Styled.TextContainer onClick={handleToggleDropdown}>
-                <FlexRow alignItems="center" gap="8px">
+              <ReminderModalDropdownToggle
+                text={`${checkedYear} ${checkedMonth} ${checkedDate.padStart(
+                  3,
+                  "0"
+                )}`}
+                IconComponent={() => (
                   <Calendar width="16px" height="16px" fill="#8B8B8B" />
-                  <Styled.Text>
-                    {`${checkedYear}년 ${checkedMonth}월 ${checkedDate.padStart(
-                      2,
-                      "0"
-                    )}일`}
-                  </Styled.Text>
-                </FlexRow>
-
-                <DownArrowIcon width="24px" height="24px" fill="#8B8B8B" />
-              </Styled.TextContainer>
+                )}
+                handleToggleDropdown={handleToggleDropdown}
+              />
 
               {isDropdownOpened && (
                 <Styled.TextOptionContainer>
-                  <Styled.TextOptions ref={yearRef}>
-                    {years.map((year) => (
-                      <Styled.Label key={year}>
-                        <Styled.Radio
-                          type="radio"
-                          value={year}
-                          onChange={handleChangeYear}
-                          checked={checkedYear === year}
-                        />
-                        <Styled.TextOption>{year}년</Styled.TextOption>
-                      </Styled.Label>
-                    ))}
-                  </Styled.TextOptions>
+                  <Styled.TextOptionsWrapper ref={yearRef}>
+                    <ReminderModalOptions
+                      isPadStart={false}
+                      optionTexts={years}
+                      checkedText={checkedYear}
+                      handleChangeText={handleChangeYear}
+                    />
+                  </Styled.TextOptionsWrapper>
 
-                  <Styled.TextOptions ref={monthRef}>
-                    {months.map((month) => (
-                      <Styled.Label key={month}>
-                        <Styled.Radio
-                          type="radio"
-                          value={month}
-                          onChange={handleChangeMonth}
-                          checked={checkedMonth === month}
-                        />
-                        <Styled.TextOption>
-                          {month.padStart(2, "0")}월
-                        </Styled.TextOption>
-                      </Styled.Label>
-                    ))}
-                  </Styled.TextOptions>
+                  <Styled.TextOptionsWrapper ref={monthRef}>
+                    <ReminderModalOptions
+                      isPadStart={true}
+                      optionTexts={months}
+                      checkedText={checkedMonth}
+                      handleChangeText={handleChangeMonth}
+                    />
+                  </Styled.TextOptionsWrapper>
 
-                  <Styled.TextOptions ref={dateRef}>
-                    {dates.map((date) => (
-                      <Styled.Label key={date}>
-                        <Styled.Radio
-                          type="radio"
-                          value={date}
-                          onChange={handleChangeDate}
-                          checked={checkedDate === date}
-                        />
-                        <Styled.TextOption>
-                          {date.padStart(2, "0")}일
-                        </Styled.TextOption>
-                      </Styled.Label>
-                    ))}
-                  </Styled.TextOptions>
+                  <Styled.TextOptionsWrapper ref={dateRef}>
+                    <ReminderModalOptions
+                      isPadStart={true}
+                      optionTexts={dates}
+                      checkedText={checkedDate}
+                      handleChangeText={handleChangeDate}
+                    />
+                  </Styled.TextOptionsWrapper>
                 </Styled.TextOptionContainer>
               )}
             </FlexColumn>
@@ -124,67 +103,45 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
             <FlexColumn>
               <Styled.Subtitle>시간</Styled.Subtitle>
 
-              <Styled.TextContainer onClick={handleToggleDropdown}>
-                <FlexRow alignItems="center" gap="8px">
+              <ReminderModalDropdownToggle
+                text={`${checkedMeridiem} ${checkedHour} ${checkedMinute.padStart(
+                  3,
+                  "0"
+                )}`}
+                IconComponent={() => (
                   <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
-                  <Styled.Text>
-                    {`${checkedMeridiem} ${checkedHour}:${checkedMinute.padStart(
-                      2,
-                      "0"
-                    )}`}
-                  </Styled.Text>
-                </FlexRow>
-
-                <DownArrowIcon width="24px" height="24px" fill="#8B8B8B" />
-              </Styled.TextContainer>
+                )}
+                handleToggleDropdown={handleToggleDropdown}
+              />
 
               {isDropdownOpened && (
                 <Styled.TextOptionContainer>
-                  <Styled.TextOptions ref={meridiemRef}>
-                    {meridiems.map((meridiem) => (
-                      <Styled.Label key={meridiem}>
-                        <Styled.Radio
-                          type="radio"
-                          value={meridiem}
-                          onChange={handleChangeMeridiem}
-                          checked={checkedMeridiem === meridiem}
-                        />
-                        <Styled.TextOption>{meridiem}</Styled.TextOption>
-                      </Styled.Label>
-                    ))}
-                  </Styled.TextOptions>
+                  <Styled.TextOptionsWrapper ref={meridiemRef}>
+                    <ReminderModalOptions
+                      isPadStart={false}
+                      optionTexts={meridiems}
+                      checkedText={checkedMeridiem}
+                      handleChangeText={handleChangeMeridiem}
+                    />
+                  </Styled.TextOptionsWrapper>
 
-                  <Styled.TextOptions ref={hourRef}>
-                    {hours.map((hour) => (
-                      <Styled.Label key={hour}>
-                        <Styled.Radio
-                          type="radio"
-                          value={hour}
-                          onChange={handleChangeHour}
-                          checked={checkedHour === hour}
-                        />
-                        <Styled.TextOption>
-                          {hour.padStart(2, "0")}시
-                        </Styled.TextOption>
-                      </Styled.Label>
-                    ))}
-                  </Styled.TextOptions>
+                  <Styled.TextOptionsWrapper ref={hourRef}>
+                    <ReminderModalOptions
+                      isPadStart={true}
+                      optionTexts={hours}
+                      checkedText={checkedHour}
+                      handleChangeText={handleChangeHour}
+                    />
+                  </Styled.TextOptionsWrapper>
 
-                  <Styled.TextOptions ref={minuteRef}>
-                    {minutes.map((minute) => (
-                      <Styled.Label key={minute}>
-                        <Styled.Radio
-                          type="radio"
-                          value={minute}
-                          onChange={handleChangeMinute}
-                          checked={checkedMinute === minute}
-                        />
-                        <Styled.TextOption>
-                          {minute.padStart(2, "0")}분
-                        </Styled.TextOption>
-                      </Styled.Label>
-                    ))}
-                  </Styled.TextOptions>
+                  <Styled.TextOptionsWrapper ref={minuteRef}>
+                    <ReminderModalOptions
+                      isPadStart={true}
+                      optionTexts={minutes}
+                      checkedText={checkedMinute}
+                      handleChangeText={handleChangeMinute}
+                    />
+                  </Styled.TextOptionsWrapper>
                 </Styled.TextOptionContainer>
               )}
             </FlexColumn>

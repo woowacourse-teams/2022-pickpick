@@ -35,23 +35,6 @@ export const Subtitle = styled.h2`
   `}
 `;
 
-export const TextContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  padding: 2px 6px;
-  cursor: pointer;
-  z-index: 1;
-`;
-
-export const Text = styled.p`
-  ${({ theme }: StyledDefaultProps) => css`
-    font-size: ${theme.FONT_SIZE.CAPTION};
-  `}
-`;
-
 export const TextOptionContainer = styled.div`
   height: 128px;
   display: flex;
@@ -82,7 +65,7 @@ export const TextOptionContainer = styled.div`
   }
 `;
 
-export const TextOptions = styled.div`
+export const TextOptionsWrapper = styled.div`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
@@ -96,29 +79,6 @@ export const TextOptions = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
-
-export const Label = styled.label`
-  cursor: pointer;
-
-  &:first-child {
-    margin-top: 54px;
-  }
-
-  &:last-child {
-    margin-bottom: 60px;
-  }
-`;
-
-export const Radio = styled.input`
-  position: absolute;
-  top: -9999999999999999px;
-  left: -9999999999999999px;
-  opacity: 0;
-`;
-
-export const TextOption = styled.span`
-  cursor: pointer;
 `;
 
 const textTable: Record<ButtonText, CSSProp<Theme>> = {
