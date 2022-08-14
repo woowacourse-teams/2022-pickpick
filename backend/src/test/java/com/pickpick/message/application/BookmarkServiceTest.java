@@ -114,8 +114,7 @@ class BookmarkServiceTest {
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
         Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
         messages.save(message);
-        Bookmark bookmark = new Bookmark(member, message);
-        bookmarks.save(bookmark);
+        Bookmark bookmark = bookmarks.save(new Bookmark(member, message));
 
         // when
         bookmarkService.delete(message.getId(), member.getId());
