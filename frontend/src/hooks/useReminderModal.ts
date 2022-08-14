@@ -68,8 +68,8 @@ const isInvalidateDateTime = ({
 
 function useReminderModal() {
   const { year, month, date, hour, minute } = getDateInformation(new Date());
+  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
-  const lastDate = new Date(year, month, 0).getDate();
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
     hour: meridiemHour,
     minute,
