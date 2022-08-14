@@ -17,6 +17,7 @@ function PublicRouter({ children }: Props) {
     isCertificated,
     {
       retry: false,
+      onError: () => null,
     }
   );
 
