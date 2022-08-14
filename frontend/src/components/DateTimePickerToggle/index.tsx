@@ -8,11 +8,7 @@ interface Props {
   children: JSX.Element;
 }
 
-function ReminderModalDropdownToggle({
-  text,
-  handleToggleDropdown,
-  children,
-}: Props) {
+function DateTimePickerToggle({ text, handleToggleDropdown, children }: Props) {
   return (
     <Styled.Container onClick={handleToggleDropdown}>
       <FlexRow alignItems="center" gap="8px">
@@ -25,4 +21,4 @@ function ReminderModalDropdownToggle({
   );
 }
 
-export default ReminderModalDropdownToggle;
+export default DateTimePickerToggle;

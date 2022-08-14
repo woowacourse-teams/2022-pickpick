@@ -4,8 +4,8 @@ import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useReminderModal from "@src/hooks/useReminderModal";
-import ReminderModalOptions from "../ReminderModalOptions";
-import ReminderModalDropdownToggle from "../ReminderModalToggleDropdown";
+import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
+import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 
 export type ButtonText = "생성" | "수정" | "취소";
 
@@ -49,7 +49,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
             <FlexColumn marginBottom="10px">
               <Styled.Subtitle>언제</Styled.Subtitle>
 
-              <ReminderModalDropdownToggle
+              <DateTimePickerToggle
                 text={`${checkedYear} ${checkedMonth} ${checkedDate.padStart(
                   3,
                   "0"
@@ -57,12 +57,12 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                 handleToggleDropdown={handleToggleDropdown}
               >
                 <Calendar width="16px" height="16px" fill="#8B8B8B" />
-              </ReminderModalDropdownToggle>
+              </DateTimePickerToggle>
 
               {isDropdownOpened && (
                 <Styled.TextOptionContainer>
                   <Styled.TextOptionsWrapper ref={yearRef}>
-                    <ReminderModalOptions
+                    <DateTimePickerOptions
                       needZeroPaddingStart={false}
                       optionTexts={years}
                       checkedText={checkedYear}
@@ -71,7 +71,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                   </Styled.TextOptionsWrapper>
 
                   <Styled.TextOptionsWrapper ref={monthRef}>
-                    <ReminderModalOptions
+                    <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={months}
                       checkedText={checkedMonth}
@@ -80,7 +80,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                   </Styled.TextOptionsWrapper>
 
                   <Styled.TextOptionsWrapper ref={dateRef}>
-                    <ReminderModalOptions
+                    <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={dates}
                       checkedText={checkedDate}
@@ -102,7 +102,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
             <FlexColumn>
               <Styled.Subtitle>시간</Styled.Subtitle>
 
-              <ReminderModalDropdownToggle
+              <DateTimePickerToggle
                 text={`${checkedMeridiem} ${checkedHour} ${checkedMinute.padStart(
                   3,
                   "0"
@@ -110,12 +110,12 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                 handleToggleDropdown={handleToggleDropdown}
               >
                 <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
-              </ReminderModalDropdownToggle>
+              </DateTimePickerToggle>
 
               {isDropdownOpened && (
                 <Styled.TextOptionContainer>
                   <Styled.TextOptionsWrapper ref={meridiemRef}>
-                    <ReminderModalOptions
+                    <DateTimePickerOptions
                       needZeroPaddingStart={false}
                       optionTexts={meridiems}
                       checkedText={checkedMeridiem}
@@ -124,7 +124,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                   </Styled.TextOptionsWrapper>
 
                   <Styled.TextOptionsWrapper ref={hourRef}>
-                    <ReminderModalOptions
+                    <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={hours}
                       checkedText={checkedHour}
@@ -133,7 +133,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                   </Styled.TextOptionsWrapper>
 
                   <Styled.TextOptionsWrapper ref={minuteRef}>
-                    <ReminderModalOptions
+                    <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={minutes}
                       checkedText={checkedMinute}

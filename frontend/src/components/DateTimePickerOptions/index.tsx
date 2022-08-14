@@ -8,7 +8,7 @@ interface Props {
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }
 
-function ReminderModalOptions({
+function DateTimePickerOptions({
   needZeroPaddingStart,
   optionTexts,
   checkedText,
@@ -33,4 +33,4 @@ function ReminderModalOptions({
   );
 }
 
-export default ReminderModalOptions;
+export default DateTimePickerOptions;
