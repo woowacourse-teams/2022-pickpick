@@ -89,34 +89,21 @@ function useReminderModal() {
   } = useDropdown();
 
   const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
-  const [checkedHour, setCheckedHour] = useState(`${parsedHour.toString()}시`);
-  const [checkedMinute, setCheckedMinute] = useState(
-    `${parsedMinute.toString()}분`
-  );
+  const [checkedHour, setCheckedHour] = useState(`${parsedHour}시`);
+  const [checkedMinute, setCheckedMinute] = useState(`${parsedMinute}분`);
 
-  const [checkedYear, setCheckedYear] = useState(`${year.toString()}년`);
-  const [checkedMonth, setCheckedMonth] = useState(`${month.toString()}월`);
-  const [checkedDate, setCheckedDate] = useState(`${date.toString()}일`);
+  const [checkedYear, setCheckedYear] = useState(`${year}년`);
+  const [checkedMonth, setCheckedMonth] = useState(`${month}월`);
+  const [checkedDate, setCheckedDate] = useState(`${date}일`);
 
   const meridiems = ["오전", "오후"];
-  const hours = Array.from(
-    { length: 12 },
-    (_, index) => `${(index + 1).toString()}시`
-  );
-  const minutes = Array.from(
-    { length: 6 },
-    (_, index) => `${(index * 10).toString()}분`
-  );
-  const years = [year, year + 1, year + 2].map(
-    (year) => `${year.toString()}년`
-  );
-  const months = Array.from(
-    { length: 12 },
-    (_, index) => `${(index + 1).toString()}월`
-  );
+  const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
+  const minutes = Array.from({ length: 6 }, (_, index) => `${index * 10}분`);
+  const years = [year, year + 1, year + 2].map((year) => `${year}년`);
+  const months = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
   const dates = Array.from(
     { length: lastDate },
-    (_, index) => `${(index + 1).toString()}일`
+    (_, index) => `${index + 1}일`
   );
 
   const handleChangeMeridiem = (event: ChangeEvent<HTMLInputElement>) => {
