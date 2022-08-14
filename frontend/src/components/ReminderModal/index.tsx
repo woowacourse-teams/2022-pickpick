@@ -3,7 +3,7 @@ import Calendar from "@public/assets/icons/Calendar.svg";
 import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
-import useReminderModal from "@src/hooks/useReminderModal";
+import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 
@@ -35,7 +35,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
       handleToggleDateTimePicker,
       handleSubmit,
     },
-  } = useReminderModal();
+  } = useSetReminder();
 
   return (
     <Styled.Container>
