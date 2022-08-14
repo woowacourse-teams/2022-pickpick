@@ -9,12 +9,12 @@ import { QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import queryClient from "./queryClient";
 import { ReactQueryDevtools } from "react-query/devtools";
-import useTheme, { THEME_KIND } from "@src/hooks/useTheme";
+import useModeTheme, { THEME_KIND } from "@src/hooks/useModeTheme";
 import ThemeToggler from "./components/ThemeToggler";
 
 function App() {
   const { handleError } = useApiError();
-  const { theme, handleToggleTheme } = useTheme();
+  const { theme, handleToggleTheme } = useModeTheme();
   const element = useRoutes(routes);
 
   useEffect(() => {
