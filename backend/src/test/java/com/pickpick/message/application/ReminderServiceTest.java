@@ -76,8 +76,7 @@ class ReminderServiceTest {
         // given
         Member member = members.save(new Member("U1234", "사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
-        messages.save(message);
+        Message message = messages.save(new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
 
         ReminderRequest reminderRequest = new ReminderRequest(message.getId(), LocalDateTime.now().plusDays(1));
         int beforeSize = findReminderSize(member);
