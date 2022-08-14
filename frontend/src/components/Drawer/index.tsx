@@ -3,8 +3,9 @@ import PlusIcon from "@public/assets/icons/PlusIcon.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import WrapperLink from "../@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
-import { SubscribedChannel } from "@src/@types/shared";
+import { SubscribedChannel, Theme } from "@src/@types/shared";
 import { Link } from "react-router-dom";
+import { useTheme } from "styled-components";
 
 interface Props {
   channels?: SubscribedChannel[];
@@ -12,6 +13,7 @@ interface Props {
 }
 
 function Drawer({ channels = [], handleCloseDrawer }: Props) {
+  const theme = useTheme() as Theme;
   return (
     <Styled.Container>
       <FlexRow
@@ -21,7 +23,13 @@ function Drawer({ channels = [], handleCloseDrawer }: Props) {
       >
         <Styled.Title>채널</Styled.Title>
         <WrapperLink to={PATH_NAME.ADD_CHANNEL}>
-          {() => <PlusIcon width="14px" height="14px" fill="#121212" />}
+          {() => (
+            <PlusIcon
+              width="14px"
+              height="14px"
+              fill={theme.COLOR.TEXT.DEFAULT}
+            />
+          )}
         </WrapperLink>
       </FlexRow>
       <Styled.Hr />
