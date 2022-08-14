@@ -4,19 +4,19 @@ import * as Styled from "./style";
 
 interface Props {
   text: string;
-  IconComponent: () => JSX.Element;
   handleToggleDropdown: () => void;
+  children: JSX.Element;
 }
 
 function ReminderModalDropdownToggle({
   text,
-  IconComponent,
   handleToggleDropdown,
+  children,
 }: Props) {
   return (
     <Styled.Container onClick={handleToggleDropdown}>
       <FlexRow alignItems="center" gap="8px">
-        <IconComponent />
+        {children}
         <Styled.Text>{text}</Styled.Text>
       </FlexRow>
 

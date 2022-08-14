@@ -32,7 +32,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
       handleChangeYear,
       handleChangeMonth,
       handleChangeDate,
-      handleOpenDropdown,
+      handleToggleDateTimePicker,
       handleSubmit,
     },
   } = useReminderModal();
@@ -43,7 +43,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
       <Dropdown>
         {({ isDropdownOpened, handleToggleDropdown }) => {
-          handleOpenDropdown(isDropdownOpened);
+          handleToggleDateTimePicker();
 
           return (
             <FlexColumn marginBottom="10px">
@@ -54,11 +54,10 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                   3,
                   "0"
                 )}`}
-                IconComponent={() => (
-                  <Calendar width="16px" height="16px" fill="#8B8B8B" />
-                )}
                 handleToggleDropdown={handleToggleDropdown}
-              />
+              >
+                <Calendar width="16px" height="16px" fill="#8B8B8B" />
+              </ReminderModalDropdownToggle>
 
               {isDropdownOpened && (
                 <Styled.TextOptionContainer>
@@ -97,7 +96,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
       <Dropdown>
         {({ isDropdownOpened, handleToggleDropdown }) => {
-          handleOpenDropdown(isDropdownOpened);
+          handleToggleDateTimePicker();
 
           return (
             <FlexColumn>
@@ -108,11 +107,10 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                   3,
                   "0"
                 )}`}
-                IconComponent={() => (
-                  <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
-                )}
                 handleToggleDropdown={handleToggleDropdown}
-              />
+              >
+                <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
+              </ReminderModalDropdownToggle>
 
               {isDropdownOpened && (
                 <Styled.TextOptionContainer>
