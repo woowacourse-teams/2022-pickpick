@@ -34,11 +34,7 @@ const convertMeridiemHourToStandardHour = (
   meridiemHour: number
 ): number => {
   if (meridiem === "오후") {
-    if (meridiemHour === 12) {
-      return 0;
-    }
-
-    return meridiemHour + 12;
+    return meridiemHour === 12 ? 0 : meridiemHour + 12;
   }
 
   return meridiemHour;
