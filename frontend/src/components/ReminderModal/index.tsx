@@ -63,7 +63,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                 <Styled.TextOptionContainer>
                   <Styled.TextOptionsWrapper ref={yearRef}>
                     <ReminderModalOptions
-                      isPadStart={false}
+                      needZeroPaddingStart={false}
                       optionTexts={years}
                       checkedText={checkedYear}
                       handleChangeText={handleChangeYear}
@@ -72,7 +72,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
                   <Styled.TextOptionsWrapper ref={monthRef}>
                     <ReminderModalOptions
-                      isPadStart={true}
+                      needZeroPaddingStart={true}
                       optionTexts={months}
                       checkedText={checkedMonth}
                       handleChangeText={handleChangeMonth}
@@ -81,7 +81,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
                   <Styled.TextOptionsWrapper ref={dateRef}>
                     <ReminderModalOptions
-                      isPadStart={true}
+                      needZeroPaddingStart={true}
                       optionTexts={dates}
                       checkedText={checkedDate}
                       handleChangeText={handleChangeDate}
@@ -116,7 +116,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                 <Styled.TextOptionContainer>
                   <Styled.TextOptionsWrapper ref={meridiemRef}>
                     <ReminderModalOptions
-                      isPadStart={false}
+                      needZeroPaddingStart={false}
                       optionTexts={meridiems}
                       checkedText={checkedMeridiem}
                       handleChangeText={handleChangeMeridiem}
@@ -125,7 +125,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
                   <Styled.TextOptionsWrapper ref={hourRef}>
                     <ReminderModalOptions
-                      isPadStart={true}
+                      needZeroPaddingStart={true}
                       optionTexts={hours}
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
@@ -134,7 +134,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
                   <Styled.TextOptionsWrapper ref={minuteRef}>
                     <ReminderModalOptions
-                      isPadStart={true}
+                      needZeroPaddingStart={true}
                       optionTexts={minutes}
                       checkedText={checkedMinute}
                       handleChangeText={handleChangeMinute}

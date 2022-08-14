@@ -2,14 +2,14 @@ import { ChangeEventHandler } from "react";
 import * as Styled from "./style";
 
 interface Props {
-  isPadStart: boolean;
+  needZeroPaddingStart: boolean;
   optionTexts: string[];
   checkedText: string;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }
 
 function ReminderModalOptions({
-  isPadStart,
+  needZeroPaddingStart,
   optionTexts,
   checkedText,
   handleChangeText,
@@ -25,7 +25,7 @@ function ReminderModalOptions({
             checked={checkedText === optionText}
           />
           <Styled.TextOption>
-            {isPadStart ? optionText.padStart(3, "0") : optionText}
+            {needZeroPaddingStart ? optionText.padStart(3, "0") : optionText}
           </Styled.TextOption>
         </Styled.Container>
       ))}
