@@ -1,6 +1,20 @@
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
+interface IsInvalidateDateTimeProps {
+  checkedYear: string;
+  checkedMonth: string;
+  checkedDate: string;
+  checkedMeridiem: string;
+  checkedHour: string;
+  checkedMinute: string;
+  year: number;
+  month: number;
+  date: number;
+  hour: number;
+  minute: number;
+}
+
 const convertTimeToStepTenMinuteTime = ({
   hour,
   minute,
@@ -28,6 +42,31 @@ const convertMeridiemHourToStandardHour = (
   }
 
   return meridiemHour;
+};
+
+const isInvalidateDateTime = ({
+  checkedYear,
+  checkedMonth,
+  checkedDate,
+  checkedMeridiem,
+  checkedHour,
+  checkedMinute,
+  year,
+  month,
+  date,
+  hour,
+  minute,
+}: IsInvalidateDateTimeProps) => {
+  return (
+    Number(checkedYear.replace("년", "")) < year ||
+    Number(checkedMonth.replace("월", "")) < month ||
+    Number(checkedDate.replace("일", "")) < date ||
+    convertMeridiemHourToStandardHour(
+      checkedMeridiem,
+      Number(checkedHour.replace("시", ""))
+    ) < hour ||
+    Number(checkedMinute.replace("분", "")) < minute
+  );
 };
 
 function useReminderModal() {
@@ -112,12 +151,19 @@ function useReminderModal() {
 
   const handleSubmit = () => {
     if (
-      Number(checkedYear) < year ||
-      Number(checkedMonth) < month ||
-      Number(checkedDate) < date ||
-      convertMeridiemHourToStandardHour(checkedMeridiem, Number(checkedHour)) <
-        hour ||
-      Number(checkedMinute) < minute
+      isInvalidateDateTime({
+        checkedYear,
+        checkedMonth,
+        checkedDate,
+        checkedMeridiem,
+        checkedHour,
+        checkedMinute,
+        year,
+        month,
+        date,
+        hour,
+        minute,
+      })
     ) {
       console.log("리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다.");
       return;
