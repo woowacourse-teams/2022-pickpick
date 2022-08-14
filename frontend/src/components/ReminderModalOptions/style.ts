@@ -13,9 +13,8 @@ export const Container = styled.label`
 `;
 
 export const Radio = styled.input`
+  display: none;
   position: absolute;
-  top: -9999999999999999px;
-  left: -9999999999999999px;
   opacity: 0;
 `;
 
