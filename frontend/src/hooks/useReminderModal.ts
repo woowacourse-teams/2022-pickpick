@@ -1,5 +1,6 @@
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import useDropdown from "./useDropdown";
 
 interface IsInvalidateDateTimeProps {
   checkedYear: string;
@@ -82,7 +83,10 @@ function useReminderModal() {
   const hourRef = useRef<HTMLDivElement>(null);
   const minuteRef = useRef<HTMLDivElement>(null);
 
-  const [isDropdownOpened, setIsDropdownOpened] = useState(false);
+  const {
+    isDropdownOpened: isDateTimePickerOpened,
+    handleToggleDropdown: handleToggleDateTimePicker,
+  } = useDropdown();
 
   const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
   const [checkedHour, setCheckedHour] = useState(`${parsedHour.toString()}시`);
@@ -139,10 +143,6 @@ function useReminderModal() {
 
   const handleChangeDate = (event: ChangeEvent<HTMLInputElement>) => {
     setCheckedDate(event.target.value);
-  };
-
-  const handleOpenDropdown = (isOpened: boolean) => {
-    setIsDropdownOpened(isOpened);
   };
 
   const handleSubmit = () => {
@@ -217,7 +217,7 @@ function useReminderModal() {
     checkedYear,
     checkedMonth,
     checkedDate,
-    isDropdownOpened,
+    isDateTimePickerOpened,
   ]);
 
   return {
@@ -252,7 +252,7 @@ function useReminderModal() {
       handleChangeYear,
       handleChangeMonth,
       handleChangeDate,
-      handleOpenDropdown,
+      handleToggleDateTimePicker,
       handleSubmit,
     },
   };
