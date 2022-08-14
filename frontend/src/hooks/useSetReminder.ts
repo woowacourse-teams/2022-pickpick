@@ -1,6 +1,7 @@
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import useDropdown from "./useDropdown";
+import useSnackbar from "./useSnackbar";
 
 interface IsInvalidateDateTimeProps {
   checkedYear: string;
@@ -87,6 +88,7 @@ function useSetReminder() {
     isDropdownOpened: isDateTimePickerOpened,
     handleToggleDropdown: handleToggleDateTimePicker,
   } = useDropdown();
+  const { openFailureSnackbar } = useSnackbar();
 
   const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
   const [checkedHour, setCheckedHour] = useState(`${parsedHour}시`);
@@ -148,11 +150,13 @@ function useSetReminder() {
         minute,
       })
     ) {
-      console.log("리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다.");
+      openFailureSnackbar(
+        "리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다."
+      );
       return;
     }
 
-    console.log("서브밋 성공");
+    return;
   };
 
   useEffect(() => {
