@@ -120,3 +120,13 @@ export const convertSeparatorToKey = ({
   // eslint-disable-next-line
   return value.replace(/\,/g, key);
 };
+
+export const parsedOptionText = ({
+  needZeroPaddingStart,
+  optionText,
+}: {
+  needZeroPaddingStart: boolean;
+  optionText: string;
+}): string => {
+  return needZeroPaddingStart ? optionText.padStart(3, "0") : optionText;
+};

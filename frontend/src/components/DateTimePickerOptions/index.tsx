@@ -1,3 +1,4 @@
+import { parsedOptionText } from "@src/@utils";
 import { ChangeEventHandler } from "react";
 import * as Styled from "./style";
 
@@ -25,7 +26,7 @@ function DateTimePickerOptions({
             checked={checkedText === optionText}
           />
           <Styled.TextOption>
-            {needZeroPaddingStart ? optionText.padStart(3, "0") : optionText}
+            {parsedOptionText({ needZeroPaddingStart, optionText })}
           </Styled.TextOption>
         </Styled.Container>
       ))}
