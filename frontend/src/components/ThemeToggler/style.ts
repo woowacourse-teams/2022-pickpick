@@ -14,7 +14,7 @@ export const Container = styled.input`
     cursor: pointer;
 
     &::before { 
-    content: url('https://shivanarrthine.com/public/images/icons/moon.svg');
+    content: url('./assets/icons/MoonIcon.svg');
     display: block;
     position: absolute;
     z-index: 2;
@@ -39,7 +39,7 @@ export const Container = styled.input`
   &:checked{
     &::before{
         left: 32px;
-        content: url('https://shivanarrthine.com/public/images/icons/sun.svg');
+        content: url('./assets/icons/SunIcon.svg');
       }|
   }
 `;
