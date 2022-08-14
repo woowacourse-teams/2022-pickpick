@@ -1,11 +1,11 @@
-import { ChangeEvent } from "react";
+import { ChangeEventHandler } from "react";
 import * as Styled from "./style";
 
 interface Props {
   isPadStart: boolean;
   optionTexts: string[];
   checkedText: string;
-  handleChangeText: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }
 
 function ReminderModalOptions({
