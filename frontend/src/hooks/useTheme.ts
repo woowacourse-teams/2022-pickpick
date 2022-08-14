@@ -14,10 +14,11 @@ interface ReturnType {
 }
 
 function useTheme(): ReturnType {
-  const [getStoredTheme, setStoredTheme] = useWebStorage<Theme>({
-    key: "theme",
-    kind: STORAGE_KIND.LOCAL,
-  });
+  const { getItem: getStoredTheme, setItem: setStoredTheme } =
+    useWebStorage<Theme>({
+      key: "theme",
+      kind: STORAGE_KIND.LOCAL,
+    });
   const [theme, setTheme] = useState<Theme>(
     getStoredTheme() ?? THEME_KIND.LIGHT
   );

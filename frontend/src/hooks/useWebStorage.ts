@@ -10,18 +10,23 @@ interface Props {
   kind: Storage;
 }
 
-function useWebStorage<T>({ key, kind }: Props) {
+interface ReturnType<T> {
+  getItem: () => T;
+  setItem: (item: T) => void;
+}
+
+function useWebStorage<T>({ key, kind }: Props): ReturnType<T> {
   const storage = kind === STORAGE_KIND.LOCAL ? localStorage : sessionStorage;
 
-  function get(): T {
+  const getItem = (): T => {
     return JSON.parse(storage.getItem(key) ?? "[]");
-  }
+  };
 
-  function set(item: T): void {
+  const setItem = (item: T): void => {
     storage.setItem(key, JSON.stringify(item));
-  }
+  };
 
-  return [get, set] as const;
+  return { getItem, setItem };
 }
 
 export default useWebStorage;
