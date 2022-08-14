@@ -35,7 +35,10 @@ function useTheme(): ReturnType {
   };
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+    if (
+      window.matchMedia("(prefers-color-scheme: dark)").matches &&
+      theme !== THEME_KIND.LIGHT
+    )
       handleChangeTheme(THEME_KIND.DARK);
   }, []);
 
