@@ -20,6 +20,7 @@ import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
+import ReminderModal from "@src/components/ReminderModal";
 
 function Feed() {
   const { channelId } = useParams();
@@ -38,9 +39,15 @@ function Feed() {
     );
 
   const {
-    isModalOpened: isCalenderOpened,
+    isModalOpened: isCalendarOpened,
     handleOpenModal: handleOpenCalendar,
     handleCloseModal: handleCloseCalendar,
+  } = useModal();
+
+  const {
+    isModalOpened: isReminderModalOpened,
+    handleOpenModal: handleOpenReminderModal,
+    handleCloseModal: handleCloseReminderModal,
   } = useModal();
 
   const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
@@ -91,6 +98,7 @@ function Feed() {
                         ? handleRemoveBookmark(id)
                         : handleAddBookmark(id)
                     }
+                    handleOpenReminderModal={handleOpenReminderModal}
                   />
                 </React.Fragment>
               );
@@ -101,13 +109,23 @@ function Feed() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isCalenderOpened}>
+      <Portal isOpened={isCalendarOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
           <Calendar
             channelId={channelId ?? "main"}
             handleCloseCalendar={handleCloseCalendar}
           />
+        </>
+      </Portal>
+
+      <Portal isOpened={isReminderModalOpened}>
+        <>
+          <Dimmer
+            hasBackgroundColor={true}
+            onClick={handleCloseReminderModal}
+          />
+          <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
         </>
       </Portal>
     </Styled.Container>
