@@ -1,5 +1,12 @@
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useEffect,
+  useRef,
+  useState,
+  RefObject,
+  ChangeEventHandler,
+} from "react";
 import useDropdown from "./useDropdown";
 import useSnackbar from "./useSnackbar";
 
@@ -67,7 +74,44 @@ const isInvalidateDateTime = ({
   );
 };
 
-function useSetReminder() {
+interface ReturnType {
+  ref: {
+    yearRef: RefObject<HTMLDivElement>;
+    monthRef: RefObject<HTMLDivElement>;
+    dateRef: RefObject<HTMLDivElement>;
+    meridiemRef: RefObject<HTMLDivElement>;
+    hourRef: RefObject<HTMLDivElement>;
+    minuteRef: RefObject<HTMLDivElement>;
+  };
+  dateStateArray: {
+    meridiems: string[];
+    hours: string[];
+    minutes: string[];
+    years: string[];
+    months: string[];
+    dates: string[];
+  };
+  checkedState: {
+    checkedMeridiem: "오전" | "오후";
+    checkedHour: string;
+    checkedMinute: string;
+    checkedYear: string;
+    checkedMonth: string;
+    checkedDate: string;
+  };
+  handler: {
+    handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
+    handleChangeHour: ChangeEventHandler<HTMLInputElement>;
+    handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
+    handleChangeYear: ChangeEventHandler<HTMLInputElement>;
+    handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
+    handleChangeDate: ChangeEventHandler<HTMLInputElement>;
+    handleToggleDateTimePicker: () => void;
+    handleSubmit: () => void;
+  };
+}
+
+function useSetReminder(): ReturnType {
   const { year, month, date, hour, minute } = getDateInformation(new Date());
   const { date: lastDate } = getDateInformation(new Date(year, month, 0));
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
@@ -90,13 +134,17 @@ function useSetReminder() {
   } = useDropdown();
   const { openFailureSnackbar } = useSnackbar();
 
-  const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
-  const [checkedHour, setCheckedHour] = useState(`${parsedHour}시`);
-  const [checkedMinute, setCheckedMinute] = useState(`${parsedMinute}분`);
+  const [checkedMeridiem, setCheckedMeridiem] = useState<"오전" | "오후">(
+    meridiem
+  );
+  const [checkedHour, setCheckedHour] = useState<string>(`${parsedHour}시`);
+  const [checkedMinute, setCheckedMinute] = useState<string>(
+    `${parsedMinute}분`
+  );
 
-  const [checkedYear, setCheckedYear] = useState(`${year}년`);
-  const [checkedMonth, setCheckedMonth] = useState(`${month}월`);
-  const [checkedDate, setCheckedDate] = useState(`${date}일`);
+  const [checkedYear, setCheckedYear] = useState<string>(`${year}년`);
+  const [checkedMonth, setCheckedMonth] = useState<string>(`${month}월`);
+  const [checkedDate, setCheckedDate] = useState<string>(`${date}일`);
 
   const meridiems = ["오전", "오후"];
   const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);

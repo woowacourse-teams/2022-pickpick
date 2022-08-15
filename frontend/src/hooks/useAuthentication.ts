@@ -9,7 +9,12 @@ import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useSnackbar from "./useSnackbar";
 
-function useAuthentication() {
+interface ReturnType {
+  login: (token: string, isFirstLogin: boolean) => void;
+  logout: () => void;
+}
+
+function useAuthentication(): ReturnType {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openSuccessSnackbar } = useSnackbar();
