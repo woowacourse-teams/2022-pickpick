@@ -7,7 +7,13 @@ import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 
-export type ButtonText = "생성" | "수정" | "취소";
+const BUTTON_TEXT = {
+  CREATE: "생성",
+  UPDATE: "수정",
+  CANCEL: "취소",
+};
+
+export type ButtonText = typeof BUTTON_TEXT[keyof typeof BUTTON_TEXT];
 
 interface Props {
   handleCloseReminderModal: () => void;
@@ -149,14 +155,18 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
 
       <FlexRow gap="8px" margin-top="18px" justifyContent="flex-end">
         <Styled.Button
-          text="취소"
+          text={BUTTON_TEXT.CANCEL}
           type="button"
           onClick={handleCloseReminderModal}
         >
-          취소
+          {BUTTON_TEXT.CANCEL}
         </Styled.Button>
-        <Styled.Button text="생성" type="button" onClick={handleSubmit}>
-          생성
+        <Styled.Button
+          text={BUTTON_TEXT.CREATE}
+          type="button"
+          onClick={handleSubmit}
+        >
+          {BUTTON_TEXT.CREATE}
         </Styled.Button>
       </FlexRow>
     </Styled.Container>
