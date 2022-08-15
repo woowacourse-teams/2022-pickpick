@@ -18,6 +18,7 @@ import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
+import com.pickpick.message.ui.dto.ReminderSelectRequest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -91,7 +92,7 @@ class ReminderServiceTest {
     }
 
     private int findReminderSize(final Member member) {
-        return reminderService.find(null, member.getId()).getReminders().size();
+        return reminderService.find(new ReminderSelectRequest(null, null), member.getId()).getReminders().size();
     }
 
     @DisplayName("리마인더 조회")
@@ -104,7 +105,7 @@ class ReminderServiceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         // when
-        ReminderResponses response = reminderService.find(reminderId, memberId);
+        ReminderResponses response = reminderService.find(new ReminderSelectRequest(reminderId, null), memberId);
 
         // then
         List<Long> ids = convertToIds(response);
@@ -129,7 +130,7 @@ class ReminderServiceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         // when
-        ReminderResponses response = reminderService.find(null, 1L);
+        ReminderResponses response = reminderService.find(new ReminderSelectRequest(null, null), 1L);
 
         // then
         List<Long> ids = convertToIds(response);

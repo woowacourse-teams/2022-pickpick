@@ -15,6 +15,7 @@ import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
+import com.pickpick.message.ui.dto.ReminderSelectRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Clock;
@@ -28,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class ReminderService {
-
-    private static final int COUNT = 20;
 
     private final ReminderRepository reminders;
     private final MemberRepository members;
@@ -58,13 +57,13 @@ public class ReminderService {
         reminders.save(reminder);
     }
 
-    public ReminderResponses find(final Long reminderId, final Long memberId) {
-        List<Reminder> reminderList = findReminders(reminderId, memberId);
+    public ReminderResponses find(final ReminderSelectRequest request, final Long memberId) {
+        List<Reminder> reminderList = findReminders(request, memberId);
 
         return new ReminderResponses(toReminderResponseList(reminderList), isLast(reminderList, memberId));
     }
 
-    private List<Reminder> findReminders(final Long reminderId, final Long memberId) {
+    private List<Reminder> findReminders(final ReminderSelectRequest request, final Long memberId) {
         return jpaQueryFactory
                 .selectFrom(QReminder.reminder)
                 .leftJoin(QReminder.reminder.message)
@@ -72,9 +71,9 @@ public class ReminderService {
                 .leftJoin(QReminder.reminder.member)
                 .fetchJoin()
                 .where(QReminder.reminder.member.id.eq(memberId))
-                .where(remindDateCondition(reminderId))
+                .where(remindDateCondition(request.getReminderId()))
                 .orderBy(QReminder.reminder.remindDate.asc())
-                .limit(COUNT)
+                .limit(request.getCount())
                 .fetch();
     }
 
