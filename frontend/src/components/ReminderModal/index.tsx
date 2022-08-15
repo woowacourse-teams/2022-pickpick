@@ -10,10 +10,16 @@ import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 export type ButtonText = "생성" | "수정" | "취소";
 
 interface Props {
+  targetMessageId: string;
   handleCloseReminderModal: () => void;
+  refetchFeed: () => void;
 }
 
-function ReminderModal({ handleCloseReminderModal }: Props) {
+function ReminderModal({
+  targetMessageId,
+  handleCloseReminderModal,
+  refetchFeed,
+}: Props) {
   const {
     ref: { yearRef, monthRef, dateRef, meridiemRef, hourRef, minuteRef },
     dateStateArray: { meridiems, hours, minutes, years, months, dates },
@@ -35,7 +41,11 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
       handleToggleDateTimePicker,
       handleSubmit,
     },
-  } = useSetReminder();
+  } = useSetReminder({
+    targetMessageId,
+    handleCloseReminderModal,
+    refetchFeed,
+  });
 
   return (
     <Styled.Container>

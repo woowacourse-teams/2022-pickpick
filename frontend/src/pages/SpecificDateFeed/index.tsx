@@ -1,5 +1,5 @@
 import * as Styled from "../Feed/style";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import { useInfiniteQuery } from "react-query";
 import { ResponseMessages } from "@src/@types/shared";
@@ -27,6 +27,7 @@ function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
+  const [targetMessageId, setTargetMessageId] = useState("");
 
   const {
     data,
@@ -60,6 +61,10 @@ function SpecificDateFeed() {
     handleOpenModal: handleOpenReminderModal,
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
+
+  const handleUpdateTargetMessageId = (id: string) => {
+    setTargetMessageId(id);
+  };
 
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,
@@ -106,6 +111,7 @@ function SpecificDateFeed() {
               text,
               userThumbnail,
               isBookmarked,
+              isSetReminded,
             }) => {
               const parsedDate = postedDate.split("T")[0];
 
@@ -124,12 +130,16 @@ function SpecificDateFeed() {
                     text={text}
                     thumbnail={userThumbnail}
                     isBookmarked={isBookmarked}
+                    isSetReminded={isSetReminded}
                     toggleBookmark={
                       isBookmarked
                         ? handleRemoveBookmark(id)
                         : handleAddBookmark(id)
                     }
-                    handleOpenReminderModal={handleOpenReminderModal}
+                    handleOpenReminderModal={() => {
+                      handleOpenReminderModal();
+                      handleUpdateTargetMessageId(id);
+                    }}
                   />
                 </React.Fragment>
               );
@@ -156,7 +166,11 @@ function SpecificDateFeed() {
             hasBackgroundColor={true}
             onClick={handleCloseReminderModal}
           />
-          <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
+          <ReminderModal
+            targetMessageId={targetMessageId}
+            handleCloseReminderModal={handleCloseReminderModal}
+            refetchFeed={refetch}
+          />
         </>
       </Portal>
     </Styled.Container>

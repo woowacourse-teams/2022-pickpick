@@ -4,7 +4,7 @@ import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages } from "@src/@types/shared";
-import React from "react";
+import React, { useState } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
@@ -26,6 +26,7 @@ function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
+  const [targetMessageId, setTargetMessageId] = useState("");
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -49,6 +50,10 @@ function Feed() {
     handleOpenModal: handleOpenReminderModal,
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
+
+  const handleUpdateTargetMessageId = (id: string) => {
+    setTargetMessageId(id);
+  };
 
   const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,
@@ -75,6 +80,7 @@ function Feed() {
               text,
               userThumbnail,
               isBookmarked,
+              isSetReminded,
             }) => {
               const parsedDate = postedDate.split("T")[0];
 
@@ -93,12 +99,16 @@ function Feed() {
                     text={text}
                     thumbnail={userThumbnail}
                     isBookmarked={isBookmarked}
+                    isSetReminded={isSetReminded}
                     toggleBookmark={
                       isBookmarked
                         ? handleRemoveBookmark(id)
                         : handleAddBookmark(id)
                     }
-                    handleOpenReminderModal={handleOpenReminderModal}
+                    handleOpenReminderModal={() => {
+                      handleOpenReminderModal();
+                      handleUpdateTargetMessageId(id);
+                    }}
                   />
                 </React.Fragment>
               );
@@ -125,7 +135,11 @@ function Feed() {
             hasBackgroundColor={true}
             onClick={handleCloseReminderModal}
           />
-          <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
+          <ReminderModal
+            targetMessageId={targetMessageId}
+            handleCloseReminderModal={handleCloseReminderModal}
+            refetchFeed={refetch}
+          />
         </>
       </Portal>
     </Styled.Container>
