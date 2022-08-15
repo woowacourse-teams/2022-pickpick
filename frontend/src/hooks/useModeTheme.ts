@@ -2,14 +2,8 @@ import { useEffect } from "react";
 import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
 import { useRecoilState } from "recoil";
 import { themeState } from "@src/@atoms";
-
-export const THEME_KIND = {
-  LIGHT: "LIGHT",
-  DARK: "DARK",
-} as const;
-
-type ThemeKind = keyof typeof THEME_KIND;
-
+import { ThemeKind } from "@src/@types/shared";
+import { THEME_KIND } from "@src/@constants";
 interface ReturnType {
   theme: ThemeKind;
   handleToggleTheme: () => void;
