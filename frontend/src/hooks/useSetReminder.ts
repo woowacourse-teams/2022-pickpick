@@ -20,11 +20,18 @@ type ReturnDateStateArray = Record<
   string[]
 >;
 
+const MERIDIEM = {
+  AM: "오전",
+  PM: "오후",
+} as const;
+
+type Meridiem = typeof MERIDIEM[keyof typeof MERIDIEM];
+
 interface ReturnType {
   ref: ReturnRef;
   dateStateArray: ReturnDateStateArray;
   checkedState: {
-    checkedMeridiem: "오전" | "오후";
+    checkedMeridiem: Meridiem;
     checkedHour: string;
     checkedMinute: string;
     checkedYear: string;
@@ -74,7 +81,7 @@ const convertMeridiemHourToStandardHour = (
   meridiem: string,
   meridiemHour: number
 ): number => {
-  if (meridiem === "오후") {
+  if (meridiem === MERIDIEM.PM) {
     return meridiemHour === 12 ? 0 : meridiemHour + 12;
   }
 
@@ -129,9 +136,7 @@ function useSetReminder(): ReturnType {
   } = useDropdown();
   const { openFailureSnackbar } = useSnackbar();
 
-  const [checkedMeridiem, setCheckedMeridiem] = useState<"오전" | "오후">(
-    meridiem
-  );
+  const [checkedMeridiem, setCheckedMeridiem] = useState<Meridiem>(meridiem);
   const [checkedHour, setCheckedHour] = useState<string>(`${parsedHour}시`);
   const [checkedMinute, setCheckedMinute] = useState<string>(
     `${parsedMinute}분`
@@ -141,7 +146,7 @@ function useSetReminder(): ReturnType {
   const [checkedMonth, setCheckedMonth] = useState<string>(`${month}월`);
   const [checkedDate, setCheckedDate] = useState<string>(`${date}일`);
 
-  const meridiems = ["오전", "오후"];
+  const meridiems = [MERIDIEM.AM, MERIDIEM.PM];
   const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
   const minutes = Array.from({ length: 6 }, (_, index) => `${index * 10}분`);
   const years = [year, year + 1, year + 2].map((year) => `${year}년`);
@@ -152,7 +157,10 @@ function useSetReminder(): ReturnType {
   );
 
   const handleChangeMeridiem = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "오전" || event.target.value === "오후") {
+    if (
+      event.target.value === MERIDIEM.AM ||
+      event.target.value === MERIDIEM.PM
+    ) {
       setCheckedMeridiem(event.target.value);
     }
   };
@@ -226,7 +234,7 @@ function useSetReminder(): ReturnType {
 
     if (meridiemRef.current) {
       meridiemRef.current.scrollTo({
-        top: checkedMeridiem === "오전" ? 0 : 22,
+        top: checkedMeridiem === MERIDIEM.AM ? 0 : 22,
         behavior: "smooth",
       });
     }
