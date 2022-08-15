@@ -10,6 +10,38 @@ import {
 import useDropdown from "@src/hooks/useDropdown";
 import useSnackbar from "@src/hooks/useSnackbar";
 
+type ReturnRef = Record<
+  "yearRef" | "monthRef" | "dateRef" | "hourRef" | "minuteRef" | "meridiemRef",
+  RefObject<HTMLDivElement>
+>;
+
+type ReturnDateStateArray = Record<
+  "meridiems" | "hours" | "minutes" | "years" | "months" | "dates",
+  string[]
+>;
+
+interface ReturnType {
+  ref: ReturnRef;
+  dateStateArray: ReturnDateStateArray;
+  checkedState: {
+    checkedMeridiem: "오전" | "오후";
+    checkedHour: string;
+    checkedMinute: string;
+    checkedYear: string;
+    checkedMonth: string;
+    checkedDate: string;
+  };
+  handler: {
+    handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
+    handleChangeHour: ChangeEventHandler<HTMLInputElement>;
+    handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
+    handleChangeYear: ChangeEventHandler<HTMLInputElement>;
+    handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
+    handleChangeDate: ChangeEventHandler<HTMLInputElement>;
+    handleToggleDateTimePicker: () => void;
+    handleSubmit: () => void;
+  };
+}
 interface IsInvalidateDateTimeProps {
   checkedYear: string;
   checkedMonth: string;
@@ -73,43 +105,6 @@ const isInvalidateDateTime = ({
     Number(checkedMinute.replace("분", "")) < minute
   );
 };
-
-interface ReturnType {
-  ref: {
-    yearRef: RefObject<HTMLDivElement>;
-    monthRef: RefObject<HTMLDivElement>;
-    dateRef: RefObject<HTMLDivElement>;
-    meridiemRef: RefObject<HTMLDivElement>;
-    hourRef: RefObject<HTMLDivElement>;
-    minuteRef: RefObject<HTMLDivElement>;
-  };
-  dateStateArray: {
-    meridiems: string[];
-    hours: string[];
-    minutes: string[];
-    years: string[];
-    months: string[];
-    dates: string[];
-  };
-  checkedState: {
-    checkedMeridiem: "오전" | "오후";
-    checkedHour: string;
-    checkedMinute: string;
-    checkedYear: string;
-    checkedMonth: string;
-    checkedDate: string;
-  };
-  handler: {
-    handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
-    handleChangeHour: ChangeEventHandler<HTMLInputElement>;
-    handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
-    handleChangeYear: ChangeEventHandler<HTMLInputElement>;
-    handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
-    handleChangeDate: ChangeEventHandler<HTMLInputElement>;
-    handleToggleDateTimePicker: () => void;
-    handleSubmit: () => void;
-  };
-}
 
 function useSetReminder(): ReturnType {
   const { year, month, date, hour, minute } = getDateInformation(new Date());
