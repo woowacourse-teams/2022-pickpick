@@ -7,7 +7,7 @@ import {
 import { deleteCookie, setCookie } from "@src/@utils";
 import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import useSnackbar from "./useSnackbar";
+import useSnackbar from "@src/hooks/useSnackbar";
 
 interface ReturnType {
   login: (token: string, isFirstLogin: boolean) => void;
