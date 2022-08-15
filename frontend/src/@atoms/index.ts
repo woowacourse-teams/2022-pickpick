@@ -1,5 +1,5 @@
-import { SNACKBAR_STATUS } from "@src/@constants";
-import { SnackbarStatus } from "@src/@types/shared";
+import { SNACKBAR_STATUS, THEME_KIND } from "@src/@constants";
+import { SnackbarStatus, ThemeKind } from "@src/@types/shared";
 import { atom } from "recoil";
 
 interface SnackbarState {
@@ -15,4 +15,9 @@ export const snackbarState = atom<SnackbarState>({
     message: "",
     status: SNACKBAR_STATUS.SUCCESS,
   },
+});
+
+export const themeState = atom<ThemeKind>({
+  key: "themeState",
+  default: THEME_KIND.LIGHT,
 });
