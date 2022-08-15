@@ -11,10 +11,12 @@ import queryClient from "./queryClient";
 import { ReactQueryDevtools } from "react-query/devtools";
 import useModeTheme, { THEME_KIND } from "@src/hooks/useModeTheme";
 import ThemeToggler from "./components/ThemeToggler";
+import { useRecoilState } from "recoil";
+import { themeState } from "./@atoms";
 
 function App() {
   const { handleError } = useApiError();
-  const { theme, handleToggleTheme } = useModeTheme();
+  const { theme } = useModeTheme();
   const element = useRoutes(routes);
 
   useEffect(() => {
@@ -35,10 +37,6 @@ function App() {
         theme={theme === THEME_KIND.LIGHT ? LIGHT_MODE_THEME : DARK_MODE_THEME}
       >
         <GlobalStyle />
-        <ThemeToggler
-          checked={theme === THEME_KIND.LIGHT}
-          onChange={handleToggleTheme}
-        />
         {element}
         <Snackbar />
       </ThemeProvider>
