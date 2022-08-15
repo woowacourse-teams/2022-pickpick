@@ -1,10 +1,16 @@
-import React from "react";
+import { THEME_KIND } from "@src/@constants";
+import useModeTheme from "@src/hooks/useModeTheme";
 import * as Styled from "./style";
 
-type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
-
-function ThemeToggler(props: Props) {
-  return <Styled.Container type="checkbox" {...props} />;
+function ThemeToggler() {
+  const { theme, handleToggleTheme } = useModeTheme();
+  return (
+    <Styled.Container
+      type="checkbox"
+      checked={theme === THEME_KIND.DARK}
+      onChange={handleToggleTheme}
+    />
+  );
 }
 
 export default ThemeToggler;

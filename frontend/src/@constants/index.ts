@@ -85,3 +85,8 @@ export const ERROR_MESSAGE_BY_CODE = {
   MESSAGE_NOT_FOUND: "죄송합니다. 현재 메시지를 가져올 수 없습니다.",
   DEFAULT_MESSAGE: "서버에 오류가 있습니다. 잠시 후에 다시 시도해주세요.",
 } as const;
+
+export const THEME_KIND = {
+  LIGHT: "LIGHT",
+  DARK: "DARK",
+} as const;

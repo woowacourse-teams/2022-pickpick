@@ -1,20 +1,20 @@
+import GlobalStyle from "@src/@styles/GlobalStyle";
+import Snackbar from "@src/components/Snackbar";
+import useApiError from "@src/hooks/useApiError";
+import routes from "@src/Routes";
+import queryClient from "@src/queryClient";
+import useModeTheme from "@src/hooks/useModeTheme";
 import { useRoutes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { DARK_MODE_THEME, LIGHT_MODE_THEME } from "@src/@styles/theme";
-import GlobalStyle from "@src/@styles/GlobalStyle";
-import Snackbar from "./components/Snackbar";
-import useApiError from "./hooks/useApiError";
-import routes from "./Routes";
 import { QueryClientProvider } from "react-query";
 import { useEffect } from "react";
-import queryClient from "./queryClient";
 import { ReactQueryDevtools } from "react-query/devtools";
-import useModeTheme, { THEME_KIND } from "@src/hooks/useModeTheme";
-import ThemeToggler from "./components/ThemeToggler";
+import { THEME_KIND } from "@src/@constants";
 
 function App() {
   const { handleError } = useApiError();
-  const { theme, handleToggleTheme } = useModeTheme();
+  const { theme } = useModeTheme();
   const element = useRoutes(routes);
 
   useEffect(() => {
@@ -35,10 +35,6 @@ function App() {
         theme={theme === THEME_KIND.LIGHT ? LIGHT_MODE_THEME : DARK_MODE_THEME}
       >
         <GlobalStyle />
-        <ThemeToggler
-          checked={theme === THEME_KIND.LIGHT}
-          onChange={handleToggleTheme}
-        />
         {element}
         <Snackbar />
       </ThemeProvider>

@@ -12,34 +12,30 @@ export const Container = styled.input`
     outline: none;
     border: none;
     cursor: pointer;
-
-    &::before { 
-    content: url('./assets/icons/MoonIcon.svg');
-    display: block;
-    position: absolute;
-    z-index: 2;
-    width: 24px;
-    height: 24px;
-    left: 4px;
-    top: 4px;
-    border-radius: 50%;
-    text-indent: 4px;
-    line-height: 29px;
-    word-spacing: 37px;
-    color: #fff;
-    white-space: nowrap;
-   
-    transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
     ${({ theme }: StyledDefaultProps) => css`
-      color: ${theme.COLOR.TEXT.DEFAULT};
-      background-color: ${theme.COLOR.CONTAINER.DEFAULT};
+      background-color: ${theme.COLOR.TEXT.DEFAULT};
     `}
-    }
+    &::before { 
+      content: url('https://shivanarrthine.com/public/images/icons/moon.svg');
+      display: block;
+      position: absolute;
+    
+      width: 24px;
+      height: 24px;
 
+      left: 4px;
+      top: 4px;
+      border-radius: 50%;
+      text-indent: 4px;
+      line-height: 29px;
+      word-spacing: 37px;
+      white-space: nowrap;
+      transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+    }
   &:checked{
     &::before{
         left: 32px;
-        content: url('./assets/icons/SunIcon.svg');
+        content: url('https://shivanarrthine.com/public/images/icons/sun.svg');
       }|
   }
 `;
