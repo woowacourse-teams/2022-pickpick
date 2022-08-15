@@ -13,6 +13,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "2",
@@ -23,6 +24,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "3",
@@ -33,6 +35,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "4",
@@ -43,6 +46,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "5",
@@ -53,6 +57,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "6",
@@ -63,6 +68,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "7",
@@ -73,6 +79,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "8",
@@ -83,6 +90,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "9",
@@ -93,6 +101,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "10",
@@ -103,6 +112,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "11",
@@ -113,6 +123,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "12",
@@ -123,6 +134,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "13",
@@ -133,6 +145,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "14",
@@ -143,6 +156,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "15",
@@ -153,6 +167,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "16",
@@ -163,6 +178,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "17",
@@ -173,6 +189,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "18",
@@ -183,6 +200,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "19",
@@ -193,6 +211,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "20",
@@ -203,6 +222,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
       ],
     },
@@ -218,6 +238,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "22",
@@ -228,6 +249,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "23",
@@ -238,6 +260,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "24",
@@ -248,6 +271,7 @@ export const mainFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
       ],
     },
@@ -269,6 +293,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "2",
@@ -279,6 +304,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "3",
@@ -289,6 +315,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "4",
@@ -299,6 +326,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "5",
@@ -309,6 +337,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "6",
@@ -319,6 +348,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "7",
@@ -329,6 +359,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "8",
@@ -339,6 +370,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "9",
@@ -349,6 +381,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "10",
@@ -359,6 +392,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "11",
@@ -369,6 +403,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "12",
@@ -379,6 +414,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "13",
@@ -389,6 +425,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "14",
@@ -399,6 +436,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "15",
@@ -409,6 +447,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "16",
@@ -419,6 +458,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "17",
@@ -429,6 +469,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "18",
@@ -439,6 +480,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "19",
@@ -449,6 +491,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "20",
@@ -459,6 +502,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
       ],
     },
@@ -474,6 +518,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "22",
@@ -484,6 +529,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "23",
@@ -494,6 +540,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
         {
           id: "24",
@@ -504,6 +551,7 @@ export const bookmarkFeedResponseData = {
           postedDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
           isBookmarked: false,
+          isSetReminded: false,
         },
       ],
     },
@@ -520,6 +568,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "2",
@@ -530,6 +579,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "3",
@@ -540,6 +590,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "4",
@@ -550,6 +601,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "5",
@@ -560,6 +612,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "6",
@@ -570,6 +623,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "7",
@@ -580,6 +634,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "8",
@@ -590,6 +645,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "9",
@@ -600,6 +656,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "10",
@@ -610,6 +667,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "11",
@@ -620,6 +678,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "12",
@@ -630,6 +689,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "13",
@@ -640,6 +700,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "14",
@@ -650,6 +711,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "15",
@@ -660,6 +722,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "16",
@@ -670,6 +733,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "17",
@@ -680,6 +744,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "18",
@@ -690,6 +755,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "19",
@@ -700,6 +766,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "20",
@@ -710,6 +777,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "21",
@@ -720,6 +788,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "22",
@@ -730,6 +799,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "23",
@@ -740,6 +810,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "24",
@@ -750,6 +821,7 @@ export const refinedFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
 ];
 
@@ -763,6 +835,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "2",
@@ -773,6 +846,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "3",
@@ -783,6 +857,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "4",
@@ -793,6 +868,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "5",
@@ -803,6 +879,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "6",
@@ -813,6 +890,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "7",
@@ -823,6 +901,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "8",
@@ -833,6 +912,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "9",
@@ -843,6 +923,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "10",
@@ -853,6 +934,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "11",
@@ -863,6 +945,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "12",
@@ -873,6 +956,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "13",
@@ -883,6 +967,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "14",
@@ -893,6 +978,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "15",
@@ -903,6 +989,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "16",
@@ -913,6 +1000,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "17",
@@ -923,6 +1011,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "18",
@@ -933,6 +1022,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "19",
@@ -943,6 +1033,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "20",
@@ -953,6 +1044,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "21",
@@ -963,6 +1055,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "22",
@@ -973,6 +1066,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "23",
@@ -983,6 +1077,7 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
   {
     id: "24",
@@ -993,5 +1088,6 @@ export const refinedBookmarkFeedResponseData = [
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
     isBookmarked: false,
+    isSetReminded: false,
   },
 ];

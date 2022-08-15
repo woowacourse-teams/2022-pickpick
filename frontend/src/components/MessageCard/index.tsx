@@ -12,6 +12,7 @@ interface Props {
   text: string;
   thumbnail: string;
   isBookmarked: boolean;
+  isSetReminded: boolean;
   toggleBookmark: () => void;
   handleOpenReminderModal?: () => void;
 }
@@ -22,6 +23,7 @@ function MessageCard({
   text,
   thumbnail,
   isBookmarked,
+  isSetReminded,
   toggleBookmark,
   handleOpenReminderModal,
 }: Props) {
@@ -42,7 +44,7 @@ function MessageCard({
         <IconButton
           type="button"
           icon="alarm"
-          isActive={false}
+          isActive={isSetReminded}
           onClick={handleOpenReminderModal}
         >
           <FlexRow justifyContent="center" alignItems="center" gap="5px">

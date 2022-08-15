@@ -13,6 +13,7 @@ export interface Message {
   text: string;
   userThumbnail: string;
   isBookmarked: boolean;
+  isSetReminded: boolean;
 }
 
 export type Bookmark = Omit<Message, "isBookmarked">;

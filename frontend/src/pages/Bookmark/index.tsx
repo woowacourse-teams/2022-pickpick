@@ -1,6 +1,5 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
-import SearchInput from "@src/components/SearchInput";
 import * as Styled from "../Feed/style";
 import { useInfiniteQuery } from "react-query";
 import { ResponseBookmarks } from "@src/@types/shared";
@@ -36,7 +35,14 @@ function Bookmark() {
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
             {parsedData.map(
-              ({ id, username, postedDate, text, userThumbnail }) => (
+              ({
+                id,
+                username,
+                postedDate,
+                text,
+                userThumbnail,
+                isSetReminded,
+              }) => (
                 <MessageCard
                   key={id}
                   username={username}
@@ -44,6 +50,7 @@ function Bookmark() {
                   text={text}
                   thumbnail={userThumbnail}
                   isBookmarked={true}
+                  isSetReminded={isSetReminded}
                   toggleBookmark={handleRemoveBookmark(id)}
                 />
               )

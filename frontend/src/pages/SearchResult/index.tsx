@@ -58,6 +58,7 @@ function SearchResult() {
               text,
               userThumbnail,
               isBookmarked,
+              isSetReminded,
             }) => (
               <React.Fragment key={id}>
                 <MessageCard
@@ -66,6 +67,7 @@ function SearchResult() {
                   text={text}
                   thumbnail={userThumbnail}
                   isBookmarked={isBookmarked}
+                  isSetReminded={isSetReminded}
                   toggleBookmark={
                     isBookmarked
                       ? handleRemoveBookmark(id)
