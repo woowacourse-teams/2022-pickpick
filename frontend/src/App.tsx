@@ -9,10 +9,8 @@ import { QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import queryClient from "./queryClient";
 import { ReactQueryDevtools } from "react-query/devtools";
-import useModeTheme, { THEME_KIND } from "@src/hooks/useModeTheme";
-import ThemeToggler from "./components/ThemeToggler";
-import { useRecoilState } from "recoil";
-import { themeState } from "./@atoms";
+import useModeTheme from "@src/hooks/useModeTheme";
+import { THEME_KIND } from "./@constants";
 
 function App() {
   const { handleError } = useApiError();
