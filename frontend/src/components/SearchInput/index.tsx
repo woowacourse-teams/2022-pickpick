@@ -1,13 +1,12 @@
-import React from "react";
+import { PropsWithChildren, InputHTMLAttributes } from "react";
 import * as Styled from "./style";
 import SearchIcon from "@public/assets/icons/SearchIcon.svg";
 import { FlexRow } from "@src/@styles/shared";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  children?: JSX.Element | string | boolean;
-}
-
-function SearchInput({ children, ...props }: Props) {
+function SearchInput({
+  children,
+  ...props
+}: PropsWithChildren<InputHTMLAttributes<HTMLInputElement>>) {
   return (
     <Styled.Container>
       <FlexRow gap="6px" alignItems="center">

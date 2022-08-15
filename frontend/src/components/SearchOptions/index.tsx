@@ -2,7 +2,7 @@ import {
   ResponseSubscribedChannels,
   SubscribedChannel,
 } from "@src/@types/shared";
-import Button from "../@shared/Button";
+import Button from "@src/components/@shared/Button";
 import * as Styled from "./style";
 
 interface Props {

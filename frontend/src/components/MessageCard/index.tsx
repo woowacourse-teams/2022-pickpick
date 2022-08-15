@@ -4,7 +4,7 @@ import AlarmIconActive from "@public/assets/icons/AlarmIcon-Active.svg";
 import ProfileImage from "@src/components/ProfileImage";
 import { FlexRow } from "@src/@styles/shared";
 import { parseTime } from "@src/@utils";
-import IconButton from "../@shared/IconButton";
+import IconButton from "@src/components/@shared/IconButton";
 
 interface Props {
   username: string;

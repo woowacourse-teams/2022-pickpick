@@ -1,14 +1,12 @@
+import { PropsWithChildren } from "react";
+import * as Styled from "./style";
 import Header from "@src/components/@layouts/Header";
 import Footer from "@src/components/@layouts/Footer";
-import * as Styled from "./style";
-import Navigation from "../Navigation";
+import Navigation from "@src/components/@layouts/Navigation";
 import { useLocation } from "react-router-dom";
 import { PATH_NAME } from "@src/@constants";
 
-interface Props {
-  children: JSX.Element;
-}
-function LayoutContainer({ children }: Props) {
+function LayoutContainer({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
 
   const hasHeader = () => pathname === PATH_NAME.HOME;

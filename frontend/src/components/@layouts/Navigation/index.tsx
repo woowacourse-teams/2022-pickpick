@@ -14,11 +14,11 @@ import Drawer from "@src/components/Drawer";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getSubscribedChannels } from "@src/api/channels";
+import { useTheme } from "styled-components";
+import { Theme } from "@src/@types/shared";
 import useModal from "@src/hooks/useModal";
 import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
-import { useTheme } from "styled-components";
-import { Theme } from "@src/@types/shared";
 
 function Navigation() {
   const { pathname } = useLocation();
