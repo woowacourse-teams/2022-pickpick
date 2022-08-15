@@ -1,15 +1,16 @@
-import { getDateInformation, getMeridiemTime } from "@src/@utils";
+import { getDateInformation, getMeridiemTime, ISOConverter } from "@src/@utils";
+import { postReminder } from "@src/api/reminders";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useMutation } from "react-query";
 import useDropdown from "./useDropdown";
 import useSnackbar from "./useSnackbar";
 
 interface IsInvalidateDateTimeProps {
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
+  checkedYear: number;
+  checkedMonth: number;
+  checkedDate: number;
+  checkedHour: number;
+  checkedMinute: number;
   year: number;
   month: number;
   date: number;
@@ -46,7 +47,6 @@ const isInvalidateDateTime = ({
   checkedYear,
   checkedMonth,
   checkedDate,
-  checkedMeridiem,
   checkedHour,
   checkedMinute,
   year,
@@ -55,19 +55,49 @@ const isInvalidateDateTime = ({
   hour,
   minute,
 }: IsInvalidateDateTimeProps) => {
-  return (
-    Number(checkedYear.replace("년", "")) < year ||
-    Number(checkedMonth.replace("월", "")) < month ||
-    Number(checkedDate.replace("일", "")) < date ||
-    convertMeridiemHourToStandardHour(
-      checkedMeridiem,
-      Number(checkedHour.replace("시", ""))
-    ) < hour ||
-    Number(checkedMinute.replace("분", "")) < minute
-  );
+  if (checkedYear < year) return true;
+  if (checkedYear <= year && checkedMonth < month) return true;
+  if (checkedYear <= year && checkedMonth <= month && checkedDate < date)
+    return true;
+
+  if (
+    checkedYear <= year &&
+    checkedMonth <= month &&
+    checkedDate <= date &&
+    checkedHour < hour
+  )
+    return true;
+
+  if (
+    checkedYear <= year &&
+    checkedMonth <= month &&
+    checkedDate <= date &&
+    checkedHour <= hour &&
+    checkedMinute < minute
+  )
+    return true;
+
+  return false;
 };
 
-function useSetReminder() {
+interface Props {
+  targetMessageId: string;
+  handleCloseReminderModal: () => void;
+  refetchFeed: () => void;
+}
+
+function useSetReminder({
+  targetMessageId,
+  handleCloseReminderModal,
+  refetchFeed,
+}: Props) {
+  const { mutate: addReminder } = useMutation(postReminder, {
+    onSuccess: () => {
+      handleCloseReminderModal();
+      refetchFeed();
+    },
+  });
+
   const { year, month, date, hour, minute } = getDateInformation(new Date());
   const { date: lastDate } = getDateInformation(new Date(year, month, 0));
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
@@ -135,14 +165,22 @@ function useSetReminder() {
   };
 
   const handleSubmit = () => {
+    const replaceCheckedYear = Number(checkedYear.replace("년", ""));
+    const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
+    const replaceCheckedDate = Number(checkedDate.replace("일", ""));
+    const replaceCheckedHour = convertMeridiemHourToStandardHour(
+      checkedMeridiem,
+      Number(checkedHour.replace("시", ""))
+    );
+    const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+
     if (
       isInvalidateDateTime({
-        checkedYear,
-        checkedMonth,
-        checkedDate,
-        checkedMeridiem,
-        checkedHour,
-        checkedMinute,
+        checkedYear: replaceCheckedYear,
+        checkedMonth: replaceCheckedMonth,
+        checkedDate: replaceCheckedDate,
+        checkedHour: replaceCheckedHour,
+        checkedMinute: replaceCheckedMinute,
         year,
         month,
         date,
@@ -153,8 +191,19 @@ function useSetReminder() {
       openFailureSnackbar(
         "리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다."
       );
+
       return;
     }
+
+    const reminderISODateTime = ISOConverter(
+      `${replaceCheckedYear}-${replaceCheckedMonth}-${replaceCheckedDate}`,
+      `${replaceCheckedHour}:${replaceCheckedMinute}`
+    );
+
+    addReminder({
+      messageId: Number(targetMessageId),
+      reminderDate: reminderISODateTime,
+    });
 
     return;
   };
