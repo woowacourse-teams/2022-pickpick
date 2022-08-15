@@ -54,7 +54,7 @@ export const deleteCookie = (key: string) => {
   document.cookie = key + "=; Max-Age=0";
 };
 
-export const ISOConverter = (date: string): string => {
+export const ISOConverter = (date: string, time?: string): string => {
   const today = new Date();
 
   if (date === DATE.TODAY) {
@@ -68,6 +68,15 @@ export const ISOConverter = (date: string): string => {
   }
 
   const [year, month, day] = date.split("-");
+
+  if (time) {
+    const [hour, minute] = time.split(":");
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )}${`T${hour.padStart(2, "0")}:${minute.padStart(2, "0")}:00`}`;
+  }
 
   return `${year}-${month.padStart(2, "0")}-${day.padStart(
     2,
