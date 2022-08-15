@@ -39,3 +39,9 @@ export const ChannelName = styled.p`
     font-size: ${theme.FONT_SIZE.LARGE_BODY};
   `}
 `;
+
+export const ThemeTogglerContainer = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+`;
