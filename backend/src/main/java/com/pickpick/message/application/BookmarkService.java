@@ -14,6 +14,7 @@ import com.pickpick.message.domain.QBookmark;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
+import com.pickpick.message.ui.dto.BookmarkSelectRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -26,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class BookmarkService {
-
-    private static final int COUNT = 20;
 
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
@@ -54,13 +53,13 @@ public class BookmarkService {
         bookmarks.save(bookmark);
     }
 
-    public BookmarkResponses find(final Long bookmarkId, final Long memberId) {
-        List<Bookmark> bookmarkList = findBookmarks(bookmarkId, memberId);
+    public BookmarkResponses find(final BookmarkSelectRequest request, final Long memberId) {
+        List<Bookmark> bookmarkList = findBookmarks(request, memberId);
 
         return new BookmarkResponses(toBookmarkResponseList(bookmarkList), isLast(bookmarkList, memberId));
     }
 
-    private List<Bookmark> findBookmarks(final Long bookmarkId, final Long memberId) {
+    private List<Bookmark> findBookmarks(final BookmarkSelectRequest request, final Long memberId) {
         return jpaQueryFactory
                 .selectFrom(QBookmark.bookmark)
                 .leftJoin(QBookmark.bookmark.message)
@@ -68,9 +67,9 @@ public class BookmarkService {
                 .leftJoin(QBookmark.bookmark.member)
                 .fetchJoin()
                 .where(QBookmark.bookmark.member.id.eq(memberId))
-                .where(bookmarkIdCondition(bookmarkId))
+                .where(bookmarkIdCondition(request.getBookmarkId()))
                 .orderBy(QBookmark.bookmark.message.postedDate.desc())
-                .limit(COUNT)
+                .limit(request.getCount())
                 .fetch();
     }
 
