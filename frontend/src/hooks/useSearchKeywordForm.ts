@@ -1,4 +1,10 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  FormEventHandler,
+  FormEvent,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import useSnackbar from "@src/hooks/useSnackbar";
 import { PATH_NAME } from "@src/@constants";
@@ -9,8 +15,8 @@ interface Props {
 
 interface ReturnType {
   searchKeyword: string;
-  handleChangeSearchKeyword: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmitSearchKeyword: (event: FormEvent) => void;
+  handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement>;
+  handleSubmitSearchKeyword: FormEventHandler;
 }
 
 function useSearchKeywordForm({ channelIds }: Props): ReturnType {
