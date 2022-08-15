@@ -1,7 +1,13 @@
-import { SNACKBAR_STATUS, ERROR_MESSAGE_BY_CODE } from "@src/@constants";
+import {
+  SNACKBAR_STATUS,
+  ERROR_MESSAGE_BY_CODE,
+  THEME_KIND,
+} from "@src/@constants";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export type Theme = typeof LIGHT_MODE_THEME;
+
+export type ThemeKind = keyof typeof THEME_KIND;
 
 export interface StyledDefaultProps {
   theme: Theme;
