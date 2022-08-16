@@ -100,4 +100,19 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_200_확인(response);
     }
+
+    @Test
+    void 파일_공유_메시지_요청_시_메시지가_저장된다() {
+        // given
+        Map<String, Object> messageCreatedRequest = createEventRequest("");
+        post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
+
+        Map<String, Object> messageDeletedRequest = createEventRequest(SlackEvent.MESSAGE_FILE_SHARE.getSubtype());
+
+        // when
+        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageDeletedRequest);
+
+        // then
+        상태코드_200_확인(response);
+    }
 }
