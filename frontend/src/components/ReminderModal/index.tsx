@@ -7,16 +7,18 @@ import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 
-export type ButtonText = "생성" | "수정" | "취소";
+export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
 interface Props {
   targetMessageId: string;
+  isTargetMessageSetReminded: boolean;
   handleCloseReminderModal: () => void;
   refetchFeed: () => void;
 }
 
 function ReminderModal({
   targetMessageId,
+  isTargetMessageSetReminded,
   handleCloseReminderModal,
   refetchFeed,
 }: Props) {
@@ -39,10 +41,13 @@ function ReminderModal({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleSubmit,
+      handleCreateSubmit,
+      handleRemoveSubmit,
+      handleModifySubmit,
     },
   } = useSetReminder({
     targetMessageId,
+    isTargetMessageSetReminded,
     handleCloseReminderModal,
     refetchFeed,
   });
@@ -165,9 +170,32 @@ function ReminderModal({
         >
           취소
         </Styled.Button>
-        <Styled.Button text="생성" type="button" onClick={handleSubmit}>
-          생성
-        </Styled.Button>
+
+        {!isTargetMessageSetReminded && (
+          <Styled.Button text="생성" type="button" onClick={handleCreateSubmit}>
+            생성
+          </Styled.Button>
+        )}
+
+        {isTargetMessageSetReminded && (
+          <>
+            <Styled.Button
+              text="삭제"
+              type="button"
+              onClick={() => handleRemoveSubmit(targetMessageId)}
+            >
+              삭제
+            </Styled.Button>
+
+            <Styled.Button
+              text="수정"
+              type="button"
+              onClick={handleModifySubmit}
+            >
+              수정
+            </Styled.Button>
+          </>
+        )}
       </FlexRow>
     </Styled.Container>
   );
