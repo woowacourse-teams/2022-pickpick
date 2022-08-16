@@ -3,6 +3,7 @@ package com.pickpick.message.ui;
 import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.ReminderService;
 import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderSelectRequest;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,11 @@ public class ReminderController {
     public void save(@AuthenticationPrincipal final Long memberId,
                      @RequestBody final ReminderRequest reminderRequest) {
         reminderService.save(memberId, reminderRequest);
+    }
+
+    @GetMapping(params = "messageId")
+    public ReminderResponse findOne(final @AuthenticationPrincipal Long memberId, final @RequestParam Long messageId) {
+        return reminderService.findOne(messageId, memberId);
     }
 
     @GetMapping

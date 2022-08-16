@@ -6,7 +6,7 @@ import org.springframework.data.repository.Repository;
 
 public interface MessageRepository extends Repository<Message, Long> {
 
-    void save(Message message);
+    Message save(Message message);
 
     List<Message> findAll();
 

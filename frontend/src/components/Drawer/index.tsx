@@ -1,11 +1,12 @@
 import * as Styled from "./style";
 import PlusIcon from "@public/assets/icons/PlusIcon.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
-import WrapperLink from "../@shared/WrapperLink";
+import WrapperLink from "@src/components/@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
 import { SubscribedChannel, Theme } from "@src/@types/shared";
 import { Link } from "react-router-dom";
 import { useTheme } from "styled-components";
+import ThemeToggler from "@src/components/ThemeToggler";
 
 interface Props {
   channels?: SubscribedChannel[];
@@ -42,6 +43,9 @@ function Drawer({ channels = [], handleCloseDrawer }: Props) {
           </Link>
         ))}
       </FlexColumn>
+      <Styled.ThemeTogglerContainer>
+        <ThemeToggler />
+      </Styled.ThemeTogglerContainer>
     </Styled.Container>
   );
 }
