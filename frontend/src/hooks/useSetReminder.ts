@@ -103,7 +103,7 @@ const parsedDateTime = (ISODateTime: string) => {
   };
 };
 
-interface HandleReminderSubmitProps {
+export interface HandleReminderSubmitProps {
   event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>;
   key: string;
 }

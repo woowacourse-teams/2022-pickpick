@@ -1,11 +1,12 @@
 import * as Styled from "./style";
 import Calendar from "@public/assets/icons/Calendar.svg";
 import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
-import { FlexColumn, FlexRow } from "@src/@styles/shared";
+import { FlexColumn } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
+import ReminderModalButtons from "../ReminderModalButtons";
 
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
@@ -161,47 +162,13 @@ function ReminderModal({
         }}
       </Dropdown>
 
-      <FlexRow gap="8px" margin-top="18px" justifyContent="flex-end">
-        <Styled.Button
-          text="취소"
-          type="button"
-          onClick={handleCloseReminderModal}
-        >
-          취소
-        </Styled.Button>
-
-        {!isTargetMessageSetReminded && (
-          <Styled.Button
-            text="생성"
-            type="submit"
-            onClick={(event) => handleReminderSubmit({ event, key: "create" })}
-          >
-            생성
-          </Styled.Button>
-        )}
-
-        {isTargetMessageSetReminded && (
-          <>
-            <Styled.Button
-              text="삭제"
-              type="button"
-              onClick={() => handleRemoveSubmit(targetMessageId)}
-            >
-              삭제
-            </Styled.Button>
-
-            <Styled.Button
-              text="수정"
-              type="submit"
-              onClick={(event) =>
-                handleReminderSubmit({ event, key: "modify" })
-              }
-            >
-              수정
-            </Styled.Button>
-          </>
-        )}
-      </FlexRow>
+      <ReminderModalButtons
+        targetMessageId={targetMessageId}
+        isTargetMessageSetReminded={isTargetMessageSetReminded}
+        handleCloseReminderModal={handleCloseReminderModal}
+        handleReminderSubmit={handleReminderSubmit}
+        handleRemoveSubmit={handleRemoveSubmit}
+      />
     </Styled.Container>
   );
 }
