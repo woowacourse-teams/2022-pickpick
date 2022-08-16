@@ -238,7 +238,7 @@ function useSetReminder({
       })
     ) {
       openFailureSnackbar(
-        "리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다."
+        "리마인더 시간은 현재 시간보다 미래로 설정해주셔야 합니다."
       );
 
       return;
@@ -267,10 +267,14 @@ function useSetReminder({
   };
 
   const handleRemoveSubmit = async (targetMessageId: string) => {
-    await deleteReminder(targetMessageId);
+    if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
+      await deleteReminder(targetMessageId);
 
-    refetchFeed();
-    handleCloseReminderModal();
+      refetchFeed();
+      handleCloseReminderModal();
+
+      return;
+    }
 
     return;
   };
