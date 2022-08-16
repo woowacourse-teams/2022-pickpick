@@ -18,8 +18,6 @@ export interface Message {
 
 export type Bookmark = Omit<Message, "isReminded" | "isBookmarked">;
 
-export type Reminder = Omit<Message, "isReminded" | "isBookmarked">;
-
 export interface ResponseReminder {
   id: number;
   messageId: number;
@@ -32,7 +30,7 @@ export interface ResponseReminder {
 }
 
 export interface ResponseReminders {
-  reminders: Reminder[];
+  reminders: ResponseReminder[];
   isLast: boolean;
 }
 

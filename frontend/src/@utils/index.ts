@@ -2,7 +2,7 @@ import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
 import {
   Bookmark,
   Message,
-  Reminder,
+  ResponseReminder,
   ResponseBookmarks,
   ResponseMessages,
   ResponseReminders,
@@ -43,7 +43,7 @@ export const extractResponseBookmarks = (
 
 export const extractResponseReminders = (
   data?: InfiniteData<ResponseReminders>
-): Reminder[] => {
+): ResponseReminder[] => {
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.reminders);
