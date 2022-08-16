@@ -2,8 +2,10 @@ import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
 import {
   Bookmark,
   Message,
+  Reminder,
   ResponseBookmarks,
   ResponseMessages,
+  ResponseReminders,
 } from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
@@ -37,6 +39,14 @@ export const extractResponseBookmarks = (
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.bookmarks);
+};
+
+export const extractResponseReminders = (
+  data?: InfiniteData<ResponseReminders>
+): Reminder[] => {
+  if (!data) return [];
+
+  return data.pages.flatMap((arr) => arr.reminders);
 };
 
 export const setCookie = (key: string, value: string) => {
