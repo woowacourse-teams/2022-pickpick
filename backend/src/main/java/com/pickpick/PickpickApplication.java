@@ -13,4 +13,5 @@ public class PickpickApplication {
     public static void main(String[] args) {
         SpringApplication.run(PickpickApplication.class, args);
     }
+    
 }
