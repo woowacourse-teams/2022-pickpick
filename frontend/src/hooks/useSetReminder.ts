@@ -1,7 +1,13 @@
+import { QUERY_KEY } from "@src/@constants";
 import { getDateInformation, getMeridiemTime, ISOConverter } from "@src/@utils";
-import { postReminder } from "@src/api/reminders";
+import {
+  deleteReminder,
+  getReminder,
+  postReminder,
+  putReminder,
+} from "@src/api/reminders";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import useDropdown from "./useDropdown";
 import useSnackbar from "./useSnackbar";
 
@@ -17,31 +23,6 @@ interface IsInvalidateDateTimeProps {
   hour: number;
   minute: number;
 }
-
-const convertTimeToStepTenMinuteTime = ({
-  hour,
-  minute,
-}: {
-  hour: number;
-  minute: number;
-}) => {
-  if (minute > 50) {
-    return { parsedHour: hour + 1, parsedMinute: 0 };
-  }
-
-  return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
-};
-
-const convertMeridiemHourToStandardHour = (
-  meridiem: string,
-  meridiemHour: number
-): number => {
-  if (meridiem === "오후") {
-    return meridiemHour === 12 ? 0 : meridiemHour + 12;
-  }
-
-  return meridiemHour;
-};
 
 const isInvalidateDateTime = ({
   checkedYear,
@@ -80,18 +61,77 @@ const isInvalidateDateTime = ({
   return false;
 };
 
+const convertTimeToStepTenMinuteTime = ({
+  hour,
+  minute,
+}: {
+  hour: number;
+  minute: number;
+}) => {
+  if (minute > 50) {
+    return { parsedHour: hour + 1, parsedMinute: 0 };
+  }
+
+  return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
+};
+
+const convertMeridiemHourToStandardHour = (
+  meridiem: string,
+  meridiemHour: number
+): number => {
+  if (meridiem === "오후") {
+    return meridiemHour === 12 ? 0 : meridiemHour + 12;
+  }
+
+  return meridiemHour;
+};
+
+const parsedDateTime = (ISODateTime: string) => {
+  const [date, time] = ISODateTime.split("T");
+  const [targetYear, targetMonth, targetDate] = date.split("-");
+  const [targetHour, targetMinute, _] = time.split(":");
+  const { meridiem: targetMeridiem, hour: targetMeridiemHour } =
+    getMeridiemTime(Number(targetHour));
+
+  return {
+    targetYear,
+    targetMonth,
+    targetDate,
+    targetMeridiem,
+    targetMeridiemHour,
+    targetMinute,
+  };
+};
+
 interface Props {
   targetMessageId: string;
+  isTargetMessageSetReminded: boolean;
   handleCloseReminderModal: () => void;
   refetchFeed: () => void;
 }
 
 function useSetReminder({
   targetMessageId,
+  isTargetMessageSetReminded,
   handleCloseReminderModal,
   refetchFeed,
 }: Props) {
+  const { data: targetMessageData } = useQuery(
+    QUERY_KEY.REMINDER,
+    () => getReminder(targetMessageId),
+    {
+      enabled: isTargetMessageSetReminded,
+    }
+  );
+
   const { mutate: addReminder } = useMutation(postReminder, {
+    onSuccess: () => {
+      handleCloseReminderModal();
+      refetchFeed();
+    },
+  });
+
+  const { mutate: modifyReminder } = useMutation(putReminder, {
     onSuccess: () => {
       handleCloseReminderModal();
       refetchFeed();
@@ -127,6 +167,27 @@ function useSetReminder({
   const [checkedYear, setCheckedYear] = useState(`${year}년`);
   const [checkedMonth, setCheckedMonth] = useState(`${month}월`);
   const [checkedDate, setCheckedDate] = useState(`${date}일`);
+
+  useEffect(() => {
+    if (isTargetMessageSetReminded && targetMessageData) {
+      const {
+        targetYear,
+        targetMonth,
+        targetDate,
+        targetMeridiem,
+        targetMeridiemHour,
+        targetMinute,
+      } = parsedDateTime(targetMessageData.remindDate);
+
+      setCheckedYear(`${targetYear}년`);
+      setCheckedMonth(`${targetMonth}월`);
+      setCheckedDate(`${targetDate}일`);
+
+      setCheckedMeridiem(targetMeridiem);
+      setCheckedHour(`${targetMeridiemHour}시`);
+      setCheckedMinute(`${targetMinute}분`);
+    }
+  }, [targetMessageData, isTargetMessageSetReminded]);
 
   const meridiems = ["오전", "오후"];
   const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
@@ -164,7 +225,7 @@ function useSetReminder({
     setCheckedDate(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleCreateSubmit = () => {
     const replaceCheckedYear = Number(checkedYear.replace("년", ""));
     const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
     const replaceCheckedDate = Number(checkedDate.replace("일", ""));
@@ -201,6 +262,59 @@ function useSetReminder({
     );
 
     addReminder({
+      messageId: Number(targetMessageId),
+      reminderDate: reminderISODateTime,
+    });
+
+    return;
+  };
+
+  const handleRemoveSubmit = async (targetMessageId: string) => {
+    await deleteReminder(targetMessageId);
+
+    refetchFeed();
+    handleCloseReminderModal();
+
+    return;
+  };
+
+  const handleModifySubmit = () => {
+    const replaceCheckedYear = Number(checkedYear.replace("년", ""));
+    const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
+    const replaceCheckedDate = Number(checkedDate.replace("일", ""));
+    const replaceCheckedHour = convertMeridiemHourToStandardHour(
+      checkedMeridiem,
+      Number(checkedHour.replace("시", ""))
+    );
+    const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+
+    if (
+      isInvalidateDateTime({
+        checkedYear: replaceCheckedYear,
+        checkedMonth: replaceCheckedMonth,
+        checkedDate: replaceCheckedDate,
+        checkedHour: replaceCheckedHour,
+        checkedMinute: replaceCheckedMinute,
+        year,
+        month,
+        date,
+        hour,
+        minute,
+      })
+    ) {
+      openFailureSnackbar(
+        "리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다."
+      );
+
+      return;
+    }
+
+    const reminderISODateTime = ISOConverter(
+      `${replaceCheckedYear}-${replaceCheckedMonth}-${replaceCheckedDate}`,
+      `${replaceCheckedHour}:${replaceCheckedMinute}`
+    );
+
+    modifyReminder({
       messageId: Number(targetMessageId),
       reminderDate: reminderISODateTime,
     });
@@ -293,7 +407,9 @@ function useSetReminder({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleSubmit,
+      handleCreateSubmit,
+      handleRemoveSubmit,
+      handleModifySubmit,
     },
   };
 }
