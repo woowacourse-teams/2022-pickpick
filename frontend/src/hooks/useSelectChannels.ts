@@ -57,8 +57,8 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
   }, [allChannels, currentChannelIds]);
 
   return {
-    selectedChannelIds,
     allChannels,
+    selectedChannelIds,
     handleToggleChannel,
     handleToggleAllChannels,
   };

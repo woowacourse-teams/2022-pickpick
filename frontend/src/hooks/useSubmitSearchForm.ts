@@ -1,4 +1,10 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import {
+  ChangeEventHandler,
+  ChangeEvent,
+  FormEventHandler,
+  FormEvent,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import useSnackbar from "@src/hooks/useSnackbar";
 import { PATH_NAME } from "@src/@constants";
@@ -8,19 +14,21 @@ interface Props {
 }
 interface ReturnType {
   searchKeyword: string;
-  handleChangeSearchKeyword: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmitSearchKeyword: (
-    selectedChannelIds: number[]
-  ) => (event: FormEvent) => void;
+  handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement>;
+  handleSubmitSearchKeyword: (selectedChannelIds: number[]) => FormEventHandler;
 }
+
+const parseValue = (value: string) => value.trim();
 
 function useSubmitSearchForm({ keyword }: Props): ReturnType {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
   const [searchKeyword, setSearchKeyword] = useState(keyword);
 
-  const handleChangeSearchKeyword = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(event.target.value);
+  const handleChangeSearchKeyword = ({
+    target,
+  }: ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(target.value);
   };
 
   const handleSubmitSearchKeyword =
@@ -33,7 +41,7 @@ function useSubmitSearchForm({ keyword }: Props): ReturnType {
         return;
       }
 
-      if (!searchKeyword.length) {
+      if (!parseValue(searchKeyword).length) {
         openFailureSnackbar(
           "검색할 키워드를 입력하신 후 검색 버튼을 눌러주세요."
         );
