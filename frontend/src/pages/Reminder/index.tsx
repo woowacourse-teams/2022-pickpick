@@ -15,13 +15,19 @@ import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import ReminderModal from "@src/components/ReminderModal";
 import useModal from "@src/hooks/useModal";
-import { useState } from "react";
+import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 
 function Reminder() {
   const { pathname } = useLocation();
-  const [targetMessageId, setTargetMessageId] = useState("");
-  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
-    useState(false);
+  const {
+    messageTargetState: { targetMessageId, isTargetMessageSetReminded },
+    handler: {
+      handleUpdateTargetMessageId,
+      handleUpdateTargetMessageSetReminded,
+      handleInitializeTargetMessageId,
+      handleInitializeTargetMessageSetReminded,
+    },
+  } = useSetTargetMessage();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseReminders>(QUERY_KEY.REMINDERS, getReminders, {
@@ -35,22 +41,6 @@ function Reminder() {
     handleOpenModal: handleOpenReminderModal,
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
-
-  const handleUpdateTargetMessageId = (id: string) => {
-    setTargetMessageId(id);
-  };
-
-  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
-    setIsTargetMessageSetReminded(isSetReminded);
-  };
-
-  const handleInitializeTargetMessageId = () => {
-    setTargetMessageId("");
-  };
-
-  const handleInitializeTargetMessageSetReminded = () => {
-    setIsTargetMessageSetReminded(false);
-  };
 
   return (
     <Styled.Container>

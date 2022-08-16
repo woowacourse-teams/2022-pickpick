@@ -4,7 +4,7 @@ import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages } from "@src/@types/shared";
-import React, { useState } from "react";
+import React from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages } from "@src/@utils";
@@ -21,14 +21,22 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
+import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const { key: queryKey, pathname } = useLocation();
-  const [targetMessageId, setTargetMessageId] = useState("");
-  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
-    useState(false);
+
+  const {
+    messageTargetState: { targetMessageId, isTargetMessageSetReminded },
+    handler: {
+      handleUpdateTargetMessageId,
+      handleUpdateTargetMessageSetReminded,
+      handleInitializeTargetMessageId,
+      handleInitializeTargetMessageSetReminded,
+    },
+  } = useSetTargetMessage();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -52,22 +60,6 @@ function Feed() {
     handleOpenModal: handleOpenReminderModal,
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
-
-  const handleUpdateTargetMessageId = (id: string) => {
-    setTargetMessageId(id);
-  };
-
-  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
-    setIsTargetMessageSetReminded(isSetReminded);
-  };
-
-  const handleInitializeTargetMessageId = () => {
-    setTargetMessageId("");
-  };
-
-  const handleInitializeTargetMessageSetReminded = () => {
-    setIsTargetMessageSetReminded(false);
-  };
 
   const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,

@@ -1,5 +1,5 @@
 import * as Styled from "../Feed/style";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import { useInfiniteQuery } from "react-query";
 import { ResponseMessages } from "@src/@types/shared";
@@ -22,14 +22,22 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
+import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 
 function SpecificDateFeed() {
   const { key: queryKey, pathname } = useLocation();
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
-  const [targetMessageId, setTargetMessageId] = useState("");
-  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
-    useState(false);
+
+  const {
+    messageTargetState: { targetMessageId, isTargetMessageSetReminded },
+    handler: {
+      handleUpdateTargetMessageId,
+      handleUpdateTargetMessageSetReminded,
+      handleInitializeTargetMessageId,
+      handleInitializeTargetMessageSetReminded,
+    },
+  } = useSetTargetMessage();
 
   const {
     data,
@@ -63,22 +71,6 @@ function SpecificDateFeed() {
     handleOpenModal: handleOpenReminderModal,
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
-
-  const handleUpdateTargetMessageId = (id: string) => {
-    setTargetMessageId(id);
-  };
-
-  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
-    setIsTargetMessageSetReminded(isSetReminded);
-  };
-
-  const handleInitializeTargetMessageId = () => {
-    setTargetMessageId("");
-  };
-
-  const handleInitializeTargetMessageSetReminded = () => {
-    setIsTargetMessageSetReminded(false);
-  };
 
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
     isCallable: hasPreviousPage,
