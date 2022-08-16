@@ -51,7 +51,6 @@ public class MessageFileShareService implements SlackEventService {
                 .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
 
         String channelSlackId = slackMessageDto.getChannelSlackId();
-
         Channel channel = channels.findBySlackId(channelSlackId)
                 .orElseGet(() -> createChannel(channelSlackId));
 

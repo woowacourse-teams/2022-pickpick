@@ -107,10 +107,10 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> messageCreatedRequest = createEventRequest("");
         post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
 
-        Map<String, Object> messageDeletedRequest = createEventRequest(SlackEvent.MESSAGE_FILE_SHARE.getSubtype());
+        Map<String, Object> fileShareMessageRequest = createEventRequest(SlackEvent.MESSAGE_FILE_SHARE.getSubtype());
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageDeletedRequest);
+        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, fileShareMessageRequest);
 
         // then
         상태코드_200_확인(response);

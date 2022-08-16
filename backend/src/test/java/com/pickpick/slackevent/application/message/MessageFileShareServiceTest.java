@@ -4,7 +4,7 @@ import static com.pickpick.slackevent.application.SlackEvent.MESSAGE_FILE_SHARE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -63,7 +63,7 @@ class MessageFileShareServiceTest {
     @MockBean
     private MethodsClient slackClient;
 
-    @DisplayName("파일과 함께 생성된 메시지에 대한 저장")
+    @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있지 않으면 채널 신규 저장 후 메시지를 저장한다")
     @ValueSource(strings = {"", " ", "파일과 함께 전송한 메시지 text"})
     @ParameterizedTest
     void fileShareMessage(final String expectedText) throws SlackApiException, IOException {
@@ -72,10 +72,10 @@ class MessageFileShareServiceTest {
         Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
         Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
-        ConversationsInfoResponse conversationsInfoResponse = setupMockData();
+        ConversationsInfoResponse conversationsInfoResponse = setUpChannelMockData();
 
-        when(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
-                .thenReturn(conversationsInfoResponse);
+        given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
+                .willReturn(conversationsInfoResponse);
 
         // when
         messageFileShareService.execute(fileShareRequest(expectedText));
@@ -92,7 +92,7 @@ class MessageFileShareServiceTest {
         );
     }
 
-    @DisplayName("메시지 작성 이벤트 전달 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
+    @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
     @ValueSource(strings = {"", " ", "파일과 함께 전송한 메시지 text"})
     @ParameterizedTest
     void saveMessageWhenFileShareEventPassed(final String expectedText) {
@@ -117,7 +117,7 @@ class MessageFileShareServiceTest {
         );
     }
 
-    private ConversationsInfoResponse setupMockData() {
+    private ConversationsInfoResponse setUpChannelMockData() {
         Conversation conversation = new Conversation();
         conversation.setId(SAMPLE_CHANNEL.getSlackId());
         conversation.setName(SAMPLE_CHANNEL.getName());
