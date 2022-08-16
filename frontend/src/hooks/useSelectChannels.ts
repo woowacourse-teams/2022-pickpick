@@ -50,7 +50,7 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
   };
 
   useEffect(() => {
-    if (allChannels.length === 0) return;
+    if (allChannels.length === 0 || selectedChannelIds.length > 0) return;
     setSelectedChannelIds(
       currentChannelIds.length === 0 ? [allChannels[0].id] : currentChannelIds
     );
