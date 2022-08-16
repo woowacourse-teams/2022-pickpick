@@ -5,19 +5,18 @@ import { ResponseMessages } from "@src/@types/shared";
 import { getMessages } from "@src/api/messages";
 import { nextMessagesCallback } from "@src/api/utils";
 import { useInfiniteQuery } from "react-query";
-import { useSearchParams } from "react-router-dom";
 import MessageCard from "@src/components/MessageCard";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { FlexColumn } from "@src/@styles/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import EmptyStatus from "@src/components/EmptyStatus";
 import useBookmark from "@src/hooks/useBookmark";
 import { convertSeparatorToKey, extractResponseMessages } from "@src/@utils";
+import SearchForm from "@src/components/SearchForm";
+import useGetSearchParam from "@src/hooks/useGetSearchParam";
 
 function SearchResult() {
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get("keyword") ?? "";
-  const channelIds = searchParams.get("channelIds") ?? "";
+  const keyword = useGetSearchParam("keyword");
+  const channelIds = useGetSearchParam("channelIds");
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -43,6 +42,7 @@ function SearchResult() {
 
   return (
     <Styled.Container>
+      <SearchForm />
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
