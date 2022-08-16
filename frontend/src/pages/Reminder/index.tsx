@@ -5,7 +5,7 @@ import { useInfiniteQuery } from "react-query";
 import { ResponseReminders } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseReminders } from "@src/@utils";
+import { extractResponseReminders, parseTime } from "@src/@utils";
 import { nextRemindersCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import EmptyStatus from "@src/components/EmptyStatus";
@@ -58,25 +58,31 @@ function Reminder() {
                 messageId,
                 username,
                 postedDate,
+                remindDate,
                 text,
                 userThumbnail,
-              }) => (
-                <MessageCard
-                  key={id}
-                  username={username}
-                  pathname={pathname}
-                  date={postedDate}
-                  text={text}
-                  thumbnail={userThumbnail}
-                  isBookmarked={true}
-                  isSetReminded={true}
-                  handleOpenReminderModal={() => {
-                    handleOpenReminderModal();
-                    handleUpdateTargetMessageId(messageId.toString());
-                    handleUpdateTargetMessageSetReminded(true);
-                  }}
-                />
-              )
+              }) => {
+                const date = remindDate.split("T")[0];
+
+                return (
+                  <MessageCard
+                    key={id}
+                    username={username}
+                    pathname={pathname}
+                    date={postedDate}
+                    remindDate={`${date} ${parseTime(remindDate)}`}
+                    text={text}
+                    thumbnail={userThumbnail}
+                    isBookmarked={true}
+                    isSetReminded={true}
+                    handleOpenReminderModal={() => {
+                      handleOpenReminderModal();
+                      handleUpdateTargetMessageId(messageId.toString());
+                      handleUpdateTargetMessageSetReminded(true);
+                    }}
+                  />
+                );
+              }
             )}
           </>
           {isLoading && <MessagesLoadingStatus length={20} />}

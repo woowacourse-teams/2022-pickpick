@@ -23,10 +23,18 @@ export const Writer = styled.p`
   font-size: ${({ theme }: StyledDefaultProps) => theme.FONT_SIZE.LARGE_BODY};
 `;
 
+interface DateStyledProps extends StyledDefaultProps {
+  isReminderPage: boolean;
+}
+
 export const Date = styled.p`
-  ${({ theme }: StyledDefaultProps) => css`
+  font-weight: 600;
+
+  ${({ theme, isReminderPage }: DateStyledProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
-    color: ${theme.COLOR.TEXT.PLACEHOLDER};
+    color: ${isReminderPage
+      ? theme.COLOR.TEXT.LIGHT_BLUE
+      : theme.COLOR.TEXT.PLACEHOLDER};
   `}
 `;
 

@@ -10,6 +10,7 @@ import { PATH_NAME } from "@src/@constants";
 interface Props {
   username: string;
   date: string;
+  remindDate?: string;
   text: string;
   thumbnail: string;
   pathname: string;
@@ -23,6 +24,7 @@ function MessageCard({
   username,
   pathname,
   date,
+  remindDate,
   text,
   thumbnail,
   isBookmarked,
@@ -37,7 +39,11 @@ function MessageCard({
         <div>
           <FlexRow columnGap="4px" alignItems="center">
             <Styled.Writer>{username}</Styled.Writer>
-            <Styled.Date>{parseTime(date)}</Styled.Date>
+            <Styled.Date isReminderPage={pathname === PATH_NAME.REMINDER}>
+              {pathname === PATH_NAME.REMINDER
+                ? (remindDate as string)
+                : parseTime(date)}
+            </Styled.Date>
           </FlexRow>
           <Styled.Message>{text}</Styled.Message>
         </div>
