@@ -21,12 +21,14 @@ function SearchForm({ currentChannelIds }: Props) {
     searchKeyword,
     handleChangeSearchKeyword,
     handleSubmitSearchKeyword,
-  } = useSearchKeywordForm({ selectedChannelIds });
+  } = useSearchKeywordForm();
 
   return (
     <Dropdown>
       {({ isDropdownOpened, handleOpenDropdown }) => (
-        <Styled.Container onSubmit={handleSubmitSearchKeyword}>
+        <Styled.Container
+          onSubmit={handleSubmitSearchKeyword(selectedChannelIds)}
+        >
           <SearchInput
             placeholder="검색 할 키워드를 입력해주세요."
             onFocus={handleOpenDropdown}

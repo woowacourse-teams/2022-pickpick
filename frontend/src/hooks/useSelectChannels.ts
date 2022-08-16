@@ -16,30 +16,25 @@ interface ReturnType {
 }
 
 function useSelectChannels({ currentChannelIds }: Props): ReturnType {
-  // 선택된 채널 id 들
   const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
-
-  // 채널 가져오기
   const { data } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
-
   const allChannels = data?.channels ?? [];
 
   const handleToggleAllChannels = () => {
     if (!allChannels) return;
 
     if (
-      selectedChannelIds.length >= 0 &&
+      selectedChannelIds.length &&
       selectedChannelIds.length < allChannels.length
     ) {
-      setSelectedChannelIds(allChannels.map((channel) => channel.id)); // 전체 넣기
+      setSelectedChannelIds(allChannels.map((channel) => channel.id));
       return;
     }
 
-    setSelectedChannelIds([]); // 전체 비우기
-    return;
+    setSelectedChannelIds([]);
   };
 
   const handleToggleChannel = (id: number) => {
