@@ -11,7 +11,7 @@ interface ReturnType {
   ) => (event: FormEvent) => void;
 }
 
-function useSearchKeywordForm(): ReturnType {
+function useSubmitSearchForm(): ReturnType {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -52,4 +52,4 @@ function useSearchKeywordForm(): ReturnType {
   };
 }
 
-export default useSearchKeywordForm;
+export default useSubmitSearchForm;
