@@ -16,7 +16,14 @@ export interface Message {
   isSetReminded: boolean;
 }
 
-export type Bookmark = Omit<Message, "isBookmarked">;
+export type Bookmark = Omit<Message, "isReminded" | "isBookmarked">;
+
+export type Reminder = Omit<Message, "isReminded" | "isBookmarked">;
+
+export interface ResponseReminders {
+  reminders: Reminder[];
+  isLast: boolean;
+}
 
 export interface ResponseBookmarks {
   bookmarks: Bookmark[];
