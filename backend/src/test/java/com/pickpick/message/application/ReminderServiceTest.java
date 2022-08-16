@@ -18,7 +18,7 @@ import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderSelectRequest;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -92,7 +92,38 @@ class ReminderServiceTest {
     }
 
     private int findReminderSize(final Member member) {
-        return reminderService.find(new ReminderSelectRequest(null, null), member.getId()).getReminders().size();
+        return reminderService.find(new ReminderFindRequest(null, null), member.getId()).getReminders().size();
+    }
+
+    @DisplayName("리마인더 조회 시 count가 없으면 default 값을 20으로 세팅")
+    @Test
+    void findRemindersByDefaultCount() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, null), 1L);
+
+        // then
+        int size = response.getReminders().size();
+        assertThat(size).isEqualTo(20);
+    }
+
+    @DisplayName("리마인더 조회 시 count 값이 10이면 10개 조회")
+    @Test
+    void findRemindersByCount() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+        int count = 10;
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 1L);
+
+        // then
+        int size = response.getReminders().size();
+        assertThat(size).isEqualTo(count);
     }
 
     @DisplayName("리마인더 조회")
@@ -105,7 +136,7 @@ class ReminderServiceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         // when
-        ReminderResponses response = reminderService.find(new ReminderSelectRequest(reminderId, null), memberId);
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(reminderId, null), memberId);
 
         // then
         List<Long> ids = convertToIds(response);
@@ -130,7 +161,7 @@ class ReminderServiceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         // when
-        ReminderResponses response = reminderService.find(new ReminderSelectRequest(null, null), 1L);
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, null), 1L);
 
         // then
         List<Long> ids = convertToIds(response);
