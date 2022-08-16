@@ -33,9 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
-    private static final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
-    private static final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
-    private static final Message SAMPLE_MESSAGE = new Message(
+    private static final int FIRST_INDEX = 0;
+    private final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
+    private final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
+    private final Message SAMPLE_MESSAGE = new Message(
             "db8a1f84-8acf-46ab-b93d-85177cee3e96",
             "메시지 전송!",
             SAMPLE_MEMBER,
@@ -43,8 +44,7 @@ class MessageThreadBroadcastServiceTest {
             TimeUtils.toLocalDateTime("1234567890"),
             TimeUtils.toLocalDateTime("1234567890")
     );
-
-    private static final Map<String, Object> MESSAGE_THREAD_BROADCAST_REQUEST =
+    private final Map<String, Object> MESSAGE_THREAD_BROADCAST_REQUEST =
             Map.of("event", Map.of(
                             "type", SlackEvent.MESSAGE_THREAD_BROADCAST.getType(),
                             "subtype", SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype(),
@@ -55,9 +55,6 @@ class MessageThreadBroadcastServiceTest {
                             "client_msg_id", SAMPLE_MESSAGE.getSlackId()
                     )
             );
-
-    private static final int FIRST_INDEX = 0;
-
     @Autowired
     private MessageThreadBroadcastService messageThreadBroadcastService;
 

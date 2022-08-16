@@ -25,9 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class MessageChangedServiceTest {
 
-    private static final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
-    private static final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
-    private static final Message SAMPLE_MESSAGE = new Message(
+    private final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
+    private final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
+    private final Message SAMPLE_MESSAGE = new Message(
             "db8a1f84-8acf-46ab-b93d-85177cee3e97",
             "메시지 전송!",
             SAMPLE_MEMBER,
@@ -70,7 +70,7 @@ class MessageChangedServiceTest {
                         TimeUtils.toLocalDateTime(modifiedDate))
         );
     }
-    
+
     @DisplayName("subtype이 메시지 수정 이벤트 발생이지만, message 내부에 thread_broadcast 타입이 있다면 메시지 저장")
     @Test
     void saveThreadBroadcastMessage() {
