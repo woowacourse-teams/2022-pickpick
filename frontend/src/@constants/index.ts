@@ -15,6 +15,7 @@ export const QUERY_KEY = {
   SPECIFIC_DATE_MESSAGES: "specificDateMessages",
   BOOKMARKS: "bookmarks",
   REMINDERS: "reminders",
+  REMINDER: "reminder",
   AUTHENTICATION: "authentication",
   SLACK_LOGIN: "slackLogin",
 } as const;

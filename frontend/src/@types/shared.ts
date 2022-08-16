@@ -20,6 +20,17 @@ export type Bookmark = Omit<Message, "isReminded" | "isBookmarked">;
 
 export type Reminder = Omit<Message, "isReminded" | "isBookmarked">;
 
+export interface ResponseReminder {
+  id: number;
+  messageId: number;
+  username: string;
+  userThumbnail: string;
+  text: string;
+  postedDate: string;
+  modifyDate: string;
+  remindDate: string;
+}
+
 export interface ResponseReminders {
   reminders: Reminder[];
   isLast: boolean;
