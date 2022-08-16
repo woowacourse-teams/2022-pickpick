@@ -8,27 +8,50 @@ import java.util.stream.Collectors;
 
 public class MessageRequestFactory {
 
-    public static MessageRequest 쿼리_파라미터가_없는_요청(final int limit) {
+    public static MessageRequest emptyQueryParams() {
+        return new MessageRequest("", "", null, true, null, null);
+    }
+
+    public static MessageRequest emptyQueryParamsWithCount(final int limit) {
         return new MessageRequest("", "", null, true, null, limit);
     }
 
-    public static MessageRequest 여러채널의_최신부터_내림차순_요청(final List<Channel> channels, final int limit) {
+    public static MessageRequest fromLatestInChannelIds(final List<Long> channelIds, final int limit) {
+        return new MessageRequest("", "", channelIds, true, null, limit);
+    }
+
+    public static MessageRequest fromLatestInChannels(final List<Channel> channels, final int limit) {
         return new MessageRequest("", "", extractChannelIds(channels), true, null, limit);
     }
 
-    public static MessageRequest 검색대상_여러채널과_키워드로_요청(final List<Channel> channels, final String keyword,
-                                                    final int limit) {
+    public static MessageRequest searchByKeywordInChannels(final List<Channel> channels, final String keyword,
+                                                           final int limit) {
         return new MessageRequest(keyword, "", extractChannelIds(channels), true, null, limit);
     }
 
-    public static MessageRequest 여러채널에서_기준_메시지의_과거_내림차순_요청(final List<Channel> channels, final Message message,
-                                                           final int limit) {
+    public static MessageRequest searchByKeywordInChannelIds(final List<Long> channelIds, final String keyword,
+                                                             final int limit) {
+        return new MessageRequest(keyword, "", channelIds, true, null, limit);
+    }
+
+    public static MessageRequest pastFromTargetMessageInChannels(final List<Channel> channels, final Message message,
+                                                                 final int limit) {
         return new MessageRequest("", "", extractChannelIds(channels), true, message.getId(), limit);
     }
 
-    public static MessageRequest 여러채널에서_기준_메시지의_미래_오름차순_요청(final List<Channel> channels, final Message message,
-                                                           final int limit) {
+    public static MessageRequest pastFromTargetMessageInChannelIds(final List<Long> channelIds, final Long messageId,
+                                                                   final int limit) {
+        return new MessageRequest("", "", channelIds, true, messageId, limit);
+    }
+
+    public static MessageRequest futureFromTargetMessageInChannels(final List<Channel> channels, final Message message,
+                                                                   final int limit) {
         return new MessageRequest("", "", extractChannelIds(channels), false, message.getId(), limit);
+    }
+
+    public static MessageRequest futureFromTargetMessageInChannelIds(final List<Long> channelIds, final Long messageId,
+                                                                   final int limit) {
+        return new MessageRequest("", "", channelIds, false, messageId, limit);
     }
 
     private static List<Long> extractChannelIds(final List<Channel> channels) {
