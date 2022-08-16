@@ -1,24 +1,23 @@
-import {
-  ResponseSubscribedChannels,
-  SubscribedChannel,
-} from "@src/@types/shared";
+import { SubscribedChannel } from "@src/@types/shared";
 import Button from "../@shared/Button";
 import * as Styled from "./style";
 
 interface Props {
-  data: ResponseSubscribedChannels;
-  defaultChannel: SubscribedChannel;
-  channelIds: (number | undefined)[];
-  handleToggleChannelId: (id: number) => void;
-  handleToggleAllChannelIds: () => void;
+  allChannels: SubscribedChannel[];
+  currentChannels: SubscribedChannel[];
+  leftChannels: SubscribedChannel[];
+  selectedChannelIds: number[];
+  handleToggleChannel: (id: number) => void;
+  handleToggleAllChannels: () => void;
 }
 
 function SearchOptions({
-  data,
-  defaultChannel: { name: defaultName, id: defaultId },
-  channelIds,
-  handleToggleChannelId,
-  handleToggleAllChannelIds,
+  allChannels,
+  currentChannels,
+  leftChannels,
+  selectedChannelIds,
+  handleToggleChannel,
+  handleToggleAllChannels,
 }: Props) {
   return (
     <Styled.Container>
@@ -26,39 +25,39 @@ function SearchOptions({
 
       <Styled.ScrollContainer>
         <Button
-          isActive={channelIds.length === data.channels.length}
+          isActive={selectedChannelIds.length === allChannels.length}
           size="small"
-          onClick={handleToggleAllChannelIds}
+          onClick={handleToggleAllChannels}
           type="button"
         >
-          {channelIds.length === data.channels.length
+          {selectedChannelIds.length === allChannels.length
             ? "전체 해제"
             : "전체 선택"}
         </Button>
 
-        <Button
-          key={defaultName}
-          isActive={channelIds.includes(defaultId)}
-          size="small"
-          onClick={() => handleToggleChannelId(defaultId)}
-          type="button"
-        >
-          <>#{defaultName}</>
-        </Button>
+        {currentChannels.map(({ name, id }) => (
+          <Button
+            key={id}
+            isActive={selectedChannelIds.includes(id)}
+            size="small"
+            onClick={() => handleToggleChannel(id)}
+            type="button"
+          >
+            <>#{name}</>
+          </Button>
+        ))}
 
-        {data.channels
-          .filter((channel) => channel.id !== defaultId)
-          .map(({ name, id }) => (
-            <Button
-              key={name}
-              isActive={channelIds.includes(id)}
-              size="small"
-              onClick={() => handleToggleChannelId(id)}
-              type="button"
-            >
-              <>#{name}</>
-            </Button>
-          ))}
+        {leftChannels.map(({ name, id }) => (
+          <Button
+            key={id}
+            isActive={selectedChannelIds.includes(id)}
+            size="small"
+            onClick={() => handleToggleChannel(id)}
+            type="button"
+          >
+            <>#{name}</>
+          </Button>
+        ))}
       </Styled.ScrollContainer>
     </Styled.Container>
   );

@@ -6,25 +6,22 @@ import useSearchKeywordForm from "@src/hooks/useSearchKeywordForm";
 import Dropdown from "../Dropdown";
 
 interface Props {
-  channelId: number;
+  currentChannelIds: number[];
 }
 
-function SearchForm({ channelId }: Props) {
+function SearchForm({ currentChannelIds }: Props) {
   const {
-    channelsData,
-    channelIds,
-    defaultChannel,
-    handleToggleChannelId,
-    handleToggleAllChannelIds,
-  } = useSelectChannels({
-    defaultChannelId: channelId ? Number(channelId) : 0,
-  });
+    allChannels,
+    selectedChannelIds,
+    handleToggleChannel,
+    handleToggleAllChannels,
+  } = useSelectChannels({ currentChannelIds });
 
   const {
     searchKeyword,
     handleChangeSearchKeyword,
     handleSubmitSearchKeyword,
-  } = useSearchKeywordForm({ channelIds });
+  } = useSearchKeywordForm({ selectedChannelIds });
 
   return (
     <Dropdown>
@@ -36,13 +33,18 @@ function SearchForm({ channelId }: Props) {
             onChange={handleChangeSearchKeyword}
             value={searchKeyword}
           >
-            {channelsData && defaultChannel && isDropdownOpened && (
+            {allChannels && isDropdownOpened && (
               <SearchOptions
-                data={channelsData}
-                defaultChannel={defaultChannel}
-                channelIds={channelIds}
-                handleToggleChannelId={handleToggleChannelId}
-                handleToggleAllChannelIds={handleToggleAllChannelIds}
+                allChannels={allChannels}
+                currentChannels={allChannels.filter(({ id }) =>
+                  currentChannelIds.includes(id)
+                )}
+                leftChannels={allChannels.filter(
+                  ({ id }) => !currentChannelIds.includes(id)
+                )}
+                selectedChannelIds={selectedChannelIds}
+                handleToggleChannel={handleToggleChannel}
+                handleToggleAllChannels={handleToggleAllChannels}
               />
             )}
           </SearchInput>

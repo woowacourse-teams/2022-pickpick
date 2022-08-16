@@ -4,7 +4,7 @@ import useSnackbar from "@src/hooks/useSnackbar";
 import { PATH_NAME } from "@src/@constants";
 
 interface Props {
-  channelIds: (number | undefined)[];
+  selectedChannelIds: number[];
 }
 
 interface ReturnType {
@@ -13,7 +13,7 @@ interface ReturnType {
   handleSubmitSearchKeyword: (event: FormEvent) => void;
 }
 
-function useSearchKeywordForm({ channelIds }: Props): ReturnType {
+function useSearchKeywordForm({ selectedChannelIds }: Props): ReturnType {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -25,7 +25,7 @@ function useSearchKeywordForm({ channelIds }: Props): ReturnType {
   const handleSubmitSearchKeyword = (event: FormEvent) => {
     event.preventDefault();
 
-    if (!channelIds.length) {
+    if (!selectedChannelIds.length) {
       openFailureSnackbar("채널을 하나 이상 선택 후 검색 버튼을 눌러주세요.");
 
       return;
@@ -40,7 +40,9 @@ function useSearchKeywordForm({ channelIds }: Props): ReturnType {
     }
 
     navigate(
-      `${PATH_NAME.SEARCH_RESULT}?keyword=${searchKeyword}&channelIds=${channelIds}`
+      `${
+        PATH_NAME.SEARCH_RESULT
+      }?keyword=${searchKeyword}&channelIds=${selectedChannelIds.join(",")}`
     );
   };
 

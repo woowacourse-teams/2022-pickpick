@@ -1,95 +1,71 @@
 import { QUERY_KEY } from "@src/@constants";
-import {
-  ResponseSubscribedChannels,
-  SubscribedChannel,
-} from "@src/@types/shared";
+import { SubscribedChannel } from "@src/@types/shared";
 import { getSubscribedChannels } from "@src/api/channels";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 interface Props {
-  defaultChannelId?: number;
+  currentChannelIds: number[];
 }
 
 interface ReturnType {
-  channelIds: (number | undefined)[];
-  channelsData: ResponseSubscribedChannels | undefined;
-  defaultChannel: SubscribedChannel | undefined;
-  handleToggleChannelId: (id: number) => void;
-  handleToggleAllChannelIds: () => void;
+  selectedChannelIds: number[];
+  allChannels: SubscribedChannel[];
+  handleToggleChannel: (id: number) => void;
+  handleToggleAllChannels: () => void;
 }
 
-function useSelectChannels({ defaultChannelId }: Props): ReturnType {
-  const [channelIds, setChannelIds] = useState<(number | undefined)[]>([]);
-  const [defaultChannel, setDefaultChannel] = useState<SubscribedChannel>();
+function useSelectChannels({ currentChannelIds }: Props): ReturnType {
+  // 선택된 채널 id 들
+  const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
 
-  const { data: channelsData } = useQuery(
+  // 채널 가져오기
+  const { data } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
     getSubscribedChannels
   );
 
-  const handleToggleAllChannelIds = () => {
-    if (!channelsData) return;
+  const allChannels = data?.channels ?? [];
+
+  const handleToggleAllChannels = () => {
+    if (!allChannels) return;
 
     if (
-      0 <= channelIds.length &&
-      channelIds.length < channelsData.channels.length
+      selectedChannelIds.length >= 0 &&
+      selectedChannelIds.length < allChannels.length
     ) {
-      setChannelIds(channelsData.channels.map((channel) => channel.id));
-
+      setSelectedChannelIds(allChannels.map((channel) => channel.id)); // 전체 넣기
       return;
     }
 
-    setChannelIds([]);
+    setSelectedChannelIds([]); // 전체 비우기
     return;
   };
 
-  const handleToggleChannelId = (id: number) => {
-    if (channelIds.includes(id)) {
-      setChannelIds((prev) => {
-        prev.splice(
-          prev.findIndex((channelId) => channelId === id),
-          1
-        );
-
-        return [...prev];
-      });
-
+  const handleToggleChannel = (id: number) => {
+    if (selectedChannelIds.includes(id)) {
+      const filteredChannelIds = selectedChannelIds.filter(
+        (channelId) => id !== channelId
+      );
+      setSelectedChannelIds(filteredChannelIds);
       return;
     }
 
-    setChannelIds((prev) => [...prev, id]);
-    return;
+    setSelectedChannelIds((prev) => [...prev, id]);
   };
 
   useEffect(() => {
-    if (!channelsData) return;
-
-    setChannelIds([
-      defaultChannelId === 0 ? channelsData.channels[0].id : defaultChannelId,
-    ]);
-  }, [channelsData, defaultChannelId]);
-
-  useEffect(() => {
-    if (!channelsData) return;
-
-    setDefaultChannel({
-      ...channelsData.channels.filter((channel) => {
-        if (defaultChannelId === 0) {
-          return channel.id === channelsData.channels[0].id;
-        }
-
-        return channel.id === defaultChannelId;
-      })[0],
-    });
-  }, [channelsData, defaultChannelId]);
+    if (allChannels.length === 0) return;
+    setSelectedChannelIds(
+      currentChannelIds.length === 0 ? [allChannels[0].id] : currentChannelIds
+    );
+  }, [allChannels, currentChannelIds]);
 
   return {
-    channelIds,
-    channelsData,
-    defaultChannel,
-    handleToggleChannelId,
-    handleToggleAllChannelIds,
+    selectedChannelIds,
+    allChannels,
+    handleToggleChannel,
+    handleToggleAllChannels,
   };
 }
 

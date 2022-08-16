@@ -58,7 +58,7 @@ function Feed() {
 
   return (
     <Styled.Container>
-      <SearchForm channelId={channelId ? Number(channelId) : 0} />
+      <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
 
       <InfiniteScroll
         callback={fetchNextPage}

@@ -42,7 +42,7 @@ function SearchResult() {
 
   return (
     <Styled.Container>
-      <SearchForm />
+      <SearchForm currentChannelIds={channelIds.split(",").map(Number)} />
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
