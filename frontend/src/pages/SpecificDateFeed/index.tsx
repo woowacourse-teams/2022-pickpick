@@ -28,6 +28,8 @@ function SpecificDateFeed() {
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const [targetMessageId, setTargetMessageId] = useState("");
+  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
+    useState(false);
 
   const {
     data,
@@ -64,6 +66,18 @@ function SpecificDateFeed() {
 
   const handleUpdateTargetMessageId = (id: string) => {
     setTargetMessageId(id);
+  };
+
+  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
+    setIsTargetMessageSetReminded(isSetReminded);
+  };
+
+  const handleInitializeTargetMessageId = () => {
+    setTargetMessageId("");
+  };
+
+  const handleInitializeTargetMessageSetReminded = () => {
+    setIsTargetMessageSetReminded(false);
   };
 
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
@@ -139,6 +153,7 @@ function SpecificDateFeed() {
                     handleOpenReminderModal={() => {
                       handleOpenReminderModal();
                       handleUpdateTargetMessageId(id);
+                      handleUpdateTargetMessageSetReminded(isSetReminded);
                     }}
                   />
                 </React.Fragment>
@@ -164,11 +179,20 @@ function SpecificDateFeed() {
         <>
           <Dimmer
             hasBackgroundColor={true}
-            onClick={handleCloseReminderModal}
+            onClick={() => {
+              handleInitializeTargetMessageId();
+              handleInitializeTargetMessageSetReminded();
+              handleCloseReminderModal();
+            }}
           />
           <ReminderModal
             targetMessageId={targetMessageId}
-            handleCloseReminderModal={handleCloseReminderModal}
+            isTargetMessageSetReminded={isTargetMessageSetReminded}
+            handleCloseReminderModal={() => {
+              handleInitializeTargetMessageId();
+              handleInitializeTargetMessageSetReminded();
+              handleCloseReminderModal();
+            }}
             refetchFeed={refetch}
           />
         </>

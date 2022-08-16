@@ -27,6 +27,8 @@ function Feed() {
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
   const [targetMessageId, setTargetMessageId] = useState("");
+  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
+    useState(false);
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -53,6 +55,18 @@ function Feed() {
 
   const handleUpdateTargetMessageId = (id: string) => {
     setTargetMessageId(id);
+  };
+
+  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
+    setIsTargetMessageSetReminded(isSetReminded);
+  };
+
+  const handleInitializeTargetMessageId = () => {
+    setTargetMessageId("");
+  };
+
+  const handleInitializeTargetMessageSetReminded = () => {
+    setIsTargetMessageSetReminded(false);
   };
 
   const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
@@ -108,6 +122,7 @@ function Feed() {
                     handleOpenReminderModal={() => {
                       handleOpenReminderModal();
                       handleUpdateTargetMessageId(id);
+                      handleUpdateTargetMessageSetReminded(isSetReminded);
                     }}
                   />
                 </React.Fragment>
@@ -133,11 +148,20 @@ function Feed() {
         <>
           <Dimmer
             hasBackgroundColor={true}
-            onClick={handleCloseReminderModal}
+            onClick={() => {
+              handleInitializeTargetMessageId();
+              handleInitializeTargetMessageSetReminded();
+              handleCloseReminderModal();
+            }}
           />
           <ReminderModal
             targetMessageId={targetMessageId}
-            handleCloseReminderModal={handleCloseReminderModal}
+            isTargetMessageSetReminded={isTargetMessageSetReminded}
+            handleCloseReminderModal={() => {
+              handleInitializeTargetMessageId();
+              handleInitializeTargetMessageSetReminded();
+              handleCloseReminderModal();
+            }}
             refetchFeed={refetch}
           />
         </>
