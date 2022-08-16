@@ -58,6 +58,13 @@ public class ReminderService {
         reminders.save(reminder);
     }
 
+    public ReminderResponse findOne(final Long messageId, final Long memberId) {
+        Reminder reminder = reminders.findByMessageIdAndMemberId(messageId, memberId)
+                .orElseThrow(() -> new ReminderNotFoundException(messageId, memberId));
+
+        return ReminderResponse.from(reminder);
+    }
+
     public ReminderResponses find(final Long reminderId, final Long memberId) {
         List<Reminder> reminderList = findReminders(reminderId, memberId);
 
