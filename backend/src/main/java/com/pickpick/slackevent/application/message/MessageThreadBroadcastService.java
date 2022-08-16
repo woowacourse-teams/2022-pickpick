@@ -28,6 +28,7 @@ public class MessageThreadBroadcastService implements SlackEventService {
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
     private static final String CHANNEL = "channel";
+
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
@@ -49,12 +50,12 @@ public class MessageThreadBroadcastService implements SlackEventService {
     }
 
     public void saveWhenSubtypeIsMessageChanged(final SlackMessageDto slackMessageDto) {
-        if (shouldSave(slackMessageDto)) {
+        if (isNewMessage(slackMessageDto)) {
             save(slackMessageDto);
         }
     }
 
-    private boolean shouldSave(final SlackMessageDto slackMessageDto) {
+    private boolean isNewMessage(final SlackMessageDto slackMessageDto) {
         return messages.findBySlackId(slackMessageDto.getSlackId()).isEmpty();
     }
 
