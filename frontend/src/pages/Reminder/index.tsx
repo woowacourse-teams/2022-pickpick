@@ -10,8 +10,10 @@ import { nextRemindersCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import EmptyStatus from "@src/components/EmptyStatus";
 import { getReminders } from "@src/api/reminders";
+import { useLocation } from "react-router-dom";
 
 function Reminder() {
+  const { pathname } = useLocation();
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage } =
     useInfiniteQuery<ResponseReminders>(QUERY_KEY.REMINDERS, getReminders, {
       getNextPageParam: nextRemindersCallback,
@@ -34,6 +36,7 @@ function Reminder() {
                 <MessageCard
                   key={id}
                   username={username}
+                  pathname={pathname}
                   date={postedDate}
                   text={text}
                   thumbnail={userThumbnail}

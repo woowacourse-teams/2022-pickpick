@@ -5,7 +5,7 @@ import { ResponseMessages } from "@src/@types/shared";
 import { getMessages } from "@src/api/messages";
 import { nextMessagesCallback } from "@src/api/utils";
 import { useInfiniteQuery } from "react-query";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import MessageCard from "@src/components/MessageCard";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { FlexColumn } from "@src/@styles/shared";
@@ -16,6 +16,7 @@ import { convertSeparatorToKey, extractResponseMessages } from "@src/@utils";
 
 function SearchResult() {
   const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
   const keyword = searchParams.get("keyword") ?? "";
   const channelIds = searchParams.get("channelIds") ?? "";
 
@@ -63,6 +64,7 @@ function SearchResult() {
               <React.Fragment key={id}>
                 <MessageCard
                   username={username}
+                  pathname={pathname}
                   date={postedDate}
                   text={text}
                   thumbnail={userThumbnail}

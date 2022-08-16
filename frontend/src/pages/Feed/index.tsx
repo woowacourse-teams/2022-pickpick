@@ -25,7 +25,7 @@ import ReminderModal from "@src/components/ReminderModal";
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
-  const { key: queryKey } = useLocation();
+  const { key: queryKey, pathname } = useLocation();
   const [targetMessageId, setTargetMessageId] = useState("");
   const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
     useState(false);
@@ -109,6 +109,7 @@ function Feed() {
                   )}
                   <MessageCard
                     username={username}
+                    pathname={pathname}
                     date={postedDate}
                     text={text}
                     thumbnail={userThumbnail}

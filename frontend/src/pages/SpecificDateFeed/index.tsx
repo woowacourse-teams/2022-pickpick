@@ -24,7 +24,7 @@ import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
 
 function SpecificDateFeed() {
-  const { key: queryKey } = useLocation();
+  const { key: queryKey, pathname } = useLocation();
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const [targetMessageId, setTargetMessageId] = useState("");
@@ -140,6 +140,7 @@ function SpecificDateFeed() {
                   )}
                   <MessageCard
                     username={username}
+                    pathname={pathname}
                     date={postedDate}
                     text={text}
                     thumbnail={userThumbnail}

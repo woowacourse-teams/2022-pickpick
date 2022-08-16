@@ -11,8 +11,10 @@ import { QUERY_KEY } from "@src/@constants";
 import { getBookmarks } from "@src/api/bookmarks";
 import useBookmark from "@src/hooks/useBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
+import { useLocation } from "react-router-dom";
 
 function Bookmark() {
+  const { pathname } = useLocation();
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
       getNextPageParam: nextBookmarksCallback,
@@ -46,6 +48,7 @@ function Bookmark() {
                 <MessageCard
                   key={id}
                   username={username}
+                  pathname={pathname}
                   date={postedDate}
                   text={text}
                   thumbnail={userThumbnail}
