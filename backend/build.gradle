@@ -5,6 +5,7 @@ plugins {
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "org.sonarqube" version "3.4.0.2513"
+    id "jacoco"
 }
 
 group = 'com.pickpick'
@@ -59,6 +60,7 @@ ext {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
 
 asciidoctor {
@@ -110,5 +112,15 @@ compileQuerydsl {
 sonarqube {
   properties {
     property "sonar.projectKey", "woowacourse-teams_2022-pickpick_AYKlZap98dMo58Zrdp2E"
+  }
+}
+
+jacoco {
+  toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
   }
 }
