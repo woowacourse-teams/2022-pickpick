@@ -19,13 +19,14 @@ defaults:
     working-directory: backend
 
 jobs:
-  Build-Test:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           token: ${{ secrets.SUBMODULE_TOKEN }}
           submodules: recursive
 
@@ -44,10 +45,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle build를 수행합니다
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: ./gradlew build
 
       - name: 테스트 결과를 PR에 코멘트로 등록합니다
@@ -72,34 +69,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
-        
-  SonarQube:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 리포지토리를 가져옵니다
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.SUBMODULE_TOKEN }}
-          submodules: recursive
-
-      - name: JDK 11을 설치합니다
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: TimeZone을 Asia/Seoul로 설정합니다
-        uses: zcong1993/setup-timezone@master
-        with:
-          timezone: Asia/Seoul
-
-      - name: Gradle 명령 실행을 위한 권한을 부여합니다
-        run: chmod +x gradlew
-
-      - name: Build and analyze via SonarQube
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: ./gradlew build sonarqube --info
