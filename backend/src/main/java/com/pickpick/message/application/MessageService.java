@@ -4,11 +4,11 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.exception.channel.SubscriptionNotFoundException;
 import com.pickpick.exception.message.MessageNotFoundException;
-import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QBookmark;
 import com.pickpick.message.domain.QMessage;
+import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
@@ -18,6 +18,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -36,23 +37,23 @@ public class MessageService {
 
     private final MessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
-    private final MemberRepository members;
     private final JPAQueryFactory jpaQueryFactory;
+    private final Clock clock;
 
     public MessageService(final MessageRepository messages,
                           final ChannelSubscriptionRepository channelSubscriptions,
-                          final MemberRepository members,
-                          final JPAQueryFactory jpaQueryFactory) {
+                          final JPAQueryFactory jpaQueryFactory,
+                          final Clock clock) {
         this.messages = messages;
         this.channelSubscriptions = channelSubscriptions;
-        this.members = members;
         this.jpaQueryFactory = jpaQueryFactory;
+        this.clock = clock;
     }
 
     public MessageResponses find(final Long memberId, final MessageRequest messageRequest) {
         List<Long> channelIds = findChannelId(memberId, messageRequest);
 
-        List<MessageResponse> messageResponses = findMessages(channelIds, messageRequest);
+        List<MessageResponse> messageResponses = findMessages(memberId, channelIds, messageRequest);
         boolean isLast = isLast(channelIds, messageRequest, messageResponses);
 
         return new MessageResponses(messageResponses, isLast, messageRequest.isNeedPastMessage());
@@ -75,7 +76,8 @@ public class MessageService {
         return Objects.nonNull(channelIds) && !channelIds.isEmpty();
     }
 
-    private List<MessageResponse> findMessages(final List<Long> channelIds, final MessageRequest messageRequest) {
+    private List<MessageResponse> findMessages(final Long memberId, final List<Long> channelIds,
+                                               final MessageRequest messageRequest) {
         boolean needPastMessage = messageRequest.isNeedPastMessage();
         int messageCount = messageRequest.getMessageCount();
 
@@ -85,6 +87,8 @@ public class MessageService {
                 .leftJoin(QMessage.message.member)
                 .leftJoin(QBookmark.bookmark)
                 .on(QMessage.message.id.eq(QBookmark.bookmark.message.id))
+                .leftJoin(QReminder.reminder)
+                .on(remainReminder(memberId))
                 .where(meetAllConditions(channelIds, messageRequest))
                 .orderBy(arrangeDateByNeedPastMessage(needPastMessage))
                 .limit(messageCount)
@@ -108,7 +112,14 @@ public class MessageService {
                 QMessage.message.text,
                 QMessage.message.postedDate,
                 QMessage.message.modifiedDate,
-                QBookmark.bookmark.id);
+                QBookmark.bookmark.id,
+                QReminder.reminder.id);
+    }
+
+    private BooleanExpression remainReminder(final Long memberId) {
+        return QReminder.reminder.member.id.eq(memberId)
+                .and(QReminder.reminder.message.id.eq(QMessage.message.id))
+                .and(QReminder.reminder.remindDate.after(LocalDateTime.now(clock)));
     }
 
     private BooleanExpression meetAllConditions(final List<Long> channelIds, final MessageRequest request) {

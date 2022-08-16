@@ -54,3 +54,6 @@ insert into bookmark(id, member_id, message_id)
 values (1, 1, 1),
       (2, 1, 5),
       (3, 1, 10);
+
+insert into reminder (id, member_id, message_id, remind_date)
+values (1, 1, 38, '2022-08-12 14:20:00');

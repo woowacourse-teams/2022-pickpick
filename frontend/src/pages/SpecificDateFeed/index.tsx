@@ -21,6 +21,7 @@ import Dimmer from "@src/components/@shared/Dimmer";
 import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
+import ReminderModal from "@src/components/ReminderModal";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -52,6 +53,12 @@ function SpecificDateFeed() {
     isModalOpened: isCalenderOpened,
     handleOpenModal: handleOpenCalendar,
     handleCloseModal: handleCloseCalendar,
+  } = useModal();
+
+  const {
+    isModalOpened: isReminderModalOpened,
+    handleOpenModal: handleOpenReminderModal,
+    handleCloseModal: handleCloseReminderModal,
   } = useModal();
 
   const { onWheel, onTouchStart, onTouchEnd } = useTopScreenEventHandler({
@@ -122,6 +129,7 @@ function SpecificDateFeed() {
                         ? handleRemoveBookmark(id)
                         : handleAddBookmark(id)
                     }
+                    handleOpenReminderModal={handleOpenReminderModal}
                   />
                 </React.Fragment>
               );
@@ -139,6 +147,16 @@ function SpecificDateFeed() {
             channelId={channelId ?? ""}
             handleCloseCalendar={handleCloseCalendar}
           />
+        </>
+      </Portal>
+
+      <Portal isOpened={isReminderModalOpened}>
+        <>
+          <Dimmer
+            hasBackgroundColor={true}
+            onClick={handleCloseReminderModal}
+          />
+          <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
         </>
       </Portal>
     </Styled.Container>

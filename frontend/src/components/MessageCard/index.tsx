@@ -4,7 +4,6 @@ import AlarmIconActive from "@public/assets/icons/AlarmIcon-Active.svg";
 import ProfileImage from "@src/components/ProfileImage";
 import { FlexRow } from "@src/@styles/shared";
 import { parseTime } from "@src/@utils";
-import { useState } from "react";
 import IconButton from "../@shared/IconButton";
 
 interface Props {
@@ -14,6 +13,7 @@ interface Props {
   thumbnail: string;
   isBookmarked: boolean;
   toggleBookmark: () => void;
+  handleOpenReminderModal?: () => void;
 }
 
 function MessageCard({
@@ -23,13 +23,8 @@ function MessageCard({
   thumbnail,
   isBookmarked,
   toggleBookmark,
+  handleOpenReminderModal,
 }: Props) {
-  const [isActiveAlarmButton, setIsActiveAlarmButton] = useState(false);
-
-  const handleActiveAlarmButton = () => {
-    setIsActiveAlarmButton((prev) => !prev);
-  };
-
   return (
     <Styled.Container>
       <FlexRow columnGap="8px" width="100%">
@@ -47,8 +42,8 @@ function MessageCard({
         <IconButton
           type="button"
           icon="alarm"
-          isActive={isActiveAlarmButton}
-          onClick={handleActiveAlarmButton}
+          isActive={false}
+          onClick={handleOpenReminderModal}
         >
           <FlexRow justifyContent="center" alignItems="center" gap="5px">
             <Styled.ButtonText>알람설정</Styled.ButtonText>

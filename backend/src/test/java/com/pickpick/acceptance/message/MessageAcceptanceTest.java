@@ -2,11 +2,15 @@ package com.pickpick.acceptance.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
 import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/truncate.sql", "/message.sql"})
@@ -29,6 +34,9 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String MESSAGE_API_URL = "/api/messages";
     private static final long MEMBER_ID = 1L;
+
+    @SpyBean
+    private Clock clock;
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(
@@ -151,5 +159,41 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_200_확인(response);
         assertThat(messageResponses.isNeedPastMessage()).isFalse();
+    }
+
+    @Test
+    void 이미_리마인드_완료된_메시지_조회_시_isSetReminded가_false() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-13T00:00:00Z"));
+        Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        MessageResponse messageResponse = response.as(MessageResponses.class)
+                .getMessages()
+                .get(0);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(messageResponse.isSetReminded()).isFalse();
+    }
+
+    @Test
+    void 리마인드_해야하는_메시지_조회_시_isSetReminded가_true() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+        Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        MessageResponse messageResponse = response.as(MessageResponses.class)
+                .getMessages()
+                .get(0);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(messageResponse.isSetReminded()).isTrue();
     }
 }

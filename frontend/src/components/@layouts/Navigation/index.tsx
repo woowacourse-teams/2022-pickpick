@@ -17,10 +17,13 @@ import { getSubscribedChannels } from "@src/api/channels";
 import useModal from "@src/hooks/useModal";
 import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
+import { useTheme } from "styled-components";
+import { Theme } from "@src/@types/shared";
 
 function Navigation() {
   const { pathname } = useLocation();
   const { logout } = useAuthentication();
+  const theme = useTheme() as Theme;
 
   const { data, refetch } = useQuery(
     QUERY_KEY.SUBSCRIBED_CHANNELS,
@@ -51,7 +54,7 @@ function Navigation() {
   return (
     <Styled.Container>
       <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
-        <MenuIcon width="24px" height="24px" fill="#121212" />
+        <MenuIcon width="24px" height="24px" fill={theme.COLOR.TEXT.DEFAULT} />
       </WrapperButton>
 
       <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
@@ -60,7 +63,11 @@ function Navigation() {
             <StarIconUnfill
               width="24px"
               height="24px"
-              fill={isActive ? "#FF9900" : "#121212"}
+              fill={
+                isActive
+                  ? theme.COLOR.PRIMARY.DEFAULT
+                  : theme.COLOR.TEXT.DEFAULT
+              }
             />
           );
         }}
@@ -72,7 +79,11 @@ function Navigation() {
             <HomeIconUnfill
               width="24px"
               height="24px"
-              fill={isActive ? "#FF9900" : "#121212"}
+              fill={
+                isActive
+                  ? theme.COLOR.PRIMARY.DEFAULT
+                  : theme.COLOR.TEXT.DEFAULT
+              }
             />
           );
         }}
@@ -84,14 +95,18 @@ function Navigation() {
             <AlarmIconInactive
               width="24px"
               height="24px"
-              fill={isActive ? "#FF9900" : "#121212"}
+              fill={
+                isActive
+                  ? theme.COLOR.PRIMARY.DEFAULT
+                  : theme.COLOR.TEXT.DEFAULT
+              }
             />
           );
         }}
       </WrapperLink>
 
       <WrapperButton kind="bigIcon" onClick={handleToggleLogoutButton}>
-        <InfoIcon width="24px" height="24px" fill="#121212" />
+        <InfoIcon width="24px" height="24px" fill={theme.COLOR.TEXT.DEFAULT} />
       </WrapperButton>
 
       <Portal isOpened={isMenuDrawerOpened}>
