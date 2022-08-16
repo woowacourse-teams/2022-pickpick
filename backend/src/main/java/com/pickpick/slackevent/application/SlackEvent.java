@@ -40,4 +40,8 @@ public enum SlackEvent {
     private static boolean isSameType(final SlackEvent event, final String type, final String subtype) {
         return event.type.equals(type) && event.subtype.equals(subtype);
     }
+
+    public boolean isSameSubtype(String subtype) {
+        return this.subtype.equals(subtype);
+    }
 }

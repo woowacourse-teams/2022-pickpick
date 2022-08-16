@@ -28,8 +28,6 @@ public class MessageThreadBroadcastService implements SlackEventService {
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
     private static final String CHANNEL = "channel";
-    private static final String THREAD_TIMESTAMP = "thread_ts";
-
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
@@ -47,6 +45,20 @@ public class MessageThreadBroadcastService implements SlackEventService {
     public void execute(final Map<String, Object> requestBody) {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
+        save(slackMessageDto);
+    }
+
+    public void saveWhenSubtypeIsMessageChanged(final SlackMessageDto slackMessageDto) {
+        if (shouldSave(slackMessageDto)) {
+            save(slackMessageDto);
+        }
+    }
+
+    private boolean shouldSave(final SlackMessageDto slackMessageDto) {
+        return messages.findBySlackId(slackMessageDto.getSlackId()).isEmpty();
+    }
+
+    private void save(final SlackMessageDto slackMessageDto) {
         String memberSlackId = slackMessageDto.getMemberSlackId();
         Member member = members.findBySlackId(memberSlackId)
                 .orElseThrow(() -> new MemberNotFoundException(memberSlackId));

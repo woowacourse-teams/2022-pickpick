@@ -12,6 +12,7 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.TimeUtils;
 import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.MethodsClient;
@@ -25,17 +26,17 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
-@AutoConfigureMockMvc
+@Transactional
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
     private static final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
     private static final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
     private static final Message SAMPLE_MESSAGE = new Message(
-            "db8a1f84-8acf-46ab-b93d-85177cee3e97",
+            "db8a1f84-8acf-46ab-b93d-85177cee3e96",
             "메시지 전송!",
             SAMPLE_MEMBER,
             SAMPLE_CHANNEL,
@@ -110,7 +111,7 @@ class MessageThreadBroadcastServiceTest {
         return conversationsInfoResponse;
     }
 
-    @DisplayName("스레드 메시지 채널로 전송 이벤트 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
+    @DisplayName("Thread_Broadcast 이벤트 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
     @Test
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
@@ -130,6 +131,67 @@ class MessageThreadBroadcastServiceTest {
                 () -> assertThat(messageBeforeSave).isEmpty(),
                 () -> assertThat(channelAfterSave).isPresent(),
                 () -> assertThat(messageAfterSave).isPresent()
+        );
+    }
+
+    @DisplayName("subtype이 message_changed인 요청이 왔을 경우, DB에 저장되어 있는 메시지라면 저장하지 않는다")
+    @Test
+    void notSave() {
+        // given
+        members.save(SAMPLE_MEMBER);
+        channels.save(SAMPLE_CHANNEL);
+        messages.save(SAMPLE_MESSAGE);
+        Optional<Message> messageBeforeExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+
+        SlackMessageDto messageDto = new SlackMessageDto(
+                SAMPLE_MEMBER.getSlackId(),
+                SAMPLE_MESSAGE.getSlackId(),
+                "1234567890",
+                "1234567890",
+                "messageText",
+                SAMPLE_CHANNEL.getSlackId());
+
+        // when
+        messageThreadBroadcastService.saveWhenSubtypeIsMessageChanged(messageDto);
+
+        // then
+        Optional<Message> messageAfterExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+
+        assertAll(
+                () -> assertThat(messageBeforeExecute).isPresent(),
+                () -> assertThat(messageBeforeExecute.get())
+                        .usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(messageAfterExecute.get())
+        );
+    }
+
+    @DisplayName("subtype이 message_changed인 요청이 왔을 경우, DB에 저장되지 않은 메시지라면 저장한다")
+    @Test
+    void save() {
+        // given
+        members.save(SAMPLE_MEMBER);
+        channels.save(SAMPLE_CHANNEL);
+        Optional<Message> messageBeforeExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+
+        SlackMessageDto messageDto = new SlackMessageDto(
+                SAMPLE_MEMBER.getSlackId(),
+                SAMPLE_MESSAGE.getSlackId(),
+                "1234567890",
+                "1234567890",
+                "messageText",
+                SAMPLE_CHANNEL.getSlackId());
+
+        // when
+        messageThreadBroadcastService.saveWhenSubtypeIsMessageChanged(messageDto);
+
+        // then
+        Optional<Message> messageAfterExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+
+        assertAll(
+                () -> assertThat(messageBeforeExecute).isEmpty(),
+                () -> assertThat(messageAfterExecute).isPresent(),
+                () -> assertThat(messageAfterExecute.get().getText()).isEqualTo("messageText")
         );
     }
 }
