@@ -1,7 +1,7 @@
 import React from "react";
 import * as Styled from "../Feed/style";
 import { QUERY_KEY } from "@src/@constants";
-import { ResponseMessages } from "@src/@types/shared";
+import { ResponseMessages, CustomError } from "@src/@types/shared";
 import { getMessages } from "@src/api/messages";
 import { nextMessagesCallback } from "@src/api/utils";
 import { useInfiniteQuery } from "react-query";
@@ -20,7 +20,7 @@ function SearchResult() {
   const channelIds = searchParams.get("channelIds") ?? "";
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages>(
+    useInfiniteQuery<ResponseMessages, CustomError>(
       QUERY_KEY.ALL_MESSAGES,
       getMessages({
         channelId: convertSeparatorToKey({

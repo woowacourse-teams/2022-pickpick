@@ -3,7 +3,7 @@ import MessageCard from "@src/components/MessageCard";
 import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
-import { ResponseMessages } from "@src/@types/shared";
+import { ResponseMessages, CustomError } from "@src/@types/shared";
 import React from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
@@ -28,7 +28,7 @@ function Feed() {
   const { key: queryKey } = useLocation();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages>(
+    useInfiniteQuery<ResponseMessages, CustomError>(
       [QUERY_KEY.ALL_MESSAGES, queryKey],
       getMessages({
         channelId,

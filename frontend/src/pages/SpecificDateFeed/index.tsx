@@ -2,7 +2,7 @@ import * as Styled from "../Feed/style";
 import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import { useInfiniteQuery } from "react-query";
-import { ResponseMessages } from "@src/@types/shared";
+import { ResponseMessages, CustomError } from "@src/@types/shared";
 import { getMessages } from "@src/api/messages";
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
@@ -37,7 +37,7 @@ function SpecificDateFeed() {
     fetchNextPage,
     hasNextPage,
     refetch,
-  } = useInfiniteQuery<ResponseMessages>(
+  } = useInfiniteQuery<ResponseMessages, CustomError>(
     [QUERY_KEY.SPECIFIC_DATE_MESSAGES, queryKey],
     getMessages({
       date,
