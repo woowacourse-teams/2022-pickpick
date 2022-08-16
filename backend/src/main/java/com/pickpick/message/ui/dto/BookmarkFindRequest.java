@@ -4,12 +4,12 @@ import java.util.Objects;
 import lombok.Getter;
 
 @Getter
-public class BookmarkSelectRequest {
+public class BookmarkFindRequest {
 
     private Long bookmarkId;
     private int count = 20;
 
-    public BookmarkSelectRequest(final Long bookmarkId, final Integer count) {
+    public BookmarkFindRequest(final Long bookmarkId, final Integer count) {
         this.bookmarkId = bookmarkId;
 
         if (Objects.nonNull(count)) {

@@ -14,7 +14,7 @@ import com.pickpick.message.domain.QBookmark;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
-import com.pickpick.message.ui.dto.BookmarkSelectRequest;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -53,13 +53,13 @@ public class BookmarkService {
         bookmarks.save(bookmark);
     }
 
-    public BookmarkResponses find(final BookmarkSelectRequest request, final Long memberId) {
+    public BookmarkResponses find(final BookmarkFindRequest request, final Long memberId) {
         List<Bookmark> bookmarkList = findBookmarks(request, memberId);
 
         return new BookmarkResponses(toBookmarkResponseList(bookmarkList), isLast(bookmarkList, memberId));
     }
 
-    private List<Bookmark> findBookmarks(final BookmarkSelectRequest request, final Long memberId) {
+    private List<Bookmark> findBookmarks(final BookmarkFindRequest request, final Long memberId) {
         return jpaQueryFactory
                 .selectFrom(QBookmark.bookmark)
                 .leftJoin(QBookmark.bookmark.message)

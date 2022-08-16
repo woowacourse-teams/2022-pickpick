@@ -4,12 +4,12 @@ import java.util.Objects;
 import lombok.Getter;
 
 @Getter
-public class ReminderSelectRequest {
+public class ReminderFindRequest {
 
     private Long reminderId;
     private int count = 20;
 
-    public ReminderSelectRequest(final Long reminderId, final Integer count) {
+    public ReminderFindRequest(final Long reminderId, final Integer count) {
         this.reminderId = reminderId;
 
         if (Objects.nonNull(count)) {

@@ -16,7 +16,7 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
-import com.pickpick.message.ui.dto.BookmarkSelectRequest;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +80,7 @@ class BookmarkServiceTest {
     }
 
     private int findBookmarksSize(final Member member) {
-        return bookmarkService.find(new BookmarkSelectRequest(null, null), member.getId()).getBookmarks().size();
+        return bookmarkService.find(new BookmarkFindRequest(null, null), member.getId()).getBookmarks().size();
     }
 
     @DisplayName("북마크 조회")
@@ -89,7 +89,7 @@ class BookmarkServiceTest {
     void findBookmarks(final String subscription, final Long bookmarkId, final Long memberId,
                        final List<Long> expectedIds, final boolean expectedIsLast) {
         // given & when
-        BookmarkResponses response = bookmarkService.find(new BookmarkSelectRequest(bookmarkId, null), memberId);
+        BookmarkResponses response = bookmarkService.find(new BookmarkFindRequest(bookmarkId, null), memberId);
 
         // then
         List<Long> ids = convertToIds(response);

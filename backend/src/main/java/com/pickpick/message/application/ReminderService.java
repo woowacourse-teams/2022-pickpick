@@ -15,7 +15,7 @@ import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderSelectRequest;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Clock;
@@ -64,13 +64,13 @@ public class ReminderService {
         return ReminderResponse.from(reminder);
     }
 
-    public ReminderResponses find(final ReminderSelectRequest request, final Long memberId) {
+    public ReminderResponses find(final ReminderFindRequest request, final Long memberId) {
         List<Reminder> reminderList = findReminders(request, memberId);
 
         return new ReminderResponses(toReminderResponseList(reminderList), isLast(reminderList, memberId));
     }
 
-    private List<Reminder> findReminders(final ReminderSelectRequest request, final Long memberId) {
+    private List<Reminder> findReminders(final ReminderFindRequest request, final Long memberId) {
         return jpaQueryFactory
                 .selectFrom(QReminder.reminder)
                 .leftJoin(QReminder.reminder.message)
