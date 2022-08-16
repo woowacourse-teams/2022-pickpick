@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import useSnackbar from "@src/hooks/useSnackbar";
 import { PATH_NAME } from "@src/@constants";
 
+interface Props {
+  keyword: string;
+}
 interface ReturnType {
   searchKeyword: string;
   handleChangeSearchKeyword: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -11,10 +14,10 @@ interface ReturnType {
   ) => (event: FormEvent) => void;
 }
 
-function useSubmitSearchForm(): ReturnType {
+function useSubmitSearchForm({ keyword }: Props): ReturnType {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState(keyword);
 
   const handleChangeSearchKeyword = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(event.target.value);

@@ -6,10 +6,11 @@ import useSubmitSearchForm from "@src/hooks/useSubmitSearchForm";
 import Dropdown from "../Dropdown";
 
 interface Props {
+  currentKeyword?: string;
   currentChannelIds: number[];
 }
 
-function SearchForm({ currentChannelIds }: Props) {
+function SearchForm({ currentKeyword, currentChannelIds }: Props) {
   const {
     allChannels,
     selectedChannelIds,
@@ -21,7 +22,7 @@ function SearchForm({ currentChannelIds }: Props) {
     searchKeyword,
     handleChangeSearchKeyword,
     handleSubmitSearchKeyword,
-  } = useSubmitSearchForm();
+  } = useSubmitSearchForm({ keyword: currentKeyword ?? "" });
 
   return (
     <Dropdown>
