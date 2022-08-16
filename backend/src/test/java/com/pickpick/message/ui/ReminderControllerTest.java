@@ -71,7 +71,50 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    @DisplayName("리마인더를 조회한다")
+    @DisplayName("리마인더를 단건 조회한다")
+    @Test
+    void findOne() throws Exception {
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.set("messageId", "2");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(REMINDER_API_URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
+                        .params(requestParams)
+                )
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
+                        ),
+                        requestParameters(
+                                parameterWithName("messageId").optional().description("메시지 아이디")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER)
+                                        .description("리마인더 아이디"),
+                                fieldWithPath("messageId").type(JsonFieldType.NUMBER)
+                                        .description("메시지 아이디"),
+                                fieldWithPath("username").type(JsonFieldType.STRING)
+                                        .description("유저 이름"),
+                                fieldWithPath("userThumbnail").type(JsonFieldType.STRING)
+                                        .description("유저 프로필 사진"),
+                                fieldWithPath("text").type(JsonFieldType.STRING)
+                                        .description("메시지 내용"),
+                                fieldWithPath("postedDate").type(JsonFieldType.STRING)
+                                        .description("메시지 게시 날짜"),
+                                fieldWithPath("modifiedDate").type(JsonFieldType.STRING)
+                                        .description("메시지 수정 날짜"),
+                                fieldWithPath("remindDate").type(JsonFieldType.STRING)
+                                        .description("리마인드 날짜")
+                        )
+                ));
+    }
+
+    @DisplayName("리마인더를 다건 조회한다")
     @Test
     void find() throws Exception {
         given(clock.instant())

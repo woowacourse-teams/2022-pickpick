@@ -3,6 +3,7 @@ package com.pickpick.message.ui;
 import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.ReminderService;
 import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +28,13 @@ public class ReminderController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void save(final @AuthenticationPrincipal Long memberId,
-                     final @RequestBody ReminderRequest reminderRequest) {
+    public void save(final @AuthenticationPrincipal Long memberId, final @RequestBody ReminderRequest reminderRequest) {
         reminderService.save(memberId, reminderRequest);
+    }
+
+    @GetMapping(params = "messageId")
+    public ReminderResponse findOne(final @AuthenticationPrincipal Long memberId, final @RequestParam Long messageId) {
+        return reminderService.findOne(messageId, memberId);
     }
 
     @GetMapping
@@ -40,8 +45,7 @@ public class ReminderController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
-    public void delete(final @AuthenticationPrincipal Long memberId,
-                       final @RequestParam Long messageId) {
+    public void delete(final @AuthenticationPrincipal Long memberId, final @RequestParam Long messageId) {
         reminderService.delete(messageId, memberId);
     }
 
