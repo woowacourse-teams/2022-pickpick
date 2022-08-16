@@ -91,7 +91,7 @@ operation::reminder-controller-test/save[snippets='http-request,request-headers,
 
 === 리마인더 삭제 API
 
-operation::bookmark-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
+operation::reminder-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
 
 === 리마인더 수정 API
 
