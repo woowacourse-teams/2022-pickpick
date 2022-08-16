@@ -113,7 +113,8 @@ public class MessageService {
                 QMessage.message.postedDate,
                 QMessage.message.modifiedDate,
                 QBookmark.bookmark.id,
-                QReminder.reminder.id);
+                QReminder.reminder.id,
+                QReminder.reminder.remindDate);
     }
 
     private BooleanExpression existsBookmark(final Long memberId) {

@@ -137,4 +137,40 @@ class MessageServiceTest {
                         false)
         );
     }
+
+    @DisplayName("메시지 조회 시, remindDate가 함께 전달된다")
+    @Test
+    void checkRemindDate2() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        MessageRequest request = new MessageRequest("", "", List.of(5L), true, null, 1);
+
+        // when
+        MessageResponse message = messageService.find(MEMBER_ID, request)
+                .getMessages()
+                .get(0);
+
+        // then
+        assertThat(message.getRemindDate()).isNotNull();
+    }
+
+    @DisplayName("메시지 조회 시, remindDate 값이 없으면 빈 값으로 전달된다")
+    @Test
+    void checkRemindDate() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-12T14:20:00Z"));
+
+        MessageRequest request = new MessageRequest("", "", List.of(5L), true, null, 1);
+
+        // when
+        MessageResponse message = messageService.find(MEMBER_ID, request)
+                .getMessages()
+                .get(0);
+
+        // then
+        assertThat(message.getRemindDate()).isNull();
+    }
 }

@@ -17,6 +17,7 @@ public class MessageResponse {
     private String text;
     private LocalDateTime postedDate;
     private LocalDateTime modifiedDate;
+    private LocalDateTime remindDate;
 
     @JsonProperty(value = "isBookmarked")
     private boolean bookmarked;
@@ -36,7 +37,8 @@ public class MessageResponse {
                            final LocalDateTime postedDate,
                            final LocalDateTime modifiedDate,
                            final boolean isBookmarked,
-                           final boolean isSetReminded) {
+                           final boolean isSetReminded,
+                           final LocalDateTime remindDate) {
         this.id = id;
         this.memberId = memberId;
         this.username = username;
@@ -46,6 +48,7 @@ public class MessageResponse {
         this.modifiedDate = modifiedDate;
         this.bookmarked = isBookmarked;
         this.setReminded = isSetReminded;
+        this.remindDate = remindDate;
     }
 
     @QueryProjection
@@ -57,7 +60,8 @@ public class MessageResponse {
                            final LocalDateTime postedDate,
                            final LocalDateTime modifiedDate,
                            final Long bookmarkId,
-                           final Long reminderId) {
+                           final Long reminderId,
+                           final LocalDateTime remindDate) {
         this.id = id;
         this.memberId = memberId;
         this.username = username;
@@ -67,5 +71,6 @@ public class MessageResponse {
         this.modifiedDate = modifiedDate;
         this.bookmarked = Objects.nonNull(bookmarkId);
         this.setReminded = Objects.nonNull(reminderId);
+        this.remindDate = remindDate;
     }
 }
