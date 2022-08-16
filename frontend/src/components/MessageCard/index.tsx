@@ -13,7 +13,7 @@ interface Props {
   thumbnail: string;
   isBookmarked: boolean;
   isSetReminded: boolean;
-  toggleBookmark: () => void;
+  toggleBookmark?: () => void;
   handleOpenReminderModal?: () => void;
 }
 
