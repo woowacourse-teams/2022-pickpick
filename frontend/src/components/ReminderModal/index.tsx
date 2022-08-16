@@ -41,9 +41,8 @@ function ReminderModal({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleCreateSubmit,
+      handleReminderSubmit,
       handleRemoveSubmit,
-      handleModifySubmit,
     },
   } = useSetReminder({
     targetMessageId,
@@ -172,7 +171,11 @@ function ReminderModal({
         </Styled.Button>
 
         {!isTargetMessageSetReminded && (
-          <Styled.Button text="생성" type="button" onClick={handleCreateSubmit}>
+          <Styled.Button
+            text="생성"
+            type="submit"
+            onClick={(event) => handleReminderSubmit({ event, key: "create" })}
+          >
             생성
           </Styled.Button>
         )}
@@ -189,8 +192,10 @@ function ReminderModal({
 
             <Styled.Button
               text="수정"
-              type="button"
-              onClick={handleModifySubmit}
+              type="submit"
+              onClick={(event) =>
+                handleReminderSubmit({ event, key: "modify" })
+              }
             >
               수정
             </Styled.Button>

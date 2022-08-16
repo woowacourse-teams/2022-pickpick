@@ -6,7 +6,7 @@ import {
   postReminder,
   putReminder,
 } from "@src/api/reminders";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import useDropdown from "./useDropdown";
 import useSnackbar from "./useSnackbar";
@@ -103,6 +103,11 @@ const parsedDateTime = (ISODateTime: string) => {
   };
 };
 
+interface HandleReminderSubmitProps {
+  event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>;
+  key: string;
+}
+
 interface Props {
   targetMessageId: string;
   isTargetMessageSetReminded: boolean;
@@ -160,44 +165,34 @@ function useSetReminder({
   } = useDropdown();
   const { openFailureSnackbar } = useSnackbar();
 
-  const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
-  const [checkedHour, setCheckedHour] = useState(`${parsedHour}시`);
-  const [checkedMinute, setCheckedMinute] = useState(`${parsedMinute}분`);
-
   const [checkedYear, setCheckedYear] = useState(`${year}년`);
   const [checkedMonth, setCheckedMonth] = useState(`${month}월`);
   const [checkedDate, setCheckedDate] = useState(`${date}일`);
 
-  useEffect(() => {
-    if (isTargetMessageSetReminded && targetMessageData) {
-      const {
-        targetYear,
-        targetMonth,
-        targetDate,
-        targetMeridiem,
-        targetMeridiemHour,
-        targetMinute,
-      } = parsedDateTime(targetMessageData.remindDate);
+  const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
+  const [checkedHour, setCheckedHour] = useState(`${parsedHour}시`);
+  const [checkedMinute, setCheckedMinute] = useState(`${parsedMinute}분`);
 
-      setCheckedYear(`${targetYear}년`);
-      setCheckedMonth(`${targetMonth}월`);
-      setCheckedDate(`${targetDate}일`);
-
-      setCheckedMeridiem(targetMeridiem);
-      setCheckedHour(`${targetMeridiemHour}시`);
-      setCheckedMinute(`${targetMinute}분`);
-    }
-  }, [targetMessageData, isTargetMessageSetReminded]);
-
-  const meridiems = ["오전", "오후"];
-  const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
-  const minutes = Array.from({ length: 6 }, (_, index) => `${index * 10}분`);
   const years = [year, year + 1, year + 2].map((year) => `${year}년`);
   const months = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
   const dates = Array.from(
     { length: lastDate },
     (_, index) => `${index + 1}일`
   );
+
+  const meridiems = ["오전", "오후"];
+  const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
+  const minutes = Array.from({ length: 6 }, (_, index) => `${index * 10}분`);
+
+  const replaceCheckedYear = Number(checkedYear.replace("년", ""));
+  const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
+  const replaceCheckedDate = Number(checkedDate.replace("일", ""));
+
+  const replaceCheckedHour = convertMeridiemHourToStandardHour(
+    checkedMeridiem,
+    Number(checkedHour.replace("시", ""))
+  );
+  const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
 
   const handleChangeMeridiem = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === "오전" || event.target.value === "오후") {
@@ -225,15 +220,8 @@ function useSetReminder({
     setCheckedDate(event.target.value);
   };
 
-  const handleCreateSubmit = () => {
-    const replaceCheckedYear = Number(checkedYear.replace("년", ""));
-    const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
-    const replaceCheckedDate = Number(checkedDate.replace("일", ""));
-    const replaceCheckedHour = convertMeridiemHourToStandardHour(
-      checkedMeridiem,
-      Number(checkedHour.replace("시", ""))
-    );
-    const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+  const handleReminderSubmit = ({ event, key }: HandleReminderSubmitProps) => {
+    event.preventDefault();
 
     if (
       isInvalidateDateTime({
@@ -261,7 +249,16 @@ function useSetReminder({
       `${replaceCheckedHour}:${replaceCheckedMinute}`
     );
 
-    addReminder({
+    if (key === "create") {
+      addReminder({
+        messageId: Number(targetMessageId),
+        reminderDate: reminderISODateTime,
+      });
+
+      return;
+    }
+
+    modifyReminder({
       messageId: Number(targetMessageId),
       reminderDate: reminderISODateTime,
     });
@@ -278,68 +275,45 @@ function useSetReminder({
     return;
   };
 
-  const handleModifySubmit = () => {
-    const replaceCheckedYear = Number(checkedYear.replace("년", ""));
-    const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
-    const replaceCheckedDate = Number(checkedDate.replace("일", ""));
-    const replaceCheckedHour = convertMeridiemHourToStandardHour(
-      checkedMeridiem,
-      Number(checkedHour.replace("시", ""))
-    );
-    const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+  useEffect(() => {
+    if (isTargetMessageSetReminded && targetMessageData) {
+      const {
+        targetYear,
+        targetMonth,
+        targetDate,
+        targetMeridiem,
+        targetMeridiemHour,
+        targetMinute,
+      } = parsedDateTime(targetMessageData.remindDate);
 
-    if (
-      isInvalidateDateTime({
-        checkedYear: replaceCheckedYear,
-        checkedMonth: replaceCheckedMonth,
-        checkedDate: replaceCheckedDate,
-        checkedHour: replaceCheckedHour,
-        checkedMinute: replaceCheckedMinute,
-        year,
-        month,
-        date,
-        hour,
-        minute,
-      })
-    ) {
-      openFailureSnackbar(
-        "리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다."
-      );
+      setCheckedYear(`${targetYear}년`);
+      setCheckedMonth(`${targetMonth}월`);
+      setCheckedDate(`${targetDate}일`);
 
-      return;
+      setCheckedMeridiem(targetMeridiem);
+      setCheckedHour(`${targetMeridiemHour}시`);
+      setCheckedMinute(`${targetMinute}분`);
     }
-
-    const reminderISODateTime = ISOConverter(
-      `${replaceCheckedYear}-${replaceCheckedMonth}-${replaceCheckedDate}`,
-      `${replaceCheckedHour}:${replaceCheckedMinute}`
-    );
-
-    modifyReminder({
-      messageId: Number(targetMessageId),
-      reminderDate: reminderISODateTime,
-    });
-
-    return;
-  };
+  }, [targetMessageData, isTargetMessageSetReminded]);
 
   useEffect(() => {
     if (yearRef.current) {
       yearRef.current.scrollTo({
-        top: (Number(checkedYear.replace("년", "")) - year) * 22,
+        top: (replaceCheckedYear - year) * 22,
         behavior: "smooth",
       });
     }
 
     if (monthRef.current) {
       monthRef.current.scrollTo({
-        top: (Number(checkedMonth.replace("월", "")) - 1) * 22.5,
+        top: (replaceCheckedMonth - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (dateRef.current) {
       dateRef.current.scrollTo({
-        top: (Number(checkedDate.replace("일", "")) - 1) * 22.5,
+        top: (replaceCheckedDate - 1) * 22.5,
         behavior: "smooth",
       });
     }
@@ -360,7 +334,7 @@ function useSetReminder({
 
     if (minuteRef.current) {
       minuteRef.current.scrollTo({
-        top: (Number(checkedMinute.replace("분", "")) / 10) * 22.7,
+        top: (replaceCheckedMinute / 10) * 22.7,
         behavior: "smooth",
       });
     }
@@ -407,9 +381,8 @@ function useSetReminder({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleCreateSubmit,
+      handleReminderSubmit,
       handleRemoveSubmit,
-      handleModifySubmit,
     },
   };
 }
