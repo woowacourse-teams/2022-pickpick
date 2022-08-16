@@ -1,6 +1,6 @@
 import * as Styled from "./style";
 import { useEffect } from "react";
-import { PATH_NAME, QUERY_KEY } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants";
 import MenuIcon from "@public/assets/icons/MenuIcon.svg";
 import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
 import HomeIconUnfill from "@public/assets/icons/HomeIcon-Unfill.svg";
@@ -12,23 +12,19 @@ import Portal from "@src/components/@shared/Portal";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import Drawer from "@src/components/Drawer";
 import { useLocation } from "react-router-dom";
-import { useQuery } from "react-query";
-import { getSubscribedChannels } from "@src/api/channels";
 import useModal from "@src/hooks/useModal";
 import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
 import { useTheme } from "styled-components";
 import { Theme } from "@src/@types/shared";
+import useGetSubscribedChannels from "@src/hooks/useGetSubscribedChannels";
 
 function Navigation() {
   const { pathname } = useLocation();
   const { logout } = useAuthentication();
   const theme = useTheme() as Theme;
 
-  const { data, refetch } = useQuery(
-    QUERY_KEY.SUBSCRIBED_CHANNELS,
-    getSubscribedChannels
-  );
+  const { data, refetch } = useGetSubscribedChannels();
 
   const {
     isModalOpened: isMenuDrawerOpened,

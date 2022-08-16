@@ -1,8 +1,6 @@
-import { QUERY_KEY } from "@src/@constants";
 import { SubscribedChannel } from "@src/@types/shared";
-import { getSubscribedChannels } from "@src/api/channels";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import useGetSubscribedChannels from "@src/hooks/useGetSubscribedChannels";
 
 interface Props {
   currentChannelIds: number[];
@@ -17,10 +15,7 @@ interface ReturnType {
 
 function useSelectChannels({ currentChannelIds }: Props): ReturnType {
   const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
-  const { data } = useQuery(
-    QUERY_KEY.SUBSCRIBED_CHANNELS,
-    getSubscribedChannels
-  );
+  const { data } = useGetSubscribedChannels();
   const allChannels = data?.channels ?? [];
 
   const handleToggleAllChannels = () => {
