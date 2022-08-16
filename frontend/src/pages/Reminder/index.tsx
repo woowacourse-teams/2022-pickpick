@@ -11,15 +11,46 @@ import { QUERY_KEY } from "@src/@constants";
 import EmptyStatus from "@src/components/EmptyStatus";
 import { getReminders } from "@src/api/reminders";
 import { useLocation } from "react-router-dom";
+import Portal from "@src/components/@shared/Portal";
+import Dimmer from "@src/components/@shared/Dimmer";
+import ReminderModal from "@src/components/ReminderModal";
+import useModal from "@src/hooks/useModal";
+import { useState } from "react";
 
 function Reminder() {
   const { pathname } = useLocation();
-  const { data, isLoading, isSuccess, fetchNextPage, hasNextPage } =
+  const [targetMessageId, setTargetMessageId] = useState("");
+  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
+    useState(false);
+
+  const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseReminders>(QUERY_KEY.REMINDERS, getReminders, {
       getNextPageParam: nextRemindersCallback,
     });
 
   const parsedData = extractResponseReminders(data);
+
+  const {
+    isModalOpened: isReminderModalOpened,
+    handleOpenModal: handleOpenReminderModal,
+    handleCloseModal: handleCloseReminderModal,
+  } = useModal();
+
+  const handleUpdateTargetMessageId = (id: string) => {
+    setTargetMessageId(id);
+  };
+
+  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
+    setIsTargetMessageSetReminded(isSetReminded);
+  };
+
+  const handleInitializeTargetMessageId = () => {
+    setTargetMessageId("");
+  };
+
+  const handleInitializeTargetMessageSetReminded = () => {
+    setIsTargetMessageSetReminded(false);
+  };
 
   return (
     <Styled.Container>
@@ -32,7 +63,14 @@ function Reminder() {
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
             {parsedData.map(
-              ({ id, username, postedDate, text, userThumbnail }) => (
+              ({
+                id,
+                messageId,
+                username,
+                postedDate,
+                text,
+                userThumbnail,
+              }) => (
                 <MessageCard
                   key={id}
                   username={username}
@@ -42,6 +80,11 @@ function Reminder() {
                   thumbnail={userThumbnail}
                   isBookmarked={true}
                   isSetReminded={true}
+                  handleOpenReminderModal={() => {
+                    handleOpenReminderModal();
+                    handleUpdateTargetMessageId(messageId.toString());
+                    handleUpdateTargetMessageSetReminded(true);
+                  }}
                 />
               )
             )}
@@ -49,6 +92,29 @@ function Reminder() {
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>
+
+      <Portal isOpened={isReminderModalOpened}>
+        <>
+          <Dimmer
+            hasBackgroundColor={true}
+            onClick={() => {
+              handleInitializeTargetMessageId();
+              handleInitializeTargetMessageSetReminded();
+              handleCloseReminderModal();
+            }}
+          />
+          <ReminderModal
+            targetMessageId={targetMessageId}
+            isTargetMessageSetReminded={isTargetMessageSetReminded}
+            handleCloseReminderModal={() => {
+              handleInitializeTargetMessageId();
+              handleInitializeTargetMessageSetReminded();
+              handleCloseReminderModal();
+            }}
+            refetchFeed={refetch}
+          />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }
