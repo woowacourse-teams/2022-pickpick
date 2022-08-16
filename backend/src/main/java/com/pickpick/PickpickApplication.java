@@ -11,6 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class PickpickApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PickpickApplication.class, args);
+        SpringApplication.run(PickpickApplication.class, args); //
     }
 }
