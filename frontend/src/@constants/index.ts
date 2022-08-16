@@ -1,8 +1,8 @@
 export const PATH_NAME = {
   HOME: "/",
   FEED: "/feed",
-  ALARM: "/alarm",
   BOOKMARK: "/bookmark",
+  REMINDER: "/reminder",
   ADD_CHANNEL: "/add-channel",
   CERTIFICATION: "/certification",
   SEARCH_RESULT: "/search-result",
@@ -14,6 +14,7 @@ export const QUERY_KEY = {
   ALL_MESSAGES: "allMessages",
   SPECIFIC_DATE_MESSAGES: "specificDateMessages",
   BOOKMARKS: "bookmarks",
+  REMINDERS: "reminders",
   AUTHENTICATION: "authentication",
   SLACK_LOGIN: "slackLogin",
 } as const;

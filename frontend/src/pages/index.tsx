@@ -21,13 +21,13 @@ export const AddChannel = Loadable({
   LoadingStatus: () => <Loader />,
 });
 
-export const Alarm = Loadable({
-  Component: lazy(() => import("./Alarm")),
+export const Bookmark = Loadable({
+  Component: lazy(() => import("./Bookmark")),
   LoadingStatus: () => <Loader />,
 });
 
-export const Bookmark = Loadable({
-  Component: lazy(() => import("./Bookmark")),
+export const Reminder = Loadable({
+  Component: lazy(() => import("./Reminder")),
   LoadingStatus: () => <Loader />,
 });
 
