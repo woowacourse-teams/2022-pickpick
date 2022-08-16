@@ -124,7 +124,7 @@ class ReminderServiceTest {
                 .isInstanceOf(ReminderNotFoundException.class);
     }
 
-    @DisplayName("리마인더 다건 조회")
+    @DisplayName("리마인더 목록 조회")
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameterProvider")
     void findReminders(final String subscription, final Long reminderId, final Long memberId,

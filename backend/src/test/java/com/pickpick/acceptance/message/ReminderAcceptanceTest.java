@@ -68,7 +68,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.NOT_FOUND);
     }
 
-
     @Test
     void 멤버_ID_2번으로_리마인더_목록_조회() {
         // given

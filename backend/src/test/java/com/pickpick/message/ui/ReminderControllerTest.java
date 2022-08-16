@@ -114,7 +114,7 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    @DisplayName("리마인더를 다건 조회한다")
+    @DisplayName("리마인더 목록을 조회한다")
     @Test
     void find() throws Exception {
         given(clock.instant())
