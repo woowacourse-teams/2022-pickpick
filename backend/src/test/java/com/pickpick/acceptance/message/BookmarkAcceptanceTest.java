@@ -3,6 +3,7 @@ package com.pickpick.acceptance.message;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.config.dto.ErrorResponse;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import io.restassured.response.ExtractableResponse;
@@ -81,7 +82,8 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long messageId = 2L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
+                1L);
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
@@ -93,9 +95,12 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long messageId = 1L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
+                1L);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "BOOKMARK_DELETE_FAILURE");
     }
 }

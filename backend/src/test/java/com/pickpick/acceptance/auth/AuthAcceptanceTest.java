@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.config.dto.ErrorResponse;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
@@ -95,6 +96,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo("INVALID_TOKEN");
     }
 
     private ExtractableResponse<Response> getWithToken(final String uri, final String token) {
@@ -131,5 +133,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo("INVALID_TOKEN");
     }
 }
