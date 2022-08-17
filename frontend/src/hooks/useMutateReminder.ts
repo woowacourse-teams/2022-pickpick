@@ -79,7 +79,32 @@ interface Props {
   refetchFeed: () => void;
 }
 
-function useMutateReminder({ handleCloseReminderModal, refetchFeed }: Props) {
+interface ReturnType {
+  handleCreateReminder: ({
+    messageId,
+    checkedYear,
+    checkedMonth,
+    checkedDate,
+    checkedMeridiem,
+    checkedHour,
+    checkedMinute,
+  }: handlerProps) => void;
+  handleModifyReminder: ({
+    messageId,
+    checkedYear,
+    checkedMonth,
+    checkedDate,
+    checkedMeridiem,
+    checkedHour,
+    checkedMinute,
+  }: handlerProps) => void;
+  handleRemoveReminder: (messageId: string) => Promise<void>;
+}
+
+function useMutateReminder({
+  handleCloseReminderModal,
+  refetchFeed,
+}: Props): ReturnType {
   const { openFailureSnackbar } = useSnackbar();
   const { mutate: addReminder } = useMutation(postReminder, {
     onSuccess: () => {

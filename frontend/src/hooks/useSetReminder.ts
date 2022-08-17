@@ -1,5 +1,5 @@
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, RefObject, ChangeEventHandler } from "react";
 import useDropdown from "./useDropdown";
 import useInput from "./useInput";
 
@@ -43,7 +43,37 @@ interface Props {
   remindDate: string;
 }
 
-function useSetReminder({ remindDate }: Props) {
+interface ReturnType {
+  ref: Record<
+    | "yearRef"
+    | "monthRef"
+    | "dateRef"
+    | "meridiemRef"
+    | "hourRef"
+    | "minuteRef",
+    RefObject<HTMLDivElement>
+  >;
+  checkedState: Record<
+    | "checkedMeridiem"
+    | "checkedHour"
+    | "checkedMinute"
+    | "checkedYear"
+    | "checkedMonth"
+    | "checkedDate",
+    string
+  >;
+  handler: {
+    handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
+    handleChangeHour: ChangeEventHandler<HTMLInputElement>;
+    handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
+    handleChangeYear: ChangeEventHandler<HTMLInputElement>;
+    handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
+    handleChangeDate: ChangeEventHandler<HTMLInputElement>;
+    handleToggleDateTimePicker: () => void;
+  };
+}
+
+function useSetReminder({ remindDate }: Props): ReturnType {
   const { year, month, date, hour, minute } = getDateInformation(new Date());
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
