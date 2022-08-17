@@ -69,7 +69,13 @@ function Reminder() {
                   >
                     <ReminderButton
                       isActive={true}
-                      onClick={handleOpenReminderModal}
+                      onClick={() => {
+                        handleOpenReminderModal();
+                        handleUpdateReminderTarget({
+                          id: messageId.toString(),
+                          remindDate,
+                        });
+                      }}
                     />
                   </MessageCard>
                 );
@@ -90,8 +96,8 @@ function Reminder() {
             }}
           />
           <ReminderModal
-            targetMessageId={reminderTarget.id}
-            isTargetMessageSetReminded={reminderTarget.isSetReminded}
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
             handleCloseReminderModal={() => {
               handleInitializeReminderTarget();
               handleCloseReminderModal();

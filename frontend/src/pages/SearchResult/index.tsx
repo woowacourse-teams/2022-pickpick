@@ -77,6 +77,7 @@ function SearchResult() {
               id,
               username,
               postedDate,
+              remindDate,
               text,
               userThumbnail,
               isBookmarked,
@@ -93,7 +94,10 @@ function SearchResult() {
                 <>
                   <ReminderButton
                     isActive={isSetReminded}
-                    onClick={handleOpenReminderModal}
+                    onClick={() => {
+                      handleUpdateReminderTarget({ id, remindDate });
+                      handleOpenReminderModal();
+                    }}
                   />
                   <BookmarkButton
                     isActive={isBookmarked}
@@ -122,8 +126,8 @@ function SearchResult() {
             }}
           />
           <ReminderModal
-            targetMessageId={reminderTarget.id}
-            isTargetMessageSetReminded={reminderTarget.isSetReminded}
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
             handleCloseReminderModal={() => {
               handleInitializeReminderTarget();
               handleCloseReminderModal();

@@ -11,15 +11,15 @@ import ReminderModalButtons from "../ReminderModalButtons";
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
 interface Props {
-  targetMessageId: string;
-  isTargetMessageSetReminded: boolean;
+  messageId: string;
+  remindDate: string;
   handleCloseReminderModal: () => void;
   refetchFeed: () => void;
 }
 
 function ReminderModal({
-  targetMessageId,
-  isTargetMessageSetReminded,
+  messageId,
+  remindDate,
   handleCloseReminderModal,
   refetchFeed,
 }: Props) {
@@ -46,8 +46,8 @@ function ReminderModal({
       handleRemoveSubmit,
     },
   } = useSetReminder({
-    targetMessageId,
-    isTargetMessageSetReminded,
+    messageId,
+    remindDate,
     handleCloseReminderModal,
     refetchFeed,
   });
@@ -163,8 +163,8 @@ function ReminderModal({
       </Dropdown>
 
       <ReminderModalButtons
-        targetMessageId={targetMessageId}
-        isTargetMessageSetReminded={isTargetMessageSetReminded}
+        messageId={messageId}
+        remindDate={remindDate}
         handleCloseReminderModal={handleCloseReminderModal}
         handleReminderSubmit={handleReminderSubmit}
         handleRemoveSubmit={handleRemoveSubmit}

@@ -87,19 +87,20 @@ const convertMeridiemHourToStandardHour = (
 };
 
 const parsedDateTime = (ISODateTime: string) => {
-  const [date, time] = ISODateTime.split("T");
-  const [targetYear, targetMonth, targetDate] = date.split("-");
-  const [targetHour, targetMinute, _] = time.split(":");
-  const { meridiem: targetMeridiem, hour: targetMeridiemHour } =
-    getMeridiemTime(Number(targetHour));
+  const [fullDate, fullTime] = ISODateTime.split("T");
+  const [year, month, date] = fullDate.split("-");
+  const [hour, minute] = fullTime.split(":");
+  const { meridiem: meridiem, hour: meridiemHour } = getMeridiemTime(
+    Number(hour)
+  );
 
   return {
-    targetYear,
-    targetMonth,
-    targetDate,
-    targetMeridiem,
-    targetMeridiemHour,
-    targetMinute,
+    year,
+    month,
+    date,
+    meridiem,
+    meridiemHour,
+    minute,
   };
 };
 
@@ -109,26 +110,18 @@ export interface HandleReminderSubmitProps {
 }
 
 interface Props {
-  targetMessageId: string;
-  isTargetMessageSetReminded: boolean;
+  messageId: string;
+  remindDate: string;
   handleCloseReminderModal: () => void;
   refetchFeed: () => void;
 }
 
 function useSetReminder({
-  targetMessageId,
-  isTargetMessageSetReminded,
+  messageId,
+  remindDate,
   handleCloseReminderModal,
   refetchFeed,
 }: Props) {
-  const { data: targetMessageData } = useQuery(
-    QUERY_KEY.REMINDER,
-    () => getReminder(targetMessageId),
-    {
-      enabled: isTargetMessageSetReminded,
-    }
-  );
-
   const { mutate: addReminder } = useMutation(postReminder, {
     onSuccess: () => {
       handleCloseReminderModal();
@@ -251,7 +244,7 @@ function useSetReminder({
 
     if (key === "create") {
       addReminder({
-        messageId: Number(targetMessageId),
+        messageId: Number(messageId),
         reminderDate: reminderISODateTime,
       });
 
@@ -259,16 +252,16 @@ function useSetReminder({
     }
 
     modifyReminder({
-      messageId: Number(targetMessageId),
+      messageId: Number(messageId),
       reminderDate: reminderISODateTime,
     });
 
     return;
   };
 
-  const handleRemoveSubmit = async (targetMessageId: string) => {
+  const handleRemoveSubmit = async (messageId: string) => {
     if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
-      await deleteReminder(targetMessageId);
+      await deleteReminder(messageId);
 
       refetchFeed();
       handleCloseReminderModal();
@@ -280,25 +273,19 @@ function useSetReminder({
   };
 
   useEffect(() => {
-    if (isTargetMessageSetReminded && targetMessageData) {
-      const {
-        targetYear,
-        targetMonth,
-        targetDate,
-        targetMeridiem,
-        targetMeridiemHour,
-        targetMinute,
-      } = parsedDateTime(targetMessageData.remindDate);
+    if (remindDate) {
+      const { year, month, date, meridiem, meridiemHour, minute } =
+        parsedDateTime(remindDate);
 
-      setCheckedYear(`${targetYear}년`);
-      setCheckedMonth(`${targetMonth}월`);
-      setCheckedDate(`${targetDate}일`);
+      setCheckedYear(`${year}년`);
+      setCheckedMonth(`${month}월`);
+      setCheckedDate(`${date}일`);
 
-      setCheckedMeridiem(targetMeridiem);
-      setCheckedHour(`${targetMeridiemHour}시`);
-      setCheckedMinute(`${targetMinute}분`);
+      setCheckedMeridiem(meridiem);
+      setCheckedHour(`${meridiemHour}시`);
+      setCheckedMinute(`${minute}분`);
     }
-  }, [targetMessageData, isTargetMessageSetReminded]);
+  }, [remindDate]);
 
   useEffect(() => {
     if (yearRef.current) {

@@ -2,16 +2,16 @@ import { HandleReminderSubmitProps } from "@src/hooks/useSetReminder";
 import * as Styled from "./style";
 
 interface Props {
-  targetMessageId: string;
-  isTargetMessageSetReminded: boolean;
+  messageId: string;
+  remindDate: string;
   handleCloseReminderModal: () => void;
   handleReminderSubmit: ({ event, key }: HandleReminderSubmitProps) => void;
   handleRemoveSubmit: (targetMessageId: string) => void;
 }
 
 function ReminderModalButtons({
-  targetMessageId,
-  isTargetMessageSetReminded,
+  messageId,
+  remindDate,
   handleCloseReminderModal,
   handleReminderSubmit,
   handleRemoveSubmit,
@@ -26,7 +26,7 @@ function ReminderModalButtons({
         취소
       </Styled.Button>
 
-      {!isTargetMessageSetReminded && (
+      {!remindDate && (
         <Styled.Button
           text="생성"
           type="submit"
@@ -36,12 +36,12 @@ function ReminderModalButtons({
         </Styled.Button>
       )}
 
-      {isTargetMessageSetReminded && (
+      {remindDate && (
         <>
           <Styled.Button
             text="삭제"
             type="button"
-            onClick={() => handleRemoveSubmit(targetMessageId)}
+            onClick={() => handleRemoveSubmit(messageId)}
           >
             삭제
           </Styled.Button>

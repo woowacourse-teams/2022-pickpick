@@ -112,6 +112,7 @@ function SpecificDateFeed() {
               id,
               username,
               postedDate,
+              remindDate,
               text,
               userThumbnail,
               isBookmarked,
@@ -138,7 +139,10 @@ function SpecificDateFeed() {
                     <>
                       <ReminderButton
                         isActive={isSetReminded}
-                        onClick={handleOpenReminderModal}
+                        onClick={() => {
+                          handleOpenReminderModal();
+                          handleUpdateReminderTarget({ id, remindDate });
+                        }}
                       />
                       <BookmarkButton
                         isActive={isBookmarked}
@@ -179,8 +183,8 @@ function SpecificDateFeed() {
             }}
           />
           <ReminderModal
-            targetMessageId={reminderTarget.id}
-            isTargetMessageSetReminded={reminderTarget.isSetReminded}
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
             handleCloseReminderModal={() => {
               handleInitializeReminderTarget();
               handleCloseReminderModal();

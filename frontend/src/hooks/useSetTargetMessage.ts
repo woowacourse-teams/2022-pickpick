@@ -2,13 +2,13 @@ import { useState } from "react";
 
 interface ReminderTarget {
   id: string;
-  isSetReminded: boolean;
+  remindDate?: string;
 }
 
 function useSetTargetMessage() {
   const [reminderTarget, setReminderTarget] = useState<ReminderTarget>({
     id: "",
-    isSetReminded: false,
+    remindDate: "",
   });
 
   const handleUpdateReminderTarget = (reminderTarget: ReminderTarget) => {
@@ -16,7 +16,7 @@ function useSetTargetMessage() {
   };
 
   const handleInitializeReminderTarget = () => {
-    setReminderTarget({ id: "", isSetReminded: false });
+    setReminderTarget({ id: "", remindDate: "" });
   };
 
   return {

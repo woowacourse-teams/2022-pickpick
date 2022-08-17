@@ -65,6 +65,8 @@ function Feed() {
 
   const parsedData = extractResponseMessages(data);
 
+  console.log(parsedData);
+
   return (
     <Styled.Container>
       <SearchForm channelId={channelId ? Number(channelId) : 0} />
@@ -81,6 +83,7 @@ function Feed() {
               id,
               username,
               postedDate,
+              remindDate,
               text,
               userThumbnail,
               isBookmarked,
@@ -107,7 +110,10 @@ function Feed() {
                     <>
                       <ReminderButton
                         isActive={isSetReminded}
-                        onClick={handleOpenReminderModal}
+                        onClick={() => {
+                          handleOpenReminderModal();
+                          handleUpdateReminderTarget({ id, remindDate });
+                        }}
                       />
                       <BookmarkButton
                         isActive={isBookmarked}
@@ -148,8 +154,8 @@ function Feed() {
             }}
           />
           <ReminderModal
-            targetMessageId={reminderTarget.id}
-            isTargetMessageSetReminded={reminderTarget.isSetReminded}
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
             handleCloseReminderModal={() => {
               handleInitializeReminderTarget();
               handleCloseReminderModal();

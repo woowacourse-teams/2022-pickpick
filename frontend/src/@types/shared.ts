@@ -10,6 +10,7 @@ export interface Message {
   id: string;
   username: string;
   postedDate: string;
+  remindDate: string;
   text: string;
   userThumbnail: string;
   isBookmarked: boolean;
@@ -25,8 +26,8 @@ export interface ResponseReminder {
   userThumbnail: string;
   text: string;
   postedDate: string;
-  modifyDate: string;
   remindDate: string;
+  modifyDate: string;
 }
 
 export interface ResponseReminders {
