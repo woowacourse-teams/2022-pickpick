@@ -22,6 +22,7 @@ function App() {
       queries: {
         refetchOnWindowFocus: false,
         onError: handleError,
+        retry: 0,
       },
       mutations: {
         onError: handleError,

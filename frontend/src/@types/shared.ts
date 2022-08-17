@@ -79,6 +79,12 @@ export interface ResponseToken {
 }
 
 export interface CustomError {
+  response: {
+    data: Error;
+  };
+}
+
+export interface Error {
   code: keyof typeof ERROR_MESSAGE_BY_CODE;
   message: string;
 }
