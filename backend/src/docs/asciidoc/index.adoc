@@ -77,9 +77,13 @@ operation::bookmark-controller-test/delete[snippets='http-request,request-header
 
 == 리마인더 API
 
-=== 리마인더 조회 API
+=== 리마인더 목록 조회 API
 
 operation::reminder-controller-test/find[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== 리마인더 단건 조회 API
+
+operation::reminder-controller-test/find-one[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 리마인더 추가 API
 
@@ -87,7 +91,7 @@ operation::reminder-controller-test/save[snippets='http-request,request-headers,
 
 === 리마인더 삭제 API
 
-operation::bookmark-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
+operation::reminder-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
 
 === 리마인더 수정 API
 

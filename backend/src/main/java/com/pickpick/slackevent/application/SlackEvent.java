@@ -12,6 +12,7 @@ public enum SlackEvent {
     MESSAGE_CHANGED("message", "message_changed"),
     MESSAGE_DELETED("message", "message_deleted"),
     MESSAGE_THREAD_BROADCAST("message", "thread_broadcast"),
+    MESSAGE_FILE_SHARE("message", "file_share"),
     CHANNEL_RENAME("channel_rename", ""),
     CHANNEL_DELETED("channel_deleted", ""),
     MEMBER_CHANGED("user_profile_changed", ""),

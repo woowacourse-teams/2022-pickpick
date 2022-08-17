@@ -16,6 +16,7 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -65,8 +66,7 @@ class BookmarkServiceTest {
         // given
         Member member = members.save(new Member("U1234", "사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
-        messages.save(message);
+        Message message = messages.save(new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
 
         BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
         int beforeSize = findBookmarksSize(member);
@@ -80,7 +80,7 @@ class BookmarkServiceTest {
     }
 
     private int findBookmarksSize(final Member member) {
-        return bookmarkService.find(null, member.getId()).getBookmarks().size();
+        return bookmarkService.find(new BookmarkFindRequest(null, null), member.getId()).getBookmarks().size();
     }
 
     @DisplayName("북마크 조회")
@@ -89,7 +89,7 @@ class BookmarkServiceTest {
     void findBookmarks(final String subscription, final Long bookmarkId, final Long memberId,
                        final List<Long> expectedIds, final boolean expectedIsLast) {
         // given & when
-        BookmarkResponses response = bookmarkService.find(bookmarkId, memberId);
+        BookmarkResponses response = bookmarkService.find(new BookmarkFindRequest(bookmarkId, null), memberId);
 
         // then
         List<Long> ids = convertToIds(response);
@@ -112,10 +112,8 @@ class BookmarkServiceTest {
         // given
         Member member = members.save(new Member("U1234", "사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
-        messages.save(message);
-        Bookmark bookmark = new Bookmark(member, message);
-        bookmarks.save(bookmark);
+        Message message = messages.save(new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
+        Bookmark bookmark = bookmarks.save(new Bookmark(member, message));
 
         // when
         bookmarkService.delete(message.getId(), member.getId());
@@ -132,8 +130,7 @@ class BookmarkServiceTest {
         Member owner = members.save(new Member("U1234", "사용자", "user.png"));
         Member other = members.save(new Member("U1235", "다른 사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = new Message("M1234", "메시지", owner, channel, LocalDateTime.now(), LocalDateTime.now());
-        messages.save(message);
+        Message message = messages.save(new Message("M1234", "메시지", owner, channel, LocalDateTime.now(), LocalDateTime.now()));
         Bookmark bookmark = new Bookmark(owner, message);
         bookmarks.save(bookmark);
 

@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
+import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -15,9 +16,10 @@ import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -76,14 +78,14 @@ class ReminderServiceTest {
         // given
         Member member = members.save(new Member("U1234", "사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now());
-        messages.save(message);
+        Message message = messages.save(
+                new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
 
-        ReminderRequest reminderRequest = new ReminderRequest(message.getId(), LocalDateTime.now().plusDays(1));
+        ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusDays(1));
         int beforeSize = findReminderSize(member);
 
         // when
-        reminderService.save(member.getId(), reminderRequest);
+        reminderService.save(member.getId(), request);
 
         // then
         int afterSize = findReminderSize(member);
@@ -91,10 +93,70 @@ class ReminderServiceTest {
     }
 
     private int findReminderSize(final Member member) {
-        return reminderService.find(null, member.getId()).getReminders().size();
+        return reminderService.find(new ReminderFindRequest(null, null), member.getId()).getReminders().size();
     }
 
-    @DisplayName("리마인더 조회")
+    @DisplayName("리마인더 조회 시 count가 없으면 default 값을 20으로 세팅")
+    @Test
+    void findRemindersByDefaultCount() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, null), 1L);
+
+        // then
+        int size = response.getReminders().size();
+        assertThat(size).isEqualTo(20);
+    }
+
+    @DisplayName("리마인더 조회 시 count 값이 10이면 10개 조회")
+    @Test
+    void findRemindersByCount() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+        int count = 10;
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 1L);
+
+        // then
+        int size = response.getReminders().size();
+        assertThat(size).isEqualTo(count);
+    }
+
+    @DisplayName("리마인더 단건 조회")
+    @Test
+    void findOneReminder() {
+        // given
+        Long memberId = 2L;
+        Long messageId = 1L;
+
+        // when
+        ReminderResponse reminder = reminderService.findOne(messageId, memberId);
+
+        // then
+        assertAll(
+                () -> assertThat(reminder.getId()).isEqualTo(1L),
+                () -> assertThat(reminder.getRemindDate()).isEqualTo(LocalDateTime.of(2022, 8, 12, 14, 20))
+        );
+    }
+
+    @DisplayName("리마인더가 존재하지 않는 메시지를 단건 조회할 경우 예외 발생")
+    @Test
+    void findNotExistOneThenThrowException() {
+        // given
+        Long memberId = 2L;
+        Long messageId = 20L;
+
+        // when & then
+        assertThatThrownBy(() -> reminderService.findOne(messageId, memberId))
+                .isInstanceOf(ReminderNotFoundException.class);
+    }
+
+    @DisplayName("리마인더 목록 조회")
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameterProvider")
     void findReminders(final String subscription, final Long reminderId, final Long memberId,
@@ -104,7 +166,7 @@ class ReminderServiceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         // when
-        ReminderResponses response = reminderService.find(reminderId, memberId);
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(reminderId, null), memberId);
 
         // then
         List<Long> ids = convertToIds(response);
@@ -129,7 +191,7 @@ class ReminderServiceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         // when
-        ReminderResponses response = reminderService.find(null, 1L);
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, null), 1L);
 
         // then
         List<Long> ids = convertToIds(response);
@@ -151,7 +213,7 @@ class ReminderServiceTest {
         long messageId = 2L;
 
         // when
-        reminderService.update(memberId, new ReminderRequest(messageId, updateTime));
+        reminderService.update(memberId, new ReminderSaveRequest(messageId, updateTime));
 
         // then
         Optional<Reminder> expected = reminders.findByMessageIdAndMemberId(messageId, memberId);
@@ -169,7 +231,7 @@ class ReminderServiceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        ReminderRequest request = new ReminderRequest(1L, LocalDateTime.now(clock).plusDays(1));
+        ReminderSaveRequest request = new ReminderSaveRequest(1L, LocalDateTime.now(clock).plusDays(1));
 
         // when & then
         assertThatThrownBy(() -> reminderService.update(1L, request))

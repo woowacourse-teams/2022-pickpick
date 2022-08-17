@@ -5,6 +5,7 @@ import * as Styled from "./style";
 interface Props {
   needZeroPaddingStart: boolean;
   optionTexts: string[];
+  unit?: "년" | "월" | "일" | "시" | "분";
   checkedText: string;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }
@@ -12,6 +13,7 @@ interface Props {
 function DateTimePickerOptions({
   needZeroPaddingStart,
   optionTexts,
+  unit,
   checkedText,
   handleChangeText,
 }: Props) {
@@ -26,7 +28,13 @@ function DateTimePickerOptions({
             checked={checkedText === optionText}
           />
           <Styled.TextOption>
-            {parsedOptionText({ needZeroPaddingStart, optionText })}
+            {unit &&
+              `${parsedOptionText({
+                needZeroPaddingStart,
+                optionText,
+              })}${unit}`}
+
+            {!unit && parsedOptionText({ needZeroPaddingStart, optionText })}
           </Styled.TextOption>
         </Styled.Container>
       ))}

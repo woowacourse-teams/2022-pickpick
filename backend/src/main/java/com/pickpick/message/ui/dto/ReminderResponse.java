@@ -38,7 +38,7 @@ public class ReminderResponse {
 
     public static ReminderResponse from(final Reminder reminder) {
         Message message = reminder.getMessage();
-        Member member = reminder.getMember();
+        Member member = message.getMember();
 
         return ReminderResponse.builder()
                 .id(reminder.getId())

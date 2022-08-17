@@ -1,4 +1,3 @@
-import React from "react";
 import * as Styled from "../Feed/style";
 import { QUERY_KEY } from "@src/@constants";
 import { ResponseMessages } from "@src/@types/shared";
@@ -12,12 +11,29 @@ import { FlexColumn } from "@src/@styles/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import EmptyStatus from "@src/components/EmptyStatus";
 import useBookmark from "@src/hooks/useBookmark";
-import { convertSeparatorToKey, extractResponseMessages } from "@src/@utils";
+import {
+  convertSeparatorToKey,
+  extractResponseMessages,
+  parseTime,
+} from "@src/@utils";
+import useModal from "@src/hooks/useModal";
+import Portal from "@src/components/@shared/Portal";
+import Dimmer from "@src/components/@shared/Dimmer";
+import ReminderModal from "@src/components/ReminderModal";
+import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 
 function SearchResult() {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword") ?? "";
   const channelIds = searchParams.get("channelIds") ?? "";
+
+  const {
+    reminderTarget,
+    handleUpdateReminderTarget,
+    handleInitializeReminderTarget,
+  } = useSetTargetMessage();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -39,6 +55,12 @@ function SearchResult() {
     handleSettle: refetch,
   });
 
+  const {
+    isModalOpened: isReminderModalOpened,
+    handleOpenModal: handleOpenReminderModal,
+    handleCloseModal: handleCloseReminderModal,
+  } = useModal();
+
   const parsedData = extractResponseMessages(data);
 
   return (
@@ -55,30 +77,65 @@ function SearchResult() {
               id,
               username,
               postedDate,
+              remindDate,
               text,
               userThumbnail,
               isBookmarked,
+              isSetReminded,
             }) => (
-              <React.Fragment key={id}>
-                <MessageCard
-                  username={username}
-                  date={postedDate}
-                  text={text}
-                  thumbnail={userThumbnail}
-                  isBookmarked={isBookmarked}
-                  toggleBookmark={
-                    isBookmarked
-                      ? handleRemoveBookmark(id)
-                      : handleAddBookmark(id)
-                  }
-                />
-              </React.Fragment>
+              <MessageCard
+                key={id}
+                username={username}
+                date={parseTime(postedDate)}
+                text={text}
+                thumbnail={userThumbnail}
+                isRemindedMessage={false}
+              >
+                <>
+                  <ReminderButton
+                    isActive={isSetReminded}
+                    onClick={() => {
+                      handleUpdateReminderTarget({ id, remindDate });
+                      handleOpenReminderModal();
+                    }}
+                  />
+                  <BookmarkButton
+                    isActive={isBookmarked}
+                    onClick={
+                      isBookmarked
+                        ? handleRemoveBookmark(id)
+                        : handleAddBookmark(id)
+                    }
+                  />
+                </>
+              </MessageCard>
             )
           )}
 
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>
+
+      <Portal isOpened={isReminderModalOpened}>
+        <>
+          <Dimmer
+            hasBackgroundColor={true}
+            onClick={() => {
+              handleInitializeReminderTarget();
+              handleCloseReminderModal();
+            }}
+          />
+          <ReminderModal
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
+            handleCloseReminderModal={() => {
+              handleInitializeReminderTarget();
+              handleCloseReminderModal();
+            }}
+            refetchFeed={refetch}
+          />
+        </>
+      </Portal>
     </Styled.Container>
   );
 }

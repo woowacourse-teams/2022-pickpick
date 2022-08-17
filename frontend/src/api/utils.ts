@@ -1,5 +1,9 @@
 import { ACCESS_TOKEN_KEY } from "@src/@constants";
-import { ResponseMessages, ResponseBookmarks } from "@src/@types/shared";
+import {
+  ResponseMessages,
+  ResponseBookmarks,
+  ResponseReminders,
+} from "@src/@types/shared";
 import { getCookie } from "@src/@utils";
 
 export const getPublicHeaders = () => {
@@ -40,5 +44,14 @@ export const nextBookmarksCallback = ({
 }: ResponseBookmarks) => {
   if (!isLast) {
     return bookmarks[bookmarks.length - 1]?.id;
+  }
+};
+
+export const nextRemindersCallback = ({
+  isLast,
+  reminders,
+}: ResponseReminders) => {
+  if (!isLast) {
+    return reminders[reminders.length - 1]?.id;
   }
 };
