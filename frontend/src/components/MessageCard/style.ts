@@ -24,15 +24,15 @@ export const Writer = styled.p`
 `;
 
 interface DateStyledProps extends StyledDefaultProps {
-  isReminderPage: boolean;
+  isHighlighted: boolean;
 }
 
 export const Date = styled.p`
   font-weight: 600;
 
-  ${({ theme, isReminderPage }: DateStyledProps) => css`
+  ${({ theme, isHighlighted }: DateStyledProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
-    color: ${isReminderPage
+    color: ${isHighlighted
       ? theme.COLOR.TEXT.LIGHT_BLUE
       : theme.COLOR.TEXT.PLACEHOLDER};
   `}
@@ -46,12 +46,5 @@ export const Message = styled.p`
   ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.BODY};
     color: ${theme.COLOR.TEXT.DEFAULT};
-  `}
-`;
-
-export const ButtonText = styled.p`
-  ${({ theme }: StyledDefaultProps) => css`
-    font-size: ${theme.FONT_SIZE.CAPTION};
-    color: ${theme.COLOR.TEXT.WHITE};
   `}
 `;

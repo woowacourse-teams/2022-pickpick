@@ -10,23 +10,18 @@ import { nextRemindersCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import EmptyStatus from "@src/components/EmptyStatus";
 import { getReminders } from "@src/api/reminders";
-import { useLocation } from "react-router-dom";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import ReminderModal from "@src/components/ReminderModal";
 import useModal from "@src/hooks/useModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 
 function Reminder() {
-  const { pathname } = useLocation();
   const {
-    messageTargetState: { targetMessageId, isTargetMessageSetReminded },
-    handler: {
-      handleUpdateTargetMessageId,
-      handleUpdateTargetMessageSetReminded,
-      handleInitializeTargetMessageId,
-      handleInitializeTargetMessageSetReminded,
-    },
+    reminderTarget,
+    handleUpdateReminderTarget,
+    handleInitializeReminderTarget,
   } = useSetTargetMessage();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
@@ -57,7 +52,6 @@ function Reminder() {
                 id,
                 messageId,
                 username,
-                postedDate,
                 remindDate,
                 text,
                 userThumbnail,
@@ -68,19 +62,16 @@ function Reminder() {
                   <MessageCard
                     key={id}
                     username={username}
-                    pathname={pathname}
-                    date={postedDate}
-                    remindDate={`${date} ${parseTime(remindDate)}`}
+                    date={`${date} ${parseTime(remindDate)}`}
                     text={text}
                     thumbnail={userThumbnail}
-                    isBookmarked={true}
-                    isSetReminded={true}
-                    handleOpenReminderModal={() => {
-                      handleOpenReminderModal();
-                      handleUpdateTargetMessageId(messageId.toString());
-                      handleUpdateTargetMessageSetReminded(true);
-                    }}
-                  />
+                    isRemindedMessage={true}
+                  >
+                    <ReminderButton
+                      isActive={true}
+                      onClick={handleOpenReminderModal}
+                    />
+                  </MessageCard>
                 );
               }
             )}
@@ -94,17 +85,15 @@ function Reminder() {
           <Dimmer
             hasBackgroundColor={true}
             onClick={() => {
-              handleInitializeTargetMessageId();
-              handleInitializeTargetMessageSetReminded();
+              handleInitializeReminderTarget();
               handleCloseReminderModal();
             }}
           />
           <ReminderModal
-            targetMessageId={targetMessageId}
-            isTargetMessageSetReminded={isTargetMessageSetReminded}
+            targetMessageId={reminderTarget.id}
+            isTargetMessageSetReminded={reminderTarget.isSetReminded}
             handleCloseReminderModal={() => {
-              handleInitializeTargetMessageId();
-              handleInitializeTargetMessageSetReminded();
+              handleInitializeReminderTarget();
               handleCloseReminderModal();
             }}
             refetchFeed={refetch}

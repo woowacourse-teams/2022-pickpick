@@ -5,16 +5,15 @@ import { useInfiniteQuery } from "react-query";
 import { ResponseBookmarks } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseBookmarks } from "@src/@utils";
+import { extractResponseBookmarks, parseTime } from "@src/@utils";
 import { nextBookmarksCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import { getBookmarks } from "@src/api/bookmarks";
 import useBookmark from "@src/hooks/useBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
-import { useLocation } from "react-router-dom";
+import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 
 function Bookmark() {
-  const { pathname } = useLocation();
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
       getNextPageParam: nextBookmarksCallback,
@@ -37,25 +36,20 @@ function Bookmark() {
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
             {parsedData.map(
-              ({
-                id,
-                username,
-                postedDate,
-                text,
-                userThumbnail,
-                isSetReminded,
-              }) => (
+              ({ id, username, postedDate, text, userThumbnail }) => (
                 <MessageCard
                   key={id}
                   username={username}
-                  pathname={pathname}
-                  date={postedDate}
+                  isRemindedMessage={false}
+                  date={parseTime(postedDate)}
                   text={text}
                   thumbnail={userThumbnail}
-                  isBookmarked={true}
-                  isSetReminded={isSetReminded}
-                  toggleBookmark={handleRemoveBookmark(id)}
-                />
+                >
+                  <BookmarkButton
+                    isActive={true}
+                    onClick={handleRemoveBookmark(id)}
+                  />
+                </MessageCard>
               )
             )}
           </>

@@ -1,37 +1,28 @@
 import { useState } from "react";
 
+interface ReminderTarget {
+  id: string;
+  isSetReminded: boolean;
+}
+
 function useSetTargetMessage() {
-  const [targetMessageId, setTargetMessageId] = useState("");
-  const [isTargetMessageSetReminded, setIsTargetMessageSetReminded] =
-    useState(false);
+  const [reminderTarget, setReminderTarget] = useState<ReminderTarget>({
+    id: "",
+    isSetReminded: false,
+  });
 
-  const handleUpdateTargetMessageId = (id: string) => {
-    setTargetMessageId(id);
+  const handleUpdateReminderTarget = (reminderTarget: ReminderTarget) => {
+    setReminderTarget({ ...reminderTarget });
   };
 
-  const handleUpdateTargetMessageSetReminded = (isSetReminded: boolean) => {
-    setIsTargetMessageSetReminded(isSetReminded);
-  };
-
-  const handleInitializeTargetMessageId = () => {
-    setTargetMessageId("");
-  };
-
-  const handleInitializeTargetMessageSetReminded = () => {
-    setIsTargetMessageSetReminded(false);
+  const handleInitializeReminderTarget = () => {
+    setReminderTarget({ id: "", isSetReminded: false });
   };
 
   return {
-    messageTargetState: {
-      targetMessageId,
-      isTargetMessageSetReminded,
-    },
-    handler: {
-      handleUpdateTargetMessageId,
-      handleUpdateTargetMessageSetReminded,
-      handleInitializeTargetMessageId,
-      handleInitializeTargetMessageSetReminded,
-    },
+    reminderTarget,
+    handleUpdateReminderTarget,
+    handleInitializeReminderTarget,
   };
 }
 
