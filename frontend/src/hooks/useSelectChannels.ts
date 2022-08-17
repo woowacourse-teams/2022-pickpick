@@ -34,10 +34,13 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
 
   const handleToggleChannel = (id: number) => {
     if (selectedChannelIds.includes(id)) {
-      const filteredChannelIds = selectedChannelIds.filter(
-        (channelId) => id !== channelId
-      );
-      setSelectedChannelIds(filteredChannelIds);
+      setSelectedChannelIds((prevChannelIds) => {
+        const filteredChannelIds = prevChannelIds.filter(
+          (channelId) => id !== channelId
+        );
+
+        return filteredChannelIds;
+      });
       return;
     }
 
