@@ -85,7 +85,7 @@ function Navigation() {
         }}
       </WrapperLink>
 
-      <WrapperLink to={PATH_NAME.ALARM} kind="bigIcon">
+      <WrapperLink to={PATH_NAME.REMINDER} kind="bigIcon">
         {({ isActive }) => {
           return (
             <AlarmIconInactive

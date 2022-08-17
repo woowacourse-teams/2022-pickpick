@@ -2,7 +2,8 @@ package com.pickpick.message.ui;
 
 import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.ReminderService;
-import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class ReminderController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void save(final @AuthenticationPrincipal Long memberId, final @RequestBody ReminderRequest reminderRequest) {
-        reminderService.save(memberId, reminderRequest);
+    public void save(@AuthenticationPrincipal final Long memberId, @RequestBody final ReminderSaveRequest reminderSaveRequest) {
+        reminderService.save(memberId, reminderSaveRequest);
     }
 
     @GetMapping(params = "messageId")
@@ -38,20 +39,19 @@ public class ReminderController {
     }
 
     @GetMapping
-    public ReminderResponses find(final @AuthenticationPrincipal Long memberId,
-                                  final @RequestParam(required = false) Long reminderId) {
-        return reminderService.find(reminderId, memberId);
+    public ReminderResponses find(@AuthenticationPrincipal final Long memberId, final ReminderFindRequest request) {
+        return reminderService.find(request, memberId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
-    public void delete(final @AuthenticationPrincipal Long memberId, final @RequestParam Long messageId) {
+    public void delete(@AuthenticationPrincipal final Long memberId, @RequestParam final Long messageId) {
         reminderService.delete(messageId, memberId);
     }
 
     @PutMapping
-    public void update(final @AuthenticationPrincipal Long memberId,
-                       final @RequestBody ReminderRequest reminderRequest) {
-        reminderService.update(memberId, reminderRequest);
+    public void update(@AuthenticationPrincipal final Long memberId,
+                       @RequestBody final ReminderSaveRequest request) {
+        reminderService.update(memberId, request);
     }
 }

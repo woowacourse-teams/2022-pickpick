@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.config.RestDocsTestSupport;
-import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -51,7 +51,7 @@ public class ReminderControllerTest extends RestDocsTestSupport {
     @Test
     void save() throws Exception {
         String body = objectMapper.writeValueAsString(
-                new ReminderRequest(1L, LocalDateTime.now().plusDays(2))
+                new ReminderSaveRequest(1L, LocalDateTime.now().plusDays(2))
         );
         mockMvc.perform(MockMvcRequestBuilders
                         .post(REMINDER_API_URL)
@@ -114,7 +114,7 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    @DisplayName("리마인더를 다건 조회한다")
+    @DisplayName("리마인더 목록을 조회한다")
     @Test
     void find() throws Exception {
         given(clock.instant())
@@ -158,7 +158,7 @@ public class ReminderControllerTest extends RestDocsTestSupport {
     @Test
     void update() throws Exception {
         String body = objectMapper.writeValueAsString(
-                new ReminderRequest(2L, LocalDateTime.now().plusDays(2))
+                new ReminderSaveRequest(2L, LocalDateTime.now().plusDays(2))
         );
         mockMvc.perform(MockMvcRequestBuilders
                         .put(REMINDER_API_URL)

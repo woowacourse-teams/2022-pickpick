@@ -23,10 +23,18 @@ export const Writer = styled.p`
   font-size: ${({ theme }: StyledDefaultProps) => theme.FONT_SIZE.LARGE_BODY};
 `;
 
+interface DateStyledProps extends StyledDefaultProps {
+  isHighlighted: boolean;
+}
+
 export const Date = styled.p`
-  ${({ theme }: StyledDefaultProps) => css`
+  font-weight: 600;
+
+  ${({ theme, isHighlighted }: DateStyledProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
-    color: ${theme.COLOR.TEXT.PLACEHOLDER};
+    color: ${isHighlighted
+      ? theme.COLOR.TEXT.LIGHT_BLUE
+      : theme.COLOR.TEXT.PLACEHOLDER};
   `}
 `;
 
@@ -38,12 +46,5 @@ export const Message = styled.p`
   ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.BODY};
     color: ${theme.COLOR.TEXT.DEFAULT};
-  `}
-`;
-
-export const ButtonText = styled.p`
-  ${({ theme }: StyledDefaultProps) => css`
-    font-size: ${theme.FONT_SIZE.CAPTION};
-    color: ${theme.COLOR.TEXT.WHITE};
   `}
 `;

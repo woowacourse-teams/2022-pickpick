@@ -43,6 +43,32 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 리마인더_단건_조회_정상_응답() {
+        // given
+        Map<String, Object> request = Map.of("messageId", "1");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
+
+        // then
+        상태코드_200_확인(response);
+        ReminderResponse reminderResponse = response.jsonPath().getObject("", ReminderResponse.class);
+        assertThat(reminderResponse.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    void 존재하지_않는_리마인더_조회시_404_응답() {
+        // given
+        Map<String, Object> request = Map.of("messageId", "100");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     void 멤버_ID_2번으로_리마인더_목록_조회() {
         // given
         given(clock.instant())
@@ -140,6 +166,51 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
                 .stream()
                 .map(ReminderResponse::getId)
                 .collect(Collectors.toList());
+    }
+
+    @Test
+    void 리마인더_조회_시_count_값이_없으면_20개가_조회된다() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        Map<String, Object> request = Map.of("reminderId", "");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        int size = response.jsonPath()
+                .getObject("", ReminderResponses.class)
+                .getReminders()
+                .size();
+
+        assertThat(size).isEqualTo(20);
+    }
+
+    @Test
+    void 리마인더_조회_시_count_값이_있다면_count_개수_만큼_조회된다() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        int count = 10;
+        Map<String, Object> request = Map.of("reminderId", "", "count", count);
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        int size = response.jsonPath()
+                .getObject("", ReminderResponses.class)
+                .getReminders()
+                .size();
+
+        assertThat(size).isEqualTo(count);
     }
 
     @Test
