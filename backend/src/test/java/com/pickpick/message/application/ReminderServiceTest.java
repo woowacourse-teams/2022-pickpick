@@ -16,7 +16,7 @@ import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
@@ -81,11 +81,11 @@ class ReminderServiceTest {
         Message message = messages.save(
                 new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
 
-        ReminderRequest reminderRequest = new ReminderRequest(message.getId(), LocalDateTime.now().plusDays(1));
+        ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusDays(1));
         int beforeSize = findReminderSize(member);
 
         // when
-        reminderService.save(member.getId(), reminderRequest);
+        reminderService.save(member.getId(), request);
 
         // then
         int afterSize = findReminderSize(member);
@@ -213,7 +213,7 @@ class ReminderServiceTest {
         long messageId = 2L;
 
         // when
-        reminderService.update(memberId, new ReminderRequest(messageId, updateTime));
+        reminderService.update(memberId, new ReminderSaveRequest(messageId, updateTime));
 
         // then
         Optional<Reminder> expected = reminders.findByMessageIdAndMemberId(messageId, memberId);
@@ -231,7 +231,7 @@ class ReminderServiceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        ReminderRequest request = new ReminderRequest(1L, LocalDateTime.now(clock).plusDays(1));
+        ReminderSaveRequest request = new ReminderSaveRequest(1L, LocalDateTime.now(clock).plusDays(1));
 
         // when & then
         assertThatThrownBy(() -> reminderService.update(1L, request))

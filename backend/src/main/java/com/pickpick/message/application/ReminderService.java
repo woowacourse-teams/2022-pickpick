@@ -12,7 +12,7 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.ui.dto.ReminderRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
@@ -46,14 +46,14 @@ public class ReminderService {
     }
 
     @Transactional
-    public void save(final Long memberId, final ReminderRequest reminderRequest) {
+    public void save(final Long memberId, final ReminderSaveRequest request) {
         Member member = members.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
-        Message message = messages.findById(reminderRequest.getMessageId())
-                .orElseThrow(() -> new MessageNotFoundException(reminderRequest.getMessageId()));
+        Message message = messages.findById(request.getMessageId())
+                .orElseThrow(() -> new MessageNotFoundException(request.getMessageId()));
 
-        Reminder reminder = new Reminder(member, message, reminderRequest.getReminderDate());
+        Reminder reminder = new Reminder(member, message, request.getReminderDate());
         reminders.save(reminder);
     }
 
@@ -123,11 +123,11 @@ public class ReminderService {
     }
 
     @Transactional
-    public void update(final Long memberId, final ReminderRequest reminderRequest) {
-        Reminder reminder = reminders.findByMessageIdAndMemberId(reminderRequest.getMessageId(), memberId)
-                .orElseThrow(() -> new ReminderUpdateFailureException(reminderRequest.getMessageId(), memberId));
+    public void update(final Long memberId, final ReminderSaveRequest request) {
+        Reminder reminder = reminders.findByMessageIdAndMemberId(request.getMessageId(), memberId)
+                .orElseThrow(() -> new ReminderUpdateFailureException(request.getMessageId(), memberId));
 
-        reminder.updateRemindDate(reminderRequest.getReminderDate());
+        reminder.updateRemindDate(request.getReminderDate());
     }
 
     @Transactional

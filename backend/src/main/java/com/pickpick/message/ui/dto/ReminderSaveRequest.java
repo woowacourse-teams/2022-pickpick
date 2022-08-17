@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class ReminderRequest {
+public class ReminderSaveRequest {
 
     private Long messageId;
     private LocalDateTime reminderDate;
 
-    private ReminderRequest() {
+    private ReminderSaveRequest() {
     }
 
-    public ReminderRequest(final Long messageId, final LocalDateTime reminderDate) {
+    public ReminderSaveRequest(final Long messageId, final LocalDateTime reminderDate) {
         this.messageId = messageId;
         this.reminderDate = reminderDate;
     }
