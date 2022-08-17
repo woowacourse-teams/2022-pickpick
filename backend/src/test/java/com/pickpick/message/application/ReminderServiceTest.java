@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
+import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -126,7 +127,36 @@ class ReminderServiceTest {
         assertThat(size).isEqualTo(count);
     }
 
-    @DisplayName("리마인더 조회")
+    @DisplayName("리마인더 단건 조회")
+    @Test
+    void findOneReminder() {
+        // given
+        Long memberId = 2L;
+        Long messageId = 1L;
+
+        // when
+        ReminderResponse reminder = reminderService.findOne(messageId, memberId);
+
+        // then
+        assertAll(
+                () -> assertThat(reminder.getId()).isEqualTo(1L),
+                () -> assertThat(reminder.getRemindDate()).isEqualTo(LocalDateTime.of(2022, 8, 12, 14, 20))
+        );
+    }
+
+    @DisplayName("리마인더가 존재하지 않는 메시지를 단건 조회할 경우 예외 발생")
+    @Test
+    void findNotExistOneThenThrowException() {
+        // given
+        Long memberId = 2L;
+        Long messageId = 20L;
+
+        // when & then
+        assertThatThrownBy(() -> reminderService.findOne(messageId, memberId))
+                .isInstanceOf(ReminderNotFoundException.class);
+    }
+
+    @DisplayName("리마인더 목록 조회")
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameterProvider")
     void findReminders(final String subscription, final Long reminderId, final Long memberId,

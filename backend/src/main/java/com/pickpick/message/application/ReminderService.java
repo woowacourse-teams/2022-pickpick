@@ -75,8 +75,6 @@ public class ReminderService {
                 .selectFrom(QReminder.reminder)
                 .leftJoin(QReminder.reminder.message)
                 .fetchJoin()
-                .leftJoin(QReminder.reminder.member)
-                .fetchJoin()
                 .where(QReminder.reminder.member.id.eq(memberId))
                 .where(remindDateCondition(request.getReminderId()))
                 .orderBy(QReminder.reminder.remindDate.asc())
