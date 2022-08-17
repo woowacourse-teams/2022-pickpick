@@ -48,7 +48,7 @@ function useSetReminder({ remindDate }: Props) {
   const { date: lastDate } = getDateInformation(new Date(year, month, 0));
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
-    hour: meridiemHour,
+    hour: Number(meridiemHour),
     minute,
   });
 
@@ -70,21 +70,21 @@ function useSetReminder({ remindDate }: Props) {
     handleChangeValue: handleChangeYear,
     changeValue: changeYear,
   } = useInput({
-    initialValue: `${year}년`,
+    initialValue: year.toString(),
   });
 
   const {
     value: checkedMonth,
     handleChangeValue: handleChangeMonth,
     changeValue: changeMonth,
-  } = useInput({ initialValue: `${month}월` });
+  } = useInput({ initialValue: month.toString() });
 
   const {
     value: checkedDate,
     handleChangeValue: handleChangeDate,
     changeValue: changeDate,
   } = useInput({
-    initialValue: `${date}일`,
+    initialValue: date.toString(),
   });
 
   const {
@@ -98,69 +98,64 @@ function useSetReminder({ remindDate }: Props) {
     handleChangeValue: handleChangeHour,
     changeValue: changeHour,
   } = useInput({
-    initialValue: `${parsedHour}시`,
+    initialValue: parsedHour.toString(),
   });
 
   const {
     value: checkedMinute,
     handleChangeValue: handleChangeMinute,
     changeValue: changeMinute,
-  } = useInput({ initialValue: `${parsedMinute}분` });
+  } = useInput({ initialValue: parsedMinute.toString() });
 
-  const years = [year, year + 1, year + 2].map((year) => `${year}년`);
-  const months = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
-  const dates = Array.from(
-    { length: lastDate },
-    (_, index) => `${index + 1}일`
+  const years = [year, year + 1, year + 2].map((year) => year.toString());
+  const months = Array.from({ length: 12 }, (_, index) =>
+    (index + 1).toString()
+  );
+  const dates = Array.from({ length: lastDate }, (_, index) =>
+    (index + 1).toString()
   );
 
   const meridiems = ["오전", "오후"];
-  const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
-  const minutes = Array.from({ length: 6 }, (_, index) => `${index * 10}분`);
-
-  const replaceCheckedYear = Number(checkedYear.replace("년", ""));
-  const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
-  const replaceCheckedDate = Number(checkedDate.replace("일", ""));
-
-  // const replaceCheckedHour = convertMeridiemHourToStandardHour(
-  //   checkedMeridiem,
-  //   Number(checkedHour.replace("시", ""))
-  // );
-  const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+  const hours = Array.from({ length: 12 }, (_, index) =>
+    (index + 1).toString()
+  );
+  const minutes = Array.from({ length: 6 }, (_, index) =>
+    (index * 10).toString()
+  );
 
   useEffect(() => {
     if (remindDate) {
       const { year, month, date, meridiem, meridiemHour, minute } =
         parsedDateTime(remindDate);
 
-      changeYear(`${year}년`);
-      changeMonth(`${month}월`);
-      changeDate(`${date}일`);
+      changeYear(year);
+      changeMonth(month);
+      changeDate(date);
 
       changeMeridiem(meridiem);
-      changeHour(`${meridiemHour}시`);
-      changeMinute(`${minute}분`);
+      changeHour(meridiemHour);
+      changeMinute(minute);
     }
   }, [remindDate]);
 
   useEffect(() => {
     if (yearRef.current) {
       yearRef.current.scrollTo({
-        top: (replaceCheckedYear - year) * 22,
+        top: (Number(checkedYear) - year) * 22,
         behavior: "smooth",
       });
     }
 
     if (monthRef.current) {
       monthRef.current.scrollTo({
-        top: (replaceCheckedMonth - 1) * 22.5,
+        top: (Number(checkedMonth) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (dateRef.current) {
       dateRef.current.scrollTo({
-        top: (replaceCheckedDate - 1) * 22.5,
+        top: (Number(checkedDate) - 1) * 22.5,
         behavior: "smooth",
       });
     }
@@ -174,14 +169,14 @@ function useSetReminder({ remindDate }: Props) {
 
     if (hourRef.current) {
       hourRef.current.scrollTo({
-        top: (Number(checkedHour.replace("시", "")) - 1) * 22.5,
+        top: (Number(checkedHour) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (minuteRef.current) {
       minuteRef.current.scrollTo({
-        top: (replaceCheckedMinute / 10) * 22.7,
+        top: (Number(checkedMinute) / 10) * 22.7,
         behavior: "smooth",
       });
     }

@@ -10,10 +10,11 @@ import {
 import { InfiniteData } from "react-query";
 
 export const getMeridiemTime = (time: number) => {
-  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time };
-  if (time === TIME.NOON) return { meridiem: TIME.PM, hour: TIME.NOON };
+  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time.toString() };
+  if (time === TIME.NOON)
+    return { meridiem: TIME.PM, hour: TIME.NOON.toString() };
 
-  return { meridiem: TIME.PM, hour: time - TIME.NOON };
+  return { meridiem: TIME.PM, hour: (time - TIME.NOON).toString() };
 };
 
 export const parseTime = (date: string): string => {
@@ -147,5 +148,5 @@ export const parsedOptionText = ({
   needZeroPaddingStart: boolean;
   optionText: string;
 }): string => {
-  return needZeroPaddingStart ? optionText.padStart(3, "0") : optionText;
+  return needZeroPaddingStart ? optionText.padStart(2, "0") : optionText;
 };

@@ -63,10 +63,10 @@ function ReminderModal({
               <Styled.Subtitle>언제</Styled.Subtitle>
 
               <DateTimePickerToggle
-                text={`${checkedYear} ${checkedMonth} ${checkedDate.padStart(
-                  3,
+                text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate.padStart(
+                  2,
                   "0"
-                )}`}
+                )}일`}
                 handleToggleDropdown={handleToggleDropdown}
               >
                 <Calendar width="16px" height="16px" fill="#8B8B8B" />
@@ -78,6 +78,7 @@ function ReminderModal({
                     <DateTimePickerOptions
                       needZeroPaddingStart={false}
                       optionTexts={years}
+                      unit="년"
                       checkedText={checkedYear}
                       handleChangeText={handleChangeYear}
                     />
@@ -87,6 +88,7 @@ function ReminderModal({
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={months}
+                      unit="월"
                       checkedText={checkedMonth}
                       handleChangeText={handleChangeMonth}
                     />
@@ -96,6 +98,7 @@ function ReminderModal({
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={dates}
+                      unit="일"
                       checkedText={checkedDate}
                       handleChangeText={handleChangeDate}
                     />
@@ -116,10 +119,10 @@ function ReminderModal({
               <Styled.Subtitle>시간</Styled.Subtitle>
 
               <DateTimePickerToggle
-                text={`${checkedMeridiem} ${checkedHour} ${checkedMinute.padStart(
-                  3,
+                text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute.padStart(
+                  2,
                   "0"
-                )}`}
+                )}분`}
                 handleToggleDropdown={handleToggleDropdown}
               >
                 <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
@@ -140,6 +143,7 @@ function ReminderModal({
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={hours}
+                      unit="시"
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
                     />
@@ -149,6 +153,7 @@ function ReminderModal({
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={minutes}
+                      unit="분"
                       checkedText={checkedMinute}
                       handleChangeText={handleChangeMinute}
                     />
