@@ -45,7 +45,6 @@ interface Props {
 
 function useSetReminder({ remindDate }: Props) {
   const { year, month, date, hour, minute } = getDateInformation(new Date());
-  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
     hour: Number(meridiemHour),
@@ -106,22 +105,6 @@ function useSetReminder({ remindDate }: Props) {
     handleChangeValue: handleChangeMinute,
     changeValue: changeMinute,
   } = useInput({ initialValue: parsedMinute.toString() });
-
-  const years = [year, year + 1, year + 2].map((year) => year.toString());
-  const months = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
-  );
-  const dates = Array.from({ length: lastDate }, (_, index) =>
-    (index + 1).toString()
-  );
-
-  const meridiems = ["오전", "오후"];
-  const hours = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
-  );
-  const minutes = Array.from({ length: 6 }, (_, index) =>
-    (index * 10).toString()
-  );
 
   useEffect(() => {
     if (remindDate) {
@@ -206,14 +189,6 @@ function useSetReminder({ remindDate }: Props) {
       checkedYear,
       checkedMonth,
       checkedDate,
-    },
-    dateStateArray: {
-      meridiems,
-      hours,
-      minutes,
-      years,
-      months,
-      dates,
     },
     handler: {
       handleChangeMeridiem,

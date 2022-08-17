@@ -7,6 +7,37 @@ import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 import useMutateReminder from "@src/hooks/useMutateReminder";
+import { getDateInformation } from "@src/@utils";
+
+const generateDateTimeOptions = () => {
+  const { year, month } = getDateInformation(new Date());
+  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
+
+  const years = [year, year + 1, year + 2].map((year) => year.toString());
+  const months = Array.from({ length: 12 }, (_, index) =>
+    (index + 1).toString()
+  );
+  const dates = Array.from({ length: lastDate }, (_, index) =>
+    (index + 1).toString()
+  );
+
+  const meridiems = ["오전", "오후"];
+  const hours = Array.from({ length: 12 }, (_, index) =>
+    (index + 1).toString()
+  );
+  const minutes = Array.from({ length: 6 }, (_, index) =>
+    (index * 10).toString()
+  );
+
+  return {
+    years,
+    months,
+    dates,
+    meridiems,
+    hours,
+    minutes,
+  };
+};
 
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
@@ -25,7 +56,6 @@ function ReminderModal({
 }: Props) {
   const {
     ref: { yearRef, monthRef, dateRef, meridiemRef, hourRef, minuteRef },
-    dateStateArray: { meridiems, hours, minutes, years, months, dates },
     checkedState: {
       checkedMeridiem,
       checkedHour,
@@ -49,6 +79,9 @@ function ReminderModal({
 
   const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
+
+  const { years, months, dates, meridiems, hours, minutes } =
+    generateDateTimeOptions();
 
   return (
     <Styled.Container>
