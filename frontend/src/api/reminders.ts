@@ -14,9 +14,12 @@ interface GetReminderParam {
 
 export const getReminders = async ({ pageParam }: GetReminderParam) => {
   const { data } = await fetcher.get<ResponseReminders>(
-    `${API_ENDPOINT.REMINDERS}?reminderId=${pageParam ?? ""}`,
+    API_ENDPOINT.REMINDERS,
     {
       headers: { ...getPrivateHeaders() },
+      params: {
+        reminderId: pageParam ?? "",
+      },
     }
   );
 
@@ -24,12 +27,12 @@ export const getReminders = async ({ pageParam }: GetReminderParam) => {
 };
 
 export const getReminder = async (messageId: string) => {
-  const { data } = await fetcher.get<ResponseReminder>(
-    `${API_ENDPOINT.REMINDERS}?messageId=${messageId}`,
-    {
-      headers: { ...getPrivateHeaders() },
-    }
-  );
+  const { data } = await fetcher.get<ResponseReminder>(API_ENDPOINT.REMINDERS, {
+    headers: { ...getPrivateHeaders() },
+    params: {
+      messageId,
+    },
+  });
 
   return data;
 };
@@ -41,14 +44,17 @@ export const postReminder = async (postData: ReminderProps) => {
 };
 
 export const deleteReminder = async (messageId: string) => {
-  await fetcher.delete(`${API_ENDPOINT.REMINDERS}?messageId=${messageId}`, {
+  await fetcher.delete(API_ENDPOINT.REMINDERS, {
     headers: { ...getPrivateHeaders() },
+    params: {
+      messageId,
+    },
   });
 };
 
 export const putReminder = async (modifyData: ReminderProps) => {
   await fetcher.put(
-    `${API_ENDPOINT.REMINDERS}`,
+    API_ENDPOINT.REMINDERS,
     { ...modifyData },
     {
       headers: { ...getPrivateHeaders() },
