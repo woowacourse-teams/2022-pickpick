@@ -1,5 +1,5 @@
 import { API_ENDPOINT } from "@src/@constants";
-import { ResponseReminder, ResponseReminders } from "@src/@types/shared";
+import { ResponseReminders } from "@src/@types/shared";
 import { fetcher } from ".";
 import { getPrivateHeaders } from "./utils";
 
@@ -22,17 +22,6 @@ export const getReminders = async ({ pageParam }: GetReminderParam) => {
       },
     }
   );
-
-  return data;
-};
-
-export const getReminder = async (messageId: string) => {
-  const { data } = await fetcher.get<ResponseReminder>(API_ENDPOINT.REMINDERS, {
-    headers: { ...getPrivateHeaders() },
-    params: {
-      messageId,
-    },
-  });
 
   return data;
 };
