@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/bookmark.sql"})
+@Sql({"/bookmark.sql"})
 @DisplayName("북마크 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class BookmarkAcceptanceTest extends AcceptanceTest {
@@ -81,7 +81,8 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long messageId = 2L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
+                1L);
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
@@ -93,7 +94,8 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long messageId = 1L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId, 1L);
+        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
+                1L);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);

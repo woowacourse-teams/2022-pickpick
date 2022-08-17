@@ -15,8 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/channel.sql"})
-@Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql({"/channel.sql"})
 @DisplayName("채널 구독 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {

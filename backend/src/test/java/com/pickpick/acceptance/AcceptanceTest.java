@@ -3,10 +3,12 @@ package com.pickpick.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.config.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,9 +27,17 @@ public class AcceptanceTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void clear() {
+        databaseCleaner.clear();
     }
 
     protected ExtractableResponse<Response> post(final String uri, final Object object) {

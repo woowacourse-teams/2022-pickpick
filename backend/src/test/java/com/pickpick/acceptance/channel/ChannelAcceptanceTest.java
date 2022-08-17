@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/channel.sql"})
+@Sql({"/channel.sql"})
 @DisplayName("채널 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class ChannelAcceptanceTest extends AcceptanceTest {

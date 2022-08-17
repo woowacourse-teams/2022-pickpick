@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/member.sql"})
+@Sql({"/member.sql"})
 @DisplayName("인증 인가 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class AuthAcceptanceTest extends AcceptanceTest {

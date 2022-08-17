@@ -1,13 +1,13 @@
 package com.pickpick.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -28,10 +28,12 @@ public class RestDocsTestSupport {
 
     @Autowired
     protected RestDocumentationResultHandler restDocs;
+
     @Autowired
     protected ObjectMapper objectMapper;
+
     @Autowired
-    private ResourceLoader resourceLoader;
+    private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
     public void setUp(
@@ -43,5 +45,10 @@ public class RestDocsTestSupport {
                 .alwaysDo(MockMvcResultHandlers.print())
                 .alwaysDo(restDocs)
                 .build();
+    }
+
+    @AfterEach
+    void clear() {
+        databaseCleaner.clear();
     }
 }

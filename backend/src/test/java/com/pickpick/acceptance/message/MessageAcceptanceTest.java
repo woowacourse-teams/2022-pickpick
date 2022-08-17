@@ -26,8 +26,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/message.sql"})
-@Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql({"/message.sql"})
+
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
