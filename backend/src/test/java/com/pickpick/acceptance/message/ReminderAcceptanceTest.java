@@ -43,6 +43,32 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 리마인더_단건_조회_정상_응답() {
+        // given
+        Map<String, Object> request = Map.of("messageId", "1");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
+
+        // then
+        상태코드_200_확인(response);
+        ReminderResponse reminderResponse = response.jsonPath().getObject("", ReminderResponse.class);
+        assertThat(reminderResponse.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    void 존재하지_않는_리마인더_조회시_404_응답() {
+        // given
+        Map<String, Object> request = Map.of("messageId", "100");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     void 멤버_ID_2번으로_리마인더_목록_조회() {
         // given
         given(clock.instant())
