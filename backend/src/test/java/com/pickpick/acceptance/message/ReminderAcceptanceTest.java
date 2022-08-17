@@ -169,6 +169,51 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 리마인더_조회_시_count_값이_없으면_20개가_조회된다() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        Map<String, Object> request = Map.of("reminderId", "");
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        int size = response.jsonPath()
+                .getObject("", ReminderResponses.class)
+                .getReminders()
+                .size();
+
+        assertThat(size).isEqualTo(20);
+    }
+
+    @Test
+    void 리마인더_조회_시_count_값이_있다면_count_개수_만큼_조회된다() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        int count = 10;
+        Map<String, Object> request = Map.of("reminderId", "", "count", count);
+
+        // when
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
+
+        // then
+        상태코드_확인(response, HttpStatus.OK);
+
+        int size = response.jsonPath()
+                .getObject("", ReminderResponses.class)
+                .getReminders()
+                .size();
+
+        assertThat(size).isEqualTo(count);
+    }
+
+    @Test
     void 리마인더_정상_수정() {
         // given
         Map<String, Object> request = Map.of("messageId", "2", "reminderDate", LocalDateTime.now().toString());
