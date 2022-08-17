@@ -11,7 +11,7 @@ function useApiError(): ReturnType {
 
   const handleError = (error: CustomError) => {
     const errorMessage =
-      ERROR_MESSAGE_BY_CODE[error.code] ??
+      ERROR_MESSAGE_BY_CODE[error.response?.data?.code] ??
       ERROR_MESSAGE_BY_CODE.DEFAULT_MESSAGE;
 
     openFailureSnackbar(errorMessage);
