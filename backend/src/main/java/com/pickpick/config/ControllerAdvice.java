@@ -1,5 +1,6 @@
 package com.pickpick.config;
 
+import com.pickpick.config.dto.ErrorResponse;
 import com.pickpick.exception.BadRequestException;
 import com.pickpick.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +15,17 @@ public class ControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public void handleBadRequestException(final BadRequestException e) {
+    public ErrorResponse handleBadRequestException(final BadRequestException e) {
         log.error("예외 발생: ", e);
+        return new ErrorResponse(e.getErrorCode(), e.getClientMessage());
+
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
-    public void handleNotFoundException(final NotFoundException e) {
+    public ErrorResponse handleNotFoundException(final NotFoundException e) {
         log.error("예외 발생: ", e);
+        return new ErrorResponse(e.getErrorCode(), e.getClientMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
