@@ -191,7 +191,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 리마인더_조회_시_count_값이_10이면_10개가_조회된다() {
+    void 리마인더_조회_시_count_값이_있다면_count_개수_만큼_조회된다() {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
