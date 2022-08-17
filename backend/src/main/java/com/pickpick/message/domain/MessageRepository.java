@@ -8,8 +8,6 @@ public interface MessageRepository extends Repository<Message, Long> {
 
     Message save(Message message);
 
-    List<Message> saveAll(Iterable<Message> messages);
-
     List<Message> findAll();
 
     Optional<Message> findById(long id);

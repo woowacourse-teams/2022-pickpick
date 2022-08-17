@@ -1,9 +1,9 @@
 package com.pickpick.message.application;
 
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
-import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParamsWithCount;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
 import static com.pickpick.fixture.MessageRequestFactory.futureFromTargetMessageInChannels;
+import static com.pickpick.fixture.MessageRequestFactory.onlyCount;
 import static com.pickpick.fixture.MessageRequestFactory.pastFromTargetMessageInChannels;
 import static com.pickpick.fixture.MessageRequestFactory.searchByKeywordInChannels;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +40,6 @@ class MessageServiceQueryTest {
 
     private static final int MESSAGE_COUNT = 5;
     private static final int MESSAGE_COUNT_DEFAULT = 20;
-    private static final String MESSAGE_KEYWORD = "줍줍";
     private static final int TARGET_INDEX = 15;
     private static final int VIEW_ORDER_FIRST = 1;
     private static final int VIEW_ORDER_SECOND = 2;
@@ -60,16 +59,16 @@ class MessageServiceQueryTest {
     @Autowired
     private MessageService messageService;
 
-    @DisplayName("쿼리 파라미터와 count가 없다면, 회원의 첫번째 순서 구독 채널의 최신 메시지를 20개 내림차순 조회한다")
+    @DisplayName("쿼리 파라미터가 없다면, 회원의 첫번째 순서 구독 채널의 최신 메시지를 20개 작성시간 내림차순 조회한다")
     @Test
     void findMessagesEmptyParameters() {
         // given
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
-        messages.saveAll(createMessages(notice, summer));
+        createAndSaveMessages(notice, summer);
 
         Channel freeChat = channels.save(freeChat());
-        List<Message> messagesInFreeChat = messages.saveAll(createMessages(freeChat, summer));
+        List<Message> messagesInFreeChat = createAndSaveMessages(freeChat, summer);
 
         subscriptions.save(new ChannelSubscription(freeChat, summer, VIEW_ORDER_FIRST));
         subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_SECOND));
@@ -89,21 +88,21 @@ class MessageServiceQueryTest {
         );
     }
 
-    @DisplayName("쿼리 파라미터가 없고 count가 있다면, 회원의 첫번째 순서 구독 채널의 최신 메시지를 count개 내림차순 조회한다")
+    @DisplayName("count만 있다면, 회원의 첫번째 순서 구독 채널의 최신 메시지를 count개 작성시간 내림차순 조회한다")
     @Test
     void findMessagesEmptyParametersWithCount() {
         // given
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
-        messages.saveAll(createMessages(notice, summer));
+        createAndSaveMessages(notice, summer);
 
         Channel freeChat = channels.save(freeChat());
-        List<Message> messagesInFreeChat = messages.saveAll(createMessages(freeChat, summer));
+        List<Message> messagesInFreeChat = createAndSaveMessages(freeChat, summer);
 
         subscriptions.save(new ChannelSubscription(freeChat, summer, VIEW_ORDER_FIRST));
         subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_SECOND));
 
-        MessageRequest request = emptyQueryParamsWithCount(MESSAGE_COUNT);
+        MessageRequest request = onlyCount(MESSAGE_COUNT);
 
         // when
         MessageResponses response = messageService.find(summer.getId(), request);
@@ -124,10 +123,10 @@ class MessageServiceQueryTest {
         // given
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
-        List<Message> messagesInNotice = messages.saveAll(createMessages(notice, summer));
+        List<Message> messagesInNotice = createAndSaveMessages(notice, summer);
         subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
 
-        MessageRequest request = emptyQueryParamsWithCount(messagesInNotice.size());
+        MessageRequest request = onlyCount(messagesInNotice.size());
 
         // when
         MessageResponses response = messageService.find(summer.getId(), request);
@@ -143,7 +142,7 @@ class MessageServiceQueryTest {
         // given
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
-        List<Message> messagesInNotice = messages.saveAll(createMessages(notice, summer));
+        List<Message> messagesInNotice = createAndSaveMessages(notice, summer);
 
         MessageRequest request = fromLatestInChannels(List.of(notice), messagesInNotice.size());
 
@@ -171,19 +170,19 @@ class MessageServiceQueryTest {
         messages.save(MessageFixtures.KEYWORD_20220714_14_00_00.create(notice, summer));
         messages.save(MessageFixtures.KEYWORD_20220714_14_00_00.create(freeChat, summer));
 
-        MessageRequest request = searchByKeywordInChannels(List.of(notice, freeChat), MESSAGE_KEYWORD, MESSAGE_COUNT);
+        MessageRequest request = searchByKeywordInChannels(List.of(notice, freeChat), "줍줍", MESSAGE_COUNT);
 
         // when
         MessageResponses response = messageService.find(summer.getId(), request);
 
         // then
         List<MessageResponse> foundMessages = response.getMessages();
-        boolean isContainingKeyword = foundMessages.stream()
-                .allMatch(message -> message.getText().contains(MESSAGE_KEYWORD));
+        boolean containsKeyword = foundMessages.stream()
+                .allMatch(message -> message.getText().contains("줍줍"));
 
         assertAll(
                 () -> assertThat(foundMessages).hasSize(2),
-                () -> assertThat(isContainingKeyword).isTrue()
+                () -> assertThat(containsKeyword).isTrue()
         );
     }
 
@@ -193,7 +192,7 @@ class MessageServiceQueryTest {
         // given
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
-        List<Message> messagesInNotice = messages.saveAll(createMessages(notice, summer));
+        List<Message> messagesInNotice = createAndSaveMessages(notice, summer);
         Message targetMessage = messagesInNotice.get(TARGET_INDEX);
 
         MessageRequest request = futureFromTargetMessageInChannels(List.of(notice), targetMessage, MESSAGE_COUNT);
@@ -219,7 +218,7 @@ class MessageServiceQueryTest {
         // given
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
-        List<Message> messagesInNotice = messages.saveAll(createMessages(notice, summer));
+        List<Message> messagesInNotice = createAndSaveMessages(notice, summer);
         Message targetMessage = messagesInNotice.get(TARGET_INDEX);
 
         MessageRequest request = pastFromTargetMessageInChannels(List.of(notice), targetMessage, MESSAGE_COUNT);
@@ -251,10 +250,16 @@ class MessageServiceQueryTest {
         return new Channel("C00002", "잡담");
     }
 
-    private List<Message> createMessages(final Channel channel, final Member member) {
-        return Arrays.stream(MessageFixtures.values())
+    private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
+        List<Message> messageFixtures = Arrays.stream(MessageFixtures.values())
                 .map(messageFixture -> messageFixture.create(channel, member))
                 .collect(Collectors.toList());
+
+        for (Message fixture : messageFixtures) {
+            messages.save(fixture);
+        }
+
+        return messageFixtures;
     }
 
     private List<Long> expectedOrderedIds(final List<Message> savedMessages, final int count) {
