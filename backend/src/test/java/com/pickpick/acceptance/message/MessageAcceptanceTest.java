@@ -162,7 +162,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 이미_리마인드_완료된_메시지_조회_시_isSetReminded가_false() {
+    void 이미_리마인드_완료된_메시지_조회_시_isSetReminded가_false이고_remindDate가_null() {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-13T00:00:00Z"));
@@ -176,11 +176,14 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_200_확인(response);
-        assertThat(messageResponse.isSetReminded()).isFalse();
+        assertAll(
+                () -> assertThat(messageResponse.isSetReminded()).isFalse(),
+                () -> assertThat(messageResponse.getRemindDate()).isNull()
+        );
     }
 
     @Test
-    void 리마인드_해야하는_메시지_조회_시_isSetReminded가_true() {
+    void 리마인드_해야하는_메시지_조회_시_isSetReminded가_true이고_remindDate에_값이_존재() {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
@@ -194,6 +197,9 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_200_확인(response);
-        assertThat(messageResponse.isSetReminded()).isTrue();
+        assertAll(
+                () -> assertThat(messageResponse.isSetReminded()).isTrue(),
+                () -> assertThat(messageResponse.getRemindDate()).isNotNull()
+        );
     }
 }
