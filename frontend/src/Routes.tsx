@@ -3,8 +3,8 @@ import { PATH_NAME } from "@src/@constants";
 import LayoutContainer from "@src/components/@layouts/LayoutContainer";
 import {
   AddChannel,
-  Alarm,
   Bookmark,
+  Reminder,
   Feed,
   SpecificDateFeed,
   Home,
@@ -38,18 +38,18 @@ const routes = [
         ),
       },
       {
-        path: PATH_NAME.ALARM,
-        element: (
-          <LayoutContainer>
-            <Alarm />
-          </LayoutContainer>
-        ),
-      },
-      {
         path: PATH_NAME.BOOKMARK,
         element: (
           <LayoutContainer>
             <Bookmark />
+          </LayoutContainer>
+        ),
+      },
+      {
+        path: PATH_NAME.REMINDER,
+        element: (
+          <LayoutContainer>
+            <Reminder />
           </LayoutContainer>
         ),
       },

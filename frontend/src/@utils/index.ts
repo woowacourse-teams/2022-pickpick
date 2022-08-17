@@ -2,16 +2,19 @@ import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
 import {
   Bookmark,
   Message,
+  ResponseReminder,
   ResponseBookmarks,
   ResponseMessages,
+  ResponseReminders,
 } from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
 export const getMeridiemTime = (time: number) => {
-  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time };
-  if (time === TIME.NOON) return { meridiem: TIME.PM, hour: TIME.NOON };
+  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time.toString() };
+  if (time === TIME.NOON)
+    return { meridiem: TIME.PM, hour: TIME.NOON.toString() };
 
-  return { meridiem: TIME.PM, hour: time - TIME.NOON };
+  return { meridiem: TIME.PM, hour: (time - TIME.NOON).toString() };
 };
 
 export const parseTime = (date: string): string => {
@@ -39,6 +42,14 @@ export const extractResponseBookmarks = (
   return data.pages.flatMap((arr) => arr.bookmarks);
 };
 
+export const extractResponseReminders = (
+  data?: InfiniteData<ResponseReminders>
+): ResponseReminder[] => {
+  if (!data) return [];
+
+  return data.pages.flatMap((arr) => arr.reminders);
+};
+
 export const setCookie = (key: string, value: string) => {
   document.cookie = `${key}=${value};`;
 };
@@ -54,7 +65,7 @@ export const deleteCookie = (key: string) => {
   document.cookie = key + "=; Max-Age=0";
 };
 
-export const ISOConverter = (date: string): string => {
+export const ISOConverter = (date: string, time?: string): string => {
   const today = new Date();
 
   if (date === DATE.TODAY) {
@@ -68,6 +79,15 @@ export const ISOConverter = (date: string): string => {
   }
 
   const [year, month, day] = date.split("-");
+
+  if (time) {
+    const [hour, minute] = time.split(":");
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )}${`T${hour.padStart(2, "0")}:${minute.padStart(2, "0")}:00`}`;
+  }
 
   return `${year}-${month.padStart(2, "0")}-${day.padStart(
     2,
@@ -128,5 +148,5 @@ export const parsedOptionText = ({
   needZeroPaddingStart: boolean;
   optionText: string;
 }): string => {
-  return needZeroPaddingStart ? optionText.padStart(3, "0") : optionText;
+  return needZeroPaddingStart ? optionText.padStart(2, "0") : optionText;
 };
