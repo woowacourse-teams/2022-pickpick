@@ -28,7 +28,7 @@ interface IsInvalidateDateTimeProps {
 }
 
 interface handlerProps {
-  messageId: string;
+  messageId: number;
   checkedYear: string;
   checkedMonth: string;
   checkedDate: string;
@@ -98,7 +98,7 @@ interface ReturnType {
     checkedHour,
     checkedMinute,
   }: handlerProps) => void;
-  handleRemoveReminder: (messageId: string) => Promise<void>;
+  handleRemoveReminder: (messageId: number) => Promise<void>;
 }
 
 function useMutateReminder({
@@ -222,7 +222,7 @@ function useMutateReminder({
     });
   };
 
-  const handleRemoveReminder = async (messageId: string) => {
+  const handleRemoveReminder = async (messageId: number) => {
     if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
       await deleteReminder(messageId);
 

@@ -32,7 +32,7 @@ export const postReminder = async (postData: ReminderProps) => {
   });
 };
 
-export const deleteReminder = async (messageId: string) => {
+export const deleteReminder = async (messageId: number) => {
   await fetcher.delete(API_ENDPOINT.REMINDERS, {
     headers: { ...getPrivateHeaders() },
     params: {

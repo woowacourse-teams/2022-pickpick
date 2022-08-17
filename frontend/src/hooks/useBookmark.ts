@@ -5,7 +5,7 @@ interface Props {
   handleSettle: () => void;
 }
 
-type Handler = (messageId: string) => () => void;
+type Handler = (messageId: number) => () => void;
 
 interface ReturnType {
   handleAddBookmark: Handler;
@@ -24,11 +24,11 @@ function useBookmark({ handleSettle }: Props): ReturnType {
     },
   });
 
-  const handleAddBookmark = (messageId: string) => () => {
+  const handleAddBookmark = (messageId: number) => () => {
     addBookmark(messageId);
   };
 
-  const handleRemoveBookmark = (messageId: string) => () => {
+  const handleRemoveBookmark = (messageId: number) => () => {
     removeBookmark(messageId);
   };
 

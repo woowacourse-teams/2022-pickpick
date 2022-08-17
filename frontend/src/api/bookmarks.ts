@@ -22,7 +22,7 @@ export const getBookmarks = async (
   return data;
 };
 
-export const postBookmark = async (messageId: string) => {
+export const postBookmark = async (messageId: number) => {
   await fetcher.post(
     API_ENDPOINT.BOOKMARKS,
     { messageId },
@@ -32,7 +32,7 @@ export const postBookmark = async (messageId: string) => {
   );
 };
 
-export const deleteBookmark = async (messageId: string) => {
+export const deleteBookmark = async (messageId: number) => {
   await fetcher.delete(API_ENDPOINT.BOOKMARKS, {
     headers: { ...getPrivateHeaders() },
     params: {

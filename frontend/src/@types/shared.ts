@@ -13,7 +13,7 @@ export interface StyledDefaultProps {
   theme: Theme;
 }
 export interface Message {
-  id: string;
+  id: number;
   username: string;
   postedDate: string;
   remindDate: string;

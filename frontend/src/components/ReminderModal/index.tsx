@@ -42,7 +42,7 @@ const generateDateTimeOptions = () => {
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
 interface Props {
-  messageId: string;
+  messageId: number;
   remindDate: string;
   handleCloseReminderModal: () => void;
   refetchFeed: () => void;
