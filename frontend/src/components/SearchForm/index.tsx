@@ -42,7 +42,7 @@ function SearchForm({ currentKeyword, currentChannelIds }: Props) {
                 currentChannels={allChannels.filter(({ id }) =>
                   currentChannelIds.includes(id)
                 )}
-                leftChannels={allChannels.filter(
+                remainingChannels={allChannels.filter(
                   ({ id }) => !currentChannelIds.includes(id)
                 )}
                 selectedChannelIds={selectedChannelIds}

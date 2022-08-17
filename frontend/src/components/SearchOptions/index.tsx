@@ -5,7 +5,7 @@ import * as Styled from "./style";
 interface Props {
   allChannels: SubscribedChannel[];
   currentChannels: SubscribedChannel[];
-  leftChannels: SubscribedChannel[];
+  remainingChannels: SubscribedChannel[];
   selectedChannelIds: number[];
   handleToggleChannel: (id: number) => void;
   handleToggleAllChannels: () => void;
@@ -14,7 +14,7 @@ interface Props {
 function SearchOptions({
   allChannels,
   currentChannels,
-  leftChannels,
+  remainingChannels,
   selectedChannelIds,
   handleToggleChannel,
   handleToggleAllChannels,
@@ -47,7 +47,7 @@ function SearchOptions({
           </Button>
         ))}
 
-        {leftChannels.map(({ name, id }) => (
+        {remainingChannels.map(({ name, id }) => (
           <Button
             key={id}
             isActive={selectedChannelIds.includes(id)}
