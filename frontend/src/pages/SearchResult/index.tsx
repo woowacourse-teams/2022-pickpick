@@ -4,12 +4,10 @@ import { ResponseMessages } from "@src/@types/shared";
 import { getMessages } from "@src/api/messages";
 import { nextMessagesCallback } from "@src/api/utils";
 import { useInfiniteQuery } from "react-query";
-import { useSearchParams } from "react-router-dom";
 import MessageCard from "@src/components/MessageCard";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { FlexColumn } from "@src/@styles/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import EmptyStatus from "@src/components/EmptyStatus";
 import useBookmark from "@src/hooks/useBookmark";
 import {
   convertSeparatorToKey,
@@ -23,17 +21,24 @@ import ReminderModal from "@src/components/ReminderModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
+import SearchForm from "@src/components/SearchForm";
+import useGetSearchParam from "@src/hooks/useGetSearchParam";
 
 function SearchResult() {
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get("keyword") ?? "";
-  const channelIds = searchParams.get("channelIds") ?? "";
+  const keyword = useGetSearchParam("keyword");
+  const channelIds = useGetSearchParam("channelIds");
 
   const {
     reminderTarget,
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
   } = useSetTargetMessage();
+
+  const {
+    isModalOpened: isReminderModalOpened,
+    handleOpenModal: handleOpenReminderModal,
+    handleCloseModal: handleCloseReminderModal,
+  } = useModal();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages>(
@@ -55,23 +60,25 @@ function SearchResult() {
     handleSettle: refetch,
   });
 
-  const {
-    isModalOpened: isReminderModalOpened,
-    handleOpenModal: handleOpenReminderModal,
-    handleCloseModal: handleCloseReminderModal,
-  } = useModal();
-
   const parsedData = extractResponseMessages(data);
 
   return (
     <Styled.Container>
+      <SearchForm
+        currentKeyword={keyword}
+        currentChannelIds={channelIds.split(",").map(Number)}
+      />
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
         endPoint={!hasNextPage}
       >
         <FlexColumn gap="4px" width="100%">
-          {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+          {isSuccess && parsedData.length === 0 && (
+            <FlexColumn gap="30px" margin="25vh 0" alignItems="center">
+              <h3>{`' ${keyword} '`} 에 대한 검색 결과가 없습니다.</h3>
+            </FlexColumn>
+          )}
           {parsedData.map(
             ({
               id,
