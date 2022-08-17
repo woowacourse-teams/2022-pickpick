@@ -1,95 +1,70 @@
-import { QUERY_KEY } from "@src/@constants";
-import {
-  ResponseSubscribedChannels,
-  SubscribedChannel,
-} from "@src/@types/shared";
-import { getSubscribedChannels } from "@src/api/channels";
+import { SubscribedChannel } from "@src/@types/shared";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import useGetSubscribedChannels from "@src/hooks/useGetSubscribedChannels";
 
 interface Props {
-  defaultChannelId?: number;
+  currentChannelIds: number[];
 }
 
 interface ReturnType {
-  channelIds: (number | undefined)[];
-  channelsData: ResponseSubscribedChannels | undefined;
-  defaultChannel: SubscribedChannel | undefined;
-  handleToggleChannelId: (id: number) => void;
-  handleToggleAllChannelIds: () => void;
+  selectedChannelIds: number[];
+  allChannels: SubscribedChannel[];
+  handleToggleChannel: (id: number) => void;
+  handleToggleAllChannels: () => void;
 }
 
-function useSelectChannels({ defaultChannelId }: Props): ReturnType {
-  const [channelIds, setChannelIds] = useState<(number | undefined)[]>([]);
-  const [defaultChannel, setDefaultChannel] = useState<SubscribedChannel>();
+function useSelectChannels({ currentChannelIds }: Props): ReturnType {
+  const [visitingChannelIds, setVisitingChannelIds] =
+    useState<number[]>(currentChannelIds);
+  const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
+  const { data } = useGetSubscribedChannels();
+  const allChannels = data?.channels ?? [];
 
-  const { data: channelsData } = useQuery(
-    QUERY_KEY.SUBSCRIBED_CHANNELS,
-    getSubscribedChannels
-  );
+  const handleToggleAllChannels = () => {
+    if (!allChannels) return;
 
-  const handleToggleAllChannelIds = () => {
-    if (!channelsData) return;
-
-    if (
-      0 <= channelIds.length &&
-      channelIds.length < channelsData.channels.length
-    ) {
-      setChannelIds(channelsData.channels.map((channel) => channel.id));
-
+    if (selectedChannelIds.length === allChannels.length) {
+      setSelectedChannelIds([]);
       return;
     }
-
-    setChannelIds([]);
-    return;
+    setSelectedChannelIds(allChannels.map((channel) => channel.id));
   };
 
-  const handleToggleChannelId = (id: number) => {
-    if (channelIds.includes(id)) {
-      setChannelIds((prev) => {
-        prev.splice(
-          prev.findIndex((channelId) => channelId === id),
-          1
+  const handleToggleChannel = (id: number) => {
+    if (selectedChannelIds.includes(id)) {
+      setSelectedChannelIds((prevChannelIds) => {
+        const filteredChannelIds = prevChannelIds.filter(
+          (channelId) => id !== channelId
         );
 
-        return [...prev];
+        return filteredChannelIds;
       });
-
       return;
     }
 
-    setChannelIds((prev) => [...prev, id]);
-    return;
+    setSelectedChannelIds((prev) => [...prev, id]);
   };
 
   useEffect(() => {
-    if (!channelsData) return;
-
-    setChannelIds([
-      defaultChannelId === 0 ? channelsData.channels[0].id : defaultChannelId,
-    ]);
-  }, [channelsData, defaultChannelId]);
+    if (allChannels.length === 0) return;
+    setSelectedChannelIds(
+      visitingChannelIds.length === 0 ? [allChannels[0].id] : visitingChannelIds
+    );
+  }, [allChannels, visitingChannelIds]);
 
   useEffect(() => {
-    if (!channelsData) return;
-
-    setDefaultChannel({
-      ...channelsData.channels.filter((channel) => {
-        if (defaultChannelId === 0) {
-          return channel.id === channelsData.channels[0].id;
-        }
-
-        return channel.id === defaultChannelId;
-      })[0],
-    });
-  }, [channelsData, defaultChannelId]);
+    if (
+      JSON.stringify(currentChannelIds) === JSON.stringify(visitingChannelIds)
+    )
+      return;
+    setVisitingChannelIds(currentChannelIds);
+  }, [currentChannelIds]);
 
   return {
-    channelIds,
-    channelsData,
-    defaultChannel,
-    handleToggleChannelId,
-    handleToggleAllChannelIds,
+    allChannels,
+    selectedChannelIds,
+    handleToggleChannel,
+    handleToggleAllChannels,
   };
 }
 

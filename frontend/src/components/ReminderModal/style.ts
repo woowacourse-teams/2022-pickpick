@@ -88,11 +88,25 @@ const textTable: Record<ButtonText, CSSProp<Theme>> = {
       background-color: ${theme.COLOR.PRIMARY.DEFAULT};
     `}
   `,
-  수정: css``,
+
+  수정: css`
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.TEXT.WHITE};
+      background-color: ${theme.COLOR.PRIMARY.DEFAULT};
+    `}
+  `,
+
   취소: css`
     ${({ theme }: StyledDefaultProps) => css`
       color: ${theme.COLOR.TEXT.DEFAULT};
       border: 1px solid ${theme.COLOR.BORDER};
+    `}
+  `,
+
+  삭제: css`
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.TEXT.WHITE};
+      background-color: ${theme.COLOR.CONTAINER.LIGHT_RED};
     `}
   `,
 };

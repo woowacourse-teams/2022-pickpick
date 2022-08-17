@@ -16,12 +16,30 @@ export interface Message {
   id: string;
   username: string;
   postedDate: string;
+  remindDate: string;
   text: string;
   userThumbnail: string;
   isBookmarked: boolean;
+  isSetReminded: boolean;
 }
 
-export type Bookmark = Omit<Message, "isBookmarked">;
+export type Bookmark = Omit<Message, "isReminded" | "isBookmarked">;
+
+export interface ResponseReminder {
+  id: number;
+  messageId: number;
+  username: string;
+  userThumbnail: string;
+  text: string;
+  postedDate: string;
+  remindDate: string;
+  modifyDate: string;
+}
+
+export interface ResponseReminders {
+  reminders: ResponseReminder[];
+  isLast: boolean;
+}
 
 export interface ResponseBookmarks {
   bookmarks: Bookmark[];
@@ -61,6 +79,12 @@ export interface ResponseToken {
 }
 
 export interface CustomError {
+  response: {
+    data: Error;
+  };
+}
+
+export interface Error {
   code: keyof typeof ERROR_MESSAGE_BY_CODE;
   message: string;
 }

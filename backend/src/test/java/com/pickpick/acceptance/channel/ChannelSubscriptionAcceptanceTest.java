@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
+import com.pickpick.config.dto.ErrorResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -72,6 +73,8 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "SUBSCRIPTION_INVALID_ORDER");
     }
 
     @Test
@@ -87,6 +90,8 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "SUBSCRIPTION_DUPLICATE");
     }
 
     @Test
@@ -104,6 +109,8 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "SUBSCRIPTION_NOT_EXIST");
     }
 
     @Test
@@ -118,6 +125,8 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "SUBSCRIPTION_NOT_EXIST");
     }
 
     @Test
@@ -127,6 +136,8 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "SUBSCRIPTION_DUPLICATE");
     }
 
     @Test
@@ -139,6 +150,8 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
         // then
         상태코드_400_확인(response);
+        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
+                "SUBSCRIPTION_NOT_EXIST");
     }
 
 

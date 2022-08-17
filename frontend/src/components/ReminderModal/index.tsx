@@ -6,23 +6,56 @@ import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
+import useMutateReminder from "@src/hooks/useMutateReminder";
+import { getDateInformation } from "@src/@utils";
 
-const BUTTON_TEXT = {
-  CREATE: "생성",
-  UPDATE: "수정",
-  CANCEL: "취소",
+const generateDateTimeOptions = () => {
+  const { year, month } = getDateInformation(new Date());
+  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
+
+  const years = [year, year + 1, year + 2].map((year) => year.toString());
+  const months = Array.from({ length: 12 }, (_, index) =>
+    (index + 1).toString()
+  );
+  const dates = Array.from({ length: lastDate }, (_, index) =>
+    (index + 1).toString()
+  );
+
+  const meridiems = ["오전", "오후"];
+  const hours = Array.from({ length: 12 }, (_, index) =>
+    (index + 1).toString()
+  );
+  const minutes = Array.from({ length: 6 }, (_, index) =>
+    (index * 10).toString()
+  );
+
+  return {
+    years,
+    months,
+    dates,
+    meridiems,
+    hours,
+    minutes,
+  };
 };
 
-export type ButtonText = typeof BUTTON_TEXT[keyof typeof BUTTON_TEXT];
+export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
 interface Props {
+  messageId: string;
+  remindDate: string;
   handleCloseReminderModal: () => void;
+  refetchFeed: () => void;
 }
 
-function ReminderModal({ handleCloseReminderModal }: Props) {
+function ReminderModal({
+  messageId,
+  remindDate,
+  handleCloseReminderModal,
+  refetchFeed,
+}: Props) {
   const {
     ref: { yearRef, monthRef, dateRef, meridiemRef, hourRef, minuteRef },
-    dateStateArray: { meridiems, hours, minutes, years, months, dates },
     checkedState: {
       checkedMeridiem,
       checkedHour,
@@ -39,9 +72,16 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleSubmit,
     },
-  } = useSetReminder();
+  } = useSetReminder({
+    remindDate,
+  });
+
+  const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
+    useMutateReminder({ handleCloseReminderModal, refetchFeed });
+
+  const { years, months, dates, meridiems, hours, minutes } =
+    generateDateTimeOptions();
 
   return (
     <Styled.Container>
@@ -56,10 +96,10 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
               <Styled.Subtitle>언제</Styled.Subtitle>
 
               <DateTimePickerToggle
-                text={`${checkedYear} ${checkedMonth} ${checkedDate.padStart(
-                  3,
+                text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate.padStart(
+                  2,
                   "0"
-                )}`}
+                )}일`}
                 handleToggleDropdown={handleToggleDropdown}
               >
                 <Calendar width="16px" height="16px" fill="#8B8B8B" />
@@ -71,6 +111,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                     <DateTimePickerOptions
                       needZeroPaddingStart={false}
                       optionTexts={years}
+                      unit="년"
                       checkedText={checkedYear}
                       handleChangeText={handleChangeYear}
                     />
@@ -80,6 +121,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={months}
+                      unit="월"
                       checkedText={checkedMonth}
                       handleChangeText={handleChangeMonth}
                     />
@@ -89,6 +131,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={dates}
+                      unit="일"
                       checkedText={checkedDate}
                       handleChangeText={handleChangeDate}
                     />
@@ -109,10 +152,10 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
               <Styled.Subtitle>시간</Styled.Subtitle>
 
               <DateTimePickerToggle
-                text={`${checkedMeridiem} ${checkedHour} ${checkedMinute.padStart(
-                  3,
+                text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute.padStart(
+                  2,
                   "0"
-                )}`}
+                )}분`}
                 handleToggleDropdown={handleToggleDropdown}
               >
                 <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
@@ -133,6 +176,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={hours}
+                      unit="시"
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
                     />
@@ -142,6 +186,7 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
                       optionTexts={minutes}
+                      unit="분"
                       checkedText={checkedMinute}
                       handleChangeText={handleChangeMinute}
                     />
@@ -153,21 +198,64 @@ function ReminderModal({ handleCloseReminderModal }: Props) {
         }}
       </Dropdown>
 
-      <FlexRow gap="8px" margin-top="18px" justifyContent="flex-end">
+      <FlexRow justifyContent="flex-end" gap="8px" marginTop="18px">
         <Styled.Button
-          text={BUTTON_TEXT.CANCEL}
+          text="취소"
           type="button"
           onClick={handleCloseReminderModal}
         >
-          {BUTTON_TEXT.CANCEL}
+          취소
         </Styled.Button>
-        <Styled.Button
-          text={BUTTON_TEXT.CREATE}
-          type="button"
-          onClick={handleSubmit}
-        >
-          {BUTTON_TEXT.CREATE}
-        </Styled.Button>
+
+        {!remindDate && (
+          <Styled.Button
+            text="생성"
+            type="button"
+            onClick={() =>
+              handleCreateReminder({
+                messageId,
+                checkedYear,
+                checkedMonth,
+                checkedDate,
+                checkedMeridiem,
+                checkedHour,
+                checkedMinute,
+              })
+            }
+          >
+            생성
+          </Styled.Button>
+        )}
+
+        {remindDate && (
+          <>
+            <Styled.Button
+              text="삭제"
+              type="button"
+              onClick={() => handleRemoveReminder(messageId)}
+            >
+              삭제
+            </Styled.Button>
+
+            <Styled.Button
+              text="수정"
+              type="button"
+              onClick={() =>
+                handleModifyReminder({
+                  messageId,
+                  checkedYear,
+                  checkedMonth,
+                  checkedDate,
+                  checkedMeridiem,
+                  checkedHour,
+                  checkedMinute,
+                })
+              }
+            >
+              수정
+            </Styled.Button>
+          </>
+        )}
       </FlexRow>
     </Styled.Container>
   );

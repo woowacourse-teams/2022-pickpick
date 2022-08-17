@@ -11,7 +11,7 @@ import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 import { previousMessagesCallback, nextMessagesCallback } from "@src/api/utils";
 import useMessageDate from "@src/hooks/useMessageDate";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseMessages } from "@src/@utils";
+import { extractResponseMessages, parseTime } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
 import useBookmark from "@src/hooks/useBookmark";
 import DateDropdown from "@src/components/DateDropdown";
@@ -22,11 +22,20 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
+import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
+
+  const {
+    reminderTarget,
+    handleUpdateReminderTarget,
+    handleInitializeReminderTarget,
+  } = useSetTargetMessage();
 
   const {
     data,
@@ -88,7 +97,7 @@ function SpecificDateFeed() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <SearchForm channelId={channelId ? Number(channelId) : 0} />
+      <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
 
       <InfiniteScroll
         callback={fetchNextPage}
@@ -103,9 +112,11 @@ function SpecificDateFeed() {
               id,
               username,
               postedDate,
+              remindDate,
               text,
               userThumbnail,
               isBookmarked,
+              isSetReminded,
             }) => {
               const parsedDate = postedDate.split("T")[0];
 
@@ -120,17 +131,29 @@ function SpecificDateFeed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={postedDate}
+                    date={parseTime(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
-                    isBookmarked={isBookmarked}
-                    toggleBookmark={
-                      isBookmarked
-                        ? handleRemoveBookmark(id)
-                        : handleAddBookmark(id)
-                    }
-                    handleOpenReminderModal={handleOpenReminderModal}
-                  />
+                    isRemindedMessage={false}
+                  >
+                    <>
+                      <ReminderButton
+                        isActive={isSetReminded}
+                        onClick={() => {
+                          handleOpenReminderModal();
+                          handleUpdateReminderTarget({ id, remindDate });
+                        }}
+                      />
+                      <BookmarkButton
+                        isActive={isBookmarked}
+                        onClick={
+                          isBookmarked
+                            ? handleRemoveBookmark(id)
+                            : handleAddBookmark(id)
+                        }
+                      />
+                    </>
+                  </MessageCard>
                 </React.Fragment>
               );
             }
@@ -154,9 +177,20 @@ function SpecificDateFeed() {
         <>
           <Dimmer
             hasBackgroundColor={true}
-            onClick={handleCloseReminderModal}
+            onClick={() => {
+              handleInitializeReminderTarget();
+              handleCloseReminderModal();
+            }}
           />
-          <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
+          <ReminderModal
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
+            handleCloseReminderModal={() => {
+              handleInitializeReminderTarget();
+              handleCloseReminderModal();
+            }}
+            refetchFeed={refetch}
+          />
         </>
       </Portal>
     </Styled.Container>

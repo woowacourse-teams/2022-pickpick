@@ -86,7 +86,7 @@ public class MessageService {
                 .from(QMessage.message)
                 .leftJoin(QMessage.message.member)
                 .leftJoin(QBookmark.bookmark)
-                .on(QMessage.message.id.eq(QBookmark.bookmark.message.id))
+                .on(existsBookmark(memberId))
                 .leftJoin(QReminder.reminder)
                 .on(remainReminder(memberId))
                 .where(meetAllConditions(channelIds, messageRequest))
@@ -113,7 +113,13 @@ public class MessageService {
                 QMessage.message.postedDate,
                 QMessage.message.modifiedDate,
                 QBookmark.bookmark.id,
-                QReminder.reminder.id);
+                QReminder.reminder.id,
+                QReminder.reminder.remindDate);
+    }
+
+    private BooleanExpression existsBookmark(final Long memberId) {
+        return QBookmark.bookmark.member.id.eq(memberId)
+                .and(QBookmark.bookmark.message.id.eq(QMessage.message.id));
     }
 
     private BooleanExpression remainReminder(final Long memberId) {

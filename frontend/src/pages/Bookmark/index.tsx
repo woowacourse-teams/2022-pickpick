@@ -1,17 +1,17 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
-import SearchInput from "@src/components/SearchInput";
 import * as Styled from "../Feed/style";
 import { useInfiniteQuery } from "react-query";
 import { ResponseBookmarks, CustomError } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseBookmarks } from "@src/@utils";
+import { extractResponseBookmarks, parseTime } from "@src/@utils";
 import { nextBookmarksCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import { getBookmarks } from "@src/api/bookmarks";
 import useBookmark from "@src/hooks/useBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
+import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
@@ -44,12 +44,16 @@ function Bookmark() {
                 <MessageCard
                   key={id}
                   username={username}
-                  date={postedDate}
+                  isRemindedMessage={false}
+                  date={parseTime(postedDate)}
                   text={text}
                   thumbnail={userThumbnail}
-                  isBookmarked={true}
-                  toggleBookmark={handleRemoveBookmark(id)}
-                />
+                >
+                  <BookmarkButton
+                    isActive={true}
+                    onClick={handleRemoveBookmark(id)}
+                  />
+                </MessageCard>
               )
             )}
           </>

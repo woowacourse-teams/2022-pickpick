@@ -1,67 +1,7 @@
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
-import {
-  ChangeEvent,
-  useEffect,
-  useRef,
-  useState,
-  RefObject,
-  ChangeEventHandler,
-} from "react";
-import useDropdown from "@src/hooks/useDropdown";
-import useSnackbar from "@src/hooks/useSnackbar";
-
-type ReturnRef = Record<
-  "yearRef" | "monthRef" | "dateRef" | "hourRef" | "minuteRef" | "meridiemRef",
-  RefObject<HTMLDivElement>
->;
-
-type ReturnDateStateArray = Record<
-  "meridiems" | "hours" | "minutes" | "years" | "months" | "dates",
-  string[]
->;
-
-const MERIDIEM = {
-  AM: "오전",
-  PM: "오후",
-} as const;
-
-type Meridiem = typeof MERIDIEM[keyof typeof MERIDIEM];
-
-interface ReturnType {
-  ref: ReturnRef;
-  dateStateArray: ReturnDateStateArray;
-  checkedState: {
-    checkedMeridiem: Meridiem;
-    checkedHour: string;
-    checkedMinute: string;
-    checkedYear: string;
-    checkedMonth: string;
-    checkedDate: string;
-  };
-  handler: {
-    handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
-    handleChangeHour: ChangeEventHandler<HTMLInputElement>;
-    handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
-    handleChangeYear: ChangeEventHandler<HTMLInputElement>;
-    handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
-    handleChangeDate: ChangeEventHandler<HTMLInputElement>;
-    handleToggleDateTimePicker: () => void;
-    handleSubmit: () => void;
-  };
-}
-interface IsInvalidateDateTimeProps {
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
-  year: number;
-  month: number;
-  date: number;
-  hour: number;
-  minute: number;
-}
+import { useEffect, useRef } from "react";
+import useDropdown from "./useDropdown";
+import useInput from "./useInput";
 
 const convertTimeToStepTenMinuteTime = ({
   hour,
@@ -77,48 +17,37 @@ const convertTimeToStepTenMinuteTime = ({
   return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
 };
 
-const convertMeridiemHourToStandardHour = (
-  meridiem: string,
-  meridiemHour: number
-): number => {
-  if (meridiem === MERIDIEM.PM) {
-    return meridiemHour === 12 ? 0 : meridiemHour + 12;
-  }
-
-  return meridiemHour;
-};
-
-const isInvalidateDateTime = ({
-  checkedYear,
-  checkedMonth,
-  checkedDate,
-  checkedMeridiem,
-  checkedHour,
-  checkedMinute,
-  year,
-  month,
-  date,
-  hour,
-  minute,
-}: IsInvalidateDateTimeProps) => {
-  return (
-    Number(checkedYear.replace("년", "")) < year ||
-    Number(checkedMonth.replace("월", "")) < month ||
-    Number(checkedDate.replace("일", "")) < date ||
-    convertMeridiemHourToStandardHour(
-      checkedMeridiem,
-      Number(checkedHour.replace("시", ""))
-    ) < hour ||
-    Number(checkedMinute.replace("분", "")) < minute
+const parsedDateTime = (ISODateTime: string) => {
+  const [fullDate, fullTime] = ISODateTime.split("T");
+  const [year, month, date] = fullDate.split("-");
+  const [hour, minute] = fullTime.split(":");
+  const { meridiem: meridiem, hour: meridiemHour } = getMeridiemTime(
+    Number(hour)
   );
+
+  return {
+    year,
+    month,
+    date,
+    meridiem,
+    meridiemHour,
+    minute,
+  };
 };
 
-function useSetReminder(): ReturnType {
+const invalidMeridiem = (value: string) => {
+  return value !== "오전" && value !== "오후";
+};
+
+interface Props {
+  remindDate: string;
+}
+
+function useSetReminder({ remindDate }: Props) {
   const { year, month, date, hour, minute } = getDateInformation(new Date());
-  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
-    hour: meridiemHour,
+    hour: Number(meridiemHour),
     minute,
   });
 
@@ -134,121 +63,103 @@ function useSetReminder(): ReturnType {
     isDropdownOpened: isDateTimePickerOpened,
     handleToggleDropdown: handleToggleDateTimePicker,
   } = useDropdown();
-  const { openFailureSnackbar } = useSnackbar();
 
-  const [checkedMeridiem, setCheckedMeridiem] = useState<Meridiem>(meridiem);
-  const [checkedHour, setCheckedHour] = useState<string>(`${parsedHour}시`);
-  const [checkedMinute, setCheckedMinute] = useState<string>(
-    `${parsedMinute}분`
-  );
+  const {
+    value: checkedYear,
+    handleChangeValue: handleChangeYear,
+    changeValue: changeYear,
+  } = useInput({
+    initialValue: year.toString(),
+  });
 
-  const [checkedYear, setCheckedYear] = useState<string>(`${year}년`);
-  const [checkedMonth, setCheckedMonth] = useState<string>(`${month}월`);
-  const [checkedDate, setCheckedDate] = useState<string>(`${date}일`);
+  const {
+    value: checkedMonth,
+    handleChangeValue: handleChangeMonth,
+    changeValue: changeMonth,
+  } = useInput({ initialValue: month.toString() });
 
-  const meridiems = [MERIDIEM.AM, MERIDIEM.PM];
-  const hours = Array.from({ length: 12 }, (_, index) => `${index + 1}시`);
-  const minutes = Array.from({ length: 6 }, (_, index) => `${index * 10}분`);
-  const years = [year, year + 1, year + 2].map((year) => `${year}년`);
-  const months = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
-  const dates = Array.from(
-    { length: lastDate },
-    (_, index) => `${index + 1}일`
-  );
+  const {
+    value: checkedDate,
+    handleChangeValue: handleChangeDate,
+    changeValue: changeDate,
+  } = useInput({
+    initialValue: date.toString(),
+  });
 
-  const handleChangeMeridiem = (event: ChangeEvent<HTMLInputElement>) => {
-    if (
-      event.target.value === MERIDIEM.AM ||
-      event.target.value === MERIDIEM.PM
-    ) {
-      setCheckedMeridiem(event.target.value);
+  const {
+    value: checkedMeridiem,
+    handleChangeValue: handleChangeMeridiem,
+    changeValue: changeMeridiem,
+  } = useInput({ initialValue: meridiem, invalidation: invalidMeridiem });
+
+  const {
+    value: checkedHour,
+    handleChangeValue: handleChangeHour,
+    changeValue: changeHour,
+  } = useInput({
+    initialValue: parsedHour.toString(),
+  });
+
+  const {
+    value: checkedMinute,
+    handleChangeValue: handleChangeMinute,
+    changeValue: changeMinute,
+  } = useInput({ initialValue: parsedMinute.toString() });
+
+  useEffect(() => {
+    if (remindDate) {
+      const { year, month, date, meridiem, meridiemHour, minute } =
+        parsedDateTime(remindDate);
+
+      changeYear(year);
+      changeMonth(month);
+      changeDate(date);
+
+      changeMeridiem(meridiem);
+      changeHour(meridiemHour);
+      changeMinute(minute);
     }
-  };
-
-  const handleChangeHour = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedHour(event.target.value);
-  };
-
-  const handleChangeMinute = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedMinute(event.target.value);
-  };
-
-  const handleChangeYear = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedYear(event.target.value);
-  };
-
-  const handleChangeMonth = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedMonth(event.target.value);
-  };
-
-  const handleChangeDate = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedDate(event.target.value);
-  };
-
-  const handleSubmit = () => {
-    if (
-      isInvalidateDateTime({
-        checkedYear,
-        checkedMonth,
-        checkedDate,
-        checkedMeridiem,
-        checkedHour,
-        checkedMinute,
-        year,
-        month,
-        date,
-        hour,
-        minute,
-      })
-    ) {
-      openFailureSnackbar(
-        "리마인더 시간은 현재 시간 이후로 설정해주셔야 합니다."
-      );
-      return;
-    }
-
-    return;
-  };
+  }, [remindDate]);
 
   useEffect(() => {
     if (yearRef.current) {
       yearRef.current.scrollTo({
-        top: (Number(checkedYear.replace("년", "")) - year) * 22,
+        top: (Number(checkedYear) - year) * 22,
         behavior: "smooth",
       });
     }
 
     if (monthRef.current) {
       monthRef.current.scrollTo({
-        top: (Number(checkedMonth.replace("월", "")) - 1) * 22.5,
+        top: (Number(checkedMonth) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (dateRef.current) {
       dateRef.current.scrollTo({
-        top: (Number(checkedDate.replace("일", "")) - 1) * 22.5,
+        top: (Number(checkedDate) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (meridiemRef.current) {
       meridiemRef.current.scrollTo({
-        top: checkedMeridiem === MERIDIEM.AM ? 0 : 22,
+        top: checkedMeridiem === "오전" ? 0 : 22,
         behavior: "smooth",
       });
     }
 
     if (hourRef.current) {
       hourRef.current.scrollTo({
-        top: (Number(checkedHour.replace("시", "")) - 1) * 22.5,
+        top: (Number(checkedHour) - 1) * 22.5,
         behavior: "smooth",
       });
     }
 
     if (minuteRef.current) {
       minuteRef.current.scrollTo({
-        top: (Number(checkedMinute.replace("분", "")) / 10) * 22.7,
+        top: (Number(checkedMinute) / 10) * 22.7,
         behavior: "smooth",
       });
     }
@@ -279,14 +190,6 @@ function useSetReminder(): ReturnType {
       checkedMonth,
       checkedDate,
     },
-    dateStateArray: {
-      meridiems,
-      hours,
-      minutes,
-      years,
-      months,
-      dates,
-    },
     handler: {
       handleChangeMeridiem,
       handleChangeHour,
@@ -295,7 +198,6 @@ function useSetReminder(): ReturnType {
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleSubmit,
     },
   };
 }

@@ -11,6 +11,8 @@ public enum SlackEvent {
     MESSAGE_CREATED("message", ""),
     MESSAGE_CHANGED("message", "message_changed"),
     MESSAGE_DELETED("message", "message_deleted"),
+    MESSAGE_THREAD_BROADCAST("message", "thread_broadcast"),
+    MESSAGE_FILE_SHARE("message", "file_share"),
     CHANNEL_RENAME("channel_rename", ""),
     CHANNEL_DELETED("channel_deleted", ""),
     MEMBER_CHANGED("user_profile_changed", ""),
@@ -38,5 +40,9 @@ public enum SlackEvent {
 
     private static boolean isSameType(final SlackEvent event, final String type, final String subtype) {
         return event.type.equals(type) && event.subtype.equals(subtype);
+    }
+
+    public boolean isSameSubtype(final String subtype) {
+        return this.subtype.equals(subtype);
     }
 }

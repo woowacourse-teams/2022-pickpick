@@ -19,7 +19,7 @@ describe("24시간제의 시간이 입력되면 오전/오후 prefix를 붙여 �
 
     expect(getMeridiemTime(inputTime)).toEqual({
       meridiem: "오전",
-      hour: 11,
+      hour: "11",
     });
   });
 
@@ -28,7 +28,7 @@ describe("24시간제의 시간이 입력되면 오전/오후 prefix를 붙여 �
 
     expect(getMeridiemTime(inputTime)).toEqual({
       meridiem: "오후",
-      hour: 11,
+      hour: "11",
     });
   });
 });

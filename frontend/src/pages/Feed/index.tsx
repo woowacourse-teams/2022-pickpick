@@ -7,7 +7,7 @@ import { ResponseMessages, CustomError } from "@src/@types/shared";
 import React from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseMessages } from "@src/@utils";
+import { extractResponseMessages, parseTime } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
@@ -21,11 +21,20 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
+import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
+
+  const {
+    reminderTarget,
+    handleUpdateReminderTarget,
+    handleInitializeReminderTarget,
+  } = useSetTargetMessage();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages, CustomError>(
@@ -56,9 +65,11 @@ function Feed() {
 
   const parsedData = extractResponseMessages(data);
 
+  console.log(parsedData);
+
   return (
     <Styled.Container>
-      <SearchForm channelId={channelId ? Number(channelId) : 0} />
+      <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
 
       <InfiniteScroll
         callback={fetchNextPage}
@@ -72,9 +83,11 @@ function Feed() {
               id,
               username,
               postedDate,
+              remindDate,
               text,
               userThumbnail,
               isBookmarked,
+              isSetReminded,
             }) => {
               const parsedDate = postedDate.split("T")[0];
 
@@ -89,17 +102,29 @@ function Feed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={postedDate}
+                    date={parseTime(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
-                    isBookmarked={isBookmarked}
-                    toggleBookmark={
-                      isBookmarked
-                        ? handleRemoveBookmark(id)
-                        : handleAddBookmark(id)
-                    }
-                    handleOpenReminderModal={handleOpenReminderModal}
-                  />
+                    isRemindedMessage={false}
+                  >
+                    <>
+                      <ReminderButton
+                        isActive={isSetReminded}
+                        onClick={() => {
+                          handleOpenReminderModal();
+                          handleUpdateReminderTarget({ id, remindDate });
+                        }}
+                      />
+                      <BookmarkButton
+                        isActive={isBookmarked}
+                        onClick={
+                          isBookmarked
+                            ? handleRemoveBookmark(id)
+                            : handleAddBookmark(id)
+                        }
+                      />
+                    </>
+                  </MessageCard>
                 </React.Fragment>
               );
             }
@@ -123,9 +148,20 @@ function Feed() {
         <>
           <Dimmer
             hasBackgroundColor={true}
-            onClick={handleCloseReminderModal}
+            onClick={() => {
+              handleInitializeReminderTarget();
+              handleCloseReminderModal();
+            }}
           />
-          <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
+          <ReminderModal
+            messageId={reminderTarget.id}
+            remindDate={reminderTarget.remindDate ?? ""}
+            handleCloseReminderModal={() => {
+              handleInitializeReminderTarget();
+              handleCloseReminderModal();
+            }}
+            refetchFeed={refetch}
+          />
         </>
       </Portal>
     </Styled.Container>
