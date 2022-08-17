@@ -1,12 +1,12 @@
 import * as Styled from "./style";
 import Calendar from "@public/assets/icons/Calendar.svg";
 import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
-import ReminderModalButtons from "../ReminderModalButtons";
+import useMutateReminder from "@src/hooks/useMutateReminder";
 
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
@@ -42,16 +42,13 @@ function ReminderModal({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleCreateReminder,
-      handleModifyReminder,
-      handleRemoveReminder,
     },
   } = useSetReminder({
-    messageId,
     remindDate,
-    handleCloseReminderModal,
-    refetchFeed,
   });
+
+  const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
+    useMutateReminder({ handleCloseReminderModal, refetchFeed });
 
   return (
     <Styled.Container>
@@ -163,14 +160,65 @@ function ReminderModal({
         }}
       </Dropdown>
 
-      <ReminderModalButtons
-        messageId={messageId}
-        remindDate={remindDate}
-        handleCloseReminderModal={handleCloseReminderModal}
-        handleCreateReminder={handleCreateReminder}
-        handleModifyReminder={handleModifyReminder}
-        handleRemoveReminder={handleRemoveReminder}
-      />
+      <FlexRow justifyContent="flex-end" gap="8px" marginTop="18px">
+        <Styled.Button
+          text="취소"
+          type="button"
+          onClick={handleCloseReminderModal}
+        >
+          취소
+        </Styled.Button>
+
+        {!remindDate && (
+          <Styled.Button
+            text="생성"
+            type="button"
+            onClick={() =>
+              handleCreateReminder({
+                messageId,
+                checkedYear,
+                checkedMonth,
+                checkedDate,
+                checkedMeridiem,
+                checkedHour,
+                checkedMinute,
+              })
+            }
+          >
+            생성
+          </Styled.Button>
+        )}
+
+        {remindDate && (
+          <>
+            <Styled.Button
+              text="삭제"
+              type="button"
+              onClick={() => handleRemoveReminder(messageId)}
+            >
+              삭제
+            </Styled.Button>
+
+            <Styled.Button
+              text="수정"
+              type="button"
+              onClick={() =>
+                handleModifyReminder({
+                  messageId,
+                  checkedYear,
+                  checkedMonth,
+                  checkedDate,
+                  checkedMeridiem,
+                  checkedHour,
+                  checkedMinute,
+                })
+              }
+            >
+              수정
+            </Styled.Button>
+          </>
+        )}
+      </FlexRow>
     </Styled.Container>
   );
 }
