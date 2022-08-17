@@ -98,7 +98,7 @@ interface ReturnType {
     checkedHour,
     checkedMinute,
   }: handlerProps) => void;
-  handleRemoveReminder: (messageId: number) => Promise<void>;
+  handleRemoveReminder: (messageId: number) => void;
 }
 
 function useMutateReminder({
@@ -117,6 +117,13 @@ function useMutateReminder({
     onSuccess: () => {
       handleCloseReminderModal();
       refetchFeed();
+    },
+  });
+
+  const { mutate: removeReminder } = useMutation(deleteReminder, {
+    onSuccess: () => {
+      refetchFeed();
+      handleCloseReminderModal();
     },
   });
 
@@ -224,10 +231,7 @@ function useMutateReminder({
 
   const handleRemoveReminder = async (messageId: number) => {
     if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
-      await deleteReminder(messageId);
-
-      refetchFeed();
-      handleCloseReminderModal();
+      removeReminder(messageId);
     }
   };
 
