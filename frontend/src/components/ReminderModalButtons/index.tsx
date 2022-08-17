@@ -1,20 +1,21 @@
-import { HandleReminderSubmitProps } from "@src/hooks/useSetReminder";
 import * as Styled from "./style";
 
 interface Props {
   messageId: string;
   remindDate: string;
   handleCloseReminderModal: () => void;
-  handleReminderSubmit: ({ event, key }: HandleReminderSubmitProps) => void;
-  handleRemoveSubmit: (targetMessageId: string) => void;
+  handleCreateReminder: () => void;
+  handleModifyReminder: () => void;
+  handleRemoveReminder: (targetMessageId: string) => void;
 }
 
 function ReminderModalButtons({
   messageId,
   remindDate,
   handleCloseReminderModal,
-  handleReminderSubmit,
-  handleRemoveSubmit,
+  handleCreateReminder,
+  handleModifyReminder,
+  handleRemoveReminder,
 }: Props) {
   return (
     <Styled.Container>
@@ -27,11 +28,7 @@ function ReminderModalButtons({
       </Styled.Button>
 
       {!remindDate && (
-        <Styled.Button
-          text="생성"
-          type="submit"
-          onClick={(event) => handleReminderSubmit({ event, key: "create" })}
-        >
+        <Styled.Button text="생성" type="submit" onClick={handleCreateReminder}>
           생성
         </Styled.Button>
       )}
@@ -41,7 +38,7 @@ function ReminderModalButtons({
           <Styled.Button
             text="삭제"
             type="button"
-            onClick={() => handleRemoveSubmit(messageId)}
+            onClick={() => handleRemoveReminder(messageId)}
           >
             삭제
           </Styled.Button>
@@ -49,7 +46,7 @@ function ReminderModalButtons({
           <Styled.Button
             text="수정"
             type="submit"
-            onClick={(event) => handleReminderSubmit({ event, key: "modify" })}
+            onClick={handleModifyReminder}
           >
             수정
           </Styled.Button>

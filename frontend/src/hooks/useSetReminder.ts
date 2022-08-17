@@ -1,14 +1,9 @@
-import { QUERY_KEY } from "@src/@constants";
 import { getDateInformation, getMeridiemTime, ISOConverter } from "@src/@utils";
-import {
-  deleteReminder,
-  getReminder,
-  postReminder,
-  putReminder,
-} from "@src/api/reminders";
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { deleteReminder, postReminder, putReminder } from "@src/api/reminders";
+import { useEffect, useRef } from "react";
+import { useMutation } from "react-query";
 import useDropdown from "./useDropdown";
+import useInput from "./useInput";
 import useSnackbar from "./useSnackbar";
 
 interface IsInvalidateDateTimeProps {
@@ -104,10 +99,9 @@ const parsedDateTime = (ISODateTime: string) => {
   };
 };
 
-export interface HandleReminderSubmitProps {
-  event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>;
-  key: string;
-}
+const invalidMeridiem = (value: string) => {
+  return value !== "오전" && value !== "오후";
+};
 
 interface Props {
   messageId: string;
@@ -158,13 +152,47 @@ function useSetReminder({
   } = useDropdown();
   const { openFailureSnackbar } = useSnackbar();
 
-  const [checkedYear, setCheckedYear] = useState(`${year}년`);
-  const [checkedMonth, setCheckedMonth] = useState(`${month}월`);
-  const [checkedDate, setCheckedDate] = useState(`${date}일`);
+  const {
+    value: checkedYear,
+    handleChangeValue: handleChangeYear,
+    changeValue: changeYear,
+  } = useInput({
+    initialValue: `${year}년`,
+  });
 
-  const [checkedMeridiem, setCheckedMeridiem] = useState(meridiem);
-  const [checkedHour, setCheckedHour] = useState(`${parsedHour}시`);
-  const [checkedMinute, setCheckedMinute] = useState(`${parsedMinute}분`);
+  const {
+    value: checkedMonth,
+    handleChangeValue: handleChangeMonth,
+    changeValue: changeMonth,
+  } = useInput({ initialValue: `${month}월` });
+
+  const {
+    value: checkedDate,
+    handleChangeValue: handleChangeDate,
+    changeValue: changeDate,
+  } = useInput({
+    initialValue: `${date}일`,
+  });
+
+  const {
+    value: checkedMeridiem,
+    handleChangeValue: handleChangeMeridiem,
+    changeValue: changeMeridiem,
+  } = useInput({ initialValue: meridiem, invalidation: invalidMeridiem });
+
+  const {
+    value: checkedHour,
+    handleChangeValue: handleChangeHour,
+    changeValue: changeHour,
+  } = useInput({
+    initialValue: `${parsedHour}시`,
+  });
+
+  const {
+    value: checkedMinute,
+    handleChangeValue: handleChangeMinute,
+    changeValue: changeMinute,
+  } = useInput({ initialValue: `${parsedMinute}분` });
 
   const years = [year, year + 1, year + 2].map((year) => `${year}년`);
   const months = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
@@ -187,35 +215,7 @@ function useSetReminder({
   );
   const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
 
-  const handleChangeMeridiem = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "오전" || event.target.value === "오후") {
-      setCheckedMeridiem(event.target.value);
-    }
-  };
-
-  const handleChangeHour = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedHour(event.target.value);
-  };
-
-  const handleChangeMinute = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedMinute(event.target.value);
-  };
-
-  const handleChangeYear = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedYear(event.target.value);
-  };
-
-  const handleChangeMonth = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedMonth(event.target.value);
-  };
-
-  const handleChangeDate = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedDate(event.target.value);
-  };
-
-  const handleReminderSubmit = ({ event, key }: HandleReminderSubmitProps) => {
-    event.preventDefault();
-
+  const handleCreateReminder = () => {
     if (
       isInvalidateDateTime({
         checkedYear: replaceCheckedYear,
@@ -242,24 +242,46 @@ function useSetReminder({
       `${replaceCheckedHour}:${replaceCheckedMinute}`
     );
 
-    if (key === "create") {
-      addReminder({
-        messageId: Number(messageId),
-        reminderDate: reminderISODateTime,
-      });
+    addReminder({
+      messageId: Number(messageId),
+      reminderDate: reminderISODateTime,
+    });
+  };
+
+  const handleModifyReminder = () => {
+    if (
+      isInvalidateDateTime({
+        checkedYear: replaceCheckedYear,
+        checkedMonth: replaceCheckedMonth,
+        checkedDate: replaceCheckedDate,
+        checkedHour: replaceCheckedHour,
+        checkedMinute: replaceCheckedMinute,
+        year,
+        month,
+        date,
+        hour,
+        minute,
+      })
+    ) {
+      openFailureSnackbar(
+        "리마인더 시간은 현재 시간보다 미래로 설정해주셔야 합니다."
+      );
 
       return;
     }
+
+    const reminderISODateTime = ISOConverter(
+      `${replaceCheckedYear}-${replaceCheckedMonth}-${replaceCheckedDate}`,
+      `${replaceCheckedHour}:${replaceCheckedMinute}`
+    );
 
     modifyReminder({
       messageId: Number(messageId),
       reminderDate: reminderISODateTime,
     });
-
-    return;
   };
 
-  const handleRemoveSubmit = async (messageId: string) => {
+  const handleRemoveReminder = async (messageId: string) => {
     if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
       await deleteReminder(messageId);
 
@@ -277,13 +299,13 @@ function useSetReminder({
       const { year, month, date, meridiem, meridiemHour, minute } =
         parsedDateTime(remindDate);
 
-      setCheckedYear(`${year}년`);
-      setCheckedMonth(`${month}월`);
-      setCheckedDate(`${date}일`);
+      changeYear(`${year}년`);
+      changeMonth(`${month}월`);
+      changeDate(`${date}일`);
 
-      setCheckedMeridiem(meridiem);
-      setCheckedHour(`${meridiemHour}시`);
-      setCheckedMinute(`${minute}분`);
+      changeMeridiem(meridiem);
+      changeHour(`${meridiemHour}시`);
+      changeMinute(`${minute}분`);
     }
   }, [remindDate]);
 
@@ -372,8 +394,9 @@ function useSetReminder({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleReminderSubmit,
-      handleRemoveSubmit,
+      handleCreateReminder,
+      handleModifyReminder,
+      handleRemoveReminder,
     },
   };
 }

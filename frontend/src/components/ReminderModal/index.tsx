@@ -42,8 +42,9 @@ function ReminderModal({
       handleChangeMonth,
       handleChangeDate,
       handleToggleDateTimePicker,
-      handleReminderSubmit,
-      handleRemoveSubmit,
+      handleCreateReminder,
+      handleModifyReminder,
+      handleRemoveReminder,
     },
   } = useSetReminder({
     messageId,
@@ -166,8 +167,9 @@ function ReminderModal({
         messageId={messageId}
         remindDate={remindDate}
         handleCloseReminderModal={handleCloseReminderModal}
-        handleReminderSubmit={handleReminderSubmit}
-        handleRemoveSubmit={handleRemoveSubmit}
+        handleCreateReminder={handleCreateReminder}
+        handleModifyReminder={handleModifyReminder}
+        handleRemoveReminder={handleRemoveReminder}
       />
     </Styled.Container>
   );
