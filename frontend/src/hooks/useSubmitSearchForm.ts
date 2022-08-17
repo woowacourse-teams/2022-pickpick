@@ -18,8 +18,6 @@ interface ReturnType {
   handleSubmitSearchKeyword: (selectedChannelIds: number[]) => FormEventHandler;
 }
 
-const parseValue = (value: string) => value.trim();
-
 function useSubmitSearchForm({ keyword }: Props): ReturnType {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
