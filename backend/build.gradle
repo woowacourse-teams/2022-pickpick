@@ -98,20 +98,23 @@ tasks.named('test') {
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
+
 querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
+
 sourceSets {
     main.java.srcDir querydslDir
 }
+
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "woowacourse-teams_2022-pickpick_AYKlZap98dMo58Zrdp2E"
+        property "sonar.projectKey", "woowacourse-teams_2022-pickpick_AYKprLeNXDQxKhlck1fc"
     }
 }
 
