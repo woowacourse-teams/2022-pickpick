@@ -14,6 +14,8 @@ interface ReturnType {
 }
 
 function useSelectChannels({ currentChannelIds }: Props): ReturnType {
+  const [visitingChannelIds, setVisitingChannelIds] =
+    useState<number[]>(currentChannelIds);
   const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
   const { data } = useGetSubscribedChannels();
   const allChannels = data?.channels ?? [];
@@ -21,15 +23,11 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
   const handleToggleAllChannels = () => {
     if (!allChannels) return;
 
-    if (
-      selectedChannelIds.length &&
-      selectedChannelIds.length < allChannels.length
-    ) {
-      setSelectedChannelIds(allChannels.map((channel) => channel.id));
+    if (selectedChannelIds.length === allChannels.length) {
+      setSelectedChannelIds([]);
       return;
     }
-
-    setSelectedChannelIds([]);
+    setSelectedChannelIds(allChannels.map((channel) => channel.id));
   };
 
   const handleToggleChannel = (id: number) => {
@@ -48,12 +46,19 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
   };
 
   useEffect(() => {
-    if (allChannels.length === 0 || selectedChannelIds.length > 0) return;
-
+    if (allChannels.length === 0) return;
     setSelectedChannelIds(
-      currentChannelIds.length === 0 ? [allChannels[0].id] : currentChannelIds
+      visitingChannelIds.length === 0 ? [allChannels[0].id] : visitingChannelIds
     );
-  }, [allChannels, currentChannelIds]);
+  }, [allChannels, visitingChannelIds]);
+
+  useEffect(() => {
+    if (
+      JSON.stringify(currentChannelIds) === JSON.stringify(visitingChannelIds)
+    )
+      return;
+    setVisitingChannelIds(currentChannelIds);
+  }, [currentChannelIds]);
 
   return {
     allChannels,
