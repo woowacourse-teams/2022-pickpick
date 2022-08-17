@@ -9,6 +9,7 @@ import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -153,7 +154,7 @@ class MessageServiceTest {
                 .get(0);
 
         // then
-        assertThat(message.getRemindDate()).isNotNull();
+        assertThat(message.getRemindDate()).isEqualTo(LocalDateTime.of(2022, 8, 12, 14, 20, 0));
     }
 
     @DisplayName("메시지 조회 시, remindDate 값이 없으면 빈 값으로 전달된다")
