@@ -41,7 +41,7 @@ function useSubmitSearchForm({ keyword }: Props): ReturnType {
         return;
       }
 
-      if (!parseValue(searchKeyword).length) {
+      if (!searchKeyword.trim().length) {
         openFailureSnackbar(
           "검색할 키워드를 입력하신 후 검색 버튼을 눌러주세요."
         );
