@@ -108,7 +108,7 @@ class MessageThreadBroadcastServiceTest {
         return conversationsInfoResponse;
     }
 
-    @DisplayName("Thread_Broadcast 이벤트 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
+    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
     @Test
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
@@ -131,7 +131,7 @@ class MessageThreadBroadcastServiceTest {
         );
     }
 
-    @DisplayName("subtype이 message_changed인 요청이 왔을 경우, DB에 저장되어 있는 메시지라면 저장하지 않는다")
+    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 subtype이 message_changed인 요청이 왔을 경우, DB에 저장되어 있는 메시지라면 저장하지 않는다")
     @Test
     void notSave() {
         // given
@@ -163,7 +163,7 @@ class MessageThreadBroadcastServiceTest {
         );
     }
 
-    @DisplayName("subtype이 message_changed인 요청이 왔을 경우, DB에 저장되지 않은 메시지라면 저장한다")
+    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 subtype이 message_changed인 요청이 왔을 경우, DB에 저장되지 않은 메시지라면 저장한다")
     @Test
     void save() {
         // given

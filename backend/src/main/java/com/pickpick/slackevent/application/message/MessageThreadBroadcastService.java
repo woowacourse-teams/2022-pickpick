@@ -49,6 +49,19 @@ public class MessageThreadBroadcastService implements SlackEventService {
         save(slackMessageDto);
     }
 
+    private SlackMessageDto convert(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+
+        return new SlackMessageDto(
+                (String) event.get(USER),
+                (String) event.get(CLIENT_MSG_ID),
+                (String) event.get(TIMESTAMP),
+                (String) event.get(TIMESTAMP),
+                (String) event.get(TEXT),
+                (String) event.get(CHANNEL)
+        );
+    }
+
     public void saveWhenSubtypeIsMessageChanged(final SlackMessageDto slackMessageDto) {
         if (isNewMessage(slackMessageDto)) {
             save(slackMessageDto);
@@ -70,19 +83,6 @@ public class MessageThreadBroadcastService implements SlackEventService {
                 .orElseGet(() -> createChannel(channelSlackId));
 
         messages.save(slackMessageDto.toEntity(member, channel));
-    }
-
-    private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
-
-        return new SlackMessageDto(
-                (String) event.get(USER),
-                (String) event.get(CLIENT_MSG_ID),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TEXT),
-                (String) event.get(CHANNEL)
-        );
     }
 
     private Channel createChannel(final String channelSlackId) {
