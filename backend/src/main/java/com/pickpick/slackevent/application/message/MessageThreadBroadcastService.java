@@ -59,13 +59,11 @@ public class MessageThreadBroadcastService implements SlackEventService {
     }
 
     public void saveWhenSubtypeIsMessageChanged(final SlackMessageDto slackMessageDto) {
-        if (isNewMessage(slackMessageDto)) {
-            save(slackMessageDto);
-        }
-    }
-
-    private boolean isNewMessage(final SlackMessageDto slackMessageDto) {
-        return messages.findBySlackId(slackMessageDto.getSlackId()).isEmpty();
+        messages.findBySlackId(slackMessageDto.getSlackId())
+                .ifPresentOrElse(
+                        message -> message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate()),
+                        () -> save(slackMessageDto)
+                );
     }
 
     private void save(final SlackMessageDto slackMessageDto) {
