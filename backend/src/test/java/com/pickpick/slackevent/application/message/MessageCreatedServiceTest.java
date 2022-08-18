@@ -24,13 +24,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-@AutoConfigureMockMvc
 @SpringBootTest
 class MessageCreatedServiceTest {
 
@@ -140,7 +138,7 @@ class MessageCreatedServiceTest {
                 () -> assertThat(messageAfterSave).isPresent()
         );
     }
-    
+
     @DisplayName("메시지 댓글 생성 이벤트는 전달되어도 내용을 저장하지 않는다")
     @Test
     void doNotSaveReplyMessage() {
