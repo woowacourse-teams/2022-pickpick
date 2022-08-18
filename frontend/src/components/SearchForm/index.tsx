@@ -26,8 +26,9 @@ function SearchForm({ currentKeyword, currentChannelIds }: Props) {
 
   return (
     <Dropdown>
-      {({ isDropdownOpened, handleOpenDropdown }) => (
+      {({ innerRef, isDropdownOpened, handleOpenDropdown }) => (
         <Styled.Container
+          ref={innerRef}
           onSubmit={handleSubmitSearchKeyword(selectedChannelIds)}
         >
           <SearchInput

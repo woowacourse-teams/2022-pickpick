@@ -88,11 +88,11 @@ function ReminderModal({
       <Styled.Title>리마인더 생성</Styled.Title>
 
       <Dropdown>
-        {({ isDropdownOpened, handleToggleDropdown }) => {
+        {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
           handleToggleDateTimePicker();
 
           return (
-            <FlexColumn marginBottom="10px">
+            <FlexColumn marginBottom="10px" ref={innerRef}>
               <Styled.Subtitle>언제</Styled.Subtitle>
 
               <DateTimePickerToggle
@@ -144,11 +144,11 @@ function ReminderModal({
       </Dropdown>
 
       <Dropdown>
-        {({ isDropdownOpened, handleToggleDropdown }) => {
+        {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
           handleToggleDateTimePicker();
 
           return (
-            <FlexColumn>
+            <FlexColumn ref={innerRef}>
               <Styled.Subtitle>시간</Styled.Subtitle>
 
               <DateTimePickerToggle
