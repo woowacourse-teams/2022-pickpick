@@ -4,17 +4,18 @@ import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
 import { SubscribedChannel, Theme } from "@src/@types/shared";
-import { Link } from "react-router-dom";
 import { useTheme } from "styled-components";
 import ThemeToggler from "@src/components/ThemeToggler";
-import SunIcon from "@public/assets/icons/SunIcon.svg";
+import { useParams } from "react-router-dom";
 interface Props {
   channels?: SubscribedChannel[];
   handleCloseDrawer: () => void;
 }
 
 function Drawer({ channels = [], handleCloseDrawer }: Props) {
+  const { channelId } = useParams();
   const theme = useTheme() as Theme;
+
   return (
     <Styled.Container>
       <FlexRow
@@ -38,11 +39,14 @@ function Drawer({ channels = [], handleCloseDrawer }: Props) {
       <Styled.Hr />
 
       <FlexColumn gap="9px" padding="0 16px">
-        {channels.map((channel) => (
+        {channels.map((channel, index) => (
           <WrapperLink key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
             {({ isActive }) => (
               <Styled.ChannelName
-                isActive={isActive}
+                isActive={
+                  isActive ||
+                  (index === 0 && (!channelId || channelId === "main"))
+                }
                 onClick={handleCloseDrawer}
               >
                 #{channel.name}
