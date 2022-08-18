@@ -4,7 +4,7 @@ import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages, CustomError } from "@src/@types/shared";
-import React from "react";
+import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
@@ -64,6 +64,12 @@ function Feed() {
   });
 
   const parsedData = extractResponseMessages(data);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, [queryKey]);
 
   return (
     <Styled.Container>
