@@ -42,9 +42,9 @@ public class JwtTokenProvider {
         try {
             parseClaims(token);
         } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
+            throw new ExpiredTokenException(token);
         } catch (Exception e) {
-            throw new InvalidTokenException();
+            throw new InvalidTokenException(token);
         }
     }
 
