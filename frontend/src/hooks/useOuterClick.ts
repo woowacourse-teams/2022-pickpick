@@ -4,7 +4,7 @@ type CallbackType = () => void;
 
 function useOuterClick(callback: CallbackType) {
   const callbackRef = useRef<CallbackType>();
-  const innerRef = useRef<HTMLDivElement>();
+  const innerRef = useRef<HTMLDivElement>(null);
 
   callbackRef.current = callback;
 
