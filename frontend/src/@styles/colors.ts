@@ -21,6 +21,10 @@ export const COLORS = {
   ORANGE: {
     90: "#FF9900",
     50: "#FFC56E",
+    LIGHT_GRADIENT:
+      "linear-gradient(180deg, rgba(248,248,248,1) 0%, rgba(248,248,248,1) 57%, rgba(255,197,110,1) 81%, rgba(255,197,110,1) 91%, rgba(248,248,240,1) 100%)",
+    DARK_GRADIENT:
+      "linear-gradient(180deg, rgba(64,64,64,1) 0%, rgba(64,64,64,1) 57%, rgba(255,197,110,1) 81%, rgba(255,197,110,1) 91%, rgba(64,64,64,1) 100%)",
   },
   RED: {
     50: "#FF9494",
