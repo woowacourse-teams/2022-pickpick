@@ -1,6 +1,6 @@
 import * as Styled from "./style";
 import Calendar from "@public/assets/icons/Calendar.svg";
-import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
+import ReminderIconActive from "@public/assets/icons/ReminderIcon-Active.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
@@ -22,9 +22,12 @@ const generateDateTimeOptions = () => {
   );
 
   const meridiems = ["오전", "오후"];
-  const hours = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
-  );
+  const AMHours = Array.from({ length: 12 }, (_, index) => index.toString());
+  const PMHours = Array.from({ length: 12 }, (_, index) => {
+    if (index === 0) return "12";
+
+    return index.toString();
+  });
   const minutes = Array.from({ length: 6 }, (_, index) =>
     (index * 10).toString()
   );
@@ -34,7 +37,8 @@ const generateDateTimeOptions = () => {
     months,
     dates,
     meridiems,
-    hours,
+    AMHours,
+    PMHours,
     minutes,
   };
 };
@@ -55,7 +59,15 @@ function ReminderModal({
   refetchFeed,
 }: Props) {
   const {
-    ref: { yearRef, monthRef, dateRef, meridiemRef, hourRef, minuteRef },
+    ref: {
+      yearRef,
+      monthRef,
+      dateRef,
+      meridiemRef,
+      AMHourRef,
+      PMHourRef,
+      minuteRef,
+    },
     checkedState: {
       checkedMeridiem,
       checkedHour,
@@ -80,7 +92,7 @@ function ReminderModal({
   const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
 
-  const { years, months, dates, meridiems, hours, minutes } =
+  const { years, months, dates, meridiems, AMHours, PMHours, minutes } =
     generateDateTimeOptions();
 
   return (
@@ -158,7 +170,7 @@ function ReminderModal({
                 )}분`}
                 handleToggleDropdown={handleToggleDropdown}
               >
-                <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
+                <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />
               </DateTimePickerToggle>
 
               {isDropdownOpened && (
@@ -172,15 +184,29 @@ function ReminderModal({
                     />
                   </Styled.TextOptionsWrapper>
 
-                  <Styled.TextOptionsWrapper ref={hourRef}>
-                    <DateTimePickerOptions
-                      needZeroPaddingStart={true}
-                      optionTexts={hours}
-                      unit="시"
-                      checkedText={checkedHour}
-                      handleChangeText={handleChangeHour}
-                    />
-                  </Styled.TextOptionsWrapper>
+                  {checkedMeridiem === "오전" && (
+                    <Styled.TextOptionsWrapper ref={AMHourRef}>
+                      <DateTimePickerOptions
+                        needZeroPaddingStart={true}
+                        optionTexts={AMHours}
+                        unit="시"
+                        checkedText={checkedHour}
+                        handleChangeText={handleChangeHour}
+                      />
+                    </Styled.TextOptionsWrapper>
+                  )}
+
+                  {checkedMeridiem === "오후" && (
+                    <Styled.TextOptionsWrapper ref={PMHourRef}>
+                      <DateTimePickerOptions
+                        needZeroPaddingStart={true}
+                        optionTexts={PMHours}
+                        unit="시"
+                        checkedText={checkedHour}
+                        handleChangeText={handleChangeHour}
+                      />
+                    </Styled.TextOptionsWrapper>
+                  )}
 
                   <Styled.TextOptionsWrapper ref={minuteRef}>
                     <DateTimePickerOptions

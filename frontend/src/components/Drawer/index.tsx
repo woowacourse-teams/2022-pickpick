@@ -23,6 +23,7 @@ function Drawer({ channels = [], handleCloseDrawer }: Props) {
         padding="0 20px"
       >
         <Styled.Title>채널</Styled.Title>
+
         <WrapperLink to={PATH_NAME.ADD_CHANNEL}>
           {() => (
             <PlusIcon
@@ -33,16 +34,24 @@ function Drawer({ channels = [], handleCloseDrawer }: Props) {
           )}
         </WrapperLink>
       </FlexRow>
+
       <Styled.Hr />
-      <FlexColumn gap="11px" padding="0 20px">
+
+      <FlexColumn gap="9px" padding="0 16px">
         {channels.map((channel) => (
-          <Link key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
-            <Styled.ChannelName onClick={handleCloseDrawer}>
-              #{channel.name}
-            </Styled.ChannelName>
-          </Link>
+          <WrapperLink key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
+            {({ isActive }) => (
+              <Styled.ChannelName
+                isActive={isActive}
+                onClick={handleCloseDrawer}
+              >
+                #{channel.name}
+              </Styled.ChannelName>
+            )}
+          </WrapperLink>
         ))}
       </FlexColumn>
+
       <Styled.ThemeTogglerContainer>
         <ThemeToggler />
       </Styled.ThemeTogglerContainer>
