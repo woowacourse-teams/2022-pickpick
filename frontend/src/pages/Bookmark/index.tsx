@@ -47,7 +47,14 @@ function Bookmark() {
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
             {parsedData.map(
-              ({ id, username, postedDate, text, userThumbnail }) => (
+              ({
+                id,
+                messageId,
+                username,
+                postedDate,
+                text,
+                userThumbnail,
+              }) => (
                 <MessageCard
                   key={id}
                   username={username}
@@ -58,7 +65,7 @@ function Bookmark() {
                 >
                   <BookmarkButton
                     isActive={true}
-                    onClick={handleRemoveBookmark(id)}
+                    onClick={handleRemoveBookmark(messageId)}
                   />
                 </MessageCard>
               )

@@ -23,7 +23,15 @@ export interface Message {
   isSetReminded: boolean;
 }
 
-export type Bookmark = Omit<Message, "isReminded" | "isBookmarked">;
+export interface Bookmark {
+  id: number;
+  messageId: number;
+  username: string;
+  postedDate: string;
+  remindDate: string;
+  text: string;
+  userThumbnail: string;
+}
 
 export interface Reminder {
   id: number;
