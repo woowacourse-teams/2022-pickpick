@@ -1,6 +1,5 @@
 import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
-import WrapperLink from "@src/components/@shared/WrapperLink";
 import { FlexColumn } from "@src/@styles/shared";
 import { PATH_NAME } from "@src/@constants";
 import { useMutation, useQuery } from "react-query";
@@ -11,6 +10,7 @@ import {
 } from "@src/api/channels";
 import { QUERY_KEY } from "@src/@constants";
 import { ResponseChannels, CustomError } from "@src/@types/shared";
+import { Link } from "react-router-dom";
 
 function AddChannel() {
   const { data, refetch } = useQuery<ResponseChannels, CustomError>(
@@ -32,8 +32,12 @@ function AddChannel() {
 
   return (
     <Styled.Container>
-      <h1>채널 추가</h1>
-      <p>추가하고 싶으신 채널을 선택해주세요</p>
+      <Styled.Title>채널 추가</Styled.Title>
+
+      <Styled.Description>
+        추가하고 싶으신 채널을 선택해주세요
+      </Styled.Description>
+
       <FlexColumn gap="50px" alignItems="end">
         <Styled.ChannelListContainer>
           {data?.channels.map(({ id, name, isSubscribed }) => (
@@ -49,7 +53,10 @@ function AddChannel() {
             </Button>
           ))}
         </Styled.ChannelListContainer>
-        <WrapperLink to={PATH_NAME.FEED}>{() => <span>다음</span>}</WrapperLink>
+
+        <Link to={PATH_NAME.FEED}>
+          <Styled.Button>다음</Styled.Button>
+        </Link>
       </FlexColumn>
     </Styled.Container>
   );
