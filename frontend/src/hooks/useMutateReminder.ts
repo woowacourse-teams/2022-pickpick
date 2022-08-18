@@ -3,17 +3,6 @@ import { getDateInformation, ISOConverter } from "@src/@utils";
 import { useMutation } from "react-query";
 import useSnackbar from "./useSnackbar";
 
-const convertMeridiemHourToStandardHour = (
-  meridiem: string,
-  meridiemHour: number
-): number => {
-  if (meridiem === "오후") {
-    return meridiemHour === 12 ? 0 : meridiemHour + 12;
-  }
-
-  return meridiemHour;
-};
-
 interface IsInvalidateDateTimeProps {
   checkedYear: number;
   checkedMonth: number;
@@ -25,16 +14,6 @@ interface IsInvalidateDateTimeProps {
   date: number;
   hour: number;
   minute: number;
-}
-
-interface handlerProps {
-  messageId: number;
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
 }
 
 const isInvalidateDateTime = ({
@@ -67,12 +46,69 @@ const isInvalidateDateTime = ({
     checkedMonth <= month &&
     checkedDate <= date &&
     checkedHour <= hour &&
-    checkedMinute < minute
+    checkedMinute <= minute
   )
     return true;
 
   return false;
 };
+
+const convertMeridiemHourToStandardHour = (
+  meridiem: string,
+  meridiemHour: number
+): number => {
+  if (meridiem === "오후") {
+    return meridiemHour === 12 ? 0 : meridiemHour + 12;
+  }
+
+  return meridiemHour;
+};
+
+interface GetReplaceDateTimeProps {
+  checkedYear: string;
+  checkedMonth: string;
+  checkedDate: string;
+  checkedMeridiem: string;
+  checkedHour: string;
+  checkedMinute: string;
+}
+
+const getReplaceDateTime = ({
+  checkedYear,
+  checkedMonth,
+  checkedDate,
+  checkedMeridiem,
+  checkedHour,
+  checkedMinute,
+}: GetReplaceDateTimeProps) => {
+  const replaceCheckedYear = Number(checkedYear.replace("년", ""));
+  const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
+  const replaceCheckedDate = Number(checkedDate.replace("일", ""));
+
+  const replaceCheckedHour = convertMeridiemHourToStandardHour(
+    checkedMeridiem,
+    Number(checkedHour.replace("시", ""))
+  );
+  const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+
+  return {
+    replaceCheckedYear,
+    replaceCheckedMonth,
+    replaceCheckedDate,
+    replaceCheckedHour,
+    replaceCheckedMinute,
+  };
+};
+
+interface handlerProps {
+  messageId: number;
+  checkedYear: string;
+  checkedMonth: string;
+  checkedDate: string;
+  checkedMeridiem: string;
+  checkedHour: string;
+  checkedMinute: string;
+}
 
 interface Props {
   handleCloseReminderModal: () => void;
@@ -138,15 +174,21 @@ function useMutateReminder({
     checkedHour,
     checkedMinute,
   }: handlerProps) => {
-    const replaceCheckedYear = Number(checkedYear.replace("년", ""));
-    const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
-    const replaceCheckedDate = Number(checkedDate.replace("일", ""));
-
-    const replaceCheckedHour = convertMeridiemHourToStandardHour(
+    const {
+      replaceCheckedYear,
+      replaceCheckedMonth,
+      replaceCheckedDate,
+      replaceCheckedHour,
+      replaceCheckedMinute,
+    } = getReplaceDateTime({
+      checkedYear,
+      checkedMonth,
+      checkedDate,
       checkedMeridiem,
-      Number(checkedHour.replace("시", ""))
-    );
-    const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+      checkedHour,
+      checkedMinute,
+    });
+
     if (
       isInvalidateDateTime({
         checkedYear: replaceCheckedYear,
@@ -188,15 +230,21 @@ function useMutateReminder({
     checkedHour,
     checkedMinute,
   }: handlerProps) => {
-    const replaceCheckedYear = Number(checkedYear.replace("년", ""));
-    const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
-    const replaceCheckedDate = Number(checkedDate.replace("일", ""));
-
-    const replaceCheckedHour = convertMeridiemHourToStandardHour(
+    const {
+      replaceCheckedYear,
+      replaceCheckedMonth,
+      replaceCheckedDate,
+      replaceCheckedHour,
+      replaceCheckedMinute,
+    } = getReplaceDateTime({
+      checkedYear,
+      checkedMonth,
+      checkedDate,
       checkedMeridiem,
-      Number(checkedHour.replace("시", ""))
-    );
-    const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
+      checkedHour,
+      checkedMinute,
+    });
+
     if (
       isInvalidateDateTime({
         checkedYear: replaceCheckedYear,
