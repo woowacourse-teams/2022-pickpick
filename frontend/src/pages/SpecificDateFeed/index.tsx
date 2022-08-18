@@ -97,7 +97,11 @@ function SpecificDateFeed() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
+      <SearchForm
+        currentChannelIds={
+          channelId && channelId !== "main" ? [Number(channelId)] : []
+        }
+      />
 
       <InfiniteScroll
         callback={fetchNextPage}
