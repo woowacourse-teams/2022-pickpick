@@ -1,5 +1,5 @@
 import useDropdown from "@src/hooks/useDropdown";
-import Dimmer from "../@shared/Dimmer";
+import Dimmer from "@src/components/@shared/Dimmer";
 
 interface ChildrenProps {
   isDropdownOpened: boolean;

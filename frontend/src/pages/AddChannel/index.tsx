@@ -1,7 +1,7 @@
 import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
-import { FlexColumn } from "@src/@styles/shared";
 import WrapperLink from "@src/components/@shared/WrapperLink";
+import { FlexColumn } from "@src/@styles/shared";
 import { PATH_NAME } from "@src/@constants";
 import { useMutation, useQuery } from "react-query";
 import {
@@ -10,9 +10,13 @@ import {
   unsubscribeChannel,
 } from "@src/api/channels";
 import { QUERY_KEY } from "@src/@constants";
+import { ResponseChannels, CustomError } from "@src/@types/shared";
 
 function AddChannel() {
-  const { data, refetch } = useQuery(QUERY_KEY.ALL_CHANNELS, getChannels);
+  const { data, refetch } = useQuery<ResponseChannels, CustomError>(
+    QUERY_KEY.ALL_CHANNELS,
+    getChannels
+  );
 
   const { mutate: subscribe } = useMutation(subscribeChannel, {
     onSettled: () => {

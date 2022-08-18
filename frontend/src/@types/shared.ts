@@ -13,7 +13,7 @@ export interface StyledDefaultProps {
   theme: Theme;
 }
 export interface Message {
-  id: string;
+  id: number;
   username: string;
   postedDate: string;
   remindDate: string;
@@ -25,7 +25,7 @@ export interface Message {
 
 export type Bookmark = Omit<Message, "isReminded" | "isBookmarked">;
 
-export interface ResponseReminder {
+export interface Reminder {
   id: number;
   messageId: number;
   username: string;
@@ -37,7 +37,7 @@ export interface ResponseReminder {
 }
 
 export interface ResponseReminders {
-  reminders: ResponseReminder[];
+  reminders: Reminder[];
   isLast: boolean;
 }
 

@@ -72,7 +72,7 @@ function Reminder() {
                       onClick={() => {
                         handleOpenReminderModal();
                         handleUpdateReminderTarget({
-                          id: messageId.toString(),
+                          id: messageId,
                           remindDate,
                         });
                       }}

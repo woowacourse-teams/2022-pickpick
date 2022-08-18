@@ -1,14 +1,14 @@
+import { PropsWithChildren, ButtonHTMLAttributes } from "react";
 import * as Styled from "./style";
 
 export type Icon = "star" | "alarm";
 
-export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: JSX.Element | string;
+export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: Icon;
   isActive: boolean;
 }
 
-function IconButton({ children, ...props }: Props) {
+function IconButton({ children, ...props }: PropsWithChildren<Props>) {
   return <Styled.Container {...props}>{children}</Styled.Container>;
 }
 

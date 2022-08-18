@@ -1,13 +1,13 @@
+import { PropsWithChildren } from "react";
 import useIntersectionObserver from "@src/hooks/useIntersectionObserver";
 
 export interface Props {
-  children: JSX.Element;
   callback: () => void;
   threshold: number;
   endPoint: boolean;
 }
 
-function InfiniteScroll({ children, ...props }: Props) {
+function InfiniteScroll({ children, ...props }: PropsWithChildren<Props>) {
   const { targetRef: nextRef } = useIntersectionObserver(props);
 
   return (

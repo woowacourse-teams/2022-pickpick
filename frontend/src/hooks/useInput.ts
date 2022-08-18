@@ -1,11 +1,17 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, ChangeEventHandler } from "react";
 
 interface Props {
   initialValue: string;
   invalidation?: (value: string) => boolean;
 }
 
-function useInput({ initialValue, invalidation }: Props) {
+interface ReturnType {
+  value: string;
+  handleChangeValue: ChangeEventHandler<HTMLInputElement>;
+  changeValue: (value: string) => void;
+}
+
+function useInput({ initialValue, invalidation }: Props): ReturnType {
   const [value, setValue] = useState(initialValue);
 
   const handleChangeValue = (event: ChangeEvent<HTMLInputElement>) => {

@@ -5,7 +5,7 @@ export const mainFeedResponseData = {
       isLast: false,
       messages: [
         {
-          id: "1",
+          id: 1,
           username: "엘보우(송상민)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -17,7 +17,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "2",
+          id: 2,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -29,7 +29,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "3",
+          id: 3,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -41,7 +41,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "4",
+          id: 4,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -53,7 +53,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "5",
+          id: 5,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -65,7 +65,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "6",
+          id: 6,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -77,7 +77,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "7",
+          id: 7,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -89,7 +89,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "8",
+          id: 8,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -101,7 +101,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "9",
+          id: 9,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -113,7 +113,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "10",
+          id: 10,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -125,7 +125,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "11",
+          id: 11,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -137,7 +137,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "12",
+          id: 12,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -149,7 +149,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "13",
+          id: 13,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -161,7 +161,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "14",
+          id: 14,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -173,7 +173,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "15",
+          id: 15,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -185,7 +185,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "16",
+          id: 16,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -197,7 +197,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "17",
+          id: 17,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -209,7 +209,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "18",
+          id: 18,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -221,7 +221,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "19",
+          id: 19,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -233,7 +233,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "20",
+          id: 20,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -250,7 +250,7 @@ export const mainFeedResponseData = {
       isLast: true,
       messages: [
         {
-          id: "21",
+          id: 21,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -262,7 +262,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "22",
+          id: 22,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -274,7 +274,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "23",
+          id: 23,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -286,7 +286,7 @@ export const mainFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "24",
+          id: 24,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -309,7 +309,7 @@ export const bookmarkFeedResponseData = {
       isLast: false,
       bookmarks: [
         {
-          id: "1",
+          id: 1,
           username: "엘보우(송상민)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -321,7 +321,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "2",
+          id: 2,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -333,7 +333,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "3",
+          id: 3,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -345,7 +345,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "4",
+          id: 4,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -357,7 +357,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "5",
+          id: 5,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -369,7 +369,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "6",
+          id: 6,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -381,7 +381,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "7",
+          id: 7,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -393,7 +393,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "8",
+          id: 8,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -405,7 +405,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "9",
+          id: 9,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -417,7 +417,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "10",
+          id: 10,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -429,7 +429,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "11",
+          id: 11,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -441,7 +441,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "12",
+          id: 12,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -453,7 +453,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "13",
+          id: 13,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -465,7 +465,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "14",
+          id: 14,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -477,7 +477,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "15",
+          id: 15,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -489,7 +489,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "16",
+          id: 16,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -501,7 +501,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "17",
+          id: 17,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -513,7 +513,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "18",
+          id: 18,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -525,7 +525,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "19",
+          id: 19,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -537,7 +537,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "20",
+          id: 20,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -554,7 +554,7 @@ export const bookmarkFeedResponseData = {
       isLast: true,
       bookmarks: [
         {
-          id: "21",
+          id: 21,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -566,7 +566,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "22",
+          id: 22,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -578,7 +578,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "23",
+          id: 23,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -590,7 +590,7 @@ export const bookmarkFeedResponseData = {
           isSetReminded: false,
         },
         {
-          id: "24",
+          id: 24,
           username: "호프(김문희)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -608,7 +608,7 @@ export const bookmarkFeedResponseData = {
 
 export const refinedFeedResponseData = [
   {
-    id: "1",
+    id: 1,
     username: "엘보우(송상민)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -620,7 +620,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "2",
+    id: 2,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -632,7 +632,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "3",
+    id: 3,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -644,7 +644,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "4",
+    id: 4,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -656,7 +656,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "5",
+    id: 5,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -668,7 +668,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "6",
+    id: 6,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -680,7 +680,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "7",
+    id: 7,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -692,7 +692,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "8",
+    id: 8,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -704,7 +704,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "9",
+    id: 9,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -716,7 +716,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "10",
+    id: 10,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -728,7 +728,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "11",
+    id: 11,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -740,7 +740,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "12",
+    id: 12,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -752,7 +752,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "13",
+    id: 13,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -764,7 +764,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "14",
+    id: 14,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -776,7 +776,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "15",
+    id: 15,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -788,7 +788,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "16",
+    id: 16,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -800,7 +800,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "17",
+    id: 17,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -812,7 +812,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "18",
+    id: 18,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -824,7 +824,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "19",
+    id: 19,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -836,7 +836,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "20",
+    id: 20,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -848,7 +848,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "21",
+    id: 21,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -860,7 +860,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "22",
+    id: 22,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -872,7 +872,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "23",
+    id: 23,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -884,7 +884,7 @@ export const refinedFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "24",
+    id: 24,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -899,7 +899,7 @@ export const refinedFeedResponseData = [
 
 export const refinedBookmarkFeedResponseData = [
   {
-    id: "1",
+    id: 1,
     username: "엘보우(송상민)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -911,7 +911,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "2",
+    id: 2,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -923,7 +923,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "3",
+    id: 3,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -935,7 +935,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "4",
+    id: 4,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -947,7 +947,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "5",
+    id: 5,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -959,7 +959,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "6",
+    id: 6,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -971,7 +971,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "7",
+    id: 7,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -983,7 +983,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "8",
+    id: 8,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -995,7 +995,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "9",
+    id: 9,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1007,7 +1007,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "10",
+    id: 10,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1019,7 +1019,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "11",
+    id: 11,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1031,7 +1031,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "12",
+    id: 12,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1043,7 +1043,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "13",
+    id: 13,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1055,7 +1055,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "14",
+    id: 14,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1067,7 +1067,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "15",
+    id: 15,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1079,7 +1079,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "16",
+    id: 16,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1091,7 +1091,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "17",
+    id: 17,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1103,7 +1103,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "18",
+    id: 18,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1115,7 +1115,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "19",
+    id: 19,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1127,7 +1127,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "20",
+    id: 20,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1139,7 +1139,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "21",
+    id: 21,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1151,7 +1151,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "22",
+    id: 22,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1163,7 +1163,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "23",
+    id: 23,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
@@ -1175,7 +1175,7 @@ export const refinedBookmarkFeedResponseData = [
     isSetReminded: false,
   },
   {
-    id: "24",
+    id: 24,
     username: "호프(김문희)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",

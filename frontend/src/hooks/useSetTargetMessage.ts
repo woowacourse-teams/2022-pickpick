@@ -1,13 +1,19 @@
 import { useState } from "react";
 
 interface ReminderTarget {
-  id: string;
+  id: number;
   remindDate?: string;
 }
 
-function useSetTargetMessage() {
+interface ReturnType {
+  reminderTarget: ReminderTarget;
+  handleUpdateReminderTarget: (reminderTarget: ReminderTarget) => void;
+  handleInitializeReminderTarget: () => void;
+}
+
+function useSetTargetMessage(): ReturnType {
   const [reminderTarget, setReminderTarget] = useState<ReminderTarget>({
-    id: "",
+    id: -1,
     remindDate: "",
   });
 
@@ -16,7 +22,7 @@ function useSetTargetMessage() {
   };
 
   const handleInitializeReminderTarget = () => {
-    setReminderTarget({ id: "", remindDate: "" });
+    setReminderTarget({ id: -1, remindDate: "" });
   };
 
   return {

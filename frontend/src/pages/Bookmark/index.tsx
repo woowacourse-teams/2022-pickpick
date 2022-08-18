@@ -2,7 +2,7 @@ import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "../Feed/style";
 import { useInfiniteQuery } from "react-query";
-import { ResponseBookmarks } from "@src/@types/shared";
+import { ResponseBookmarks, CustomError } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseBookmarks, parseTime } from "@src/@utils";
@@ -15,9 +15,13 @@ import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseBookmarks>(QUERY_KEY.BOOKMARKS, getBookmarks, {
-      getNextPageParam: nextBookmarksCallback,
-    });
+    useInfiniteQuery<ResponseBookmarks, CustomError>(
+      QUERY_KEY.BOOKMARKS,
+      getBookmarks,
+      {
+        getNextPageParam: nextBookmarksCallback,
+      }
+    );
 
   const { handleRemoveBookmark } = useBookmark({
     handleSettle: refetch,

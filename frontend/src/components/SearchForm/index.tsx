@@ -3,7 +3,7 @@ import SearchInput from "@src/components/SearchInput";
 import * as Styled from "./style";
 import useSelectChannels from "@src/hooks/useSelectChannels";
 import useSubmitSearchForm from "@src/hooks/useSubmitSearchForm";
-import Dropdown from "../Dropdown";
+import Dropdown from "@src/components/Dropdown";
 
 interface Props {
   currentKeyword?: string;

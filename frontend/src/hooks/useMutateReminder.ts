@@ -28,7 +28,7 @@ interface IsInvalidateDateTimeProps {
 }
 
 interface handlerProps {
-  messageId: string;
+  messageId: number;
   checkedYear: string;
   checkedMonth: string;
   checkedDate: string;
@@ -79,7 +79,32 @@ interface Props {
   refetchFeed: () => void;
 }
 
-function useMutateReminder({ handleCloseReminderModal, refetchFeed }: Props) {
+interface ReturnType {
+  handleCreateReminder: ({
+    messageId,
+    checkedYear,
+    checkedMonth,
+    checkedDate,
+    checkedMeridiem,
+    checkedHour,
+    checkedMinute,
+  }: handlerProps) => void;
+  handleModifyReminder: ({
+    messageId,
+    checkedYear,
+    checkedMonth,
+    checkedDate,
+    checkedMeridiem,
+    checkedHour,
+    checkedMinute,
+  }: handlerProps) => void;
+  handleRemoveReminder: (messageId: number) => void;
+}
+
+function useMutateReminder({
+  handleCloseReminderModal,
+  refetchFeed,
+}: Props): ReturnType {
   const { openFailureSnackbar } = useSnackbar();
   const { mutate: addReminder } = useMutation(postReminder, {
     onSuccess: () => {
@@ -92,6 +117,13 @@ function useMutateReminder({ handleCloseReminderModal, refetchFeed }: Props) {
     onSuccess: () => {
       handleCloseReminderModal();
       refetchFeed();
+    },
+  });
+
+  const { mutate: removeReminder } = useMutation(deleteReminder, {
+    onSuccess: () => {
+      refetchFeed();
+      handleCloseReminderModal();
     },
   });
 
@@ -197,12 +229,9 @@ function useMutateReminder({ handleCloseReminderModal, refetchFeed }: Props) {
     });
   };
 
-  const handleRemoveReminder = async (messageId: string) => {
+  const handleRemoveReminder = async (messageId: number) => {
     if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
-      await deleteReminder(messageId);
-
-      refetchFeed();
-      handleCloseReminderModal();
+      removeReminder(messageId);
     }
   };
 

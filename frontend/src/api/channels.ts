@@ -4,7 +4,7 @@ import {
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
 import { fetcher } from ".";
-import { getPrivateHeaders } from "./utils";
+import { getPrivateHeaders } from "@src/api/utils";
 
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL, {
@@ -35,10 +35,10 @@ export const subscribeChannel = async (channelId: string) => {
 };
 
 export const unsubscribeChannel = async (channelId: string) => {
-  await fetcher.delete(
-    `${API_ENDPOINT.CHANNEL_SUBSCRIPTION}?channelId=${channelId}`,
-    {
-      headers: { ...getPrivateHeaders() },
-    }
-  );
+  await fetcher.delete(API_ENDPOINT.CHANNEL_SUBSCRIPTION, {
+    headers: { ...getPrivateHeaders() },
+    params: {
+      channelId,
+    },
+  });
 };
