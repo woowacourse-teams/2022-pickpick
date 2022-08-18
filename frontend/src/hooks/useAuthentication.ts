@@ -33,7 +33,6 @@ function useAuthentication(): ReturnType {
   const logout = () => {
     deleteCookie(ACCESS_TOKEN_KEY);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
-    navigate(PATH_NAME.HOME);
   };
 
   return { login, logout };
