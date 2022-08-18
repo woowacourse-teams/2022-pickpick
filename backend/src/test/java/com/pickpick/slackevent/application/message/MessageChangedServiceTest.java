@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -15,13 +16,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @SpringBootTest
 class MessageChangedServiceTest {
 
@@ -48,6 +49,14 @@ class MessageChangedServiceTest {
     @Autowired
     private ChannelRepository channels;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
+
     @DisplayName("메시지 내용 및 수정 날짜 변경")
     @Test
     void changedMessage() {
@@ -71,6 +80,7 @@ class MessageChangedServiceTest {
         );
     }
 
+    @Transactional
     @DisplayName("subtype이 메시지 수정 이벤트 발생이지만, message 내부에 thread_broadcast 타입이 있다면 메시지 저장")
     @Test
     void saveThreadBroadcastMessage() {

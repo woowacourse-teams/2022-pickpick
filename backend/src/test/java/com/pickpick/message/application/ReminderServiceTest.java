@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
@@ -16,10 +17,10 @@ import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,8 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/reminder.sql"})
-@Transactional
+@Sql({"/reminder.sql"})
 @SpringBootTest
 class ReminderServiceTest {
 
@@ -58,6 +58,9 @@ class ReminderServiceTest {
     @Autowired
     private ReminderRepository reminders;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @SpyBean
     private Clock clock;
 
@@ -73,8 +76,12 @@ class ReminderServiceTest {
         );
     }
 
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
+
     @DisplayName("리마인더를 생성한다")
-    @Sql("/truncate.sql")
     @Test
     void save() {
         // given
