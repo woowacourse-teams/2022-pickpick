@@ -4,7 +4,7 @@ import * as Styled from "./style";
 import { useInfiniteQuery } from "react-query";
 import { getMessages } from "@src/api/messages";
 import { ResponseMessages, CustomError } from "@src/@types/shared";
-import React from "react";
+import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
@@ -24,11 +24,13 @@ import ReminderModal from "@src/components/ReminderModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
+  useRecentFeedPath();
 
   const {
     reminderTarget,
