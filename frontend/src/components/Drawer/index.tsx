@@ -7,7 +7,7 @@ import { SubscribedChannel, Theme } from "@src/@types/shared";
 import { Link } from "react-router-dom";
 import { useTheme } from "styled-components";
 import ThemeToggler from "@src/components/ThemeToggler";
-
+import SunIcon from "@public/assets/icons/SunIcon.svg";
 interface Props {
   channels?: SubscribedChannel[];
   handleCloseDrawer: () => void;
