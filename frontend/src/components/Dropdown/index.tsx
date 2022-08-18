@@ -25,6 +25,7 @@ function Dropdown({ children }: Props) {
       {isDropdownOpened && (
         <Dimmer hasBackgroundColor={false} onClick={handleCloseDropdown} />
       )}
+
       {children({
         isDropdownOpened,
         handleOpenDropdown,
