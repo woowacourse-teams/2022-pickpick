@@ -49,7 +49,8 @@ interface ReturnType {
     | "monthRef"
     | "dateRef"
     | "meridiemRef"
-    | "hourRef"
+    | "AMHourRef"
+    | "PMHourRef"
     | "minuteRef",
     RefObject<HTMLDivElement>
   >;
@@ -86,7 +87,8 @@ function useSetReminder({ remindDate }: Props): ReturnType {
   const dateRef = useRef<HTMLDivElement>(null);
 
   const meridiemRef = useRef<HTMLDivElement>(null);
-  const hourRef = useRef<HTMLDivElement>(null);
+  const AMHourRef = useRef<HTMLDivElement>(null);
+  const PMHourRef = useRef<HTMLDivElement>(null);
   const minuteRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -180,9 +182,16 @@ function useSetReminder({ remindDate }: Props): ReturnType {
       });
     }
 
-    if (hourRef.current) {
-      hourRef.current.scrollTo({
-        top: (Number(checkedHour) - 1) * 22.5,
+    if (AMHourRef.current) {
+      AMHourRef.current.scrollTo({
+        top: Number(checkedHour) * 22.5,
+        behavior: "smooth",
+      });
+    }
+
+    if (PMHourRef.current) {
+      PMHourRef.current.scrollTo({
+        top: (Number(checkedHour) === 12 ? 0 : Number(checkedHour)) * 22.5,
         behavior: "smooth",
       });
     }
@@ -209,7 +218,8 @@ function useSetReminder({ remindDate }: Props): ReturnType {
       monthRef,
       dateRef,
       meridiemRef,
-      hourRef,
+      AMHourRef,
+      PMHourRef,
       minuteRef,
     },
     checkedState: {

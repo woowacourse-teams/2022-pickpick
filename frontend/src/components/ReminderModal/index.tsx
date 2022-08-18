@@ -8,7 +8,6 @@ import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 import useMutateReminder from "@src/hooks/useMutateReminder";
 import { getDateInformation } from "@src/@utils";
-import { useEffect } from "react";
 
 const generateDateTimeOptions = () => {
   const { year, month } = getDateInformation(new Date());
@@ -60,7 +59,15 @@ function ReminderModal({
   refetchFeed,
 }: Props) {
   const {
-    ref: { yearRef, monthRef, dateRef, meridiemRef, hourRef, minuteRef },
+    ref: {
+      yearRef,
+      monthRef,
+      dateRef,
+      meridiemRef,
+      AMHourRef,
+      PMHourRef,
+      minuteRef,
+    },
     checkedState: {
       checkedMeridiem,
       checkedHour,
@@ -178,7 +185,7 @@ function ReminderModal({
                   </Styled.TextOptionsWrapper>
 
                   {checkedMeridiem === "오전" && (
-                    <Styled.TextOptionsWrapper ref={hourRef}>
+                    <Styled.TextOptionsWrapper ref={AMHourRef}>
                       <DateTimePickerOptions
                         needZeroPaddingStart={true}
                         optionTexts={AMHours}
@@ -190,7 +197,7 @@ function ReminderModal({
                   )}
 
                   {checkedMeridiem === "오후" && (
-                    <Styled.TextOptionsWrapper ref={hourRef}>
+                    <Styled.TextOptionsWrapper ref={PMHourRef}>
                       <DateTimePickerOptions
                         needZeroPaddingStart={true}
                         optionTexts={PMHours}
