@@ -7,8 +7,8 @@ public class ExpiredTokenException extends BadRequestException {
     private static final String DEFAULT_MESSAGE = "만료된 토큰으로 요청";
     private static final String CLIENT_MESSAGE = "만료된 토큰입니다.";
 
-    public ExpiredTokenException() {
-        super(DEFAULT_MESSAGE);
+    public ExpiredTokenException(String token) {
+        super(String.format("%s -> token: %s", DEFAULT_MESSAGE, token));
     }
 
     @Override
