@@ -155,12 +155,10 @@ class MessageThreadBroadcastServiceTest {
         // then
         Optional<Message> messageAfterExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
-        assertAll(() -> {
-                    assertThat(messageBeforeExecute).isPresent();
-                    assertThat(messageAfterExecute).isPresent();
-                    assertThat(messageBeforeExecute.get().getText()).isNotEqualTo(messageAfterExecute.get().getText());
-                    assertThat(messageAfterExecute.get().getText()).isEqualTo("수정된 메시지 텍스트");
-                }
+        assertAll(
+                () -> assertThat(messageBeforeExecute.get().getText()).isNotEqualTo(
+                        messageAfterExecute.get().getText()),
+                () -> assertThat(messageAfterExecute.get().getText()).isEqualTo("수정된 메시지 텍스트")
         );
     }
 
