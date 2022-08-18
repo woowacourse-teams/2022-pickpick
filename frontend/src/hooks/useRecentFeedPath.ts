@@ -6,13 +6,16 @@ function useRecentFeedPath() {
   const { key, pathname } = useLocation();
   const { setItem: setRecentFeedPath, getItem: getRecentFeedPath } =
     useWebStorage<string>({
-      key: "default-feed-path",
+      key: "recent-feed-path",
       kind: STORAGE_KIND.SESSION,
     });
 
   useEffect(() => {
-    setRecentFeedPath(pathname);
-  }, [key, pathname]);
+    const name = pathname.split("/")[1];
+    if (name === "feed") {
+      setRecentFeedPath(pathname);
+    }
+  }, [pathname, key]);
 
   return { setRecentFeedPath, getRecentFeedPath };
 }
