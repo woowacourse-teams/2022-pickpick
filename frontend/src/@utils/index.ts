@@ -150,7 +150,3 @@ export const parsedOptionText = ({
 }): string => {
   return needZeroPaddingStart ? optionText.padStart(2, "0") : optionText;
 };
-
-// const isFeedPath = (path: string) => {
-
-// }
