@@ -1,6 +1,6 @@
 import * as Styled from "./style";
 import Calendar from "@public/assets/icons/Calendar.svg";
-import AlarmIcon from "@public/assets/icons/AlarmIcon-Active.svg";
+import ReminderIconActive from "@public/assets/icons/ReminderIcon-Active.svg";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
@@ -158,7 +158,7 @@ function ReminderModal({
                 )}분`}
                 handleToggleDropdown={handleToggleDropdown}
               >
-                <AlarmIcon width="16px" height="16px" fill="#8B8B8B" />
+                <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />
               </DateTimePickerToggle>
 
               {isDropdownOpened && (

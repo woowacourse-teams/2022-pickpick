@@ -1,9 +1,9 @@
 import * as Styled from "./style";
 import { PATH_NAME } from "@src/@constants";
 import MenuIcon from "@public/assets/icons/MenuIcon.svg";
-import StarIconUnfill from "@public/assets/icons/StarIcon-Unfill.svg";
-import HomeIconUnfill from "@public/assets/icons/HomeIcon-Unfill.svg";
-import AlarmIconInactive from "@public/assets/icons/AlarmIcon-Inactive.svg";
+import StarIcon from "@public/assets/icons/StarIcon.svg";
+import HomeIcon from "@public/assets/icons/HomeIcon.svg";
+import ReminderIconInactive from "@public/assets/icons/ReminderIcon-Inactive.svg";
 import InfoIcon from "@public/assets/icons/InfoIcon.svg";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import Dimmer from "@src/components/@shared/Dimmer";
@@ -62,7 +62,7 @@ function Navigation() {
       <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
         {({ isActive }) => {
           return (
-            <StarIconUnfill
+            <StarIcon
               width="24px"
               height="24px"
               fill={
@@ -78,7 +78,7 @@ function Navigation() {
       <WrapperLink to={getRecentFeedPath() ?? PATH_NAME.FEED} kind="bigIcon">
         {({ isActive }) => {
           return (
-            <HomeIconUnfill
+            <HomeIcon
               width="24px"
               height="24px"
               fill={
@@ -94,7 +94,7 @@ function Navigation() {
       <WrapperLink to={PATH_NAME.REMINDER} kind="bigIcon">
         {({ isActive }) => {
           return (
-            <AlarmIconInactive
+            <ReminderIconInactive
               width="24px"
               height="24px"
               fill={
