@@ -1,8 +1,8 @@
 package com.pickpick.slackevent.application.message;
 
+import com.pickpick.channel.application.ChannelService;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -10,10 +10,6 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.model.Conversation;
-import java.io.IOException;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,14 +28,14 @@ public class MessageThreadBroadcastService implements SlackEventService {
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
-    private final MethodsClient slackClient;
+    private final ChannelService channelService;
 
     public MessageThreadBroadcastService(final MessageRepository messages, final MemberRepository members,
-                                         final ChannelRepository channels, final MethodsClient slackClient) {
+                                         final ChannelRepository channels, final ChannelService channelService) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
-        this.slackClient = slackClient;
+        this.channelService = channelService;
     }
 
     @Override
@@ -80,27 +76,9 @@ public class MessageThreadBroadcastService implements SlackEventService {
         String channelSlackId = slackMessageDto.getChannelSlackId();
 
         Channel channel = channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> createChannel(channelSlackId));
+                .orElseGet(() -> channelService.createChannel(channelSlackId));
 
         messages.save(slackMessageDto.toEntity(member, channel));
-    }
-
-    private Channel createChannel(final String channelSlackId) {
-        try {
-            Conversation conversation = slackClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
-            ).getChannel();
-
-            Channel channel = toChannel(conversation);
-
-            return channels.save(channel);
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(e);
-        }
-    }
-
-    private Channel toChannel(final Conversation channel) {
-        return new Channel(channel.getId(), channel.getName());
     }
 
     @Override
