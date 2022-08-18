@@ -24,11 +24,13 @@ import ReminderModal from "@src/components/ReminderModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 function Feed() {
   const { channelId } = useParams();
   const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
+  useRecentFeedPath();
 
   const {
     reminderTarget,

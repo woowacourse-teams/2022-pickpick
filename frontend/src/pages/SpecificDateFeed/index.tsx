@@ -25,11 +25,13 @@ import ReminderModal from "@src/components/ReminderModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
+  useRecentFeedPath();
 
   const {
     reminderTarget,
@@ -97,7 +99,11 @@ function SpecificDateFeed() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
+      <SearchForm
+        currentChannelIds={
+          channelId && channelId !== "main" ? [Number(channelId)] : []
+        }
+      />
 
       <InfiniteScroll
         callback={fetchNextPage}

@@ -8,6 +8,7 @@ import { deleteCookie, setCookie } from "@src/@utils";
 import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useSnackbar from "@src/hooks/useSnackbar";
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 interface ReturnType {
   login: (token: string, isFirstLogin: boolean) => void;
@@ -18,6 +19,7 @@ function useAuthentication(): ReturnType {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openSuccessSnackbar } = useSnackbar();
+  const { setRecentFeedPath } = useRecentFeedPath();
 
   const login = (token: string, isFirstLogin: boolean) => {
     setCookie(ACCESS_TOKEN_KEY, token);
@@ -31,6 +33,7 @@ function useAuthentication(): ReturnType {
   };
 
   const logout = () => {
+    setRecentFeedPath("");
     deleteCookie(ACCESS_TOKEN_KEY);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
     navigate(PATH_NAME.HOME);

@@ -8,8 +8,8 @@ public class SubscriptionInvalidOrderException extends BadRequestException {
     private static final String DEFAULT_MESSAGE = "구독 순서에 0 이하의 수 입력";
     private static final String CLIENT_MESSAGE = "구독 순서는 1 이상이여야합니다.";
 
-    public SubscriptionInvalidOrderException() {
-        super(DEFAULT_MESSAGE);
+    public SubscriptionInvalidOrderException(int order) {
+        super(String.format("%s -> order: %d", DEFAULT_MESSAGE, order));
     }
 
     @Override
