@@ -98,6 +98,62 @@ class ReminderServiceTest {
         return reminderService.find(new ReminderFindRequest(null, null), member.getId()).getReminders().size();
     }
 
+    @DisplayName("리마인더 단건 조회")
+    @Test
+    void findOneReminder() {
+        // given
+        Long memberId = 2L;
+        Long messageId = 1L;
+
+        // when
+        ReminderResponse reminder = reminderService.findOne(messageId, memberId);
+
+        // then
+        assertAll(
+                () -> assertThat(reminder.getId()).isEqualTo(1L),
+                () -> assertThat(reminder.getRemindDate()).isEqualTo(LocalDateTime.of(2022, 8, 12, 14, 20))
+        );
+    }
+
+    @DisplayName("리마인더가 존재하지 않는 메시지를 단건 조회할 경우 예외 발생")
+    @Test
+    void findNotExistOneThenThrowException() {
+        // given
+        Long memberId = 2L;
+        Long messageId = 20L;
+
+        // when & then
+        assertThatThrownBy(() -> reminderService.findOne(messageId, memberId))
+                .isInstanceOf(ReminderNotFoundException.class);
+    }
+
+    @DisplayName("리마인더 목록 조회")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("parameterProvider")
+    void findReminders(final String subscription, final Long reminderId, final Long memberId,
+                       final List<Long> expectedIds, final boolean expectedIsLast) {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(reminderId, null), memberId);
+
+        // then
+        List<Long> ids = convertToIds(response);
+        assertAll(
+                () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
+                () -> assertThat(response.isLast()).isEqualTo(expectedIsLast)
+        );
+    }
+
+    private List<Long> convertToIds(final ReminderResponses response) {
+        return response.getReminders()
+                .stream()
+                .map(ReminderResponse::getId)
+                .collect(Collectors.toList());
+    }
+
     @DisplayName("리마인더 조회 시 count가 없으면 default 값을 20으로 세팅")
     @Test
     void findRemindersByDefaultCount() {
@@ -192,61 +248,27 @@ class ReminderServiceTest {
         );
     }
 
-    @DisplayName("리마인더 단건 조회")
+    @DisplayName("리마인더가 날짜 + ID 순으로 올바르게 조회되는지 확인한다")
     @Test
-    void findOneReminder() {
-        // given
-        Long memberId = 2L;
-        Long messageId = 1L;
-
-        // when
-        ReminderResponse reminder = reminderService.findOne(messageId, memberId);
-
-        // then
-        assertAll(
-                () -> assertThat(reminder.getId()).isEqualTo(1L),
-                () -> assertThat(reminder.getRemindDate()).isEqualTo(LocalDateTime.of(2022, 8, 12, 14, 20))
-        );
-    }
-
-    @DisplayName("리마인더가 존재하지 않는 메시지를 단건 조회할 경우 예외 발생")
-    @Test
-    void findNotExistOneThenThrowException() {
-        // given
-        Long memberId = 2L;
-        Long messageId = 20L;
-
-        // when & then
-        assertThatThrownBy(() -> reminderService.findOne(messageId, memberId))
-                .isInstanceOf(ReminderNotFoundException.class);
-    }
-
-    @DisplayName("리마인더 목록 조회")
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("parameterProvider")
-    void findReminders(final String subscription, final Long reminderId, final Long memberId,
-                       final List<Long> expectedIds, final boolean expectedIsLast) {
+    void findRemindersOrderByDateAndId() {
         // given
         given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+                .willReturn(Instant.parse("2023-06-07T15:20:00Z"));
+        int count = 7;
 
         // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(reminderId, null), memberId);
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 3L);
 
         // then
-        List<Long> ids = convertToIds(response);
+        int size = response.getReminders().size();
         assertAll(
-                () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
-                () -> assertThat(response.isLast()).isEqualTo(expectedIsLast)
+                () -> assertThat(size).isEqualTo(count),
+                () -> assertThat(response.isLast()).isTrue(),
+                () -> assertThat(response.getReminders()).extracting("id")
+                        .containsExactly(31L, 29L, 30L, 25L, 26L, 27L, 28L)
         );
     }
 
-    private List<Long> convertToIds(final ReminderResponses response) {
-        return response.getReminders()
-                .stream()
-                .map(ReminderResponse::getId)
-                .collect(Collectors.toList());
-    }
 
     @DisplayName("오늘 날짜보다 더 오래된 날짜에 리마인드한 내역은 조회되지 않는다.")
     @Test
