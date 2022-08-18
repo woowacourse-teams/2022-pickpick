@@ -18,11 +18,13 @@ import useAuthentication from "@src/hooks/useAuthentication";
 import { useTheme } from "styled-components";
 import { Theme } from "@src/@types/shared";
 import useGetSubscribedChannels from "@src/hooks/useGetSubscribedChannels";
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 function Navigation() {
   const { pathname } = useLocation();
   const { logout } = useAuthentication();
   const theme = useTheme() as Theme;
+  const { getRecentFeedPath } = useRecentFeedPath();
 
   const { data, refetch } = useGetSubscribedChannels();
 
@@ -69,7 +71,7 @@ function Navigation() {
         }}
       </WrapperLink>
 
-      <WrapperLink to={PATH_NAME.FEED} kind="bigIcon">
+      <WrapperLink to={getRecentFeedPath() ?? PATH_NAME.FEED} kind="bigIcon">
         {({ isActive }) => {
           return (
             <HomeIconUnfill
