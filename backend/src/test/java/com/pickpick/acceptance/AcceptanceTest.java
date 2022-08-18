@@ -36,7 +36,7 @@ public class AcceptanceTest {
     }
 
     @AfterEach
-    void clear() {
+    void tearDown() {
         databaseCleaner.clear();
     }
 
