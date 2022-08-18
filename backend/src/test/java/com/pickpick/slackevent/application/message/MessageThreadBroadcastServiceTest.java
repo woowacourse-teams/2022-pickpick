@@ -28,11 +28,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 
-@Transactional
+@Sql("/truncate.sql")
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
+
     private static final int FIRST_INDEX = 0;
     private final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
     private final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
@@ -131,7 +132,7 @@ class MessageThreadBroadcastServiceTest {
         );
     }
 
-    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 subtype이 message_changed인 요청이 왔을 경우, DB에 저장되어 있는 메시지라면 저장하지 않는다")
+    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 subtype이 message_changed인 요청이 왔을 경우, DB에 저장되어 있는 메시지라면 수정한다.")
     @Test
     void notSave() {
         // given
@@ -145,7 +146,7 @@ class MessageThreadBroadcastServiceTest {
                 SAMPLE_MESSAGE.getSlackId(),
                 "1234567890",
                 "1234567890",
-                "messageText",
+                "수정된 메시지 텍스트",
                 SAMPLE_CHANNEL.getSlackId());
 
         // when
@@ -154,12 +155,12 @@ class MessageThreadBroadcastServiceTest {
         // then
         Optional<Message> messageAfterExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
-        assertAll(
-                () -> assertThat(messageBeforeExecute).isPresent(),
-                () -> assertThat(messageBeforeExecute.get())
-                        .usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(messageAfterExecute.get())
+        assertAll(() -> {
+                    assertThat(messageBeforeExecute).isPresent();
+                    assertThat(messageAfterExecute).isPresent();
+                    assertThat(messageBeforeExecute.get().getText()).isNotEqualTo(messageAfterExecute.get().getText());
+                    assertThat(messageAfterExecute.get().getText()).isEqualTo("수정된 메시지 텍스트");
+                }
         );
     }
 
