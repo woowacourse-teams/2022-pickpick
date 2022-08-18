@@ -22,7 +22,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/reminder.sql"})
+@Sql({"/reminder.sql"})
 @DisplayName("리마인더 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class ReminderAcceptanceTest extends AcceptanceTest {

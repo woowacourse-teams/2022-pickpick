@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@Sql({"/truncate.sql", "/reminder.sql"})
+@Sql({"/reminder.sql"})
 public class ReminderControllerTest extends RestDocsTestSupport {
 
     private static final String REMINDER_API_URL = "/api/reminders";

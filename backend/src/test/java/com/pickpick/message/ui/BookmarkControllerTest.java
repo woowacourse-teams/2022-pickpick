@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@Sql({"/truncate.sql", "/bookmark.sql"})
+@Sql({"/bookmark.sql"})
 public class BookmarkControllerTest extends RestDocsTestSupport {
 
     private static final String BOOKMARK_API_URL = "/api/bookmarks";

@@ -19,7 +19,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/channel.sql", "/channel-subscription.sql"})
+@Sql({"/channel.sql", "/channel-subscription.sql"})
 class ChannelControllerTest extends RestDocsTestSupport {
 
     @MockBean

@@ -24,7 +24,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 
-@Sql({"/truncate.sql", "/message.sql"})
+@Sql({"/message.sql"})
 class MessageControllerTest extends RestDocsTestSupport {
 
     @MockBean

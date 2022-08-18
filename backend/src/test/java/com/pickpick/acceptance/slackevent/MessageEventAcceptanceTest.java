@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/message.sql"})
+@Sql({"/message.sql"})
 @DisplayName("메시지 이벤트 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MessageEventAcceptanceTest extends AcceptanceTest {

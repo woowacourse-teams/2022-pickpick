@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/bookmark.sql"})
+@Sql({"/bookmark.sql"})
 @DisplayName("북마크 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class BookmarkAcceptanceTest extends AcceptanceTest {
