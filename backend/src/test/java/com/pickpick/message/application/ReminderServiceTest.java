@@ -16,10 +16,10 @@ import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -127,6 +127,69 @@ class ReminderServiceTest {
         // then
         int size = response.getReminders().size();
         assertThat(size).isEqualTo(count);
+    }
+
+    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하면 isLast가 false 이다.")
+    @Test
+    void findSameDayReminder() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2023-07-07T15:20:00Z"));
+        int count = 2;
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 3L);
+
+        // then
+        int size = response.getReminders().size();
+        assertAll(
+                () -> assertThat(size).isEqualTo(count),
+                () -> assertThat(response.isLast()).isFalse(),
+                () -> assertThat(response.getReminders()).extracting("id")
+                        .containsExactly(29L, 30L)
+        );
+    }
+
+    @DisplayName("리마인더 조회 해당 날의 reminder의 개수보다 적은 COUNT로 조회할 경우 isLast가 false이다.")
+    @Test
+    void findSameDayReminderByCount() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2023-08-07T15:20:00Z"));
+        int count = 2;
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 3L);
+
+        // then
+        int size = response.getReminders().size();
+        assertAll(
+                () -> assertThat(size).isEqualTo(count),
+                () -> assertThat(response.isLast()).isFalse(),
+                () -> assertThat(response.getReminders()).extracting("id")
+                        .containsExactly(25L, 26L)
+        );
+    }
+
+    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하지 않으면 isLast가 true 이다.")
+    @Test
+    void findSameDayReminderByCountAndReminderId() {
+        // given
+        given(clock.instant())
+                .willReturn(Instant.parse("2023-08-07T15:20:00Z"));
+        int count = 2;
+
+        // when
+        ReminderResponses response = reminderService.find(new ReminderFindRequest(26L, count), 3L);
+
+        // then
+        int size = response.getReminders().size();
+        assertAll(
+                () -> assertThat(size).isEqualTo(count),
+                () -> assertThat(response.isLast()).isTrue(),
+                () -> assertThat(response.getReminders()).extracting("id")
+                        .containsExactly(27L, 28L)
+        );
     }
 
     @DisplayName("리마인더 단건 조회")
