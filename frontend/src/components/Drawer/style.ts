@@ -1,6 +1,10 @@
 import styled, { css } from "styled-components";
 import { StyledDefaultProps } from "@src/@types/shared";
 
+interface ChannelNameStyledProps extends StyledDefaultProps {
+  isActive: boolean;
+}
+
 export const Container = styled.div`
   position: fixed;
   top: 0;
@@ -29,15 +33,19 @@ export const Hr = styled.hr`
 export const Title = styled.h1`
   font-weight: bold;
 
-  ${({ theme }) => css`
+  ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.LARGE_BODY};
   `}
 `;
 
 export const ChannelName = styled.p`
-  ${({ theme }) => css`
+  padding: 2px 4px;
+
+  ${({ theme, isActive }: ChannelNameStyledProps) => css`
     font-size: ${theme.FONT_SIZE.LARGE_BODY};
-  `}
+    background: ${isActive ? "rgb(248, 248, 248)" : "inherit"};
+    background: ${isActive ? theme.COLOR.CONTAINER.GRADIENT_ORANGE : "inherit"};
+  `};
 `;
 
 export const ThemeTogglerContainer = styled.div`

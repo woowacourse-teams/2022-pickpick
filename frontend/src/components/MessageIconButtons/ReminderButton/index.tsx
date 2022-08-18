@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 import { FlexRow } from "@src/@styles/shared";
 import IconButton from "@src/components/@shared/IconButton";
 import * as Styled from "../style";
-import AlarmIconActive from "@public/assets/icons/AlarmIcon-Active.svg";
+import ReminderIconActive from "@public/assets/icons/ReminderIcon-Active.svg";
 
 interface Props {
   isActive: boolean;
@@ -19,7 +19,7 @@ function ReminderButton({ isActive, onClick }: Props) {
     >
       <FlexRow justifyContent="center" alignItems="center" gap="5px">
         <Styled.ButtonText>리마인더</Styled.ButtonText>
-        <AlarmIconActive width="12px" height="12px" fill="#ffffff" />
+        <ReminderIconActive width="12px" height="12px" fill="#ffffff" />
       </FlexRow>
     </IconButton>
   );
