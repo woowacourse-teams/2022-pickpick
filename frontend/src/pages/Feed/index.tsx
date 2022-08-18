@@ -67,6 +67,12 @@ function Feed() {
 
   const parsedData = extractResponseMessages(data);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, [queryKey]);
+
   return (
     <Styled.Container>
       <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />

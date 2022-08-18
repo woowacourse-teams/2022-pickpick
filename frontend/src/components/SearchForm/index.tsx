@@ -27,32 +27,33 @@ function SearchForm({ currentKeyword, currentChannelIds }: Props) {
   return (
     <Dropdown>
       {({ innerRef, isDropdownOpened, handleOpenDropdown }) => (
-        <Styled.Container
-          ref={innerRef}
-          onSubmit={handleSubmitSearchKeyword(selectedChannelIds)}
-        >
-          <SearchInput
-            placeholder="검색 할 키워드를 입력해주세요."
-            onFocus={handleOpenDropdown}
-            onChange={handleChangeSearchKeyword}
-            value={searchKeyword}
+        <div ref={innerRef}>
+          <Styled.Container
+            onSubmit={handleSubmitSearchKeyword(selectedChannelIds)}
           >
-            {allChannels && isDropdownOpened && (
-              <SearchOptions
-                allChannels={allChannels}
-                currentChannels={allChannels.filter(({ id }) =>
-                  currentChannelIds.includes(id)
-                )}
-                remainingChannels={allChannels.filter(
-                  ({ id }) => !currentChannelIds.includes(id)
-                )}
-                selectedChannelIds={selectedChannelIds}
-                handleToggleChannel={handleToggleChannel}
-                handleToggleAllChannels={handleToggleAllChannels}
-              />
-            )}
-          </SearchInput>
-        </Styled.Container>
+            <SearchInput
+              placeholder="검색 할 키워드를 입력해주세요."
+              onFocus={handleOpenDropdown}
+              onChange={handleChangeSearchKeyword}
+              value={searchKeyword}
+            >
+              {allChannels && isDropdownOpened && (
+                <SearchOptions
+                  allChannels={allChannels}
+                  currentChannels={allChannels.filter(({ id }) =>
+                    currentChannelIds.includes(id)
+                  )}
+                  remainingChannels={allChannels.filter(
+                    ({ id }) => !currentChannelIds.includes(id)
+                  )}
+                  selectedChannelIds={selectedChannelIds}
+                  handleToggleChannel={handleToggleChannel}
+                  handleToggleAllChannels={handleToggleAllChannels}
+                />
+              )}
+            </SearchInput>
+          </Styled.Container>
+        </div>
       )}
     </Dropdown>
   );

@@ -84,14 +84,14 @@ function SpecificDateFeed() {
     handleSettle: refetch,
   });
 
+  const parsedData = extractResponseMessages(data);
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }, [queryKey]);
-
-  const parsedData = extractResponseMessages(data);
 
   return (
     <Styled.Container

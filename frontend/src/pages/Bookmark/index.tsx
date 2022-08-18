@@ -12,6 +12,7 @@ import { getBookmarks } from "@src/api/bookmarks";
 import useBookmark from "@src/hooks/useBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
+import { useEffect } from "react";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
@@ -28,6 +29,12 @@ function Bookmark() {
   });
 
   const parsedData = extractResponseBookmarks(data);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, []);
 
   return (
     <Styled.Container>
