@@ -65,8 +65,6 @@ function Feed() {
 
   const parsedData = extractResponseMessages(data);
 
-  console.log(parsedData);
-
   return (
     <Styled.Container>
       <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
