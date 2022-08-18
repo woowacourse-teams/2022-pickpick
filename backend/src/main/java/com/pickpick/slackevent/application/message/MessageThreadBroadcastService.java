@@ -70,10 +70,6 @@ public class MessageThreadBroadcastService implements SlackEventService {
                 );
     }
 
-    private boolean isNewMessage(final SlackMessageDto slackMessageDto) {
-        return messages.findBySlackId(slackMessageDto.getSlackId()).isEmpty();
-    }
-
     private void save(final SlackMessageDto slackMessageDto) {
         String memberSlackId = slackMessageDto.getMemberSlackId();
         Member member = members.findBySlackId(memberSlackId)
