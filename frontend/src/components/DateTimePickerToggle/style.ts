@@ -8,7 +8,6 @@ export const Container = styled.div`
   border-radius: 4px;
   padding: 2px 6px;
   cursor: pointer;
-  z-index: 1;
 
   ${({ theme }: StyledDefaultProps) => css`
     border: 1px solid ${theme.COLOR.BACKGROUND.TERTIARY};
