@@ -8,6 +8,7 @@ import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 import useMutateReminder from "@src/hooks/useMutateReminder";
 import { getDateInformation } from "@src/@utils";
+import { useEffect } from "react";
 
 const generateDateTimeOptions = () => {
   const { year, month } = getDateInformation(new Date());
@@ -22,9 +23,12 @@ const generateDateTimeOptions = () => {
   );
 
   const meridiems = ["오전", "오후"];
-  const hours = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
-  );
+  const AMHours = Array.from({ length: 12 }, (_, index) => index.toString());
+  const PMHours = Array.from({ length: 12 }, (_, index) => {
+    if (index === 0) return "12";
+
+    return index.toString();
+  });
   const minutes = Array.from({ length: 6 }, (_, index) =>
     (index * 10).toString()
   );
@@ -34,7 +38,8 @@ const generateDateTimeOptions = () => {
     months,
     dates,
     meridiems,
-    hours,
+    AMHours,
+    PMHours,
     minutes,
   };
 };
@@ -80,7 +85,7 @@ function ReminderModal({
   const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
 
-  const { years, months, dates, meridiems, hours, minutes } =
+  const { years, months, dates, meridiems, AMHours, PMHours, minutes } =
     generateDateTimeOptions();
 
   return (
@@ -172,15 +177,29 @@ function ReminderModal({
                     />
                   </Styled.TextOptionsWrapper>
 
-                  <Styled.TextOptionsWrapper ref={hourRef}>
-                    <DateTimePickerOptions
-                      needZeroPaddingStart={true}
-                      optionTexts={hours}
-                      unit="시"
-                      checkedText={checkedHour}
-                      handleChangeText={handleChangeHour}
-                    />
-                  </Styled.TextOptionsWrapper>
+                  {checkedMeridiem === "오전" && (
+                    <Styled.TextOptionsWrapper ref={hourRef}>
+                      <DateTimePickerOptions
+                        needZeroPaddingStart={true}
+                        optionTexts={AMHours}
+                        unit="시"
+                        checkedText={checkedHour}
+                        handleChangeText={handleChangeHour}
+                      />
+                    </Styled.TextOptionsWrapper>
+                  )}
+
+                  {checkedMeridiem === "오후" && (
+                    <Styled.TextOptionsWrapper ref={hourRef}>
+                      <DateTimePickerOptions
+                        needZeroPaddingStart={true}
+                        optionTexts={PMHours}
+                        unit="시"
+                        checkedText={checkedHour}
+                        handleChangeText={handleChangeHour}
+                      />
+                    </Styled.TextOptionsWrapper>
+                  )}
 
                   <Styled.TextOptionsWrapper ref={minuteRef}>
                     <DateTimePickerOptions
