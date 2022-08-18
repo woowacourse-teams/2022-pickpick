@@ -42,7 +42,7 @@ function SearchResult() {
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useInfiniteQuery<ResponseMessages, CustomError>(
-      QUERY_KEY.ALL_MESSAGES,
+      [QUERY_KEY.ALL_MESSAGES, keyword, channelIds],
       getMessages({
         channelId: convertSeparatorToKey({
           key: "&channelIds=",
