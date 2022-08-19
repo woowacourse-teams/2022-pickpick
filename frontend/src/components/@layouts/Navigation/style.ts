@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.nav`
@@ -9,13 +9,16 @@ export const Container = styled.nav`
   display: flex;
   justify-content: space-around;
   padding: 5px;
-  z-index: 1;
-  background-color: ${({ theme }: StyledDefaultProps) =>
-    `${theme.COLOR.BACKGROUND.SECONDARY}`};
+  z-index: 999;
+
+  ${({ theme }: StyledDefaultProps) => css`
+    background-color: ${theme.COLOR.BACKGROUND.SECONDARY}};
+  `}
 `;
 
 export const LogoutButtonContainer = styled.div`
   position: fixed;
   bottom: 90px;
   right: 10px;
+  z-index: 2;
 `;

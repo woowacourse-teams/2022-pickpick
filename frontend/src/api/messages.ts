@@ -1,7 +1,7 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseMessages } from "@src/@types/shared";
 import { fetcher } from ".";
-import { getPrivateHeaders } from "./utils";
+import { getPrivateHeaders } from "@src/api/utils";
 
 interface PageParam {
   messageId: string;
@@ -12,6 +12,7 @@ interface PageParam {
 interface HighOrderParam {
   date?: string;
   channelId?: string;
+  keyword?: string;
 }
 
 interface ReturnFunctionParam {
@@ -19,15 +20,21 @@ interface ReturnFunctionParam {
 }
 
 export const getMessages =
-  ({ date = "", channelId = "" }: HighOrderParam) =>
+  ({ date = "", channelId = "", keyword = "" }: HighOrderParam) =>
   async ({ pageParam }: ReturnFunctionParam) => {
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
           !channelId || channelId === "main" ? "" : channelId
-        }&messageId=&needPastMessage=${true}&date=${date ?? ""}`,
+        }`,
         {
           headers: { ...getPrivateHeaders() },
+          params: {
+            keyword: keyword ?? "",
+            messageId: "",
+            needPastMessage: true,
+            date: date ?? "",
+          },
         }
       );
 
@@ -43,9 +50,15 @@ export const getMessages =
     const { data } = await fetcher.get<ResponseMessages>(
       `${API_ENDPOINT.MESSAGES}?channelIds=${
         !channelId || channelId === "main" ? "" : channelId
-      }&messageId=${messageId}&needPastMessage=${needPastMessage}&date=${currentDate}`,
+      }`,
       {
         headers: { ...getPrivateHeaders() },
+        params: {
+          keyword,
+          messageId,
+          needPastMessage,
+          date: currentDate,
+        },
       }
     );
 

@@ -1,14 +1,14 @@
+import { PropsWithChildren, ButtonHTMLAttributes } from "react";
 import * as Styled from "./style";
 
 export type Kind = "bigIcon" | "smallIcon" | "text";
 
-export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: JSX.Element | string;
+export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   kind: Kind;
   isFuture?: boolean;
 }
 
-function WrapperButton({ children, ...props }: Props) {
+function WrapperButton({ children, ...props }: PropsWithChildren<Props>) {
   return <Styled.Container {...props}>{children}</Styled.Container>;
 }
 

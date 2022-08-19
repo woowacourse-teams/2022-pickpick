@@ -9,6 +9,7 @@ export const Container = styled.ul`
   position: absolute;
   top: 22px;
   left: 0;
+  z-index: 1;
 
   ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.CONTAINER.DEFAULT};

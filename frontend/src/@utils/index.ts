@@ -2,25 +2,28 @@ import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
 import {
   Bookmark,
   Message,
+  Reminder,
   ResponseBookmarks,
   ResponseMessages,
+  ResponseReminders,
 } from "@src/@types/shared";
 import { InfiniteData } from "react-query";
 
-export const getTimeStandard = (time: number): string => {
-  if (time < TIME.NOON) return `${TIME.AM} ${time}`;
-  if (time === TIME.NOON) return `${TIME.PM} ${TIME.NOON}`;
+export const getMeridiemTime = (time: number) => {
+  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time.toString() };
+  if (time === TIME.NOON)
+    return { meridiem: TIME.PM, hour: TIME.NOON.toString() };
 
-  return `${TIME.PM} ${time - TIME.NOON}`;
+  return { meridiem: TIME.PM, hour: (time - TIME.NOON).toString() };
 };
 
 export const parseTime = (date: string): string => {
   const dateInstance = new Date(date);
   const hour = dateInstance.getHours();
   const minute = dateInstance.getMinutes();
-  const timeStandard = getTimeStandard(Number(hour));
+  const { meridiem, hour: parsedHour } = getMeridiemTime(Number(hour));
 
-  return `${timeStandard}:${minute}`;
+  return `${meridiem} ${parsedHour}:${minute.toString().padStart(2, "0")}`;
 };
 
 export const extractResponseMessages = (
@@ -39,6 +42,14 @@ export const extractResponseBookmarks = (
   return data.pages.flatMap((arr) => arr.bookmarks);
 };
 
+export const extractResponseReminders = (
+  data?: InfiniteData<ResponseReminders>
+): Reminder[] => {
+  if (!data) return [];
+
+  return data.pages.flatMap((arr) => arr.reminders);
+};
+
 export const setCookie = (key: string, value: string) => {
   document.cookie = `${key}=${value};`;
 };
@@ -54,7 +65,7 @@ export const deleteCookie = (key: string) => {
   document.cookie = key + "=; Max-Age=0";
 };
 
-export const ISOConverter = (date: string): string => {
+export const ISOConverter = (date: string, time?: string): string => {
   const today = new Date();
 
   if (date === DATE.TODAY) {
@@ -69,19 +80,30 @@ export const ISOConverter = (date: string): string => {
 
   const [year, month, day] = date.split("-");
 
+  if (time) {
+    const [hour, minute] = time.split(":");
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )}${`T${hour.padStart(2, "0")}:${minute.padStart(2, "0")}:00`}`;
+  }
+
   return `${year}-${month.padStart(2, "0")}-${day.padStart(
     2,
     "0"
   )}${CONVERTER_SUFFIX}`;
 };
 
-const getDateInformation = (givenDate: Date) => {
+export const getDateInformation = (givenDate: Date) => {
   const year = givenDate.getFullYear();
   const month = givenDate.getMonth() + 1;
   const date = givenDate.getDate();
   const day = DAY[givenDate.getDay()];
+  const hour = givenDate.getHours();
+  const minute = givenDate.getMinutes();
 
-  return { year, month, date, day };
+  return { year, month, date, day, hour, minute };
 };
 
 export const getMessagesDate = (postedDate: string): string => {
@@ -101,4 +123,30 @@ export const getMessagesDate = (postedDate: string): string => {
     return DATE.YESTERDAY;
 
   return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
+};
+
+export const convertSeparatorToKey = ({
+  value,
+  separator,
+  key,
+}: {
+  value: string;
+  separator: string;
+  key: string;
+}) => {
+  if (value.search(separator) === -1) {
+    return value;
+  }
+  // eslint-disable-next-line
+  return value.replace(/\,/g, key);
+};
+
+export const parsedOptionText = ({
+  needZeroPaddingStart,
+  optionText,
+}: {
+  needZeroPaddingStart: boolean;
+  optionText: string;
+}): string => {
+  return needZeroPaddingStart ? optionText.padStart(2, "0") : optionText;
 };

@@ -3,7 +3,8 @@ package com.pickpick.auth.support;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.pickpick.exception.InvalidTokenException;
+import com.pickpick.exception.auth.ExpiredTokenException;
+import com.pickpick.exception.auth.InvalidTokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,14 +33,14 @@ class JwtTokenProviderTest {
     void validateExpiredToken() {
         // given
         long memberId = 1L;
-        JwtTokenProvider expiredTokenProvider = new JwtTokenProvider("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno",
+        JwtTokenProvider expiredTokenProvider = new JwtTokenProvider(
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno",
                 0);
         String token = expiredTokenProvider.createToken(String.valueOf(memberId));
 
         // when & then
         assertThatThrownBy(() -> expiredTokenProvider.validateToken(token))
-                .isInstanceOf(InvalidTokenException.class)
-                .hasMessageContaining("만료된 토큰입니다.");
+                .isInstanceOf(ExpiredTokenException.class);
     }
 
     @DisplayName("유효하지 않은 토큰 검증")
@@ -50,8 +51,7 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
-                .isInstanceOf(InvalidTokenException.class)
-                .hasMessageContaining("유효하지 않은 토큰입니다.");
+                .isInstanceOf(InvalidTokenException.class);
     }
 
     @DisplayName("다른 시그니쳐로 생성된 토큰 검증")
@@ -64,7 +64,6 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
-                .isInstanceOf(InvalidTokenException.class)
-                .hasMessageContaining("유효하지 않은 토큰입니다.");
+                .isInstanceOf(InvalidTokenException.class);
     }
 }

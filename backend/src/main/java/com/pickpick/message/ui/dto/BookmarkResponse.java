@@ -11,6 +11,7 @@ import lombok.Getter;
 public class BookmarkResponse {
 
     private Long id;
+    private Long messageId;
     private Long memberId;
     private String username;
     private String userThumbnail;
@@ -22,6 +23,7 @@ public class BookmarkResponse {
     }
 
     public BookmarkResponse(final Long id,
+                            final Long messageId,
                             final Long memberId,
                             final String username,
                             final String userThumbnail,
@@ -29,6 +31,7 @@ public class BookmarkResponse {
                             final LocalDateTime postedDate,
                             final LocalDateTime modifiedDate) {
         this.id = id;
+        this.messageId = messageId;
         this.memberId = memberId;
         this.username = username;
         this.userThumbnail = userThumbnail;
@@ -42,6 +45,7 @@ public class BookmarkResponse {
 
         return BookmarkResponse.builder()
                 .id(bookmark.getId())
+                .messageId(message.getId())
                 .memberId(message.getMember().getId())
                 .username(message.getMember().getUsername())
                 .userThumbnail(message.getMember().getThumbnailUrl())

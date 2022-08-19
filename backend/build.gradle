@@ -4,6 +4,8 @@ plugins {
     id 'java'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id "org.sonarqube" version "3.4.0.2513"
+    id "jacoco"
 }
 
 group = 'com.pickpick'
@@ -23,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -34,6 +37,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
@@ -43,6 +47,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
+    testImplementation 'org.mockito:mockito-inline'
+    testImplementation 'org.mockito:mockito-core'
 
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
@@ -54,6 +60,7 @@ ext {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
 
 asciidoctor {
@@ -91,13 +98,32 @@ tasks.named('test') {
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
+
 querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
+
 sourceSets {
     main.java.srcDir querydslDir
 }
+
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "woowacourse-teams_2022-pickpick_AYKprLeNXDQxKhlck1fc"
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
 }

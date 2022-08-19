@@ -3,86 +3,102 @@ import { PATH_NAME } from "@src/@constants";
 import LayoutContainer from "@src/components/@layouts/LayoutContainer";
 import {
   AddChannel,
-  Alarm,
   Bookmark,
+  Reminder,
   Feed,
   SpecificDateFeed,
   Home,
   Certification,
+  SearchResult,
 } from "./pages";
 import PrivateRouter from "@src/components/PrivateRouter";
 import PublicRouter from "@src/components/PublicRouter";
 
 const routes = [
   {
+    path: "",
+    element: (
+      <PublicRouter>
+        <LayoutContainer>
+          <Home />
+        </LayoutContainer>
+      </PublicRouter>
+    ),
+  },
+  {
     path: PATH_NAME.HOME,
-    element: <LayoutContainer />,
+    element: <PrivateRouter />,
     children: [
-      {
-        path: "",
-        element: (
-          <PublicRouter>
-            <Home />
-          </PublicRouter>
-        ),
-      },
       {
         path: PATH_NAME.ADD_CHANNEL,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <AddChannel />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: PATH_NAME.ALARM,
-        element: (
-          <PrivateRouter>
-            <Alarm />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: PATH_NAME.BOOKMARK,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Bookmark />
-          </PrivateRouter>
+          </LayoutContainer>
+        ),
+      },
+      {
+        path: PATH_NAME.REMINDER,
+        element: (
+          <LayoutContainer>
+            <Reminder />
+          </LayoutContainer>
         ),
       },
       {
         path: PATH_NAME.FEED,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Feed />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: `${PATH_NAME.FEED}/:channelId`,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <Feed />
-          </PrivateRouter>
+          </LayoutContainer>
         ),
       },
       {
         path: `${PATH_NAME.FEED}/:channelId/:date`,
         element: (
-          <PrivateRouter>
+          <LayoutContainer>
             <SpecificDateFeed />
-          </PrivateRouter>
+          </LayoutContainer>
+        ),
+      },
+
+      {
+        path: PATH_NAME.SEARCH_RESULT,
+        element: (
+          <LayoutContainer>
+            <SearchResult />
+          </LayoutContainer>
         ),
       },
       {
-        path: PATH_NAME.CERTIFICATION,
-        element: <Certification />,
-      },
-      {
         path: "*",
-        element: <NotFound />,
+        element: (
+          <LayoutContainer>
+            <NotFound />
+          </LayoutContainer>
+        ),
       },
     ],
+  },
+  {
+    path: PATH_NAME.CERTIFICATION,
+    element: <Certification />,
   },
 ];
 

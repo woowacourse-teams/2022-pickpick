@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, WheelEventHandler, TouchEventHandler } from "react";
 
 interface Props {
   isCallable?: boolean;
@@ -9,9 +9,9 @@ interface Props {
 }
 
 interface ReturnType {
-  onWheel: (event: React.WheelEvent<HTMLDivElement>) => void;
-  onTouchStart: (event: React.TouchEvent<HTMLDivElement>) => void;
-  onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => void;
+  onWheel: WheelEventHandler<HTMLDivElement>;
+  onTouchStart: TouchEventHandler<HTMLDivElement>;
+  onTouchEnd: TouchEventHandler<HTMLDivElement>;
 }
 
 function useTopScreenEventHandler({

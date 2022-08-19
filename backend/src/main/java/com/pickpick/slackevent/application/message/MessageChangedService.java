@@ -1,6 +1,6 @@
 package com.pickpick.slackevent.application.message;
 
-import com.pickpick.exception.MessageNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -21,10 +21,14 @@ public class MessageChangedService implements SlackEventService {
     private static final String CLIENT_MSG_ID = "client_msg_id";
     private static final String CHANNEL = "channel";
     private static final String MESSAGE = "message";
+    private static final String SUBTYPE = "subtype";
 
+    private final MessageThreadBroadcastService messageThreadBroadcastService;
     private final MessageRepository messages;
 
-    public MessageChangedService(final MessageRepository messages) {
+    public MessageChangedService(final MessageThreadBroadcastService messageThreadBroadcastService,
+                                 final MessageRepository messages) {
+        this.messageThreadBroadcastService = messageThreadBroadcastService;
         this.messages = messages;
     }
 
@@ -32,10 +36,23 @@ public class MessageChangedService implements SlackEventService {
     public void execute(final Map<String, Object> requestBody) {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
+        if (isThreadBroadcastEvent(requestBody)) {
+            messageThreadBroadcastService.saveWhenSubtypeIsMessageChanged(slackMessageDto);
+            return;
+        }
+
         Message message = messages.findBySlackId(slackMessageDto.getSlackId())
                 .orElseThrow(() -> new MessageNotFoundException(slackMessageDto.getSlackId()));
 
         message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate());
+    }
+
+    private boolean isThreadBroadcastEvent(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map) requestBody.get(EVENT);
+        Map<String, String> message = (Map) event.get(MESSAGE);
+        String subtype = message.get(SUBTYPE);
+
+        return SlackEvent.MESSAGE_THREAD_BROADCAST.isSameSubtype(subtype);
     }
 
     private SlackMessageDto convert(final Map<String, Object> requestBody) {

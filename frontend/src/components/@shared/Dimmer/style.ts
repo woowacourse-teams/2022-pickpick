@@ -12,6 +12,7 @@ export const Container = styled.div<Props>`
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 2;
 
   ${({ theme, hasBackgroundColor }: StyledProps) => css`
     background-color: ${hasBackgroundColor

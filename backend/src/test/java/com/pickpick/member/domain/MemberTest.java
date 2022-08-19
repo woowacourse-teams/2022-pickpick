@@ -2,8 +2,8 @@ package com.pickpick.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.pickpick.exception.MemberInvalidThumbnailUrlException;
-import com.pickpick.exception.MemberInvalidUsernameException;
+import com.pickpick.exception.member.MemberInvalidThumbnailUrlException;
+import com.pickpick.exception.member.MemberInvalidUsernameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;

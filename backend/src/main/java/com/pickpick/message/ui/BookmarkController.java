@@ -2,12 +2,12 @@ package com.pickpick.message.ui;
 
 import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.BookmarkService;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,21 +27,18 @@ public class BookmarkController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void save(final @AuthenticationPrincipal Long memberId,
-                     final @RequestBody BookmarkRequest bookmarkRequest) {
+    public void save(@AuthenticationPrincipal final Long memberId, @RequestBody final BookmarkRequest bookmarkRequest) {
         bookmarkService.save(memberId, bookmarkRequest);
     }
 
     @GetMapping
-    public BookmarkResponses find(final @AuthenticationPrincipal Long memberId,
-                                  final @RequestParam(required = false) Long bookmarkId) {
-        return bookmarkService.find(bookmarkId, memberId);
+    public BookmarkResponses find(@AuthenticationPrincipal final Long memberId, final BookmarkFindRequest request) {
+        return bookmarkService.find(request, memberId);
     }
 
-    @DeleteMapping("/{bookmarkId}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(final @AuthenticationPrincipal Long memberId,
-                       final @PathVariable Long bookmarkId) {
-        bookmarkService.delete(bookmarkId, memberId);
+    public void delete(@AuthenticationPrincipal final Long memberId, @RequestParam final Long messageId) {
+        bookmarkService.delete(messageId, memberId);
     }
 }

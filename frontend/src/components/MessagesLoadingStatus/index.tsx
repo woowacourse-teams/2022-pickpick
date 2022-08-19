@@ -1,4 +1,4 @@
-import MessageCardSkeleton from "../MessageCardSkeleton";
+import MessageCardSkeleton from "@src/components/MessageCardSkeleton";
 
 interface Props {
   length: number;

@@ -19,7 +19,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  z-index: 3;
 
   ${({ theme, status }: StyledProps) => css`
     color: ${theme.COLOR.TEXT.WHITE};

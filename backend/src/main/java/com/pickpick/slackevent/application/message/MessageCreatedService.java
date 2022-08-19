@@ -1,19 +1,15 @@
 package com.pickpick.slackevent.application.message;
 
+import com.pickpick.channel.application.ChannelService;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.exception.SlackClientException;
+import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.model.Conversation;
-import java.io.IOException;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,22 +24,27 @@ public class MessageCreatedService implements SlackEventService {
     private static final String TEXT = "text";
     private static final String CLIENT_MSG_ID = "client_msg_id";
     private static final String CHANNEL = "channel";
+    private static final String THREAD_TIMESTAMP = "thread_ts";
 
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
-    private final MethodsClient slackClient;
+    private final ChannelService channelService;
 
     public MessageCreatedService(final MessageRepository messages, final MemberRepository members,
-                                 final ChannelRepository channels, final MethodsClient slackClient) {
+                                 final ChannelRepository channels, final ChannelService channelService) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
-        this.slackClient = slackClient;
+        this.channelService = channelService;
     }
 
     @Override
     public void execute(final Map<String, Object> requestBody) {
+        if (isReplyEvent(requestBody)) {
+            return;
+        }
+
         SlackMessageDto slackMessageDto = convert(requestBody);
 
         String memberSlackId = slackMessageDto.getMemberSlackId();
@@ -53,32 +54,19 @@ public class MessageCreatedService implements SlackEventService {
         String channelSlackId = slackMessageDto.getChannelSlackId();
 
         Channel channel = channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> createChannel(channelSlackId));
+                .orElseGet(() -> channelService.createChannel(channelSlackId));
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }
 
-    private Channel createChannel(final String channelSlackId) {
-        try {
-            Conversation conversation = slackClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
-            ).getChannel();
+    private boolean isReplyEvent(final Map<String, Object> requestBody) {
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
-            Channel channel = toChannel(conversation);
-            channels.save(channel);
-
-            return channel;
-        } catch (IOException | SlackApiException e) {
-            throw new SlackClientException(e);
-        }
-    }
-
-    private Channel toChannel(final Conversation channel) {
-        return new Channel(channel.getId(), channel.getName());
+        return event.containsKey(THREAD_TIMESTAMP);
     }
 
     private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        final Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
 
         return new SlackMessageDto(
                 (String) event.get(USER),

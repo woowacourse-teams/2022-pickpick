@@ -8,7 +8,7 @@ import {
 import {
   extractResponseBookmarks,
   extractResponseMessages,
-  getTimeStandard,
+  getMeridiemTime,
   ISOConverter,
   parseTime,
 } from "./index";
@@ -17,13 +17,19 @@ describe("24시간제의 시간이 입력되면 오전/오후 prefix를 붙여 �
   test("11이 입력됐을 경우 오전 prefix를 붙여 '오전 11'을 반환한다.", () => {
     const inputTime = 11;
 
-    expect(getTimeStandard(inputTime)).toBe("오전 11");
+    expect(getMeridiemTime(inputTime)).toEqual({
+      meridiem: "오전",
+      hour: "11",
+    });
   });
 
   test("23이 입력됐을 경우 오후 prefix를 붙여 '오후 11'을 반환한다.", () => {
     const inputTime = 23;
 
-    expect(getTimeStandard(inputTime)).toBe("오후 11");
+    expect(getMeridiemTime(inputTime)).toEqual({
+      meridiem: "오후",
+      hour: "11",
+    });
   });
 });
 

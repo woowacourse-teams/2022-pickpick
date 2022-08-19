@@ -1,6 +1,6 @@
 package com.pickpick.channel.domain;
 
-import com.pickpick.exception.SubscriptionOrderMinException;
+import com.pickpick.exception.channel.SubscriptionInvalidOrderException;
 import com.pickpick.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +17,8 @@ import lombok.Getter;
 @Table(name = "channel_subscription")
 @Entity
 public class ChannelSubscription {
+
+    private static final int MIN_ORDER = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,8 +50,8 @@ public class ChannelSubscription {
     }
 
     private void validateOrder(final int order) {
-        if (order < 1) {
-            throw new SubscriptionOrderMinException();
+        if (order < MIN_ORDER) {
+            throw new SubscriptionInvalidOrderException(order);
         }
     }
 

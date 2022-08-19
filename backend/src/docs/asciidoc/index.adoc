@@ -60,3 +60,39 @@ operation::channel-subscription-controller-test/update-order-of-subscribed-chann
 자세한 예시는 https://github.com/woowacourse-teams/2022-pickpick/wiki/메시지-조회-API-사용법에서 확인
 
 operation::message-controller-test/find-all-message-with-condition[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+== 북마크 API
+
+=== 북마크 조회 API
+
+operation::bookmark-controller-test/find[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 북마크 추가 API
+
+operation::bookmark-controller-test/save[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 북마크 삭제 API
+
+operation::bookmark-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
+
+== 리마인더 API
+
+=== 리마인더 목록 조회 API
+
+operation::reminder-controller-test/find[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== 리마인더 단건 조회 API
+
+operation::reminder-controller-test/find-one[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== 리마인더 추가 API
+
+operation::reminder-controller-test/save[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 리마인더 삭제 API
+
+operation::reminder-controller-test/delete[snippets='http-request,request-headers,request-parameters,http-response']
+
+=== 리마인더 수정 API
+
+operation::reminder-controller-test/update[snippets='http-request,request-headers,request-fields,http-response']

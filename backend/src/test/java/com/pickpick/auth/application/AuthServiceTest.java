@@ -9,7 +9,8 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import com.pickpick.exception.InvalidTokenException;
+import com.pickpick.exception.auth.ExpiredTokenException;
+import com.pickpick.exception.auth.InvalidTokenException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.slack.api.methods.MethodsClient;
@@ -28,10 +29,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
 @AutoConfigureMockMvc
-@Transactional
 @SpringBootTest
 class AuthServiceTest {
 
@@ -54,8 +53,7 @@ class AuthServiceTest {
     @Test
     void login() throws SlackApiException, IOException {
         // given
-        Member member = new Member("slackId", "username", "thumbnail.png");
-        members.save(member);
+        Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .willReturn(generateOAuthV2AccessResponse());
@@ -109,8 +107,7 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.verifyToken(token))
-                .isInstanceOf(InvalidTokenException.class)
-                .hasMessageContaining("유효하지 않은 토큰입니다.");
+                .isInstanceOf(InvalidTokenException.class);
     }
 
     @DisplayName("만료된 토큰을 검증한다.")
@@ -122,8 +119,7 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.verifyToken(token))
-                .isInstanceOf(InvalidTokenException.class)
-                .hasMessageContaining("만료된 토큰입니다.");
+                .isInstanceOf(ExpiredTokenException.class);
     }
 
     @DisplayName("시그니처가 다른 토큰을 검증한다.")
@@ -135,7 +131,6 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.verifyToken(token))
-                .isInstanceOf(InvalidTokenException.class)
-                .hasMessageContaining("유효하지 않은 토큰입니다.");
+                .isInstanceOf(InvalidTokenException.class);
     }
 }

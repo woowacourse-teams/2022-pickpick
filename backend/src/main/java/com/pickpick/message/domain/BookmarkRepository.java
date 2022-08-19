@@ -5,11 +5,9 @@ import org.springframework.data.repository.Repository;
 
 public interface BookmarkRepository extends Repository<Bookmark, Long> {
 
-    void save(Bookmark bookmark);
+    Bookmark save(Bookmark bookmark);
 
     Optional<Bookmark> findById(Long id);
-
-    Optional<Bookmark> findByIdAndMemberId(Long id, Long memberId);
 
     Optional<Bookmark> findByMessageIdAndMemberId(Long messageId, Long memberId);
 

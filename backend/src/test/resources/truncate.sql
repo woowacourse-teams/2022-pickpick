@@ -1,4 +1,6 @@
 delete
+from reminder;
+delete
 from bookmark;
 delete
 from message;

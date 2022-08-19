@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.ChannelNotFoundException;
+import com.pickpick.exception.channel.ChannelNotFoundException;
 import java.util.Map;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +27,7 @@ class ChannelRenameServiceTest {
     @Test
     void channelNameShouldBeChangedOnChannelRenameEvent() {
         // given
-        Channel channel = new Channel("slackId", "channelName");
-        channels.save(channel);
+        Channel channel = channels.save(new Channel("slackId", "channelName"));
 
         String expectedChannelName = "변경된 채널 이름";
         Map<String, Object> request = Map.of(

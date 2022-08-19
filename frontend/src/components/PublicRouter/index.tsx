@@ -1,3 +1,4 @@
+import { PropsWithChildren } from "react";
 import { PATH_NAME, QUERY_KEY } from "@src/@constants";
 import { isCertificated } from "@src/api/auth";
 import { useEffect } from "react";
@@ -5,19 +6,15 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Loader from "@src/components/Loader";
 
-interface Props {
-  children: JSX.Element;
-}
-
-function PublicRouter({ children }: Props) {
+function PublicRouter({ children }: PropsWithChildren) {
   const navigate = useNavigate();
 
   const { isLoading, isSuccess } = useQuery(
     QUERY_KEY.AUTHENTICATION,
     isCertificated,
     {
-      useErrorBoundary: false,
       retry: false,
+      onError: () => null,
     }
   );
 

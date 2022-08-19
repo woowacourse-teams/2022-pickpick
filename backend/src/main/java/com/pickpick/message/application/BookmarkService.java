@@ -1,9 +1,9 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.BookmarkDeleteFailureException;
-import com.pickpick.exception.BookmarkNotFoundException;
-import com.pickpick.exception.MemberNotFoundException;
-import com.pickpick.exception.MessageNotFoundException;
+import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.exception.message.BookmarkDeleteFailureException;
+import com.pickpick.exception.message.BookmarkNotFoundException;
+import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -14,6 +14,7 @@ import com.pickpick.message.domain.QBookmark;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -27,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BookmarkService {
 
-    public static final int COUNT = 20;
-    
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
     private final MemberRepository members;
@@ -54,13 +53,13 @@ public class BookmarkService {
         bookmarks.save(bookmark);
     }
 
-    public BookmarkResponses find(final Long bookmarkId, final Long memberId) {
-        List<Bookmark> bookmarkList = findBookmarks(bookmarkId, memberId);
+    public BookmarkResponses find(final BookmarkFindRequest request, final Long memberId) {
+        List<Bookmark> bookmarkList = findBookmarks(request, memberId);
 
         return new BookmarkResponses(toBookmarkResponseList(bookmarkList), isLast(bookmarkList, memberId));
     }
 
-    private List<Bookmark> findBookmarks(final Long bookmarkId, final Long memberId) {
+    private List<Bookmark> findBookmarks(final BookmarkFindRequest request, final Long memberId) {
         return jpaQueryFactory
                 .selectFrom(QBookmark.bookmark)
                 .leftJoin(QBookmark.bookmark.message)
@@ -68,9 +67,9 @@ public class BookmarkService {
                 .leftJoin(QBookmark.bookmark.member)
                 .fetchJoin()
                 .where(QBookmark.bookmark.member.id.eq(memberId))
-                .where(bookmarkIdCondition(bookmarkId))
+                .where(bookmarkIdCondition(request.getBookmarkId()))
                 .orderBy(QBookmark.bookmark.message.postedDate.desc())
-                .limit(COUNT)
+                .limit(request.getCount())
                 .fetch();
     }
 
@@ -117,10 +116,10 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void delete(final Long bookmarkId, final Long memberId) {
-        bookmarks.findByIdAndMemberId(bookmarkId, memberId)
-                .orElseThrow(() -> new BookmarkDeleteFailureException(bookmarkId, memberId));
+    public void delete(final Long messageId, final Long memberId) {
+        Bookmark bookmark = bookmarks.findByMessageIdAndMemberId(messageId, memberId)
+                .orElseThrow(() -> new BookmarkDeleteFailureException(messageId, memberId));
 
-        bookmarks.deleteById(bookmarkId);
+        bookmarks.deleteById(bookmark.getId());
     }
 }

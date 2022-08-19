@@ -2,28 +2,22 @@ import Loader from "@src/components/Loader";
 import { PATH_NAME, QUERY_KEY } from "@src/@constants";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
-import useSnackbar from "@src/hooks/useSnackbar";
 import { slackLogin } from "@src/api/auth";
-import useGetSearchParam from "@src/hooks/useGetSearchParam";
-import { ResponseToken } from "@src/@types/shared";
-import useAuthentication from "@src/hooks/useAuthentication";
+import { ResponseToken, CustomError } from "@src/@types/shared";
 import { useEffect } from "react";
+import useGetSearchParam from "@src/hooks/useGetSearchParam";
+import useAuthentication from "@src/hooks/useAuthentication";
 
 function Certification() {
   const slackCode = useGetSearchParam("code");
-  const { login } = useAuthentication();
   const navigate = useNavigate();
-  const { openFailureSnackbar } = useSnackbar();
+  const { login } = useAuthentication();
 
-  const { isSuccess, data } = useQuery<ResponseToken>(
+  const { isSuccess, isError, data } = useQuery<ResponseToken, CustomError>(
     QUERY_KEY.SLACK_LOGIN,
     () => slackLogin(slackCode),
     {
       retry: false,
-      onError: () => {
-        openFailureSnackbar("문제가 발생했습니다.");
-        navigate(PATH_NAME.HOME);
-      },
     }
   );
 
@@ -32,6 +26,13 @@ function Certification() {
       login(data.token, data.isFirstLogin);
     }
   }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (!isError) return;
+
+    navigate(PATH_NAME.HOME);
+  }, [isError]);
+
   return <Loader />;
 }
 
