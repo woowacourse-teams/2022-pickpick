@@ -1,5 +1,6 @@
-# 사라지는 Slack 메시지, 우리가 주워줄게! 줍줍  
+# <img src="https://user-images.githubusercontent.com/62681566/185729970-a8177667-e6a2-4393-83e3-69889ebc406e.png" width="40px" alt="줍줍 CI"> 사라지는 Slack 메시지, 우리가 주워줄게! 줍줍
 
+<br><br>
 
 ## Members 👩🏻‍💻🧑🏻‍💻
 
@@ -9,8 +10,10 @@
 |                         ✨ 프론트엔드                         |                         ✨ 프론트엔드                         |                           💫 백엔드                           |                           💫 백엔드                           |                           💫 백엔드                           |                           💫 백엔드                           |               
 
 
+<br><br>
+
 ## 😎 API 명세
-https://documenter.getpostman.com/view/13826399/UzJESeDr
+https://dev.jupjup.site/docs
 
 ## 😎 스토리북 
 https://62e64dc73aafd7bc9338ba73-fihzwjkqkx.chromatic.com
