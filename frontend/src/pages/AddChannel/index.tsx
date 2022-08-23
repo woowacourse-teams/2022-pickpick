@@ -2,15 +2,12 @@ import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
 import { FlexColumn } from "@src/@styles/shared";
 import { PATH_NAME } from "@src/@constants";
-import { useMutation, useQuery } from "react-query";
-import {
-  getChannels,
-  subscribeChannel,
-  unsubscribeChannel,
-} from "@src/api/channels";
+import { useQuery } from "react-query";
+import { getChannels } from "@src/api/channels";
 import { QUERY_KEY } from "@src/@constants";
 import { ResponseChannels, CustomError } from "@src/@types/shared";
 import { Link } from "react-router-dom";
+import useMutateChannels from "@src/hooks/query/useMutateChannels";
 
 function AddChannel() {
   const { data, refetch } = useQuery<ResponseChannels, CustomError>(
@@ -18,17 +15,11 @@ function AddChannel() {
     getChannels
   );
 
-  const { mutate: subscribe } = useMutation(subscribeChannel, {
-    onSettled: () => {
-      refetch();
-    },
-  });
-
-  const { mutate: unsubscribe } = useMutation(unsubscribeChannel, {
-    onSettled: () => {
-      refetch();
-    },
-  });
+  const { handleSubscribeChannel, handleUnSubscribeChannel } =
+    useMutateChannels({
+      handleSettleSubscribeChannel: () => refetch(),
+      handleSettleUnsubscribeChannel: () => refetch(),
+    });
 
   return (
     <Styled.Container>
@@ -46,7 +37,9 @@ function AddChannel() {
               size="medium"
               isActive={isSubscribed}
               onClick={() => {
-                isSubscribed ? unsubscribe(id) : subscribe(id);
+                isSubscribed
+                  ? handleUnSubscribeChannel(id)
+                  : handleSubscribeChannel(id);
               }}
             >
               <>#{name}</>
