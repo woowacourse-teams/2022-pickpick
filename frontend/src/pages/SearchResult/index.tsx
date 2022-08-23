@@ -5,7 +5,7 @@ import { FlexColumn } from "@src/@styles/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import {
-  convertSeparatorToKey,
+  getChannelIdsParams,
   extractResponseMessages,
   parseTime,
 } from "@src/@utils";
@@ -38,11 +38,7 @@ function SearchResult() {
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useGetInfiniteMessages({
-      channelId: convertSeparatorToKey({
-        key: "&channelIds=",
-        separator: ",",
-        value: channelIds,
-      }),
+      channelId: getChannelIdsParams(channelIds),
       queryKey: [keyword, channelIds],
       keyword,
     });
