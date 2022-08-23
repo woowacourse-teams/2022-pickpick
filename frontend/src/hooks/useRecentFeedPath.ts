@@ -12,9 +12,8 @@ function useRecentFeedPath() {
 
   useEffect(() => {
     const name = pathname.split("/")[1];
-    if (name === "feed") {
-      setRecentFeedPath(pathname);
-    }
+    if (name !== "feed") return;
+    setRecentFeedPath(pathname);
   }, [pathname, key]);
 
   return { setRecentFeedPath, getRecentFeedPath };
