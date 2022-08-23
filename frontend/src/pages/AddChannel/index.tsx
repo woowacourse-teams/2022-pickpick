@@ -2,19 +2,12 @@ import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
 import { FlexColumn } from "@src/@styles/shared";
 import { PATH_NAME } from "@src/@constants";
-import { useQuery } from "react-query";
-import { getChannels } from "@src/api/channels";
-import { QUERY_KEY } from "@src/@constants";
-import { ResponseChannels, CustomError } from "@src/@types/shared";
 import { Link } from "react-router-dom";
 import useMutateChannels from "@src/hooks/query/useMutateChannels";
+import useGetChannels from "@src/hooks/query/useGetChannels";
 
 function AddChannel() {
-  const { data, refetch } = useQuery<ResponseChannels, CustomError>(
-    QUERY_KEY.ALL_CHANNELS,
-    getChannels
-  );
-
+  const { data, refetch } = useGetChannels();
   const { handleSubscribeChannel, handleUnSubscribeChannel } =
     useMutateChannels({
       handleSettleSubscribeChannel: () => refetch(),
