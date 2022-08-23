@@ -1,15 +1,10 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "../Feed/style";
-import { useInfiniteQuery } from "react-query";
-import { ResponseReminders } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseReminders, parseTime } from "@src/@utils";
-import { nextRemindersCallback } from "@src/api/utils";
-import { QUERY_KEY } from "@src/@constants";
 import EmptyStatus from "@src/components/EmptyStatus";
-import { getReminders } from "@src/api/reminders";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import ReminderModal from "@src/components/ReminderModal";
@@ -17,6 +12,7 @@ import useModal from "@src/hooks/useModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import { useEffect } from "react";
+import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
 
 function Reminder() {
   const {
@@ -25,10 +21,9 @@ function Reminder() {
     handleInitializeReminderTarget,
   } = useSetTargetMessage();
 
+  useGetInfiniteReminders;
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseReminders>(QUERY_KEY.REMINDERS, getReminders, {
-      getNextPageParam: nextRemindersCallback,
-    });
+    useGetInfiniteReminders();
 
   const parsedData = extractResponseReminders(data);
 
