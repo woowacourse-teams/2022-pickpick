@@ -15,7 +15,7 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
@@ -30,7 +30,7 @@ function Feed() {
     reminderTarget,
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
-  } = useSetTargetMessage();
+  } = useSetReminderTargetMessage();
 
   useGetInfiniteMessages;
 

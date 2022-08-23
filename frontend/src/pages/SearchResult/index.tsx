@@ -13,7 +13,7 @@ import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import SearchForm from "@src/components/SearchForm";
@@ -28,7 +28,7 @@ function SearchResult() {
     reminderTarget,
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
-  } = useSetTargetMessage();
+  } = useSetReminderTargetMessage();
 
   const {
     isModalOpened: isReminderModalOpened,
