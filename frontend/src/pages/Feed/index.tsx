@@ -1,16 +1,11 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "./style";
-import { useInfiniteQuery } from "react-query";
-import { getMessages } from "@src/api/messages";
-import { ResponseMessages, CustomError } from "@src/@types/shared";
 import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import { nextMessagesCallback } from "@src/api/utils";
-import { QUERY_KEY } from "@src/@constants";
 import { useLocation, useParams } from "react-router-dom";
 import DateDropdown from "@src/components/DateDropdown";
 import useModal from "@src/hooks/useModal";
@@ -24,6 +19,7 @@ import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
 
 function Feed() {
   const { channelId } = useParams();
@@ -36,16 +32,13 @@ function Feed() {
     handleInitializeReminderTarget,
   } = useSetTargetMessage();
 
+  useGetInfiniteMessages;
+
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages, CustomError>(
-      [QUERY_KEY.ALL_MESSAGES, queryKey],
-      getMessages({
-        channelId,
-      }),
-      {
-        getNextPageParam: nextMessagesCallback,
-      }
-    );
+    useGetInfiniteMessages({
+      channelId,
+      queryKey: [queryKey],
+    });
 
   const {
     isModalOpened: isCalendarOpened,
