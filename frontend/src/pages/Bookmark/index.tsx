@@ -9,7 +9,7 @@ import { extractResponseBookmarks, parseTime } from "@src/@utils";
 import { nextBookmarksCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
 import { getBookmarks } from "@src/api/bookmarks";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import { useEffect } from "react";
@@ -24,8 +24,8 @@ function Bookmark() {
       }
     );
 
-  const { handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleRemoveBookmark } = useMutateBookmark({
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseBookmarks(data);

@@ -11,7 +11,6 @@ import { extractResponseMessages, parseTime } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
 import { nextMessagesCallback } from "@src/api/utils";
 import { QUERY_KEY } from "@src/@constants";
-import useBookmark from "@src/hooks/useBookmark";
 import { useLocation, useParams } from "react-router-dom";
 import DateDropdown from "@src/components/DateDropdown";
 import useModal from "@src/hooks/useModal";
@@ -24,6 +23,7 @@ import ReminderModal from "@src/components/ReminderModal";
 import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 
 function Feed() {
   const { channelId } = useParams();
@@ -59,8 +59,9 @@ function Feed() {
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleAddBookmark, handleRemoveBookmark } = useMutateBookmark({
+    handleSettleAddBookmark: refetch,
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseMessages(data);

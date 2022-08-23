@@ -2,8 +2,8 @@ import { subscribeChannel, unsubscribeChannel } from "@src/api/channels";
 import { useMutation } from "react-query";
 
 interface Props {
-  handleSettleSubscribeChannel: () => void;
-  handleSettleUnsubscribeChannel: () => void;
+  handleSettleSubscribeChannel?: () => void;
+  handleSettleUnsubscribeChannel?: () => void;
 }
 
 function useMutateChannels({
@@ -11,15 +11,11 @@ function useMutateChannels({
   handleSettleUnsubscribeChannel,
 }: Props) {
   const { mutate: subscribe } = useMutation(subscribeChannel, {
-    onSettled: () => {
-      handleSettleSubscribeChannel();
-    },
+    onSettled: handleSettleSubscribeChannel,
   });
 
   const { mutate: unsubscribe } = useMutation(unsubscribeChannel, {
-    onSettled: () => {
-      handleSettleUnsubscribeChannel();
-    },
+    onSettled: handleSettleUnsubscribeChannel,
   });
 
   const handleSubscribeChannel = (id: string) => {

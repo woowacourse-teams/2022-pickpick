@@ -8,7 +8,7 @@ import MessageCard from "@src/components/MessageCard";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { FlexColumn } from "@src/@styles/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import {
   convertSeparatorToKey,
   extractResponseMessages,
@@ -56,8 +56,9 @@ function SearchResult() {
       }
     );
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleAddBookmark, handleRemoveBookmark } = useMutateBookmark({
+    handleSettleAddBookmark: refetch,
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseMessages(data);

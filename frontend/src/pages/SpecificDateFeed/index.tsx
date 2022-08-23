@@ -13,7 +13,7 @@ import useMessageDate from "@src/hooks/useMessageDate";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
 import { QUERY_KEY } from "@src/@constants";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import DateDropdown from "@src/components/DateDropdown";
 import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
@@ -78,8 +78,9 @@ function SpecificDateFeed() {
     wheelDistanceCriterion: -10,
   });
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleAddBookmark, handleRemoveBookmark } = useMutateBookmark({
+    handleSettleAddBookmark: refetch,
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseMessages(data);

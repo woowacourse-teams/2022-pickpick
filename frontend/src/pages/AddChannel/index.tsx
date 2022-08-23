@@ -10,8 +10,8 @@ function AddChannel() {
   const { data, refetch } = useGetChannels();
   const { handleSubscribeChannel, handleUnSubscribeChannel } =
     useMutateChannels({
-      handleSettleSubscribeChannel: () => refetch(),
-      handleSettleUnsubscribeChannel: () => refetch(),
+      handleSettleSubscribeChannel: refetch,
+      handleSettleUnsubscribeChannel: refetch,
     });
 
   return (
