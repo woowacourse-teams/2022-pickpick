@@ -54,6 +54,8 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("bookmarks.[].id").type(JsonFieldType.NUMBER)
+                                        .description("북마크 아이디"),
+                                fieldWithPath("bookmarks.[].messageId").type(JsonFieldType.NUMBER)
                                         .description("메시지 아이디"),
                                 fieldWithPath("bookmarks.[].memberId").type(JsonFieldType.NUMBER)
                                         .description("유저 아이디"),
