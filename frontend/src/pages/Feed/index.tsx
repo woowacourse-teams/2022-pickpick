@@ -32,8 +32,6 @@ function Feed() {
     handleInitializeReminderTarget,
   } = useSetReminderTargetMessage();
 
-  useGetInfiniteMessages;
-
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useGetInfiniteMessages({
       channelId,
