@@ -2,7 +2,6 @@ import { QUERY_KEY } from "@src/@constants";
 import { CustomError, ResponseMessages } from "@src/@types/shared";
 import { getMessages } from "@src/api/messages";
 import { useInfiniteQuery } from "react-query";
-import { nextMessagesCallback, previousMessagesCallback } from "@src/api/utils";
 
 interface Props {
   queryKey: string[];
@@ -20,8 +19,19 @@ function useGetInfiniteMessages({ channelId, date, keyword, queryKey }: Props) {
       keyword,
     }),
     {
-      getPreviousPageParam: previousMessagesCallback,
-      getNextPageParam: nextMessagesCallback,
+      getPreviousPageParam: ({ isLast, messages }: ResponseMessages) => {
+        if (!isLast) {
+          return { messageId: messages[0]?.id, needPastMessage: false };
+        }
+      },
+      getNextPageParam: ({ isLast, messages }: ResponseMessages) => {
+        if (!isLast) {
+          return {
+            messageId: messages[messages.length - 1]?.id,
+            needPastMessage: true,
+          };
+        }
+      },
     }
   );
 }
