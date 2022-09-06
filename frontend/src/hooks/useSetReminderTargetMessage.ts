@@ -11,7 +11,7 @@ interface ReturnType {
   handleInitializeReminderTarget: () => void;
 }
 
-function useSetTargetMessage(): ReturnType {
+function useSetReminderTargetMessage(): ReturnType {
   const [reminderTarget, setReminderTarget] = useState<ReminderTarget>({
     id: -1,
     remindDate: "",
@@ -32,4 +32,4 @@ function useSetTargetMessage(): ReturnType {
   };
 }
 
-export default useSetTargetMessage;
+export default useSetReminderTargetMessage;
