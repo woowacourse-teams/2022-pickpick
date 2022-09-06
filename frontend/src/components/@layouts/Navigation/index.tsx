@@ -15,7 +15,7 @@ import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
 import { useTheme } from "styled-components";
 import { Theme } from "@src/@types/shared";
-import useGetSubscribedChannels from "@src/hooks/useGetSubscribedChannels";
+import useGetSubscribedChannels from "@src/hooks/query/useGetSubscribedChannels";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 import useOuterClick from "@src/hooks/useOuterClick";
 

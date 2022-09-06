@@ -6,7 +6,7 @@ import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
-import useMutateReminder from "@src/hooks/useMutateReminder";
+import useMutateReminder from "@src/hooks/query/useMutateReminder";
 import { getDateInformation } from "@src/@utils";
 
 const generateDateTimeOptions = () => {

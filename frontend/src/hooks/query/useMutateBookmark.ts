@@ -2,7 +2,8 @@ import { postBookmark, deleteBookmark } from "@src/api/bookmarks";
 import { useMutation } from "react-query";
 
 interface Props {
-  handleSettle: () => void;
+  handleSettleAddBookmark?: () => void;
+  handleSettleRemoveBookmark?: () => void;
 }
 
 type Handler = (messageId: number) => () => void;
@@ -12,16 +13,15 @@ interface ReturnType {
   handleRemoveBookmark: Handler;
 }
 
-function useBookmark({ handleSettle }: Props): ReturnType {
+function useMutateBookmark({
+  handleSettleAddBookmark,
+  handleSettleRemoveBookmark,
+}: Props): ReturnType {
   const { mutate: addBookmark } = useMutation(postBookmark, {
-    onSettled: () => {
-      handleSettle();
-    },
+    onSettled: handleSettleAddBookmark,
   });
   const { mutate: removeBookmark } = useMutation(deleteBookmark, {
-    onSettled: () => {
-      handleSettle();
-    },
+    onSettled: handleSettleRemoveBookmark,
   });
 
   const handleAddBookmark = (messageId: number) => () => {
@@ -35,4 +35,4 @@ function useBookmark({ handleSettle }: Props): ReturnType {
   return { handleAddBookmark, handleRemoveBookmark };
 }
 
-export default useBookmark;
+export default useMutateBookmark;

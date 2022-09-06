@@ -125,20 +125,10 @@ export const getMessagesDate = (postedDate: string): string => {
   return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
 };
 
-export const convertSeparatorToKey = ({
-  value,
-  separator,
-  key,
-}: {
-  value: string;
-  separator: string;
-  key: string;
-}) => {
-  if (value.search(separator) === -1) {
-    return value;
-  }
-  // eslint-disable-next-line
-  return value.replace(/\,/g, key);
+export const getChannelIdsParams = (channelIds: string) => {
+  const channelIdList = channelIds.split(",");
+  if (channelIds.length === 1) return channelIdList[0];
+  return channelIdList.join("&channelIds=");
 };
 
 export const parsedOptionText = ({
