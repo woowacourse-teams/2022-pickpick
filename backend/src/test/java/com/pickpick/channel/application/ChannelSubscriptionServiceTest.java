@@ -231,13 +231,11 @@ class ChannelSubscriptionServiceTest {
     }
 
     private Member saveMember() {
-        Member member = members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
-        return member;
+        return members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
     }
 
     private Channel saveChannel(final String slackId, final String channelName) {
-        Channel channel = channels.save(new Channel(slackId, channelName));
-        return channel;
+        return channels.save(new Channel(slackId, channelName));
     }
 
     private void subscribeChannel(Member member, Channel channel) {
