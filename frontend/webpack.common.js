@@ -26,11 +26,8 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|gif|woff)$/i,
-        loader: "file-loader",
-        options: {
-          name: "[path][name].[ext]",
-        },
+        test: /\.(png|jpe?g|woff)$/i,
+        type: "asset/resource",
       },
       {
         test: /\.svg$/,
