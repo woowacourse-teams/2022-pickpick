@@ -6,6 +6,7 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.channel.ui.dto.ChannelResponses;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
@@ -39,25 +40,25 @@ public class ChannelSubscriptionService {
         this.members = members;
     }
 
-    public List<ChannelResponse> findAll(final Long memberId) {
+    public ChannelResponses findAll(final Long memberId) {
         List<Channel> allChannels = channels.findAllByOrderByName();
-        List<Channel> subscribedChannels = findSubscribedChannels(memberId);
+        Map<Long, Channel> subscribedChannels = findSubscribedChannels(memberId);
 
-        return getChannelResponsesWithIsSubscribed(allChannels, subscribedChannels);
+        List<ChannelResponse> channelResponses = findChannelResponses(allChannels, subscribedChannels);
+        return new ChannelResponses(channelResponses);
     }
 
-    private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
-                                                                      final List<Channel> subscribedChannels) {
+    private List<ChannelResponse> findChannelResponses(final List<Channel> allChannels,
+                                                       final Map<Long, Channel> subscribedChannels) {
         return allChannels.stream()
                 .map(channel -> ChannelResponse.of(subscribedChannels, channel))
                 .collect(Collectors.toList());
     }
 
-    private List<Channel> findSubscribedChannels(final Long memberId) {
+    private Map<Long, Channel> findSubscribedChannels(final Long memberId) {
         return channelSubscriptions.findAllByMemberId(memberId)
                 .stream()
-                .map(ChannelSubscription::getChannel)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(ChannelSubscription::getChannelId, ChannelSubscription::getChannel));
     }
 
     public List<ChannelSubscription> findAllOrderByViewOrder(final Long memberId) {

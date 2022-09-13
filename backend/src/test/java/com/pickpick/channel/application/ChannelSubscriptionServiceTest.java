@@ -223,6 +223,7 @@ class ChannelSubscriptionServiceTest {
 
         // then
         boolean isSubscribed = channelSubscriptionService.findAll(member.getId())
+                .getChannels()
                 .get(0)
                 .isSubscribed();
 

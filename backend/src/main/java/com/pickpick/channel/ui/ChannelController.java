@@ -19,6 +19,6 @@ public class ChannelController {
 
     @GetMapping
     public ChannelResponses findAllChannels(final @AuthenticationPrincipal Long memberId) {
-        return new ChannelResponses(channelSubscriptionService.findAll(memberId));
+        return channelSubscriptionService.findAll(memberId);
     }
 }
