@@ -1,4 +1,26 @@
 spring:
-  config:
-    import:
-      - classpath:/security/application.yml
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MYSQL
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
+
+security:
+  jwt:
+    token:
+      secret-key: testsecretkey123456789pickpicktestsecretkey123456789pickpicktestsecretkey123456789pickpicktestsecretkey123456789pickpicktestsecretkey123456789pickpick
+      expire-length: 86400000 # 24시간
