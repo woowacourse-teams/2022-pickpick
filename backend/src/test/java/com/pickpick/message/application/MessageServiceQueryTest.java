@@ -103,8 +103,8 @@ class MessageServiceQueryTest {
             return messagesInChannel;
         }
 
-        @Nested
         @DisplayName("조회 조건과 관련없이")
+        @Nested
         class alwaysFilter {
 
             MessageRequest request = fromLatestInChannels(List.of(notice), allMessages.size() + 1);
@@ -164,7 +164,7 @@ class MessageServiceQueryTest {
             MessageRequest request = searchByKeywordInChannels(List.of(notice, freeChat), keyword, allMessages.size());
             MessageResponses response = messageService.find(summer.getId(), request);
 
-            @DisplayName("해당 채널에 있고, 특정 단어가 포함된 메시지가 조회된다")
+            @DisplayName("해당 채널들에서 특정 단어가 포함된 메시지가 조회된다")
             @Test
             void messagesContainKeywordInChannels() {
                 List<MessageResponse> foundMessages = response.getMessages();
