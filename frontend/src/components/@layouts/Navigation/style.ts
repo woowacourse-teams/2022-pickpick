@@ -20,5 +20,5 @@ export const LogoutButtonContainer = styled.div`
   position: fixed;
   bottom: 90px;
   right: 10px;
-  z-index: 1;
+  z-index: 2;
 `;

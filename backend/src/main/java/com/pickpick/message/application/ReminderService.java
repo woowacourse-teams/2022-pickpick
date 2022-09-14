@@ -12,16 +12,17 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
+import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +78,7 @@ public class ReminderService {
                 .fetchJoin()
                 .where(QReminder.reminder.member.id.eq(memberId))
                 .where(remindDateCondition(request.getReminderId()))
-                .orderBy(QReminder.reminder.remindDate.asc())
+                .orderBy(QReminder.reminder.remindDate.asc(), QReminder.reminder.id.asc())
                 .limit(request.getCount())
                 .fetch();
     }
@@ -96,12 +97,31 @@ public class ReminderService {
         Reminder reminder = reminders.findById(reminderId)
                 .orElseThrow(() -> new ReminderNotFoundException(reminderId));
 
+        if (isTargetDateMessageLeft(reminder)) {
+            return (QReminder.reminder.remindDate.eq(reminder.getRemindDate())
+                    .and(QReminder.reminder.id.gt(reminderId)))
+                    .or(QReminder.reminder.remindDate.after(reminder.getRemindDate()));
+        }
+
         return QReminder.reminder.remindDate.after(reminder.getRemindDate());
+    }
+
+    private boolean isTargetDateMessageLeft(final Reminder reminder) {
+        Optional<Long> max = reminders.findAllByRemindDate(reminder.getRemindDate())
+                .stream()
+                .map(Reminder::getId)
+                .max(Long::compareTo);
+
+        return max.isPresent() && max.get() > reminder.getId();
     }
 
     private boolean isLast(final List<Reminder> reminderList, final Long memberId) {
         if (reminderList.isEmpty()) {
             return true;
+        }
+
+        if (isTargetDateMessageLeft(reminderList)) {
+            return false;
         }
 
         Integer result = jpaQueryFactory
@@ -112,6 +132,18 @@ public class ReminderService {
                 .fetchFirst();
 
         return Objects.isNull(result);
+    }
+
+    private boolean isTargetDateMessageLeft(final List<Reminder> reminderList) {
+        Reminder targetReminder = reminderList.get(reminderList.size() - 1);
+        LocalDateTime remindDate = targetReminder.getRemindDate();
+        Optional<Long> reminderId = reminders.findAllByRemindDate(remindDate)
+                .stream()
+                .map(Reminder::getId)
+                .filter(id -> id > targetReminder.getId())
+                .findFirst();
+
+        return reminderId.isPresent();
     }
 
     private BooleanExpression meetIsLastCondition(final List<Reminder> reminderList) {

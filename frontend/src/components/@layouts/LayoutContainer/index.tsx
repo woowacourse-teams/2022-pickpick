@@ -10,7 +10,8 @@ function LayoutContainer({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
 
   const hasHeader = () => pathname === PATH_NAME.HOME;
-  const hasNavBar = () => pathname !== PATH_NAME.HOME;
+  const hasNavBar = () =>
+    pathname !== PATH_NAME.HOME && pathname !== PATH_NAME.ADD_CHANNEL;
 
   return (
     <Styled.Container>

@@ -1,16 +1,11 @@
 import * as Styled from "../Feed/style";
-import { QUERY_KEY } from "@src/@constants";
-import { ResponseMessages, CustomError } from "@src/@types/shared";
-import { getMessages } from "@src/api/messages";
-import { nextMessagesCallback } from "@src/api/utils";
-import { useInfiniteQuery } from "react-query";
 import MessageCard from "@src/components/MessageCard";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { FlexColumn } from "@src/@styles/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import {
-  convertSeparatorToKey,
+  getChannelIdsParams,
   extractResponseMessages,
   parseTime,
 } from "@src/@utils";
@@ -18,11 +13,12 @@ import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import SearchForm from "@src/components/SearchForm";
 import useGetSearchParam from "@src/hooks/useGetSearchParam";
+import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
 
 function SearchResult() {
   const keyword = useGetSearchParam("keyword");
@@ -32,7 +28,7 @@ function SearchResult() {
     reminderTarget,
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
-  } = useSetTargetMessage();
+  } = useSetReminderTargetMessage();
 
   const {
     isModalOpened: isReminderModalOpened,
@@ -41,23 +37,15 @@ function SearchResult() {
   } = useModal();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages, CustomError>(
-      QUERY_KEY.ALL_MESSAGES,
-      getMessages({
-        channelId: convertSeparatorToKey({
-          key: "&channelIds=",
-          separator: ",",
-          value: channelIds,
-        }),
-        keyword,
-      }),
-      {
-        getNextPageParam: nextMessagesCallback,
-      }
-    );
+    useGetInfiniteMessages({
+      channelId: getChannelIdsParams(channelIds),
+      queryKey: [keyword, channelIds],
+      keyword,
+    });
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleAddBookmark, handleRemoveBookmark } = useMutateBookmark({
+    handleSettleAddBookmark: refetch,
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseMessages(data);

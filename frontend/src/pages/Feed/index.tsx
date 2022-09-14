@@ -1,17 +1,11 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "./style";
-import { useInfiniteQuery } from "react-query";
-import { getMessages } from "@src/api/messages";
-import { ResponseMessages, CustomError } from "@src/@types/shared";
-import React from "react";
+import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
-import { nextMessagesCallback } from "@src/api/utils";
-import { QUERY_KEY } from "@src/@constants";
-import useBookmark from "@src/hooks/useBookmark";
 import { useLocation, useParams } from "react-router-dom";
 import DateDropdown from "@src/components/DateDropdown";
 import useModal from "@src/hooks/useModal";
@@ -21,9 +15,11 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
 
 function Feed() {
   const { channelId } = useParams();
@@ -34,18 +30,13 @@ function Feed() {
     reminderTarget,
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
-  } = useSetTargetMessage();
+  } = useSetReminderTargetMessage();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseMessages, CustomError>(
-      [QUERY_KEY.ALL_MESSAGES, queryKey],
-      getMessages({
-        channelId,
-      }),
-      {
-        getNextPageParam: nextMessagesCallback,
-      }
-    );
+    useGetInfiniteMessages({
+      channelId,
+      queryKey: [queryKey],
+    });
 
   const {
     isModalOpened: isCalendarOpened,
@@ -59,13 +50,18 @@ function Feed() {
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleAddBookmark, handleRemoveBookmark } = useMutateBookmark({
+    handleSettleAddBookmark: refetch,
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseMessages(data);
 
-  console.log(parsedData);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, [queryKey]);
 
   return (
     <Styled.Container>

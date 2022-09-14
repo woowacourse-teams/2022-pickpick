@@ -1,33 +1,30 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "../Feed/style";
-import { useInfiniteQuery } from "react-query";
-import { ResponseBookmarks, CustomError } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseBookmarks, parseTime } from "@src/@utils";
-import { nextBookmarksCallback } from "@src/api/utils";
-import { QUERY_KEY } from "@src/@constants";
-import { getBookmarks } from "@src/api/bookmarks";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
+import { extractResponseBookmarks, parseTime } from "@src/@utils";
+import { useEffect } from "react";
+import useGetInfiniteBookmarks from "@src/hooks/query/useGetInfiniteBookmarks";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseBookmarks, CustomError>(
-      QUERY_KEY.BOOKMARKS,
-      getBookmarks,
-      {
-        getNextPageParam: nextBookmarksCallback,
-      }
-    );
+    useGetInfiniteBookmarks();
 
-  const { handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleRemoveBookmark } = useMutateBookmark({
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseBookmarks(data);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, []);
 
   return (
     <Styled.Container>
@@ -40,7 +37,14 @@ function Bookmark() {
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
             {parsedData.map(
-              ({ id, username, postedDate, text, userThumbnail }) => (
+              ({
+                id,
+                messageId,
+                username,
+                postedDate,
+                text,
+                userThumbnail,
+              }) => (
                 <MessageCard
                   key={id}
                   username={username}
@@ -51,7 +55,7 @@ function Bookmark() {
                 >
                   <BookmarkButton
                     isActive={true}
-                    onClick={handleRemoveBookmark(id)}
+                    onClick={handleRemoveBookmark(messageId)}
                   />
                 </MessageCard>
               )

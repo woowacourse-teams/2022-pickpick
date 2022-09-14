@@ -51,7 +51,7 @@ public class ChannelSubscription {
 
     private void validateOrder(final int order) {
         if (order < MIN_ORDER) {
-            throw new SubscriptionInvalidOrderException();
+            throw new SubscriptionInvalidOrderException(order);
         }
     }
 

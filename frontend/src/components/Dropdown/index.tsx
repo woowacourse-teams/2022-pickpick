@@ -1,7 +1,9 @@
 import useDropdown from "@src/hooks/useDropdown";
-import Dimmer from "@src/components/@shared/Dimmer";
+import useOuterClick from "@src/hooks/useOuterClick";
+import { RefObject } from "react";
 
 interface ChildrenProps {
+  innerRef: RefObject<HTMLDivElement>;
   isDropdownOpened: boolean;
   handleOpenDropdown: () => void;
   handleCloseDropdown: () => void;
@@ -20,12 +22,12 @@ function Dropdown({ children }: Props) {
     handleToggleDropdown,
   } = useDropdown();
 
+  const { innerRef } = useOuterClick(handleCloseDropdown);
+
   return (
     <>
-      {isDropdownOpened && (
-        <Dimmer hasBackgroundColor={false} onClick={handleCloseDropdown} />
-      )}
       {children({
+        innerRef,
         isDropdownOpened,
         handleOpenDropdown,
         handleCloseDropdown,

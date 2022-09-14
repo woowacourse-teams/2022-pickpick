@@ -31,14 +31,16 @@ function useModeTheme(): ReturnType {
 
   useEffect(() => {
     const storedTheme = getStoredTheme();
-    if (
-      window.matchMedia("(prefers-color-scheme: dark)").matches &&
-      theme !== THEME_KIND.LIGHT
-    ) {
-      handleChangeTheme(THEME_KIND.DARK);
+    if (storedTheme === THEME_KIND.DARK || storedTheme === THEME_KIND.LIGHT) {
+      handleChangeTheme(storedTheme);
       return;
     }
-    handleChangeTheme(storedTheme);
+
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      handleChangeTheme(THEME_KIND.LIGHT);
+      return;
+    }
+    handleChangeTheme(THEME_KIND.DARK);
   }, []);
 
   return { theme, handleToggleTheme };

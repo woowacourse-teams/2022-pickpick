@@ -30,11 +30,14 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
   *::before,
   *::after {
     box-sizing: border-box;
+    letter-spacing: -0.4px;
+
     ${({ theme }) => css`
       font-family: ${theme.FONT.PRIMARY};
       color: ${theme.COLOR.TEXT.DEFAULT};
     `}
   }
+
   body,
   h1,
   h2,
@@ -50,20 +53,23 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
     margin: 0;
     padding: 0;
   }
+
   ul{
     list-style: none;
   }
+
   a {
     text-decoration: none;
     color: inherit;
   }
+
   input,
   button,
   textarea,
   select {
     font: inherit;
   }
-  
+
   body {
     ${({ theme }: { theme: Theme }) => css`
       background-color: ${theme.COLOR.BACKGROUND.PRIMARY};

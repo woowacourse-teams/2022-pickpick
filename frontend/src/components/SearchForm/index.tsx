@@ -26,32 +26,34 @@ function SearchForm({ currentKeyword, currentChannelIds }: Props) {
 
   return (
     <Dropdown>
-      {({ isDropdownOpened, handleOpenDropdown }) => (
-        <Styled.Container
-          onSubmit={handleSubmitSearchKeyword(selectedChannelIds)}
-        >
-          <SearchInput
-            placeholder="검색 할 키워드를 입력해주세요."
-            onFocus={handleOpenDropdown}
-            onChange={handleChangeSearchKeyword}
-            value={searchKeyword}
+      {({ innerRef, isDropdownOpened, handleOpenDropdown }) => (
+        <div ref={innerRef}>
+          <Styled.Container
+            onSubmit={handleSubmitSearchKeyword(selectedChannelIds)}
           >
-            {allChannels && isDropdownOpened && (
-              <SearchOptions
-                allChannels={allChannels}
-                currentChannels={allChannels.filter(({ id }) =>
-                  currentChannelIds.includes(id)
-                )}
-                remainingChannels={allChannels.filter(
-                  ({ id }) => !currentChannelIds.includes(id)
-                )}
-                selectedChannelIds={selectedChannelIds}
-                handleToggleChannel={handleToggleChannel}
-                handleToggleAllChannels={handleToggleAllChannels}
-              />
-            )}
-          </SearchInput>
-        </Styled.Container>
+            <SearchInput
+              placeholder="검색 할 키워드를 입력해주세요."
+              onFocus={handleOpenDropdown}
+              onChange={handleChangeSearchKeyword}
+              value={searchKeyword}
+            >
+              {allChannels && isDropdownOpened && (
+                <SearchOptions
+                  allChannels={allChannels}
+                  currentChannels={allChannels.filter(({ id }) =>
+                    currentChannelIds.includes(id)
+                  )}
+                  remainingChannels={allChannels.filter(
+                    ({ id }) => !currentChannelIds.includes(id)
+                  )}
+                  selectedChannelIds={selectedChannelIds}
+                  handleToggleChannel={handleToggleChannel}
+                  handleToggleAllChannels={handleToggleAllChannels}
+                />
+              )}
+            </SearchInput>
+          </Styled.Container>
+        </div>
       )}
     </Dropdown>
   );

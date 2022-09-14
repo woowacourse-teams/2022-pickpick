@@ -13,6 +13,7 @@ function useApiError(): ReturnType {
 
   const handleError = (error: CustomError) => {
     const errorCode = error.response?.data?.code;
+    if (errorCode === "INVALID_TOKEN") return;
     const errorMessage =
       ERROR_MESSAGE_BY_CODE[errorCode] ?? ERROR_MESSAGE_BY_CODE.DEFAULT_MESSAGE;
 

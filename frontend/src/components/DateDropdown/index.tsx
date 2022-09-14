@@ -13,9 +13,9 @@ interface Props {
 function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
   return (
     <Dropdown>
-      {({ isDropdownOpened, handleToggleDropdown }) => {
+      {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
         return (
-          <Styled.Container>
+          <Styled.Container ref={innerRef}>
             <DateDropdownToggle
               text={getMessagesDate(postedDate)}
               onClick={handleToggleDropdown}
