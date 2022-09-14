@@ -31,6 +31,9 @@ class ChannelSubscriptionServiceTest {
     private ChannelSubscriptionService channelSubscriptionService;
 
     @Autowired
+    private ChannelService channelService;
+
+    @Autowired
     private ChannelRepository channels;
 
     @Autowired
@@ -222,7 +225,7 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
         // then
-        boolean isSubscribed = channelSubscriptionService.findAll(member.getId())
+        boolean isSubscribed = channelService.findAll(member.getId())
                 .getChannels()
                 .get(0)
                 .isSubscribed();
