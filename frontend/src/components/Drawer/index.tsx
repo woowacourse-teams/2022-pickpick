@@ -1,5 +1,5 @@
 import * as Styled from "./style";
-import PlusIcon from "@public/assets/icons/PlusIcon.svg";
+import PlusIcon from "@src/components/@svgIcons/PlusIcon";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import { PATH_NAME } from "@src/@constants";
