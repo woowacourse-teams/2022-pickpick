@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,11 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@Sql({"/truncate.sql", "/message.sql"})
-@Transactional
+@Sql({"/message.sql"})
 @SpringBootTest
 class MessageServiceTest {
 
@@ -37,29 +37,11 @@ class MessageServiceTest {
 
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
     @SpyBean
     private Clock clock;
-
-    @DisplayName("메시지 조회 요청에 따른 메시지가 응답된다")
-    @MethodSource("slackMessageRequest")
-    @ParameterizedTest(name = "{0}")
-    void findMessages(
-            final String description, final MessageRequest messageRequest,
-            final List<Long> expectedMessageIds, final boolean expectedLast) {
-        // given
-        MessageResponses messageResponses = messageService.find(MEMBER_ID, messageRequest);
-
-        // when
-        List<MessageResponse> messages = messageResponses.getMessages();
-        boolean last = messageResponses.isLast();
-
-        // then
-        assertAll(
-                () -> assertThat(messages).extracting("id").isEqualTo(expectedMessageIds),
-                () -> assertThat(last).isEqualTo(expectedLast)
-        );
-    }
 
     private static Stream<Arguments> slackMessageRequest() {
         return Stream.of(
@@ -86,6 +68,48 @@ class MessageServiceTest {
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
+    }
+
+    private static Stream<Arguments> messageRequestWithReminder() {
+        return Stream.of(
+                Arguments.of("현재 시간보다 오래된 리마인더가 존재하면 isSetReminded가 false이다",
+                        "2022-08-13T00:00:00Z",
+                        new MessageRequest("", "", List.of(5L), true, null, 1),
+                        false),
+                Arguments.of("현재 시간보다 최신인 리마인더가 존재하면 isSetReminded가 true이다",
+                        "2022-08-10T00:00:00Z",
+                        new MessageRequest("", "", List.of(5L), true, null, 1),
+                        true),
+                Arguments.of("현재 시간과 동일한 리마인더가 존재하면 isSetReminded가 false이다",
+                        "2022-08-12T14:20:00Z",
+                        new MessageRequest("", "", List.of(5L), true, null, 1),
+                        false)
+        );
+    }
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
+
+    @DisplayName("메시지 조회 요청에 따른 메시지가 응답된다")
+    @MethodSource("slackMessageRequest")
+    @ParameterizedTest(name = "{0}")
+    void findMessages(
+            final String description, final MessageRequest messageRequest,
+            final List<Long> expectedMessageIds, final boolean expectedLast) {
+        // given
+        MessageResponses messageResponses = messageService.find(MEMBER_ID, messageRequest);
+
+        // when
+        List<MessageResponse> messages = messageResponses.getMessages();
+        boolean last = messageResponses.isLast();
+
+        // then
+        assertAll(
+                () -> assertThat(messages).extracting("id").isEqualTo(expectedMessageIds),
+                () -> assertThat(last).isEqualTo(expectedLast)
+        );
     }
 
     @DisplayName("메시지 조회 시, 텍스트가 비어있는 메시지는 필터링된다")
@@ -120,23 +144,6 @@ class MessageServiceTest {
 
         // then
         assertThat(message.isSetReminded()).isEqualTo(expected);
-    }
-
-    private static Stream<Arguments> messageRequestWithReminder() {
-        return Stream.of(
-                Arguments.of("현재 시간보다 오래된 리마인더가 존재하면 isSetReminded가 false이다",
-                        "2022-08-13T00:00:00Z",
-                        new MessageRequest("", "", List.of(5L), true, null, 1),
-                        false),
-                Arguments.of("현재 시간보다 최신인 리마인더가 존재하면 isSetReminded가 true이다",
-                        "2022-08-10T00:00:00Z",
-                        new MessageRequest("", "", List.of(5L), true, null, 1),
-                        true),
-                Arguments.of("현재 시간과 동일한 리마인더가 존재하면 isSetReminded가 false이다",
-                        "2022-08-12T14:20:00Z",
-                        new MessageRequest("", "", List.of(5L), true, null, 1),
-                        false)
-        );
     }
 
     @DisplayName("메시지 조회 시, remindDate가 함께 전달된다")

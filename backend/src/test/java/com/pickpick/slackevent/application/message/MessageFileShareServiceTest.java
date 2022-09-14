@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -23,17 +24,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@AutoConfigureMockMvc
 @SpringBootTest
 class MessageFileShareServiceTest {
 
@@ -59,9 +57,16 @@ class MessageFileShareServiceTest {
 
     @Autowired
     private ChannelRepository channels;
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
     @MockBean
     private MethodsClient slackClient;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있지 않으면 채널 신규 저장 후 메시지를 저장한다")
     @ValueSource(strings = {"", " ", "파일과 함께 전송한 메시지 text"})
