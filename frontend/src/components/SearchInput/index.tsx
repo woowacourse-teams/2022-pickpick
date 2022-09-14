@@ -1,6 +1,6 @@
 import { PropsWithChildren, InputHTMLAttributes } from "react";
 import * as Styled from "./style";
-import SearchIcon from "@public/assets/icons/SearchIcon.svg";
+import SearchIcon from "@src/components/@svgIcons/SearchIcon";
 import { FlexRow } from "@src/@styles/shared";
 
 function SearchInput({
