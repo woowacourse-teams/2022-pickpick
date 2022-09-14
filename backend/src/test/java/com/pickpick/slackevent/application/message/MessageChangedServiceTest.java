@@ -21,7 +21,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class MessageChangedServiceTest {
@@ -80,7 +79,6 @@ class MessageChangedServiceTest {
         );
     }
 
-    @Transactional
     @DisplayName("subtype이 메시지 수정 이벤트 발생이지만, message 내부에 thread_broadcast 타입이 있다면 메시지 저장")
     @Test
     void saveThreadBroadcastMessage() {
@@ -99,8 +97,7 @@ class MessageChangedServiceTest {
         assertAll(
                 () -> assertThat(beforeSaveMessage).isEmpty(),
                 () -> assertThat(afterSaveMessage).isPresent(),
-                () -> assertThat(afterSaveMessage.get().getSlackId()).isEqualTo(SAMPLE_MESSAGE.getSlackId()),
-                () -> assertThat(afterSaveMessage.get().getChannel()).isEqualTo(SAMPLE_CHANNEL)
+                () -> assertThat(afterSaveMessage.get().getSlackId()).isEqualTo(SAMPLE_MESSAGE.getSlackId())
         );
     }
 
