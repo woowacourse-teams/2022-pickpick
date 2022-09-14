@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -13,15 +14,16 @@ import com.pickpick.message.domain.Bookmark;
 import com.pickpick.message.domain.BookmarkRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
-import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/truncate.sql", "/bookmark.sql"})
+@Sql({"/bookmark.sql"})
 @SpringBootTest
 class BookmarkServiceTest {
 
@@ -50,6 +52,9 @@ class BookmarkServiceTest {
     @Autowired
     private BookmarkRepository bookmarks;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     private static Stream<Arguments> parameterProvider() {
         return Stream.of(
                 Arguments.arguments("멤버 ID 2번으로 북마크를 조회한다", null, 2L, List.of(1L), true),
@@ -60,13 +65,19 @@ class BookmarkServiceTest {
         );
     }
 
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
+
     @DisplayName("북마크를 생성한다")
     @Test
     void save() {
         // given
         Member member = members.save(new Member("U1234", "사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = messages.save(new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
+        Message message = messages.save(
+                new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
 
         BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
         int beforeSize = findBookmarksSize(member);
@@ -112,7 +123,8 @@ class BookmarkServiceTest {
         // given
         Member member = members.save(new Member("U1234", "사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = messages.save(new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
+        Message message = messages.save(
+                new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
         Bookmark bookmark = bookmarks.save(new Bookmark(member, message));
 
         // when
@@ -130,7 +142,8 @@ class BookmarkServiceTest {
         Member owner = members.save(new Member("U1234", "사용자", "user.png"));
         Member other = members.save(new Member("U1235", "다른 사용자", "user.png"));
         Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = messages.save(new Message("M1234", "메시지", owner, channel, LocalDateTime.now(), LocalDateTime.now()));
+        Message message = messages.save(
+                new Message("M1234", "메시지", owner, channel, LocalDateTime.now(), LocalDateTime.now()));
         Bookmark bookmark = new Bookmark(owner, message);
         bookmarks.save(bookmark);
 
