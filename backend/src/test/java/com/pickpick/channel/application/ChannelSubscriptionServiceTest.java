@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
+import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.exception.channel.ChannelNotFoundException;
@@ -31,10 +32,10 @@ class ChannelSubscriptionServiceTest {
     private ChannelSubscriptionService channelSubscriptionService;
 
     @Autowired
-    private ChannelService channelService;
+    private ChannelRepository channels;
 
     @Autowired
-    private ChannelRepository channels;
+    private ChannelSubscriptionRepository channelSubscriptions;
 
     @Autowired
     private MemberRepository members;
@@ -225,10 +226,7 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
         // then
-        boolean isSubscribed = channelService.findAll(member.getId())
-                .getChannels()
-                .get(0)
-                .isSubscribed();
+        boolean isSubscribed = channelSubscriptions.existsByChannelAndMember(channel, member);
 
         assertThat(isSubscribed).isFalse();
     }
