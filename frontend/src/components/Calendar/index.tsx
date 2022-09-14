@@ -1,6 +1,6 @@
 import * as Styled from "./style";
-import LeftArrowIcon from "@public/assets/icons/ArrowIcon-Left.svg";
-import RightArrowIcon from "@public/assets/icons/ArrowIcon-Right.svg";
+import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
+import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
 import useCalendar from "@src/hooks/useCalendar";
 import WrapperButton from "../@shared/WrapperButton";
 import { Link } from "react-router-dom";
@@ -28,7 +28,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
     <Styled.Container>
       <Styled.Month>
         <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
-          <LeftArrowIcon width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconLeft width="24px" height="24px" fill="#8B8B8B" />
         </WrapperButton>
         <Styled.Title>
           {date.getFullYear()}년 {MONTHS[date.getMonth()]}월
@@ -39,7 +39,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
         >
-          <RightArrowIcon width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconRight width="24px" height="24px" fill="#8B8B8B" />
         </WrapperButton>
       </Styled.Month>
 

@@ -1,6 +1,8 @@
 import NotFound from "@src/pages/NotFound";
 import { PATH_NAME } from "@src/@constants";
 import LayoutContainer from "@src/components/@layouts/LayoutContainer";
+import PrivateRouter from "@src/components/PrivateRouter";
+import PublicRouter from "@src/components/PublicRouter";
 import {
   AddChannel,
   Bookmark,
@@ -11,8 +13,6 @@ import {
   Certification,
   SearchResult,
 } from "./pages";
-import PrivateRouter from "@src/components/PrivateRouter";
-import PublicRouter from "@src/components/PublicRouter";
 
 const routes = [
   {
@@ -77,7 +77,6 @@ const routes = [
           </LayoutContainer>
         ),
       },
-
       {
         path: PATH_NAME.SEARCH_RESULT,
         element: (

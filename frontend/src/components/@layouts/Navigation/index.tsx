@@ -1,10 +1,10 @@
 import * as Styled from "./style";
 import { PATH_NAME } from "@src/@constants";
-import MenuIcon from "@public/assets/icons/MenuIcon.svg";
-import StarIcon from "@public/assets/icons/StarIcon.svg";
-import HomeIcon from "@public/assets/icons/HomeIcon.svg";
-import ReminderIconInactive from "@public/assets/icons/ReminderIcon-Inactive.svg";
-import InfoIcon from "@public/assets/icons/InfoIcon.svg";
+import StarIcon from "@src/components/@svgIcons/StarIcon";
+import MenuIcon from "@src/components/@svgIcons/MenuIcon";
+import HomeIcon from "@src/components/@svgIcons/HomeIcon";
+import InfoIcon from "@src/components/@svgIcons/InfoIcon";
+import ReminderIconInactive from "@src/components/@svgIcons/ReminderIconInactive";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
