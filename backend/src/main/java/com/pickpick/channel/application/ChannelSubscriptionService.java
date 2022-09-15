@@ -6,6 +6,7 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
@@ -36,10 +37,6 @@ public class ChannelSubscriptionService {
         this.channelSubscriptions = channelSubscriptions;
         this.channels = channels;
         this.members = members;
-    }
-
-    public List<ChannelSubscription> findAllOrderByViewOrder(final Long memberId) {
-        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId);
     }
 
     @Transactional
@@ -143,5 +140,12 @@ public class ChannelSubscriptionService {
         if (!channelSubscriptions.existsByChannelAndMember(channel, member)) {
             throw new SubscriptionNotExistException(channel.getId());
         }
+    }
+
+    public List<ChannelSubscriptionResponse> findByMemberId(final Long memberId) {
+        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId)
+                .stream()
+                .map(ChannelSubscriptionResponse::from)
+                .collect(Collectors.toList());
     }
 }

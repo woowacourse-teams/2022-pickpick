@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
@@ -57,7 +57,7 @@ class ChannelSubscriptionServiceTest {
         subscribeChannel(member, channel);
 
         // then
-        assertThat(channelSubscriptionService.findAllOrderByViewOrder(member.getId())).hasSize(1);
+        assertThat(channelSubscriptionService.findByMemberId(member.getId())).hasSize(1);
     }
 
     @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
@@ -97,7 +97,7 @@ class ChannelSubscriptionServiceTest {
         subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
 
         // when
-        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
                 member.getId());
         // then
         assertThat(channelSubscriptions).extracting("id")
@@ -123,7 +123,7 @@ class ChannelSubscriptionServiceTest {
         );
         channelSubscriptionService.updateOrders(request, member.getId());
 
-        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
                 member.getId());
 
         //then
