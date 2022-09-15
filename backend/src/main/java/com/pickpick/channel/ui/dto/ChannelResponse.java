@@ -2,7 +2,7 @@ package com.pickpick.channel.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pickpick.channel.domain.Channel;
-import java.util.Map;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,11 +24,11 @@ public class ChannelResponse {
         this.subscribed = subscribed;
     }
 
-    public static ChannelResponse of(final Map<Long, Channel> subscribedChannels, final Channel channel) {
+    public static ChannelResponse of(final Set<Channel> subscribedChannels, final Channel channel) {
         return ChannelResponse.builder()
                 .id(channel.getId())
                 .name(channel.getName())
-                .subscribed(subscribedChannels.containsKey(channel.getId()))
+                .subscribed(subscribedChannels.contains(channel))
                 .build();
     }
 }

@@ -12,7 +12,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +53,7 @@ public class ChannelService {
 
     public ChannelResponses findAll(final Long memberId) {
         List<Channel> allChannels = channels.findAllByOrderByName();
-        Map<Long, Channel> subscribedChannels = findSubscribedChannels(memberId);
+        Set<Channel> subscribedChannels = findSubscribedChannels(memberId);
 
         List<ChannelResponse> channelResponses = findChannelResponses(allChannels, subscribedChannels);
         return new ChannelResponses(channelResponses);
@@ -61,16 +61,17 @@ public class ChannelService {
 
 
     private List<ChannelResponse> findChannelResponses(final List<Channel> allChannels,
-                                                       final Map<Long, Channel> subscribedChannels) {
+                                                       final Set<Channel> subscribedChannels) {
         return allChannels.stream()
                 .map(channel -> ChannelResponse.of(subscribedChannels, channel))
                 .collect(Collectors.toList());
     }
 
-    private Map<Long, Channel> findSubscribedChannels(final Long memberId) {
+    private Set<Channel> findSubscribedChannels(final Long memberId) {
         return channelSubscriptions.findAllByMemberId(memberId)
                 .stream()
-                .collect(Collectors.toMap(ChannelSubscription::getChannelId, ChannelSubscription::getChannel));
+                .map(ChannelSubscription::getChannel)
+                .collect(Collectors.toSet());
     }
 
 }
