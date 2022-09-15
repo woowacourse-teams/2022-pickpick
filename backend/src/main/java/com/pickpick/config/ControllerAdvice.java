@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private static final String ERROR_LOGGING_MESSAGE = "예외 발생: ";
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public ErrorResponse handleBadRequestException(final BadRequestException e) {
-        log.error("예외 발생: ", e);
+        log.error(ERROR_LOGGING_MESSAGE, e);
         return new ErrorResponse(e.getErrorCode(), e.getClientMessage());
 
     }
@@ -25,13 +27,14 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
-        log.error("예외 발생: ", e);
+        log.error(ERROR_LOGGING_MESSAGE, e);
         return new ErrorResponse(e.getErrorCode(), e.getClientMessage());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public void handleSlackApiCallException(final SlackApiCallException e) {
-        log.error("예외 발생: ", e);
+        log.error(ERROR_LOGGING_MESSAGE, e);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
