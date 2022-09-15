@@ -3,6 +3,8 @@ package com.pickpick.slackevent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import java.util.Map;
@@ -38,7 +40,7 @@ class SlackEventTest {
     @MethodSource("methodSource")
     void findSlackEventByTypeAndSubtype(final Map<String, Object> request, final SlackEvent expected) {
         // given & when
-        SlackEvent actual = SlackEvent.of(request);
+        SlackEvent actual = SlackEvent.of(toJson(request));
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -51,7 +53,15 @@ class SlackEventTest {
         Map<String, Object> request = Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"));
 
         // when & then
-        assertThatThrownBy(() -> SlackEvent.of(request))
+        assertThatThrownBy(() -> SlackEvent.of(toJson(request)))
                 .isInstanceOf(SlackEventNotFoundException.class);
+    }
+
+    private String toJson(Map<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

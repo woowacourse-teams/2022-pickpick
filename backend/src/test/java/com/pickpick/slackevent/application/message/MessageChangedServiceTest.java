@@ -3,6 +3,8 @@ package com.pickpick.slackevent.application.message;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
@@ -63,7 +65,7 @@ class MessageChangedServiceTest {
         saveMessage();
         String updatedText = "Message is updated!";
         String modifiedDate = "1234567890.123456";
-        Map<String, Object> request = messageChangedEvent(updatedText, modifiedDate);
+        String request = messageChangedEvent(updatedText, modifiedDate);
 
         // when
         messageChangedService.execute(request);
@@ -85,7 +87,7 @@ class MessageChangedServiceTest {
         // given 
         members.saveAll(List.of(SAMPLE_MEMBER));
         channels.save(SAMPLE_CHANNEL);
-        Map<String, Object> request = messageThreadBroadcastEvent();
+        String request = messageThreadBroadcastEvent();
         Optional<Message> beforeSaveMessage = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
         // when
@@ -109,7 +111,7 @@ class MessageChangedServiceTest {
         messages.save(SAMPLE_MESSAGE);
     }
 
-    private Map<String, Object> messageChangedEvent(String updatedText, String modifiedDate) {
+    private String messageChangedEvent(String updatedText, String modifiedDate) {
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", "message_changed",
@@ -125,10 +127,10 @@ class MessageChangedServiceTest {
                 "client_msg_id", SAMPLE_MESSAGE.getSlackId());
 
         Map<String, Object> request = Map.of("event", event);
-        return request;
+        return toJson(request);
     }
 
-    private Map<String, Object> messageThreadBroadcastEvent() {
+    private String messageThreadBroadcastEvent() {
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", "message_changed",
@@ -147,6 +149,14 @@ class MessageChangedServiceTest {
                 "client_msg_id", SAMPLE_MESSAGE.getSlackId());
 
         Map<String, Object> request = Map.of("event", event);
-        return request;
+        return toJson(request);
+    }
+
+    private String toJson(Map<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

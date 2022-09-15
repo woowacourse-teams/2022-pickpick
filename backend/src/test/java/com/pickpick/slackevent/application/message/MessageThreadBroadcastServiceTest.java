@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
@@ -45,7 +47,7 @@ class MessageThreadBroadcastServiceTest {
             TimeUtils.toLocalDateTime("1234567890"),
             TimeUtils.toLocalDateTime("1234567890")
     );
-    private final Map<String, Object> MESSAGE_THREAD_BROADCAST_REQUEST =
+    private final String MESSAGE_THREAD_BROADCAST_REQUEST = toJson(
             Map.of("event", Map.of(
                             "type", SlackEvent.MESSAGE_THREAD_BROADCAST.getType(),
                             "subtype", SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype(),
@@ -55,7 +57,8 @@ class MessageThreadBroadcastServiceTest {
                             "ts", "1234567890",
                             "client_msg_id", SAMPLE_MESSAGE.getSlackId()
                     )
-            );
+            )
+    );
     @Autowired
     private MessageThreadBroadcastService messageThreadBroadcastService;
 
@@ -198,5 +201,13 @@ class MessageThreadBroadcastServiceTest {
                 () -> assertThat(messageAfterExecute).isPresent(),
                 () -> assertThat(messageAfterExecute.get().getText()).isEqualTo("messageText")
         );
+    }
+
+    private String toJson(Map<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

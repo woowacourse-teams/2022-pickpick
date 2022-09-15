@@ -2,7 +2,8 @@ package com.pickpick.slackevent.ui;
 
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventServiceFinder;
-import java.util.Map;
+import com.pickpick.slackevent.ui.dto.ChallengeRequest;
+import com.pickpick.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SlackEventController {
 
     private static final String URL_VERIFICATION = "url_verification";
-    private static final String TYPE = "type";
-    private static final String CHALLENGE = "challenge";
     private static final String EMPTY_STRING = "";
 
     private final SlackEventServiceFinder slackEventServiceFinder;
@@ -27,11 +26,12 @@ public class SlackEventController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<String> save(final @RequestBody String requestBody) {
         log.info("Slack Event: {}", requestBody);
 
         if (isUrlVerificationRequest(requestBody)) {
-            return ResponseEntity.ok((String) requestBody.get(CHALLENGE));
+            ChallengeRequest challengeRequest = JsonUtils.convert(requestBody, ChallengeRequest.class);
+            return ResponseEntity.ok(challengeRequest.getChallenge());
         }
 
         slackEventServiceFinder.findBySlackEvent(SlackEvent.of(requestBody))
@@ -40,7 +40,8 @@ public class SlackEventController {
         return ResponseEntity.ok(EMPTY_STRING);
     }
 
-    private boolean isUrlVerificationRequest(final Map<String, Object> map) {
-        return URL_VERIFICATION.equals(String.valueOf(map.get(TYPE)));
+    private boolean isUrlVerificationRequest(final String request) {
+        ChallengeRequest challengeRequest = JsonUtils.convert(request, ChallengeRequest.class);
+        return URL_VERIFICATION.equals(challengeRequest.getType());
     }
 }

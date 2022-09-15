@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
@@ -42,7 +44,7 @@ class MessageCreatedServiceTest {
             TimeUtils.toLocalDateTime("1234567890"),
             TimeUtils.toLocalDateTime("1234567890")
     );
-    private static final Map<String, Object> MESSAGE_CREATED_REQUEST =
+    private static final String MESSAGE_CREATED_REQUEST = toJson(
             Map.of("event", Map.of(
                     "type", "message",
                     "channel", SAMPLE_CHANNEL.getSlackId(),
@@ -50,8 +52,9 @@ class MessageCreatedServiceTest {
                     "user", SAMPLE_MEMBER.getSlackId(),
                     "ts", "1234567890",
                     "client_msg_id", SAMPLE_MESSAGE.getSlackId())
-            );
-    private static final Map<String, Object> MESSAGE_REPLIED_REQUEST =
+            )
+    );
+    private static final String MESSAGE_REPLIED_REQUEST = toJson(
             Map.of("event", Map.of(
                     "type", "message",
                     "channel", SAMPLE_CHANNEL.getSlackId(),
@@ -60,8 +63,8 @@ class MessageCreatedServiceTest {
                     "ts", "1234567890",
                     "client_msg_id", SAMPLE_MESSAGE.getSlackId(),
                     "thread_ts", "1234599999")
-            );
-    private static final int FIRST_INDEX = 0;
+            )
+    );
 
     @Autowired
     private MessageCreatedService messageCreatedService;
@@ -161,5 +164,13 @@ class MessageCreatedServiceTest {
         Optional<Message> message = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
 
         assertThat(message).isEmpty();
+    }
+
+    private static String toJson(Map<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

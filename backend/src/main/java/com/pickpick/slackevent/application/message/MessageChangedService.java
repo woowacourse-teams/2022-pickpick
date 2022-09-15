@@ -5,23 +5,16 @@ import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.message.dto.MessageChangedRequest;
+import com.pickpick.slackevent.application.message.dto.MessageDto;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
-import java.util.Map;
+import com.pickpick.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
 public class MessageChangedService implements SlackEventService {
-
-    private static final String EVENT = "event";
-    private static final String USER = "user";
-    private static final String TIMESTAMP = "ts";
-    private static final String TEXT = "text";
-    private static final String CLIENT_MSG_ID = "client_msg_id";
-    private static final String CHANNEL = "channel";
-    private static final String MESSAGE = "message";
-    private static final String SUBTYPE = "subtype";
 
     private final MessageThreadBroadcastService messageThreadBroadcastService;
     private final MessageRepository messages;
@@ -33,7 +26,7 @@ public class MessageChangedService implements SlackEventService {
     }
 
     @Override
-    public void execute(final Map<String, Object> requestBody) {
+    public void execute(final String requestBody) {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
         if (isThreadBroadcastEvent(requestBody)) {
@@ -47,25 +40,24 @@ public class MessageChangedService implements SlackEventService {
         message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate());
     }
 
-    private boolean isThreadBroadcastEvent(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map) requestBody.get(EVENT);
-        Map<String, String> message = (Map) event.get(MESSAGE);
-        String subtype = message.get(SUBTYPE);
+    private boolean isThreadBroadcastEvent(final String requestBody) {
+        MessageChangedRequest request = JsonUtils.convert(requestBody, MessageChangedRequest.class);
+        String subtype = request.getEvent().getMessage().getSubtype();
 
         return SlackEvent.MESSAGE_THREAD_BROADCAST.isSameSubtype(subtype);
     }
 
-    private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map) requestBody.get(EVENT);
-        Map<String, Object> message = (Map) event.get(MESSAGE);
+    private SlackMessageDto convert(final String requestBody) {
+        MessageChangedRequest request = JsonUtils.convert(requestBody, MessageChangedRequest.class);
+        MessageDto message = request.getEvent().getMessage();
 
         return new SlackMessageDto(
-                (String) message.get(USER),
-                (String) message.get(CLIENT_MSG_ID),
-                (String) message.get(TIMESTAMP),
-                (String) message.get(TIMESTAMP),
-                (String) message.get(TEXT),
-                (String) event.get(CHANNEL)
+                message.getUser(),
+                message.getClientMsgId(),
+                message.getTs(),
+                message.getTs(),
+                message.getText(),
+                request.getEvent().getChannel()
         );
     }
 

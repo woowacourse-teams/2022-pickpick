@@ -4,7 +4,9 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
-import java.util.Map;
+import com.pickpick.slackevent.application.channel.dto.ChannelDeletedRequest;
+import com.pickpick.slackevent.application.channel.dto.ChannelRenameRequest;
+import com.pickpick.utils.JsonUtils;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +14,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChannelDeletedService implements SlackEventService {
 
-    private static final String CHANNEL_SLACK_ID = "channel";
-
     private final ChannelRepository channels;
     private final MessageRepository messages;
 
-    public ChannelDeletedService(ChannelRepository channels, MessageRepository messages) {
+    public ChannelDeletedService(final ChannelRepository channels, final MessageRepository messages) {
         this.channels = channels;
         this.messages = messages;
     }
 
     @Override
-    public void execute(final Map<String, Object> requestBody) {
+    public void execute(final String requestBody) {
         String channelSlackId = extractChannelSlackId(requestBody);
 
         messages.deleteAllByChannelSlackId(channelSlackId);
         channels.deleteBySlackId(channelSlackId);
     }
 
-    private String extractChannelSlackId(final Map<String, Object> requestBody) {
-        return (String) requestBody.get(CHANNEL_SLACK_ID);
+    private String extractChannelSlackId(final String requestBody) {
+        ChannelDeletedRequest request = JsonUtils.convert(requestBody, ChannelDeletedRequest.class);
+        return request.getChannel();
     }
 
     @Override

@@ -6,7 +6,9 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.member.dto.MemberProfileChangedDto;
-import java.util.Map;
+import com.pickpick.slackevent.application.member.dto.MemberRequest;
+import com.pickpick.slackevent.application.member.dto.ProfileDto;
+import com.pickpick.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -15,14 +17,6 @@ import org.springframework.util.StringUtils;
 @Service
 public class MemberChangedService implements SlackEventService {
 
-    private static final String USER = "user";
-    private static final String PROFILE = "profile";
-    private static final String SLACK_ID = "id";
-    private static final String DISPLAY_NAME = "display_name";
-    private static final String IMAGE_URL = "image_512";
-    private static final String REAL_NAME = "real_name";
-    private static final String EVENT = "event";
-
     private final MemberRepository members;
 
     public MemberChangedService(final MemberRepository members) {
@@ -30,7 +24,7 @@ public class MemberChangedService implements SlackEventService {
     }
 
     @Override
-    public void execute(final Map<String, Object> requestBody) {
+    public void execute(final String requestBody) {
         MemberProfileChangedDto memberProfileChangedDto = convert(requestBody);
 
         String slackId = memberProfileChangedDto.getSlackId();
@@ -40,23 +34,22 @@ public class MemberChangedService implements SlackEventService {
         member.update(memberProfileChangedDto.getUsername(), memberProfileChangedDto.getThumbnailUrl());
     }
 
-    private MemberProfileChangedDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map) requestBody.get(EVENT);
-        Map<String, Object> user = (Map) event.get(USER);
-        Map<String, Object> profile = (Map) user.get(PROFILE);
+    private MemberProfileChangedDto convert(final String requestBody) {
+        MemberRequest request = JsonUtils.convert(requestBody, MemberRequest.class);
+        ProfileDto profile = request.getEvent().getUser().getProfile();
 
         return new MemberProfileChangedDto(
-                (String) user.get(SLACK_ID),
+                request.getEvent().getUser().getId(),
                 extractUsername(profile),
-                (String) profile.get(IMAGE_URL)
+                profile.getImage512()
         );
     }
 
-    private String extractUsername(final Map<String, Object> profile) {
-        String username = (String) profile.get(DISPLAY_NAME);
+    private String extractUsername(final ProfileDto profile) {
+        String username = profile.getDisplayName();
 
         if (!StringUtils.hasText(username)) {
-            return (String) profile.get(REAL_NAME);
+            return profile.getRealName();
         }
 
         return username;

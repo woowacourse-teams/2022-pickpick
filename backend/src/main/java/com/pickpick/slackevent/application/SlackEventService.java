@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface SlackEventService {
 
-    void execute(Map<String, Object> requestBody);
+    void execute(String requestBody);
 
     boolean isSameSlackEvent(SlackEvent slackEvent);
 }

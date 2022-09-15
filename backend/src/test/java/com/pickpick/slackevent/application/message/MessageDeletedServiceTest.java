@@ -2,6 +2,8 @@ package com.pickpick.slackevent.application.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
@@ -64,7 +66,7 @@ class MessageDeletedServiceTest {
         Map<String, Object> request = Map.of("event", event);
 
         // when
-        messageDeletedService.execute(request);
+        messageDeletedService.execute(toJson(request));
 
         // then
         Optional<Message> findMessage = messages.findBySlackId(MESSAGE_SLACK_ID);
@@ -77,5 +79,13 @@ class MessageDeletedServiceTest {
         channels.save(SAMPLE_CHANNEL);
 
         messages.save(SAMPLE_MESSAGE);
+    }
+
+    private String toJson(Map<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

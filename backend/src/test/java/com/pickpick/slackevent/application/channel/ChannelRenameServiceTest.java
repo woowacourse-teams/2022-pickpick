@@ -3,6 +3,8 @@ package com.pickpick.slackevent.application.channel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.channel.ChannelNotFoundException;
@@ -37,7 +39,7 @@ class ChannelRenameServiceTest {
         );
 
         // when
-        channelRenameService.execute(request);
+        channelRenameService.execute(toJson(request));
 
         // then
         Channel renamedChannel = channels.findById(channel.getId())
@@ -59,7 +61,15 @@ class ChannelRenameServiceTest {
         );
 
         // when & then
-        assertThatThrownBy(() -> channelRenameService.execute(request))
+        assertThatThrownBy(() -> channelRenameService.execute(toJson(request)))
                 .isInstanceOf(ChannelNotFoundException.class);
+    }
+
+    private String toJson(Map<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

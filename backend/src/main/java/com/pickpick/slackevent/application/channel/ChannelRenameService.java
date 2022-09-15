@@ -5,18 +5,15 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.channel.dto.ChannelRenameRequest;
 import com.pickpick.slackevent.application.channel.dto.SlackChannelRenameDto;
-import java.util.Map;
+import com.pickpick.utils.JsonUtils;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
 public class ChannelRenameService implements SlackEventService {
-
-    private static final String CHANNEL = "channel";
-    private static final String ID = "id";
-    private static final String NAME = "name";
 
     private final ChannelRepository channels;
 
@@ -25,7 +22,7 @@ public class ChannelRenameService implements SlackEventService {
     }
 
     @Override
-    public void execute(final Map<String, Object> requestBody) {
+    public void execute(final String requestBody) {
         SlackChannelRenameDto slackChannelRenameDto = convert(requestBody);
 
         Channel channel = channels.findBySlackId(slackChannelRenameDto.getSlackId())
@@ -34,12 +31,12 @@ public class ChannelRenameService implements SlackEventService {
         channel.changeName(slackChannelRenameDto.getNewName());
     }
 
-    private SlackChannelRenameDto convert(final Map<String, Object> requestBody) {
-        Map<String, String> channel = (Map) requestBody.get(CHANNEL);
+    private SlackChannelRenameDto convert(final String requestBody) {
+        ChannelRenameRequest request = JsonUtils.convert(requestBody, ChannelRenameRequest.class);
 
         return new SlackChannelRenameDto(
-                channel.get(ID),
-                channel.get(NAME)
+                request.getChannel().getId(),
+                request.getChannel().getName()
         );
     }
 

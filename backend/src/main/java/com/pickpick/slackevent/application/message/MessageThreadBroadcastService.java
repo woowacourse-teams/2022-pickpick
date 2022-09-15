@@ -9,21 +9,16 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.message.dto.MessageCreatedDto;
+import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
-import java.util.Map;
+import com.pickpick.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
 public class MessageThreadBroadcastService implements SlackEventService {
-
-    private static final String EVENT = "event";
-    private static final String USER = "user";
-    private static final String TIMESTAMP = "ts";
-    private static final String TEXT = "text";
-    private static final String CLIENT_MSG_ID = "client_msg_id";
-    private static final String CHANNEL = "channel";
 
     private final MessageRepository messages;
     private final MemberRepository members;
@@ -39,22 +34,23 @@ public class MessageThreadBroadcastService implements SlackEventService {
     }
 
     @Override
-    public void execute(final Map<String, Object> requestBody) {
+    public void execute(final String requestBody) {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
         save(slackMessageDto);
     }
 
-    private SlackMessageDto convert(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get(EVENT);
+    private SlackMessageDto convert(final String requestBody) {
+        MessageCreatedRequest request = JsonUtils.convert(requestBody, MessageCreatedRequest.class);
+        MessageCreatedDto message = request.getEvent();
 
         return new SlackMessageDto(
-                (String) event.get(USER),
-                (String) event.get(CLIENT_MSG_ID),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TIMESTAMP),
-                (String) event.get(TEXT),
-                (String) event.get(CHANNEL)
+                message.getUser(),
+                message.getClientMsgId(),
+                message.getTs(),
+                message.getTs(),
+                message.getText(),
+                message.getChannel()
         );
     }
 
