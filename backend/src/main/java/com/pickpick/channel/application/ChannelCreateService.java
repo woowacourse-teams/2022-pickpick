@@ -24,9 +24,9 @@ public class ChannelCreateService {
 
     public Channel createChannel(final String channelSlackId) {
         try {
-            Conversation conversation = slackClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
-            ).getChannel();
+            Conversation conversation = slackClient
+                    .conversationsInfo(request -> request.channel(channelSlackId))
+                    .getChannel();
 
             Channel channel = toChannel(conversation);
 
