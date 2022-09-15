@@ -1,12 +1,12 @@
 import * as Styled from "./style";
-import Calendar from "@public/assets/icons/Calendar.svg";
-import ReminderIconActive from "@public/assets/icons/ReminderIcon-Active.svg";
+import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
+import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
 import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
-import useMutateReminder from "@src/hooks/useMutateReminder";
+import useMutateReminder from "@src/hooks/query/useMutateReminder";
 import { getDateInformation } from "@src/@utils";
 
 const generateDateTimeOptions = () => {
@@ -114,7 +114,7 @@ function ReminderModal({
                 )}일`}
                 handleToggleDropdown={handleToggleDropdown}
               >
-                <Calendar width="16px" height="16px" fill="#8B8B8B" />
+                <CalendarIcon width="16px" height="16px" fill="#8B8B8B" />
               </DateTimePickerToggle>
 
               {isDropdownOpened && (

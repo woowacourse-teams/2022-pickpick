@@ -1,19 +1,14 @@
 import * as Styled from "../Feed/style";
 import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import { useInfiniteQuery } from "react-query";
-import { ResponseMessages, CustomError } from "@src/@types/shared";
-import { getMessages } from "@src/api/messages";
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import { useLocation, useParams } from "react-router-dom";
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
-import { previousMessagesCallback, nextMessagesCallback } from "@src/api/utils";
 import useMessageDate from "@src/hooks/useMessageDate";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
-import { QUERY_KEY } from "@src/@constants";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import DateDropdown from "@src/components/DateDropdown";
 import useModal from "@src/hooks/useModal";
 import Portal from "@src/components/@shared/Portal";
@@ -22,23 +17,23 @@ import Calendar from "@src/components/Calendar";
 import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetTargetMessage from "@src/hooks/useSetTargetMessage";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
+import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
   const { isRenderDate } = useMessageDate();
-  useRecentFeedPath();
 
   const {
     reminderTarget,
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
-  } = useSetTargetMessage();
+  } = useSetReminderTargetMessage();
 
+  useGetInfiniteMessages;
   const {
     data,
     isFetching,
@@ -48,17 +43,11 @@ function SpecificDateFeed() {
     fetchNextPage,
     hasNextPage,
     refetch,
-  } = useInfiniteQuery<ResponseMessages, CustomError>(
-    [QUERY_KEY.SPECIFIC_DATE_MESSAGES, queryKey],
-    getMessages({
-      date,
-      channelId,
-    }),
-    {
-      getPreviousPageParam: previousMessagesCallback,
-      getNextPageParam: nextMessagesCallback,
-    }
-  );
+  } = useGetInfiniteMessages({
+    queryKey: [queryKey],
+    channelId,
+    date,
+  });
 
   const {
     isModalOpened: isCalenderOpened,
@@ -80,8 +69,9 @@ function SpecificDateFeed() {
     wheelDistanceCriterion: -10,
   });
 
-  const { handleAddBookmark, handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleAddBookmark, handleRemoveBookmark } = useMutateBookmark({
+    handleSettleAddBookmark: refetch,
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseMessages(data);

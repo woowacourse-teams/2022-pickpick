@@ -1,6 +1,6 @@
 import { MouseEventHandler } from "react";
 import IconButton from "@src/components/@shared/IconButton";
-import StarIcon from "@public/assets/icons/StarIcon.svg";
+import StarIcon from "@src/components/@svgIcons/StarIcon";
 import { FlexRow } from "@src/@styles/shared";
 import * as Styled from "../style";
 

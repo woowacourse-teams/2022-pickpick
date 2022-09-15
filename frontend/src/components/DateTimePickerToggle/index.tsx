@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import DownArrowIcon from "@public/assets/icons/ArrowIcon-Down.svg";
+import ArrowIconDown from "@src/components/@svgIcons/ArrowIconDown";
 import { FlexRow } from "@src/@styles/shared";
 import * as Styled from "./style";
 
@@ -20,7 +20,7 @@ function DateTimePickerToggle({
         <Styled.Text>{text}</Styled.Text>
       </FlexRow>
 
-      <DownArrowIcon width="24px" height="24px" fill="#8B8B8B" />
+      <ArrowIconDown width="24px" height="24px" fill="#8B8B8B" />
     </Styled.Container>
   );
 }

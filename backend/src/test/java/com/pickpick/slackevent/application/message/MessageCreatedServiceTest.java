@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -21,16 +22,13 @@ import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@AutoConfigureMockMvc
 @SpringBootTest
 class MessageCreatedServiceTest {
 
@@ -77,8 +75,16 @@ class MessageCreatedServiceTest {
     @Autowired
     private ChannelRepository channels;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @MockBean
     private MethodsClient slackClient;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("메시지 작성 이벤트 전달 시 채널이 없으면 채널 생성 후 메시지를 저장한다")
     @Test
@@ -140,7 +146,7 @@ class MessageCreatedServiceTest {
                 () -> assertThat(messageAfterSave).isPresent()
         );
     }
-    
+
     @DisplayName("메시지 댓글 생성 이벤트는 전달되어도 내용을 저장하지 않는다")
     @Test
     void doNotSaveReplyMessage() {

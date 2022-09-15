@@ -1,7 +1,7 @@
 import { deleteReminder, postReminder, putReminder } from "@src/api/reminders";
 import { getDateInformation, ISOConverter } from "@src/@utils";
 import { useMutation } from "react-query";
-import useSnackbar from "./useSnackbar";
+import useSnackbar from "../useSnackbar";
 
 interface IsInvalidateDateTimeProps {
   checkedYear: number;
