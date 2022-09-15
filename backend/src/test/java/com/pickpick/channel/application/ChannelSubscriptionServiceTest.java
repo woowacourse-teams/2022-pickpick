@@ -9,6 +9,7 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
@@ -16,14 +17,13 @@ import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 class ChannelSubscriptionServiceTest {
 
     private static final long NOT_EXISTED_CHANNEL_ID = 1L;
@@ -39,6 +39,14 @@ class ChannelSubscriptionServiceTest {
 
     @Autowired
     private MemberRepository members;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("채널 구독을 단건 저장")
     @Test
@@ -91,10 +99,9 @@ class ChannelSubscriptionServiceTest {
         // when
         List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
                 member.getId());
-
         // then
-        assertThat(channelSubscriptions).extracting("channel")
-                .containsExactly(channel3, channel1, channel2);
+        assertThat(channelSubscriptions).extracting("id")
+                .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
     }
 
     @DisplayName("채널 구독 순서를 변경하기")
@@ -110,8 +117,8 @@ class ChannelSubscriptionServiceTest {
 
         // when
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2),
+                new ChannelOrderRequest(channel2.getId(), 1),
+                new ChannelOrderRequest(channel1.getId(), 2),
                 new ChannelOrderRequest(channel3.getId(), 3)
         );
         channelSubscriptionService.updateOrders(request, member.getId());
@@ -120,8 +127,8 @@ class ChannelSubscriptionServiceTest {
                 member.getId());
 
         //then
-        assertThat(channelSubscriptions).extracting("channel")
-                .containsExactly(channel1, channel2, channel3);
+        assertThat(channelSubscriptions).extracting("id")
+                .containsExactly(channel2.getId(), channel1.getId(), channel3.getId());
     }
 
     @DisplayName("채널 구독 순서 변경 시 중복 viewOrder가 들어올 경우 에러 발생")
