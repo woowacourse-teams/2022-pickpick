@@ -1,7 +1,7 @@
 package com.pickpick.auth.ui;
 
+import com.pickpick.auth.support.AuthorizationExtractor;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.utils.AuthorizationExtractor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.cors.CorsUtils;

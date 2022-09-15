@@ -1,8 +1,8 @@
 package com.pickpick.auth.ui;
 
 import com.pickpick.auth.support.AuthenticationPrincipal;
+import com.pickpick.auth.support.AuthorizationExtractor;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.utils.AuthorizationExtractor;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
