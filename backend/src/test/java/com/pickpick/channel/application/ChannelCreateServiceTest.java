@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.SlackApiCallException;
 import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.MethodsClient;
@@ -17,15 +18,14 @@ import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
 import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 class ChannelCreateServiceTest {
 
     @MockBean
@@ -36,6 +36,14 @@ class ChannelCreateServiceTest {
 
     @Autowired
     private ChannelCreateService channelCreateService;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("채널을 저장한다.")
     @Test
