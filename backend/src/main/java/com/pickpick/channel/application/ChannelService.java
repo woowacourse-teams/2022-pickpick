@@ -59,14 +59,6 @@ public class ChannelService {
         return new ChannelResponses(channelResponses);
     }
 
-
-    private List<ChannelResponse> findChannelResponses(final List<Channel> allChannels,
-                                                       final Set<Channel> subscribedChannels) {
-        return allChannels.stream()
-                .map(channel -> ChannelResponse.of(subscribedChannels, channel))
-                .collect(Collectors.toList());
-    }
-
     private Set<Channel> findSubscribedChannels(final Long memberId) {
         return channelSubscriptions.findAllByMemberId(memberId)
                 .stream()
@@ -74,4 +66,10 @@ public class ChannelService {
                 .collect(Collectors.toSet());
     }
 
+    private List<ChannelResponse> findChannelResponses(final List<Channel> allChannels,
+                                                       final Set<Channel> subscribedChannels) {
+        return allChannels.stream()
+                .map(channel -> ChannelResponse.of(subscribedChannels, channel))
+                .collect(Collectors.toList());
+    }
 }
