@@ -1,6 +1,6 @@
 package com.pickpick.slackevent.application.message;
 
-import com.pickpick.channel.application.ChannelService;
+import com.pickpick.channel.application.ChannelCreateService;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.member.MemberNotFoundException;
@@ -29,14 +29,14 @@ public class MessageCreatedService implements SlackEventService {
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
-    private final ChannelService channelService;
+    private final ChannelCreateService channelCreateService;
 
     public MessageCreatedService(final MessageRepository messages, final MemberRepository members,
-                                 final ChannelRepository channels, final ChannelService channelService) {
+                                 final ChannelRepository channels, final ChannelCreateService channelCreateService) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
-        this.channelService = channelService;
+        this.channelCreateService = channelCreateService;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MessageCreatedService implements SlackEventService {
         String channelSlackId = slackMessageDto.getChannelSlackId();
 
         Channel channel = channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> channelService.createChannel(channelSlackId));
+                .orElseGet(() -> channelCreateService.createChannel(channelSlackId));
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }

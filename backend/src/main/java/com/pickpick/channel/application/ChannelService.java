@@ -6,11 +6,6 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelResponses;
-import com.pickpick.exception.SlackApiCallException;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.model.Conversation;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,32 +18,10 @@ public class ChannelService {
 
     private final ChannelRepository channels;
     private final ChannelSubscriptionRepository channelSubscriptions;
-    private final MethodsClient slackClient;
 
-    public ChannelService(final ChannelRepository channels, final ChannelSubscriptionRepository channelSubscriptions,
-                          final MethodsClient slackClient) {
+    public ChannelService(final ChannelRepository channels, final ChannelSubscriptionRepository channelSubscriptions) {
         this.channels = channels;
         this.channelSubscriptions = channelSubscriptions;
-        this.slackClient = slackClient;
-    }
-
-    @Transactional
-    public Channel createChannel(final String channelSlackId) {
-        try {
-            Conversation conversation = slackClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
-            ).getChannel();
-
-            Channel channel = toChannel(conversation);
-
-            return channels.save(channel);
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(e);
-        }
-    }
-
-    private Channel toChannel(final Conversation channel) {
-        return new Channel(channel.getId(), channel.getName());
     }
 
     public ChannelResponses findAll(final Long memberId) {
