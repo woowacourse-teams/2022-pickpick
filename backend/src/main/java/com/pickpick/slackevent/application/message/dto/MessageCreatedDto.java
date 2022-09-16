@@ -1,6 +1,5 @@
 package com.pickpick.slackevent.application.message.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
