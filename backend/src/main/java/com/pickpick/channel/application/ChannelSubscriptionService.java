@@ -5,7 +5,6 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
-import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.exception.channel.ChannelNotFoundException;
@@ -38,34 +37,6 @@ public class ChannelSubscriptionService {
         this.channelSubscriptions = channelSubscriptions;
         this.channels = channels;
         this.members = members;
-    }
-
-    public List<ChannelResponse> findAll(final Long memberId) {
-        List<Channel> allChannels = channels.findAllByOrderByName();
-        List<Channel> subscribedChannels = findSubscribedChannels(memberId);
-
-        return getChannelResponsesWithIsSubscribed(allChannels, subscribedChannels);
-    }
-
-    private List<ChannelResponse> getChannelResponsesWithIsSubscribed(final List<Channel> allChannels,
-                                                                      final List<Channel> subscribedChannels) {
-        return allChannels.stream()
-                .map(channel -> ChannelResponse.of(subscribedChannels, channel))
-                .collect(Collectors.toList());
-    }
-
-    private List<Channel> findSubscribedChannels(final Long memberId) {
-        return channelSubscriptions.findAllByMemberId(memberId)
-                .stream()
-                .map(ChannelSubscription::getChannel)
-                .collect(Collectors.toList());
-    }
-
-    public List<ChannelSubscriptionResponse> findAllOrderByViewOrder(final Long memberId) {
-        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId)
-                .stream()
-                .map(ChannelSubscriptionResponse::from)
-                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -169,5 +140,12 @@ public class ChannelSubscriptionService {
         if (!channelSubscriptions.existsByChannelAndMember(channel, member)) {
             throw new SubscriptionNotExistException(channel.getId());
         }
+    }
+
+    public List<ChannelSubscriptionResponse> findByMemberId(final Long memberId) {
+        return channelSubscriptions.findAllByMemberIdOrderByViewOrder(memberId)
+                .stream()
+                .map(ChannelSubscriptionResponse::from)
+                .collect(Collectors.toList());
     }
 }
