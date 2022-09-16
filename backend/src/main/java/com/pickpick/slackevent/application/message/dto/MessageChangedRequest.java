@@ -13,4 +13,17 @@ public class MessageChangedRequest {
     public MessageChangedRequest(final MessageChangedEventDto event) {
         this.event = event;
     }
+
+    public SlackMessageDto toDto() {
+        MessageDto message = event.getMessage();
+
+        return new SlackMessageDto(
+                message.getUser(),
+                message.getClientMsgId(),
+                message.getTs(),
+                message.getTs(),
+                message.getText(),
+                event.getChannel()
+        );
+    }
 }

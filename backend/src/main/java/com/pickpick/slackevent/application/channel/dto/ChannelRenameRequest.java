@@ -13,4 +13,11 @@ public class ChannelRenameRequest {
     public ChannelRenameRequest(final ChannelDto channel) {
         this.channel = channel;
     }
+
+    public SlackChannelRenameDto toDto() {
+        return new SlackChannelRenameDto(
+                channel.getId(),
+                channel.getName()
+        );
+    }
 }

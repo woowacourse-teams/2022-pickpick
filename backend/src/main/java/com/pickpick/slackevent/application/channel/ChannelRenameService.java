@@ -33,11 +33,7 @@ public class ChannelRenameService implements SlackEventService {
 
     private SlackChannelRenameDto convert(final String requestBody) {
         ChannelRenameRequest request = JsonUtils.convert(requestBody, ChannelRenameRequest.class);
-
-        return new SlackChannelRenameDto(
-                request.getChannel().getId(),
-                request.getChannel().getName()
-        );
+        return request.toDto();
     }
 
     @Override

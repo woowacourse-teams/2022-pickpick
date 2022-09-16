@@ -9,7 +9,6 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
-import com.pickpick.slackevent.application.message.dto.MessageCreatedEventDto;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
@@ -37,29 +36,29 @@ public class MessageFileShareService implements SlackEventService {
     public void execute(final String requestBody) {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
-        String memberSlackId = slackMessageDto.getMemberSlackId();
-        Member member = members.findBySlackId(memberSlackId)
-                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
-
-        String channelSlackId = slackMessageDto.getChannelSlackId();
-        Channel channel = channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> channelCreateService.createChannel(channelSlackId));
+        Member member = findMember(slackMessageDto);
+        Channel channel = findChannel(slackMessageDto);
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }
 
     private SlackMessageDto convert(final String requestBody) {
         MessageCreatedRequest request = JsonUtils.convert(requestBody, MessageCreatedRequest.class);
-        MessageCreatedEventDto message = request.getEvent();
+        return request.toDto();
+    }
 
-        return new SlackMessageDto(
-                message.getUser(),
-                message.getClientMsgId(),
-                message.getTs(),
-                message.getTs(),
-                message.getText(),
-                message.getChannel()
-        );
+    private Member findMember(final SlackMessageDto slackMessageDto) {
+        String memberSlackId = slackMessageDto.getMemberSlackId();
+
+        return members.findBySlackId(memberSlackId)
+                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
+    }
+
+    private Channel findChannel(final SlackMessageDto slackMessageDto) {
+        String channelSlackId = slackMessageDto.getChannelSlackId();
+
+        return channels.findBySlackId(channelSlackId)
+                .orElseGet(() -> channelCreateService.createChannel(channelSlackId));
     }
 
     @Override

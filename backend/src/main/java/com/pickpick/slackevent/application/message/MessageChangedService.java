@@ -6,7 +6,6 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.message.dto.MessageChangedRequest;
-import com.pickpick.slackevent.application.message.dto.MessageDto;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
 import org.springframework.stereotype.Service;
@@ -27,9 +26,10 @@ public class MessageChangedService implements SlackEventService {
 
     @Override
     public void execute(final String requestBody) {
-        SlackMessageDto slackMessageDto = convert(requestBody);
+        MessageChangedRequest request = JsonUtils.convert(requestBody, MessageChangedRequest.class);
+        SlackMessageDto slackMessageDto = request.toDto();
 
-        if (isThreadBroadcastEvent(requestBody)) {
+        if (isThreadBroadcastEvent(request)) {
             messageThreadBroadcastService.saveWhenSubtypeIsMessageChanged(slackMessageDto);
             return;
         }
@@ -40,25 +40,9 @@ public class MessageChangedService implements SlackEventService {
         message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate());
     }
 
-    private boolean isThreadBroadcastEvent(final String requestBody) {
-        MessageChangedRequest request = JsonUtils.convert(requestBody, MessageChangedRequest.class);
+    private boolean isThreadBroadcastEvent(final MessageChangedRequest request) {
         String subtype = request.getEvent().getMessage().getSubtype();
-
         return SlackEvent.MESSAGE_THREAD_BROADCAST.isSameSubtype(subtype);
-    }
-
-    private SlackMessageDto convert(final String requestBody) {
-        MessageChangedRequest request = JsonUtils.convert(requestBody, MessageChangedRequest.class);
-        MessageDto message = request.getEvent().getMessage();
-
-        return new SlackMessageDto(
-                message.getUser(),
-                message.getClientMsgId(),
-                message.getTs(),
-                message.getTs(),
-                message.getText(),
-                request.getEvent().getChannel()
-        );
     }
 
     @Override

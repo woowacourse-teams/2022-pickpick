@@ -9,7 +9,6 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
-import com.pickpick.slackevent.application.message.dto.MessageCreatedEventDto;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
@@ -26,7 +25,8 @@ public class MessageThreadBroadcastService implements SlackEventService {
     private final ChannelCreateService channelCreateService;
 
     public MessageThreadBroadcastService(final MessageRepository messages, final MemberRepository members,
-                                         final ChannelRepository channels, final ChannelCreateService channelCreateService) {
+                                         final ChannelRepository channels,
+                                         final ChannelCreateService channelCreateService) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
@@ -42,16 +42,7 @@ public class MessageThreadBroadcastService implements SlackEventService {
 
     private SlackMessageDto convert(final String requestBody) {
         MessageCreatedRequest request = JsonUtils.convert(requestBody, MessageCreatedRequest.class);
-        MessageCreatedEventDto message = request.getEvent();
-
-        return new SlackMessageDto(
-                message.getUser(),
-                message.getClientMsgId(),
-                message.getTs(),
-                message.getTs(),
-                message.getText(),
-                message.getChannel()
-        );
+        return request.toDto();
     }
 
     public void saveWhenSubtypeIsMessageChanged(final SlackMessageDto slackMessageDto) {
