@@ -5,7 +5,6 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.channel.dto.ChannelDeletedRequest;
-import com.pickpick.slackevent.application.channel.dto.ChannelRenameRequest;
 import com.pickpick.utils.JsonUtils;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
