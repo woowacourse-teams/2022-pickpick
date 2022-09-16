@@ -5,6 +5,7 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.pickpick.exception.utils.InvalidJsonRequestException;
 
 public class JsonUtils {
 
@@ -19,7 +20,7 @@ public class JsonUtils {
         try {
             return objectMapper.readValue(json, valueType);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e); // TODO
+            throw new InvalidJsonRequestException(json);
         }
     }
 }
