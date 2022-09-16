@@ -1,8 +1,8 @@
 package com.pickpick.auth.ui;
 
 import com.pickpick.auth.application.AuthService;
+import com.pickpick.auth.support.AuthorizationExtractor;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import com.pickpick.utils.AuthorizationExtractor;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.web.bind.annotation.GetMapping;
