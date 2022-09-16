@@ -29,8 +29,8 @@ public class SlackEventController {
     public ResponseEntity<String> save(final @RequestBody String requestBody) {
         log.info("Slack Event: {}", requestBody);
 
-        if (isUrlVerificationRequest(requestBody)) {
-            ChallengeRequest challengeRequest = JsonUtils.convert(requestBody, ChallengeRequest.class);
+        ChallengeRequest challengeRequest = JsonUtils.convert(requestBody, ChallengeRequest.class);
+        if (isUrlVerificationRequest(challengeRequest)) {
             return ResponseEntity.ok(challengeRequest.getChallenge());
         }
 
@@ -40,8 +40,7 @@ public class SlackEventController {
         return ResponseEntity.ok(EMPTY_STRING);
     }
 
-    private boolean isUrlVerificationRequest(final String request) {
-        ChallengeRequest challengeRequest = JsonUtils.convert(request, ChallengeRequest.class);
+    private boolean isUrlVerificationRequest(final ChallengeRequest challengeRequest) {
         return URL_VERIFICATION.equals(challengeRequest.getType());
     }
 }
