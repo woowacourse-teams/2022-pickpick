@@ -87,7 +87,7 @@ class MemberChangedServiceTest {
                         "profile", Map.of(
                                 "real_name", realName,
                                 "display_name", displayName,
-                                "image_512", thumbnailUrl
+                                "image_48", thumbnailUrl
                         )
                 )
         ));

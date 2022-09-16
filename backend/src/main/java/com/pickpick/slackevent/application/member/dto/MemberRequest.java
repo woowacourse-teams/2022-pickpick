@@ -21,7 +21,7 @@ public class MemberRequest {
         return new MemberProfileChangedDto(
                 event.getUser().getId(),
                 extractUsername(profile),
-                profile.getImage512()
+                profile.getImage48()
         );
     }
 
@@ -31,7 +31,7 @@ public class MemberRequest {
         return MemberJoinDto.builder()
                 .slackId(event.getUser().getId())
                 .username(extractUsername(profile))
-                .thumbnailUrl(profile.getImage512())
+                .thumbnailUrl(profile.getImage48())
                 .build();
     }
 
