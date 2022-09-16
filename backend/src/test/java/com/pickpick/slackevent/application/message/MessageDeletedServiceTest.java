@@ -63,10 +63,10 @@ class MessageDeletedServiceTest {
         saveMessage();
         Map<String, String> previousMessage = Map.of("client_msg_id", MESSAGE_SLACK_ID);
         Map<String, Object> event = Map.of("previous_message", previousMessage);
-        Map<String, Object> request = Map.of("event", event);
+        String request = toJson(Map.of("event", event));
 
         // when
-        messageDeletedService.execute(toJson(request));
+        messageDeletedService.execute(request);
 
         // then
         Optional<Message> findMessage = messages.findBySlackId(MESSAGE_SLACK_ID);

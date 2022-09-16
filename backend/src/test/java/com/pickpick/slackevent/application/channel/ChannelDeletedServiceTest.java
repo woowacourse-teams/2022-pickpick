@@ -72,13 +72,15 @@ class ChannelDeletedServiceTest {
         messages.save(SAMPLE_MESSAGE_1);
         messages.save(SAMPLE_MESSAGE_2);
 
-        Map<String, Object> request = Map.of(
-                "type", "channel_deleted",
-                "channel", SAMPLE_CHANNEL.getSlackId()
+        String request = toJson(
+                Map.of(
+                        "type", "channel_deleted",
+                        "channel", SAMPLE_CHANNEL.getSlackId()
+                )
         );
 
         // when
-        channelDeletedService.execute(toJson(request));
+        channelDeletedService.execute(request);
 
         //then
         assertAll(
