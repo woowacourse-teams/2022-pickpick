@@ -9,10 +9,8 @@ public class MessageResponses {
 
     private List<MessageResponse> messages;
 
-    @JsonProperty(value = "hasPast")
     private boolean hasPast;
 
-    @JsonProperty(value = "hasFuture")
     private boolean hasFuture;
 
     @JsonProperty(value = "isNeedPastMessage")

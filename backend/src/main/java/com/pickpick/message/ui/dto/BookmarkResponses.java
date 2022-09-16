@@ -1,6 +1,5 @@
 package com.pickpick.message.ui.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
 
@@ -9,7 +8,6 @@ public class BookmarkResponses {
 
     private List<BookmarkResponse> bookmarks;
 
-    @JsonProperty(value = "hasPast")
     private boolean hasPast;
 
     private BookmarkResponses() {

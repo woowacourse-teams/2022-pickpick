@@ -1,6 +1,5 @@
 package com.pickpick.message.ui.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
 
@@ -9,7 +8,6 @@ public class ReminderResponses {
 
     private List<ReminderResponse> reminders;
 
-    @JsonProperty(value = "hasFuture")
     private boolean hasFuture;
 
     private ReminderResponses() {
