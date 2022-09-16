@@ -66,13 +66,13 @@ class ReminderServiceTest {
 
     private static Stream<Arguments> parameterProvider() {
         return Stream.of(
-                Arguments.arguments("멤버 ID 2번으로 리마인더를 조회한다", null, 2L, List.of(1L), true),
+                Arguments.arguments("멤버 ID 2번으로 리마인더를 조회한다", null, 2L, List.of(1L), false),
                 Arguments.arguments("멤버 ID가 1번이고 리마인더 id 10번일 때 리마인더 목록을 조회한다", 10L, 1L,
-                        List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L), true),
-                Arguments.arguments("리마인더 조회 시 가장 최신인 리마인더가 포함된다면 isLast가 true이다", null, 2L, List.of(1L), true),
-                Arguments.arguments("리마인더 조회 시 가장 최신인 리마인더가 포함되지 않는다면 isLast가 false이다", 2L, 1L,
+                        List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L), false),
+                Arguments.arguments("리마인더 조회 시 가장 최신인 리마인더가 포함된다면 hasFuture가 false이다", null, 2L, List.of(1L), false),
+                Arguments.arguments("리마인더 조회 시 가장 최신인 리마인더가 포함되지 않는다면 hasFuture가 true이다", 2L, 1L,
                         List.of(3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L,
-                                22L), false)
+                                22L), true)
         );
     }
 
@@ -138,7 +138,7 @@ class ReminderServiceTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameterProvider")
     void findReminders(final String subscription, final Long reminderId, final Long memberId,
-                       final List<Long> expectedIds, final boolean expectedIsLast) {
+                       final List<Long> expectedIds, final boolean expectedHasFuture) {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
@@ -150,7 +150,7 @@ class ReminderServiceTest {
         List<Long> ids = convertToIds(response);
         assertAll(
                 () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
-                () -> assertThat(response.isLast()).isEqualTo(expectedIsLast)
+                () -> assertThat(response.isHasFuture()).isEqualTo(expectedHasFuture)
         );
     }
 
@@ -192,7 +192,7 @@ class ReminderServiceTest {
         assertThat(size).isEqualTo(count);
     }
 
-    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하면 isLast가 false 이다.")
+    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하면 hasFuture가 true 이다.")
     @Test
     void findSameDayReminder() {
         // given
@@ -207,13 +207,13 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isLast()).isFalse(),
+                () -> assertThat(response.isHasFuture()).isTrue(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(29L, 30L)
         );
     }
 
-    @DisplayName("리마인더 조회 해당 날의 reminder의 개수보다 적은 COUNT로 조회할 경우 isLast가 false이다.")
+    @DisplayName("리마인더 조회 해당 날의 reminder의 개수보다 적은 COUNT로 조회할 경우 hasFuture가 true이다.")
     @Test
     void findSameDayReminderByCount() {
         // given
@@ -228,13 +228,13 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isLast()).isFalse(),
+                () -> assertThat(response.isHasFuture()).isTrue(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(25L, 26L)
         );
     }
 
-    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하지 않으면 isLast가 true 이다.")
+    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하지 않으면 hasFuture가 false 이다.")
     @Test
     void findSameDayReminderByCountAndReminderId() {
         // given
@@ -249,7 +249,7 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isLast()).isTrue(),
+                () -> assertThat(response.isHasFuture()).isFalse(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(27L, 28L)
         );
@@ -270,7 +270,7 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isLast()).isTrue(),
+                () -> assertThat(response.isHasFuture()).isFalse(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(31L, 29L, 30L, 25L, 26L, 27L, 28L)
         );
@@ -291,7 +291,7 @@ class ReminderServiceTest {
         List<Long> ids = convertToIds(response);
         assertAll(
                 () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
-                () -> assertThat(response.isLast()).isFalse()
+                () -> assertThat(response.isHasFuture()).isTrue()
         );
     }
 

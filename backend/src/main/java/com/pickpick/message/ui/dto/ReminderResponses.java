@@ -9,14 +9,14 @@ public class ReminderResponses {
 
     private List<ReminderResponse> reminders;
 
-    @JsonProperty(value = "isLast")
-    private boolean last;
+    @JsonProperty(value = "hasFuture")
+    private boolean hasFuture;
 
     private ReminderResponses() {
     }
 
-    public ReminderResponses(final List<ReminderResponse> reminders, final boolean last) {
+    public ReminderResponses(final List<ReminderResponse> reminders, final boolean hasFuture) {
         this.reminders = reminders;
-        this.last = last;
+        this.hasFuture = hasFuture;
     }
 }
