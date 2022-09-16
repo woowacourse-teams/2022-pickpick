@@ -4,10 +4,8 @@ import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.channel.application.ChannelSubscriptionService;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
-import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +27,7 @@ public class ChannelSubscriptionController {
 
     @GetMapping
     public ChannelSubscriptionResponses getAllChannels(final @AuthenticationPrincipal Long memberId) {
-        return new ChannelSubscriptionResponses(
-                channelSubscriptionService.findAllOrderByViewOrder(memberId)
-                        .stream()
-                        .map(ChannelSubscriptionResponse::from)
-                        .collect(Collectors.toList()));
+        return new ChannelSubscriptionResponses(channelSubscriptionService.findByMemberId(memberId));
     }
 
     @PostMapping

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -23,14 +24,13 @@ import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql("/truncate.sql")
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
 
@@ -68,8 +68,17 @@ class MessageThreadBroadcastServiceTest {
     @Autowired
     private ChannelRepository channels;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @MockBean
     private MethodsClient slackClient;
+
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 채널이 없으면 채널 생성 후 메시지를 저장한다")
     @Test

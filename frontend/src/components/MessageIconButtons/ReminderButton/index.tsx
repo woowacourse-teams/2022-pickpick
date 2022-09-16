@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 import { FlexRow } from "@src/@styles/shared";
 import IconButton from "@src/components/@shared/IconButton";
 import * as Styled from "../style";
-import ReminderIconActive from "@public/assets/icons/ReminderIcon-Active.svg";
+import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
 
 interface Props {
   isActive: boolean;
