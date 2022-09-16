@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
@@ -34,6 +35,9 @@ class ChannelSubscriptionServiceTest {
     private ChannelRepository channels;
 
     @Autowired
+    private ChannelSubscriptionRepository channelSubscriptions;
+
+    @Autowired
     private MemberRepository members;
 
     @Autowired
@@ -53,7 +57,7 @@ class ChannelSubscriptionServiceTest {
         subscribeChannel(member, channel);
 
         // then
-        assertThat(channelSubscriptionService.findAllOrderByViewOrder(member.getId())).hasSize(1);
+        assertThat(channelSubscriptionService.findByMemberId(member.getId())).hasSize(1);
     }
 
     @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
@@ -93,9 +97,8 @@ class ChannelSubscriptionServiceTest {
         subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
 
         // when
-        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
-                .findAllOrderByViewOrder(member.getId());
-
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
+                member.getId());
         // then
         assertThat(channelSubscriptions).extracting("id")
                 .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
@@ -120,8 +123,8 @@ class ChannelSubscriptionServiceTest {
         );
         channelSubscriptionService.updateOrders(request, member.getId());
 
-        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
-                .findAllOrderByViewOrder(member.getId());
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
+                member.getId());
 
         //then
         assertThat(channelSubscriptions).extracting("id")
@@ -230,21 +233,17 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
         // then
-        boolean isSubscribed = channelSubscriptionService.findAll(member.getId())
-                .get(0)
-                .isSubscribed();
+        boolean isSubscribed = channelSubscriptions.existsByChannelAndMember(channel, member);
 
         assertThat(isSubscribed).isFalse();
     }
 
     private Member saveMember() {
-        Member member = members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
-        return member;
+        return members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
     }
 
     private Channel saveChannel(final String slackId, final String channelName) {
-        Channel channel = channels.save(new Channel(slackId, channelName));
-        return channel;
+        return channels.save(new Channel(slackId, channelName));
     }
 
     private void subscribeChannel(Member member, Channel channel) {
