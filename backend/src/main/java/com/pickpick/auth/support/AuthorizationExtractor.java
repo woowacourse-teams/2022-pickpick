@@ -1,4 +1,4 @@
-package com.pickpick.utils;
+package com.pickpick.auth.support;
 
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SlackEventServiceFinder {
 
-    public final List<SlackEventService> slackEventServices;
+    private final List<SlackEventService> slackEventServices;
 
     public SlackEventServiceFinder(final List<SlackEventService> slackEventServices) {
         this.slackEventServices = slackEventServices;
