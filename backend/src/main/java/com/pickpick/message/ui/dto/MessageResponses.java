@@ -9,8 +9,11 @@ public class MessageResponses {
 
     private List<MessageResponse> messages;
 
-    @JsonProperty(value = "isLast")
-    private boolean last;
+    @JsonProperty(value = "hasPast")
+    private boolean hasPast;
+
+    @JsonProperty(value = "hasFuture")
+    private boolean hasFuture;
 
     @JsonProperty(value = "isNeedPastMessage")
     private boolean needPastMessage;
@@ -18,9 +21,11 @@ public class MessageResponses {
     private MessageResponses() {
     }
 
-    public MessageResponses(final List<MessageResponse> messages, final boolean last, final boolean needPastMessage) {
+    public MessageResponses(final List<MessageResponse> messages, final boolean hasPast, final boolean hasFuture,
+                            final boolean needPastMessage) {
         this.messages = messages;
-        this.last = last;
+        this.hasPast = hasPast;
+        this.hasFuture = hasFuture;
         this.needPastMessage = needPastMessage;
     }
 }

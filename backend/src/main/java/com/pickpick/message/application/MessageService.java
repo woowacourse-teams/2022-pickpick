@@ -32,9 +32,6 @@ import org.springframework.util.StringUtils;
 @Service
 public class MessageService {
 
-    private static final int FIRST_INDEX = 0;
-    private static final int ONE_TO_GET_LAST_INDEX = 1;
-
     private final MessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final JPAQueryFactory jpaQueryFactory;
@@ -54,9 +51,10 @@ public class MessageService {
         List<Long> channelIds = findChannelId(memberId, messageRequest);
 
         List<MessageResponse> messageResponses = findMessages(memberId, channelIds, messageRequest);
-        boolean isLast = isLast(channelIds, messageRequest, messageResponses);
+        boolean hasPast = hasPast(channelIds, messageRequest, messageResponses);
+        boolean hasFuture = hasFuture(channelIds, messageRequest, messageResponses);
 
-        return new MessageResponses(messageResponses, isLast, messageRequest.isNeedPastMessage());
+        return new MessageResponses(messageResponses, hasPast, hasFuture, messageRequest.isNeedPastMessage());
     }
 
     private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
@@ -198,43 +196,51 @@ public class MessageService {
         return QMessage.message.postedDate.asc();
     }
 
-    private boolean isLast(final List<Long> channelIds, final MessageRequest messageRequest,
-                           final List<MessageResponse> messages) {
+    private boolean hasPast(final List<Long> channelIds, final MessageRequest messageRequest,
+                            final List<MessageResponse> messages) {
         if (messages.isEmpty()) {
-            return true;
+            return false;
         }
 
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QMessage.message)
-                .where(meetAllIsLastCondition(channelIds, messageRequest, messages))
+                .where(meetAllHasPastCondition(channelIds, messageRequest, messages))
                 .fetchFirst();
 
-        return Objects.isNull(result);
+        return result != null;
     }
 
-    private BooleanExpression meetAllIsLastCondition(final List<Long> channelIds, final MessageRequest request,
-                                                     final List<MessageResponse> messages) {
-        MessageResponse targetMessage = findTargetMessage(messages, request.isNeedPastMessage());
+    private boolean hasFuture(final List<Long> channelIds, final MessageRequest messageRequest,
+                            final List<MessageResponse> messages) {
+        if (messages.isEmpty()) {
+            return false;
+        }
+
+        Integer result = jpaQueryFactory
+                .selectOne()
+                .from(QMessage.message)
+                .where(meetAllHasFutureCondition(channelIds, messageRequest, messages))
+                .fetchFirst();
+
+        return result != null;
+    }
+
+    private BooleanExpression meetAllHasPastCondition(final List<Long> channelIds, final MessageRequest request,
+                                                      final List<MessageResponse> messages) {
+        MessageResponse targetMessage = messages.get(messages.size() - 1);
 
         return channelIdsIn(channelIds)
                 .and(textContains(request.getKeyword()))
-                .and(isBeforeOrAfterTarget(targetMessage.getPostedDate(), request.isNeedPastMessage()));
+                .and(QMessage.message.postedDate.before(targetMessage.getPostedDate()));
     }
 
-    private MessageResponse findTargetMessage(final List<MessageResponse> messages, final boolean needPastMessage) {
-        if (needPastMessage) {
-            return messages.get(messages.size() - ONE_TO_GET_LAST_INDEX);
-        }
+    private BooleanExpression meetAllHasFutureCondition(final List<Long> channelIds, final MessageRequest request,
+                                                      final List<MessageResponse> messages) {
+        MessageResponse targetMessage = messages.get(0);
 
-        return messages.get(FIRST_INDEX);
-    }
-
-    private BooleanExpression isBeforeOrAfterTarget(final LocalDateTime targetPostDate, final boolean needPastMessage) {
-        if (needPastMessage) {
-            return QMessage.message.postedDate.before(targetPostDate);
-        }
-
-        return QMessage.message.postedDate.after(targetPostDate);
+        return channelIdsIn(channelIds)
+                .and(textContains(request.getKeyword()))
+                .and(QMessage.message.postedDate.after(targetMessage.getPostedDate()));
     }
 }
