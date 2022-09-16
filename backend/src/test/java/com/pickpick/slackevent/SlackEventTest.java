@@ -50,10 +50,12 @@ class SlackEventTest {
     @Test
     void notExistedSlackEvent() {
         // given
-        Map<String, Object> request = Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"));
+        String request = toJson(
+                Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"))
+        );
 
         // when & then
-        assertThatThrownBy(() -> SlackEvent.of(toJson(request)))
+        assertThatThrownBy(() -> SlackEvent.of(request))
                 .isInstanceOf(SlackEventNotFoundException.class);
     }
 
