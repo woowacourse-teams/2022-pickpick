@@ -32,7 +32,7 @@ public class ChannelCreateService {
 
             return channels.save(channel);
         } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(e);
+            throw new SlackApiCallException("conversationsInfo");
         }
     }
 

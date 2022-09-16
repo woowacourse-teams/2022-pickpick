@@ -46,7 +46,7 @@ public class MemberInitializer {
             return toMembers(slackClient.usersList(request -> request)
                     .getMembers());
         } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(e);
+            throw new SlackApiCallException("usersList");
         }
     }
 

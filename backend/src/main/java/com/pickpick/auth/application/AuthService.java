@@ -39,26 +39,22 @@ public class AuthService {
 
     @Transactional
     public LoginResponse login(final String code) {
-        try {
-            String token = requestSlackToken(code);
-            String memberSlackId = requestMemberSlackId(token);
+        String token = requestSlackToken(code);
+        String memberSlackId = requestMemberSlackId(token);
 
-            Member member = members.findBySlackId(memberSlackId)
-                    .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
+        Member member = members.findBySlackId(memberSlackId)
+                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
 
-            boolean isFirstLogin = member.isFirstLogin();
-            member.markLoggedIn();
+        boolean isFirstLogin = member.isFirstLogin();
+        member.markLoggedIn();
 
-            return LoginResponse.builder()
-                    .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
-                    .firstLogin(isFirstLogin)
-                    .build();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(e);
-        }
+        return LoginResponse.builder()
+                .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
+                .firstLogin(isFirstLogin)
+                .build();
     }
 
-    private String requestSlackToken(final String code) throws IOException, SlackApiException {
+    private String requestSlackToken(final String code) {
         OAuthV2AccessRequest request = OAuthV2AccessRequest.builder()
                 .clientId(slackProperties.getClientId())
                 .clientSecret(slackProperties.getClientSecret())
@@ -66,18 +62,26 @@ public class AuthService {
                 .code(code)
                 .build();
 
-        return slackClient.oauthV2Access(request)
-                .getAuthedUser()
-                .getAccessToken();
+        try {
+            return slackClient.oauthV2Access(request)
+                    .getAuthedUser()
+                    .getAccessToken();
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException("oauthV2Access");
+        }
     }
 
-    private String requestMemberSlackId(final String token) throws IOException, SlackApiException {
+    private String requestMemberSlackId(final String token) {
         UsersIdentityRequest request = UsersIdentityRequest.builder()
                 .token(token)
                 .build();
 
-        return slackClient.usersIdentity(request)
-                .getUser()
-                .getId();
+        try {
+            return slackClient.usersIdentity(request)
+                    .getUser()
+                    .getId();
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException("usersIdentity");
+        }
     }
 }
