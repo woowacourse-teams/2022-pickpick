@@ -124,7 +124,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> 상태코드_200_확인(response),
-                () -> assertThat(messageResponses.isHasPast()).isEqualTo(expectedhasPast),
+                () -> assertThat(messageResponses.hasPast()).isEqualTo(expectedhasPast),
                 () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
                 () -> assertThat(messageResponses.getMessages())
                         .extracting("id")

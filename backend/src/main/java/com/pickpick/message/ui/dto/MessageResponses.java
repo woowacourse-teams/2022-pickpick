@@ -2,15 +2,15 @@ package com.pickpick.message.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import lombok.Getter;
 
-@Getter
 public class MessageResponses {
 
     private List<MessageResponse> messages;
 
+    @JsonProperty(value = "hasPast")
     private boolean hasPast;
 
+    @JsonProperty(value = "hasFuture")
     private boolean hasFuture;
 
     @JsonProperty(value = "isNeedPastMessage")
@@ -25,5 +25,21 @@ public class MessageResponses {
         this.hasPast = hasPast;
         this.hasFuture = hasFuture;
         this.needPastMessage = needPastMessage;
+    }
+
+    public List<MessageResponse> getMessages() {
+        return messages;
+    }
+
+    public boolean hasPast() {
+        return this.hasPast;
+    }
+
+    public boolean hasFuture() {
+        return hasFuture;
+    }
+
+    public boolean isNeedPastMessage() {
+        return needPastMessage;
     }
 }

@@ -130,7 +130,7 @@ class MessageServiceTest {
             @DisplayName("hasPast는 true다")
             @Test
             void messagesHasPastTrue() {
-                boolean hasPast = response.isHasPast();
+                boolean hasPast = response.hasPast();
 
                 assertThat(hasPast).isTrue();
             }
@@ -147,7 +147,7 @@ class MessageServiceTest {
             @DisplayName("hasPast는 false이다")
             @Test
             void messagesHasPastFalse() {
-                boolean hasPast = response.isHasPast();
+                boolean hasPast = response.hasPast();
 
                 assertThat(hasPast).isFalse();
             }
@@ -165,7 +165,7 @@ class MessageServiceTest {
             @DisplayName("hasFuture는 true이다")
             @Test
             void messagesHasFutureTrue() {
-                boolean hasFuture = response.isHasFuture();
+                boolean hasFuture = response.hasFuture();
 
                 assertThat(hasFuture).isTrue();
             }
@@ -181,7 +181,7 @@ class MessageServiceTest {
             @DisplayName("hasFutre는 false이다")
             @Test
             void messagesHasFutureFalse() {
-                boolean hasFuture = response.isHasFuture();
+                boolean hasFuture = response.hasFuture();
 
                 assertThat(hasFuture).isFalse();
             }

@@ -46,7 +46,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
-        assertThat(bookmarkResponses.isHasPast()).isEqualTo(expectedHasPast);
+        assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
         assertThat(convertToIds(bookmarkResponses)).containsExactlyElementsOf(expectedIds);
     }
 
@@ -65,7 +65,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
-        assertThat(bookmarkResponses.isHasPast()).isEqualTo(expectedHasPast);
+        assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
         assertThat(convertToIds(bookmarkResponses)).containsExactlyElementsOf(expectedIds);
     }
 

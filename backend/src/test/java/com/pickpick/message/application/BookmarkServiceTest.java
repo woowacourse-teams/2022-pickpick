@@ -106,7 +106,7 @@ class BookmarkServiceTest {
         List<Long> ids = convertToIds(response);
         assertAll(
                 () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
-                () -> assertThat(response.isHasPast()).isEqualTo(expectedHasPast)
+                () -> assertThat(response.hasPast()).isEqualTo(expectedHasPast)
         );
     }
 

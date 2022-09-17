@@ -150,7 +150,7 @@ class ReminderServiceTest {
         List<Long> ids = convertToIds(response);
         assertAll(
                 () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
-                () -> assertThat(response.isHasFuture()).isEqualTo(expectedHasFuture)
+                () -> assertThat(response.hasFuture()).isEqualTo(expectedHasFuture)
         );
     }
 
@@ -207,7 +207,7 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isHasFuture()).isTrue(),
+                () -> assertThat(response.hasFuture()).isTrue(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(29L, 30L)
         );
@@ -228,7 +228,7 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isHasFuture()).isTrue(),
+                () -> assertThat(response.hasFuture()).isTrue(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(25L, 26L)
         );
@@ -249,7 +249,7 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isHasFuture()).isFalse(),
+                () -> assertThat(response.hasFuture()).isFalse(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(27L, 28L)
         );
@@ -270,7 +270,7 @@ class ReminderServiceTest {
         int size = response.getReminders().size();
         assertAll(
                 () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.isHasFuture()).isFalse(),
+                () -> assertThat(response.hasFuture()).isFalse(),
                 () -> assertThat(response.getReminders()).extracting("id")
                         .containsExactly(31L, 29L, 30L, 25L, 26L, 27L, 28L)
         );
@@ -291,7 +291,7 @@ class ReminderServiceTest {
         List<Long> ids = convertToIds(response);
         assertAll(
                 () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
-                () -> assertThat(response.isHasFuture()).isTrue()
+                () -> assertThat(response.hasFuture()).isTrue()
         );
     }
 

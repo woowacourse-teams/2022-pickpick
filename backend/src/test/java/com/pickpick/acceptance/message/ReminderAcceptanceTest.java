@@ -86,7 +86,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isHasFuture()).isEqualTo(expectedHasPast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
@@ -109,7 +109,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isHasFuture()).isEqualTo(expectedHasPast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
@@ -132,7 +132,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isHasFuture()).isEqualTo(expectedHasPast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
@@ -156,7 +156,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isHasFuture()).isEqualTo(expectedHasPast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
