@@ -3,11 +3,12 @@ import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
 import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import Dropdown from "@src/components/Dropdown";
-import useSetReminder from "@src/hooks/useSetReminder";
 import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
 import useMutateReminder from "@src/hooks/query/useMutateReminder";
 import { getDateInformation } from "@src/@utils";
+import useTimePicker from "@src/hooks/useTimePicker";
+import useDatePicker from "@src/hooks/useDatePicker";
 
 const generateDateTimeOptions = () => {
   const { year, month } = getDateInformation(new Date());
@@ -59,35 +60,31 @@ function ReminderModal({
   refetchFeed,
 }: Props) {
   const {
-    ref: {
-      yearRef,
-      monthRef,
-      dateRef,
-      meridiemRef,
-      AMHourRef,
-      PMHourRef,
-      minuteRef,
-    },
-    checkedState: {
-      checkedMeridiem,
-      checkedHour,
-      checkedMinute,
-      checkedYear,
-      checkedMonth,
-      checkedDate,
-    },
-    handler: {
-      handleChangeMeridiem,
-      handleChangeHour,
-      handleChangeMinute,
-      handleChangeYear,
-      handleChangeMonth,
-      handleChangeDate,
-      handleToggleDateTimePicker,
-    },
-  } = useSetReminder({
-    remindDate,
-  });
+    yearRef,
+    monthRef,
+    dateRef,
+    checkedYear,
+    checkedMonth,
+    checkedDate,
+    handleChangeYear,
+    handleChangeMonth,
+    handleChangeDate,
+    handleResetDatePickerPosition,
+  } = useDatePicker({ remindDate });
+
+  const {
+    meridiemRef,
+    AMHourRef,
+    PMHourRef,
+    minuteRef,
+    checkedMeridiem,
+    checkedHour,
+    checkedMinute,
+    handleChangeMeridiem,
+    handleChangeHour,
+    handleChangeMinute,
+    handleResetTimePickerPosition,
+  } = useTimePicker({ remindDate });
 
   const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
@@ -99,10 +96,8 @@ function ReminderModal({
     <Styled.Container>
       <Styled.Title>리마인더 생성</Styled.Title>
 
-      <Dropdown>
+      <Dropdown toggleHandler={handleResetDatePickerPosition}>
         {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
-          handleToggleDateTimePicker();
-
           return (
             <FlexColumn marginBottom="10px" ref={innerRef}>
               <Styled.Subtitle>언제</Styled.Subtitle>
@@ -155,14 +150,12 @@ function ReminderModal({
         }}
       </Dropdown>
 
-      <Dropdown>
+      <Dropdown toggleHandler={handleResetTimePickerPosition}>
         {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
-          handleToggleDateTimePicker();
-
           return (
             <FlexColumn ref={innerRef}>
               <Styled.Subtitle>시간</Styled.Subtitle>
-
+              {/* 컴포넌트 분리 */}
               <DateTimePickerToggle
                 text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute.padStart(
                   2,

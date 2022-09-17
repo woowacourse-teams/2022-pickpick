@@ -1,6 +1,6 @@
 import useDropdown from "@src/hooks/useDropdown";
 import useOuterClick from "@src/hooks/useOuterClick";
-import { RefObject } from "react";
+import { RefObject, useEffect } from "react";
 
 interface ChildrenProps {
   innerRef: RefObject<HTMLDivElement>;
@@ -11,10 +11,11 @@ interface ChildrenProps {
 }
 
 interface Props {
+  toggleHandler?: () => void;
   children: ({ handleToggleDropdown }: ChildrenProps) => JSX.Element;
 }
 
-function Dropdown({ children }: Props) {
+function Dropdown({ toggleHandler, children }: Props) {
   const {
     isDropdownOpened,
     handleOpenDropdown,
@@ -23,6 +24,10 @@ function Dropdown({ children }: Props) {
   } = useDropdown();
 
   const { innerRef } = useOuterClick(handleCloseDropdown);
+
+  useEffect(() => {
+    toggleHandler && toggleHandler();
+  }, [isDropdownOpened]);
 
   return (
     <>
