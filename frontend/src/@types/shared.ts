@@ -56,7 +56,8 @@ export interface ResponseBookmarks {
 
 export interface ResponseMessages {
   messages: Message[];
-  isLast: boolean;
+  hasPast: boolean;
+  hasFuture: boolean;
 }
 
 export interface Channel {

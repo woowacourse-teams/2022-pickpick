@@ -19,13 +19,13 @@ function useGetInfiniteMessages({ channelId, date, keyword, queryKey }: Props) {
       keyword,
     }),
     {
-      getPreviousPageParam: ({ isLast, messages }: ResponseMessages) => {
-        if (!isLast) {
+      getPreviousPageParam: ({ hasFuture, messages }: ResponseMessages) => {
+        if (hasFuture) {
           return { messageId: messages[0]?.id, needPastMessage: false };
         }
       },
-      getNextPageParam: ({ isLast, messages }: ResponseMessages) => {
-        if (!isLast) {
+      getNextPageParam: ({ hasPast, messages }: ResponseMessages) => {
+        if (hasPast) {
           return {
             messageId: messages[messages.length - 1]?.id,
             needPastMessage: true,
