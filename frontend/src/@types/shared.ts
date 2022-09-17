@@ -46,7 +46,7 @@ export interface Reminder {
 
 export interface ResponseReminders {
   reminders: Reminder[];
-  isLast: boolean;
+  hasFuture: boolean;
 }
 
 export interface ResponseBookmarks {
