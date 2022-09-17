@@ -51,7 +51,7 @@ export interface ResponseReminders {
 
 export interface ResponseBookmarks {
   bookmarks: Bookmark[];
-  isLast: boolean;
+  hasPast: boolean;
 }
 
 export interface ResponseMessages {
