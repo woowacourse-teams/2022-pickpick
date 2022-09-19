@@ -2,9 +2,8 @@ package com.pickpick.slackevent.application.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static utils.JsonUtils.toJson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -92,10 +91,6 @@ class MemberChangedServiceTest {
                 )
         ));
 
-        try {
-            return new ObjectMapper().writeValueAsString(request);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return toJson(request);
     }
 }

@@ -5,9 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static utils.JsonUtils.toJson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
@@ -148,13 +147,5 @@ class MessageFileShareServiceTest {
         );
 
         return toJson(request);
-    }
-
-    private String toJson(Map<String, Object> map) {
-        try {
-            return new ObjectMapper().writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

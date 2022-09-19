@@ -2,9 +2,8 @@ package com.pickpick.slackevent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static utils.JsonUtils.toJson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import java.util.Map;
@@ -57,13 +56,5 @@ class SlackEventTest {
         // when & then
         assertThatThrownBy(() -> SlackEvent.of(request))
                 .isInstanceOf(SlackEventNotFoundException.class);
-    }
-
-    private String toJson(Map<String, Object> map) {
-        try {
-            return new ObjectMapper().writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

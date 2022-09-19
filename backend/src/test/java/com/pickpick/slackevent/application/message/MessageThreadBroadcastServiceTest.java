@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static utils.JsonUtils.toJson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
@@ -201,13 +200,5 @@ class MessageThreadBroadcastServiceTest {
                 () -> assertThat(messageAfterExecute).isPresent(),
                 () -> assertThat(messageAfterExecute.get().getText()).isEqualTo("messageText")
         );
-    }
-
-    private String toJson(Map<String, Object> map) {
-        try {
-            return new ObjectMapper().writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
