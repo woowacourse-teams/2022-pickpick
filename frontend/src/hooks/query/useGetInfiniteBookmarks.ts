@@ -8,8 +8,8 @@ function useGetInfiniteBookmarks() {
     QUERY_KEY.BOOKMARKS,
     getBookmarks,
     {
-      getNextPageParam: ({ isLast, bookmarks }: ResponseBookmarks) => {
-        if (!isLast) {
+      getNextPageParam: ({ hasPast, bookmarks }: ResponseBookmarks) => {
+        if (hasPast) {
           return bookmarks[bookmarks.length - 1]?.id;
         }
       },

@@ -46,17 +46,18 @@ export interface Reminder {
 
 export interface ResponseReminders {
   reminders: Reminder[];
-  isLast: boolean;
+  hasFuture: boolean;
 }
 
 export interface ResponseBookmarks {
   bookmarks: Bookmark[];
-  isLast: boolean;
+  hasPast: boolean;
 }
 
 export interface ResponseMessages {
   messages: Message[];
-  isLast: boolean;
+  hasPast: boolean;
+  hasFuture: boolean;
 }
 
 export interface Channel {
