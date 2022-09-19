@@ -9,7 +9,7 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
-import com.pickpick.slackevent.application.message.dto.MessageCreatedDto;
+import com.pickpick.slackevent.application.message.dto.MessageCreatedEventDto;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
@@ -50,7 +50,7 @@ public class MessageFileShareService implements SlackEventService {
 
     private SlackMessageDto convert(final String requestBody) {
         MessageCreatedRequest request = JsonUtils.convert(requestBody, MessageCreatedRequest.class);
-        MessageCreatedDto message = request.getEvent();
+        MessageCreatedEventDto message = request.getEvent();
 
         return new SlackMessageDto(
                 message.getUser(),

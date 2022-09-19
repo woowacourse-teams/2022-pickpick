@@ -1,7 +1,7 @@
 package com.pickpick.slackevent.application;
 
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
-import com.pickpick.slackevent.application.dto.SlackEventDto;
+import com.pickpick.slackevent.application.dto.SlackEventRequest;
 import com.pickpick.utils.JsonUtils;
 import java.util.Arrays;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public enum SlackEvent {
     }
 
     public static SlackEvent of(final String requestBody) {
-        SlackEventDto request = JsonUtils.convert(requestBody, SlackEventDto.class);
+        SlackEventRequest request = JsonUtils.convert(requestBody, SlackEventRequest.class);
         String type = request.getEvent().getType();
         String subtype = request.getEvent().getSubtype();
 

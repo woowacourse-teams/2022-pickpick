@@ -3,15 +3,15 @@ package com.pickpick.slackevent.application.dto;
 import lombok.Getter;
 
 @Getter
-public class TypeDto {
+public class EventDto {
 
     private String type;
     private String subtype;
 
-    private TypeDto() {
+    private EventDto() {
     }
 
-    public TypeDto(final String type, final String subtype) {
+    public EventDto(final String type, final String subtype) {
         this.type = type;
         this.subtype = subtype;
     }

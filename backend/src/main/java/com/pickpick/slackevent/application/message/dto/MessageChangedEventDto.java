@@ -3,15 +3,15 @@ package com.pickpick.slackevent.application.message.dto;
 import lombok.Getter;
 
 @Getter
-public class MessageChangedDto {
+public class MessageChangedEventDto {
 
     private MessageDto message;
     private String channel;
 
-    private MessageChangedDto() {
+    private MessageChangedEventDto() {
     }
 
-    public MessageChangedDto(final MessageDto message, final String channel) {
+    public MessageChangedEventDto(final MessageDto message, final String channel) {
         this.message = message;
         this.channel = channel;
     }

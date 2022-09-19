@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class MemberRequest {
 
-    private MemberDto event;
+    private MemberEventDto event;
 
     private MemberRequest() {
     }
 
-    public MemberRequest(final MemberDto event) {
+    public MemberRequest(final MemberEventDto event) {
         this.event = event;
     }
 }

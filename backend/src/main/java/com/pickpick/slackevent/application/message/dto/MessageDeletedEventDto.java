@@ -3,14 +3,14 @@ package com.pickpick.slackevent.application.message.dto;
 import lombok.Getter;
 
 @Getter
-public class MessageDeletedDto {
+public class MessageDeletedEventDto {
 
     private PreviousMessageDto previousMessage;
 
-    private MessageDeletedDto() {
+    private MessageDeletedEventDto() {
     }
 
-    public MessageDeletedDto(final PreviousMessageDto previousMessage) {
+    public MessageDeletedEventDto(final PreviousMessageDto previousMessage) {
         this.previousMessage = previousMessage;
     }
 }

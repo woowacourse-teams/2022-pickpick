@@ -3,7 +3,7 @@ package com.pickpick.slackevent.application.message.dto;
 import lombok.Getter;
 
 @Getter
-public class MessageCreatedDto {
+public class MessageCreatedEventDto {
 
     private String subtype;
     private String user;
@@ -13,11 +13,11 @@ public class MessageCreatedDto {
     private String clientMsgId;
     private String threadTs;
 
-    private MessageCreatedDto() {
+    private MessageCreatedEventDto() {
     }
 
-    public MessageCreatedDto(final String subtype, final String user, final String clientMsgId, final String ts,
-                             final String threadTs, final String text, final String channel) {
+    public MessageCreatedEventDto(final String subtype, final String user, final String clientMsgId, final String ts,
+                                  final String threadTs, final String text, final String channel) {
         this.subtype = subtype;
         this.user = user;
         this.clientMsgId = clientMsgId;

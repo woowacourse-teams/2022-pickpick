@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class MessageCreatedRequest {
 
-    private MessageCreatedDto event;
+    private MessageCreatedEventDto event;
 
     private MessageCreatedRequest() {
     }
 
-    public MessageCreatedRequest(final MessageCreatedDto event) {
+    public MessageCreatedRequest(final MessageCreatedEventDto event) {
         this.event = event;
     }
 }

@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class MessageDeletedRequest {
 
-    private MessageDeletedDto event;
+    private MessageDeletedEventDto event;
 
     private MessageDeletedRequest() {
     }
 
-    public MessageDeletedRequest(final MessageDeletedDto event) {
+    public MessageDeletedRequest(final MessageDeletedEventDto event) {
         this.event = event;
     }
 }
