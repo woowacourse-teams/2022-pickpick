@@ -68,7 +68,7 @@ public class ReminderService {
     public ReminderResponses find(final ReminderFindRequest request, final Long memberId) {
         List<Reminder> reminderList = findReminders(request, memberId);
 
-        return new ReminderResponses(toReminderResponseList(reminderList), isLast(reminderList, memberId));
+        return new ReminderResponses(toReminderResponseList(reminderList), hasPast(reminderList, memberId));
     }
 
     private List<Reminder> findReminders(final ReminderFindRequest request, final Long memberId) {
@@ -115,23 +115,23 @@ public class ReminderService {
         return max.isPresent() && max.get() > reminder.getId();
     }
 
-    private boolean isLast(final List<Reminder> reminderList, final Long memberId) {
+    private boolean hasPast(final List<Reminder> reminderList, final Long memberId) {
         if (reminderList.isEmpty()) {
-            return true;
+            return false;
         }
 
         if (isTargetDateMessageLeft(reminderList)) {
-            return false;
+            return true;
         }
 
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QReminder.reminder)
                 .where(QReminder.reminder.member.id.eq(memberId))
-                .where(meetIsLastCondition(reminderList))
+                .where(meetHasPastCondition(reminderList))
                 .fetchFirst();
 
-        return Objects.isNull(result);
+        return result != null;
     }
 
     private boolean isTargetDateMessageLeft(final List<Reminder> reminderList) {
@@ -146,7 +146,7 @@ public class ReminderService {
         return reminderId.isPresent();
     }
 
-    private BooleanExpression meetIsLastCondition(final List<Reminder> reminderList) {
+    private BooleanExpression meetHasPastCondition(final List<Reminder> reminderList) {
         Reminder targetReminder = reminderList.get(reminderList.size() - 1);
 
         LocalDateTime remindDate = targetReminder.getRemindDate();
