@@ -17,6 +17,9 @@ public class SlackMessageDto {
     private String text;
     private String channelSlackId;
 
+    private SlackMessageDto() {
+    }
+
     public SlackMessageDto(final String memberSlackId, final String slackId, final String postedDate,
                            final String modifiedDate, final String text, final String channelSlackId) {
         this.memberSlackId = memberSlackId;

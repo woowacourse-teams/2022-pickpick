@@ -2,6 +2,7 @@ package com.pickpick.slackevent.application.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -70,9 +71,11 @@ class ChannelDeletedServiceTest {
         messages.save(SAMPLE_MESSAGE_1);
         messages.save(SAMPLE_MESSAGE_2);
 
-        Map<String, Object> request = Map.of(
-                "type", "channel_deleted",
-                "channel", SAMPLE_CHANNEL.getSlackId()
+        String request = toJson(
+                Map.of(
+                        "type", "channel_deleted",
+                        "channel", SAMPLE_CHANNEL.getSlackId()
+                )
         );
 
         // when

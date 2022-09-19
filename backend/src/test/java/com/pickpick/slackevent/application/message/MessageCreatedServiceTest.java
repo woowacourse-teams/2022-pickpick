@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -42,7 +43,7 @@ class MessageCreatedServiceTest {
             TimeUtils.toLocalDateTime("1234567890"),
             TimeUtils.toLocalDateTime("1234567890")
     );
-    private static final Map<String, Object> MESSAGE_CREATED_REQUEST =
+    private static final String MESSAGE_CREATED_REQUEST = toJson(
             Map.of("event", Map.of(
                     "type", "message",
                     "channel", SAMPLE_CHANNEL.getSlackId(),
@@ -50,8 +51,9 @@ class MessageCreatedServiceTest {
                     "user", SAMPLE_MEMBER.getSlackId(),
                     "ts", "1234567890",
                     "client_msg_id", SAMPLE_MESSAGE.getSlackId())
-            );
-    private static final Map<String, Object> MESSAGE_REPLIED_REQUEST =
+            )
+    );
+    private static final String MESSAGE_REPLIED_REQUEST = toJson(
             Map.of("event", Map.of(
                     "type", "message",
                     "channel", SAMPLE_CHANNEL.getSlackId(),
@@ -60,8 +62,8 @@ class MessageCreatedServiceTest {
                     "ts", "1234567890",
                     "client_msg_id", SAMPLE_MESSAGE.getSlackId(),
                     "thread_ts", "1234599999")
-            );
-    private static final int FIRST_INDEX = 0;
+            )
+    );
 
     @Autowired
     private MessageCreatedService messageCreatedService;

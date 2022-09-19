@@ -1,6 +1,7 @@
 package com.pickpick.slackevent.application.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -61,7 +62,7 @@ class MessageDeletedServiceTest {
         saveMessage();
         Map<String, String> previousMessage = Map.of("client_msg_id", MESSAGE_SLACK_ID);
         Map<String, Object> event = Map.of("previous_message", previousMessage);
-        Map<String, Object> request = Map.of("event", event);
+        String request = toJson(Map.of("event", event));
 
         // when
         messageDeletedService.execute(request);

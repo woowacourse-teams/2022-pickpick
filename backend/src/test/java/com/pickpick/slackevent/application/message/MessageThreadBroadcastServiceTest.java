@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -45,7 +46,7 @@ class MessageThreadBroadcastServiceTest {
             TimeUtils.toLocalDateTime("1234567890"),
             TimeUtils.toLocalDateTime("1234567890")
     );
-    private final Map<String, Object> MESSAGE_THREAD_BROADCAST_REQUEST =
+    private final String MESSAGE_THREAD_BROADCAST_REQUEST = toJson(
             Map.of("event", Map.of(
                             "type", SlackEvent.MESSAGE_THREAD_BROADCAST.getType(),
                             "subtype", SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype(),
@@ -55,7 +56,8 @@ class MessageThreadBroadcastServiceTest {
                             "ts", "1234567890",
                             "client_msg_id", SAMPLE_MESSAGE.getSlackId()
                     )
-            );
+            )
+    );
     @Autowired
     private MessageThreadBroadcastService messageThreadBroadcastService;
 
