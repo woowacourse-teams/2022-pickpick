@@ -1,8 +1,9 @@
 package com.pickpick.slackevent.application;
 
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
+import com.pickpick.slackevent.application.dto.SlackEventRequest;
+import com.pickpick.utils.JsonUtils;
 import java.util.Arrays;
-import java.util.Map;
 import lombok.Getter;
 
 @Getter
@@ -27,19 +28,19 @@ public enum SlackEvent {
         this.subtype = subtype;
     }
 
-    public static SlackEvent of(final Map<String, Object> requestBody) {
-        Map<String, Object> event = (Map<String, Object>) requestBody.get("event");
-        String type = String.valueOf(event.get("type"));
-        String subtype = String.valueOf(event.getOrDefault("subtype", ""));
+    public static SlackEvent of(final String requestBody) {
+        SlackEventRequest request = JsonUtils.convert(requestBody, SlackEventRequest.class);
+        String type = request.getEvent().getType();
+        String subtype = request.getEvent().getSubtype();
 
         return Arrays.stream(values())
-                .filter(slackEvent -> isSameType(slackEvent, type, subtype))
+                .filter(slackEvent -> slackEvent.isSameType(type, subtype))
                 .findAny()
                 .orElseThrow(() -> new SlackEventNotFoundException(type, subtype));
     }
 
-    private static boolean isSameType(final SlackEvent event, final String type, final String subtype) {
-        return event.type.equals(type) && event.subtype.equals(subtype);
+    private boolean isSameType(final String type, final String subtype) {
+        return this.type.equals(type) && this.subtype.equals(subtype);
     }
 
     public boolean isSameSubtype(final String subtype) {

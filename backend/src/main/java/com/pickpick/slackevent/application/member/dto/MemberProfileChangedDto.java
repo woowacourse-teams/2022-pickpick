@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class MemberProfileChangedDto {
 
-    private String slackId;
-    private String username;
-    private String thumbnailUrl;
+    private final String slackId;
+    private final String username;
+    private final String thumbnailUrl;
 
     public MemberProfileChangedDto(final String slackId, final String username, final String thumbnailUrl) {
         this.slackId = slackId;
