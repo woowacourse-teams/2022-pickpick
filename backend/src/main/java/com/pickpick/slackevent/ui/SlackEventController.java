@@ -26,7 +26,7 @@ public class SlackEventController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(final @RequestBody String requestBody) {
+    public ResponseEntity<String> save(@RequestBody final String requestBody) {
         log.info("Slack Event: {}", requestBody);
 
         ChallengeRequest challengeRequest = JsonUtils.convert(requestBody, ChallengeRequest.class);

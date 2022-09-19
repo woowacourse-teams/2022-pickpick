@@ -8,7 +8,7 @@ public class InvalidJsonRequestException extends BadRequestException {
     private static final String CLIENT_MESSAGE = "잘못된 요청 값입니다.";
 
     public InvalidJsonRequestException(final String json) {
-        super(String.format("%s -> message id: %s", DEFAULT_MESSAGE, json));
+        super(String.format("%s -> json input: %s", DEFAULT_MESSAGE, json));
     }
 
     @Override
