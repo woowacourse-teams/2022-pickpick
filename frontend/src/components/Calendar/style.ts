@@ -85,7 +85,7 @@ export const Day = styled.div`
       ? theme.COLOR.CONTAINER.DEFAULT
       : theme.COLOR.BACKGROUND.SECONDARY};
     font-size: ${theme.FONT_SIZE.BODY};
-
+    pointer-events: ${isFuture || isBlank ? "none" : "auto"};
     opacity: ${isFuture ? 0.3 : 1};
 
     div {
