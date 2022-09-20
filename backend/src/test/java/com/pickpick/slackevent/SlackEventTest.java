@@ -2,6 +2,7 @@ package com.pickpick.slackevent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -38,7 +39,7 @@ class SlackEventTest {
     @MethodSource("methodSource")
     void findSlackEventByTypeAndSubtype(final Map<String, Object> request, final SlackEvent expected) {
         // given & when
-        SlackEvent actual = SlackEvent.of(request);
+        SlackEvent actual = SlackEvent.of(toJson(request));
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -48,7 +49,9 @@ class SlackEventTest {
     @Test
     void notExistedSlackEvent() {
         // given
-        Map<String, Object> request = Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"));
+        String request = toJson(
+                Map.of("event", Map.of("존재하지 않는 type", "존재하지 않는 subtype"))
+        );
 
         // when & then
         assertThatThrownBy(() -> SlackEvent.of(request))

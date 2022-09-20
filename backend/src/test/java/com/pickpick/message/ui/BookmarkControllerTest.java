@@ -69,7 +69,7 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
                                         .description("메시지 게시 날짜"),
                                 fieldWithPath("bookmarks.[].modifiedDate").type(JsonFieldType.STRING)
                                         .description("메시지 수정 날짜"),
-                                fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 메시지 여부")
+                                fieldWithPath("hasPast").type(JsonFieldType.BOOLEAN).description("더 과거의 북마크 조회 가능 여부")
                         )
                 ));
     }

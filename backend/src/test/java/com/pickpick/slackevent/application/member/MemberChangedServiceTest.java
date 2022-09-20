@@ -2,6 +2,7 @@ package com.pickpick.slackevent.application.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
@@ -42,7 +43,7 @@ class MemberChangedServiceTest {
         // given
         Member member = members.save(new Member(SLACK_ID, "사용자", "test.png"));
 
-        Map<String, Object> request = memberChangedEvent(realName, displayName, "test.png");
+        String request = memberChangedEvent(realName, displayName, "test.png");
 
         // when
         memberChangedService.execute(request);
@@ -63,7 +64,7 @@ class MemberChangedServiceTest {
         Member member = members.save(new Member(SLACK_ID, "사용자", "test.png"));
 
         String thumbnailUrl = "new_test.png";
-        Map<String, Object> request = memberChangedEvent("사용자", "표시 이름", thumbnailUrl);
+        String request = memberChangedEvent("사용자", "표시 이름", thumbnailUrl);
 
         // when
         memberChangedService.execute(request);
@@ -77,17 +78,19 @@ class MemberChangedServiceTest {
         );
     }
 
-    private Map<String, Object> memberChangedEvent(final String realName, final String displayName,
-                                                   final String thumbnailUrl) {
-        return Map.of("event", Map.of(
+    private String memberChangedEvent(final String realName, final String displayName,
+                                      final String thumbnailUrl) {
+        Map<String, Object> request = Map.of("event", Map.of(
                 "user", Map.of(
                         "id", SLACK_ID,
                         "profile", Map.of(
                                 "real_name", realName,
                                 "display_name", displayName,
-                                "image_512", thumbnailUrl
+                                "image_48", thumbnailUrl
                         )
                 )
         ));
+
+        return toJson(request);
     }
 }

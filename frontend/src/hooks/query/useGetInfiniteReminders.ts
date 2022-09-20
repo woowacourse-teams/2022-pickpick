@@ -8,8 +8,8 @@ function useGetInfiniteReminders() {
     QUERY_KEY.REMINDERS,
     getReminders,
     {
-      getNextPageParam: ({ isLast, reminders }: ResponseReminders) => {
-        if (!isLast) {
+      getNextPageParam: ({ hasFuture, reminders }: ResponseReminders) => {
+        if (hasFuture) {
           return reminders[reminders.length - 1]?.id;
         }
       },

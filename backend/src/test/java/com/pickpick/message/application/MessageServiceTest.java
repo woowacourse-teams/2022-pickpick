@@ -120,38 +120,71 @@ class MessageServiceTest {
 
         }
 
-        @DisplayName("더 이상 조회할 메시지가 없다면")
+        @DisplayName("조회 할 과거 메시지가 남아 있다면")
         @Nested
-        class noMoreMessagesRemain {
-
-            MessageRequest request = onlyCount(noticeMessages.size());
-            MessageResponses response = messageService.find(summer.getId(), request);
-
-            @DisplayName("isLast는 true이다")
-            @Test
-            void messageRemainIsLastFalse() {
-                boolean isLast = response.isLast();
-
-                assertThat(isLast).isTrue();
-            }
-
-        }
-
-        @DisplayName("조회 할 메시지가 남아있다면")
-        @Nested
-        class messagesRemain {
+        class pastMessagesRemain {
 
             MessageRequest request = onlyCount(MESSAGE_COUNT);
             MessageResponses response = messageService.find(summer.getId(), request);
 
-            @DisplayName("isLast는 false다")
+            @DisplayName("hasPast는 true다")
             @Test
-            void messageRemainIsLastTrue() {
-                boolean isLast = response.isLast();
+            void messagesHasPastTrue() {
+                boolean hasPast = response.hasPast();
 
-                assertThat(isLast).isFalse();
+                assertThat(hasPast).isTrue();
             }
 
+        }
+
+        @DisplayName("조회 할 과거 메시지가 더 이상 없다면")
+        @Nested
+        class noMorePastMessagesRemain {
+
+            MessageRequest request = onlyCount(noticeMessages.size());
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("hasPast는 false이다")
+            @Test
+            void messagesHasPastFalse() {
+                boolean hasPast = response.hasPast();
+
+                assertThat(hasPast).isFalse();
+            }
+
+        }
+
+        @DisplayName("조회 할 미래 메시지가 남아 있다면")
+        @Nested
+        class futureMessagesRemain {
+
+            MessageRequest request = pastFromTargetMessageInChannels(
+                    List.of(notice), noticeMessages.get(noticeMessages.size() - 1), MESSAGE_COUNT);
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("hasFuture는 true이다")
+            @Test
+            void messagesHasFutureTrue() {
+                boolean hasFuture = response.hasFuture();
+
+                assertThat(hasFuture).isTrue();
+            }
+        }
+
+        @DisplayName("조회 할 미래 메시지가 더 이상 없다면")
+        @Nested
+        class noMoreFutureMessagesRemain {
+
+            MessageRequest request = onlyCount(MESSAGE_COUNT);
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("hasFutre는 false이다")
+            @Test
+            void messagesHasFutureFalse() {
+                boolean hasFuture = response.hasFuture();
+
+                assertThat(hasFuture).isFalse();
+            }
         }
 
         @DisplayName("특정 단어로 여러 채널에서 검색한다면")

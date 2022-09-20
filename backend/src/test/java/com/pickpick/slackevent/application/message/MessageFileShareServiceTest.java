@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -133,8 +134,8 @@ class MessageFileShareServiceTest {
         return conversationsInfoResponse;
     }
 
-    private Map<String, Object> fileShareRequest(final String text) {
-        return Map.of("event", Map.of(
+    private String fileShareRequest(final String text) {
+        Map<String, Object> request = Map.of("event", Map.of(
                 "type", MESSAGE_FILE_SHARE.getType(),
                 "subtype", MESSAGE_FILE_SHARE.getSubtype(),
                 "files", new ArrayList<>(),
@@ -144,5 +145,7 @@ class MessageFileShareServiceTest {
                 "ts", "1234567890",
                 "client_msg_id", SAMPLE_MESSAGE.getSlackId())
         );
+
+        return toJson(request);
     }
 }

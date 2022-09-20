@@ -2,6 +2,7 @@ package com.pickpick.slackevent.application.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
@@ -55,7 +56,7 @@ class MemberJoinServiceTest {
     void teamJoinEvent(final String realName, final String displayName, final String expectedName) {
         // given
         Optional<Member> memberBeforeSave = members.findBySlackId(SLACK_ID);
-        Map<String, Object> teamJoinEvent = createTeamJoinEvent(realName, displayName, expectedName);
+        String teamJoinEvent = createTeamJoinEvent(realName, displayName, expectedName);
 
         // when
         memberJoinService.execute(teamJoinEvent);
@@ -69,19 +70,21 @@ class MemberJoinServiceTest {
         );
     }
 
-    private Map<String, Object> createTeamJoinEvent(final String realName, final String displayName,
-                                                    final String thumbnailUrl) {
-        return Map.of(
-                "event", Map.of(
-                        "type", "team_join",
-                        "user", Map.of(
-                                "id", SLACK_ID,
-                                "profile", Map.of(
-                                        "real_name", realName,
-                                        "display_name", displayName,
-                                        "image_512", thumbnailUrl
+    private String createTeamJoinEvent(final String realName, final String displayName,
+                                       final String thumbnailUrl) {
+        return toJson(
+                Map.of(
+                        "event", Map.of(
+                                "type", "team_join",
+                                "user", Map.of(
+                                        "id", SLACK_ID,
+                                        "profile", Map.of(
+                                                "real_name", realName,
+                                                "display_name", displayName,
+                                                "image_48", thumbnailUrl
+                                        )
                                 )
-                        )
-                ));
+                        ))
+        );
     }
 }

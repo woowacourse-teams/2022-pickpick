@@ -1,5 +1,6 @@
 package com.pickpick.slackevent.application.member.dto;
 
+import com.pickpick.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,5 +16,9 @@ public class MemberJoinDto {
         this.slackId = slackId;
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public Member toEntity() {
+        return new Member(slackId, username, thumbnailUrl);
     }
 }

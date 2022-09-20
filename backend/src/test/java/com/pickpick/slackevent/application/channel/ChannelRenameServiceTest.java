@@ -2,6 +2,7 @@ package com.pickpick.slackevent.application.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -38,12 +39,14 @@ class ChannelRenameServiceTest {
         Channel channel = channels.save(new Channel("slackId", "channelName"));
 
         String expectedChannelName = "변경된 채널 이름";
-        Map<String, Object> request = Map.of(
-                "type", "channel_rename",
-                "channel", Map.of(
-                        "id", channel.getSlackId(),
-                        "name", expectedChannelName,
-                        "created", "1234567890")
+        String request = toJson(
+                Map.of(
+                        "type", "channel_rename",
+                        "channel", Map.of(
+                                "id", channel.getSlackId(),
+                                "name", expectedChannelName,
+                                "created", "1234567890")
+                )
         );
 
         // when
@@ -60,12 +63,14 @@ class ChannelRenameServiceTest {
     @Test
     void exceptionOccursWhenMatchedChannelDoesNotExist() {
         // given
-        Map<String, Object> request = Map.of(
-                "type", "channel_rename",
-                "channel", Map.of(
-                        "id", "NOT_EXIST_CHANNEL_SLACK_ID",
-                        "name", "NAME CHANGE REQUEST VALUE",
-                        "created", "1234567890")
+        String request = toJson(
+                Map.of(
+                        "type", "channel_rename",
+                        "channel", Map.of(
+                                "id", "NOT_EXIST_CHANNEL_SLACK_ID",
+                                "name", "NAME CHANGE REQUEST VALUE",
+                                "created", "1234567890")
+                )
         );
 
         // when & then

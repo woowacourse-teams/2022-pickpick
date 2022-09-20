@@ -1,5 +1,5 @@
 import WrapperButton from ".";
-import GithubIcon from "@public/assets/icons/GithubIcon.svg";
+import GithubIcon from "@src/components/@svgIcons/GithubIcon";
 
 export default {
   title: "@shared/WrapperButton",
