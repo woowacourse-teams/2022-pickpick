@@ -1,7 +1,7 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "./style";
-import React, { useEffect } from "react";
+import React from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseMessages, parseTime } from "@src/@utils";
@@ -20,6 +20,7 @@ import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
+import useScrollToTop from "@src/hooks/useScrollToTop";
 
 function Feed() {
   const { channelId } = useParams();
@@ -57,11 +58,7 @@ function Feed() {
 
   const parsedData = extractResponseMessages(data);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, [queryKey]);
+  useScrollToTop();
 
   return (
     <Styled.Container>

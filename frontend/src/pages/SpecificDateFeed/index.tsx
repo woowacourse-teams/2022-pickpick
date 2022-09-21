@@ -21,6 +21,7 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
+import useScrollToTop from "@src/hooks/useScrollToTop";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -82,6 +83,8 @@ function SpecificDateFeed() {
       behavior: "smooth",
     });
   }, [queryKey]);
+
+  useScrollToTop({ dependencies: [queryKey] });
 
   return (
     <Styled.Container
