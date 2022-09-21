@@ -10,8 +10,8 @@ class TimeUtilsTest {
     @Test
     void toLocalDateTime() {
         // given
-        String eventTimeStamp = "1657087057.056339";
-        LocalDateTime expected = LocalDateTime.of(2022, 7, 6, 14, 57, 37);
+        String eventTimeStamp = "1663748574.680364";
+        LocalDateTime expected = LocalDateTime.of(2022, 9, 21, 17, 22, 54, 680364000);
 
         // when
         LocalDateTime actual = TimeUtils.toLocalDateTime(eventTimeStamp);
