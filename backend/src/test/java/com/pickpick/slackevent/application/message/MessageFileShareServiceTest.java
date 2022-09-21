@@ -43,8 +43,8 @@ class MessageFileShareServiceTest {
             "메시지 전송!",
             SAMPLE_MEMBER,
             SAMPLE_CHANNEL,
-            TimeUtils.toLocalDateTime("1234567890"),
-            TimeUtils.toLocalDateTime("1234567890")
+            TimeUtils.toLocalDateTime("1656919966.864259"),
+            TimeUtils.toLocalDateTime("1656919966.864259")
     );
 
     @Autowired
@@ -142,7 +142,7 @@ class MessageFileShareServiceTest {
                 "channel", SAMPLE_CHANNEL.getSlackId(),
                 "text", text,
                 "user", SAMPLE_MEMBER.getSlackId(),
-                "ts", "1234567890",
+                "ts", "1656919966.864259",
                 "client_msg_id", SAMPLE_MESSAGE.getSlackId())
         );
 
