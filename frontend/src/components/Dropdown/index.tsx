@@ -23,7 +23,7 @@ function Dropdown({ toggleHandler, children }: Props) {
     handleToggleDropdown,
   } = useDropdown();
 
-  const { innerRef } = useOuterClick(handleCloseDropdown);
+  const { innerRef } = useOuterClick({ callback: handleCloseDropdown });
 
   useEffect(() => {
     toggleHandler && toggleHandler();
