@@ -7,8 +7,8 @@ import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import { extractResponseBookmarks, parseTime } from "@src/@utils";
-import { useEffect } from "react";
 import useGetInfiniteBookmarks from "@src/hooks/query/useGetInfiniteBookmarks";
+import useScrollToTop from "@src/hooks/useScrollToTop";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
@@ -20,11 +20,7 @@ function Bookmark() {
 
   const parsedData = extractResponseBookmarks(data);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  useScrollToTop();
 
   return (
     <Styled.Container>
