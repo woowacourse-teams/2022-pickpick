@@ -19,5 +19,9 @@ export const Radio = styled.input`
 `;
 
 export const TextOption = styled.span`
+  display: flex;
+  height: 22px;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 `;
