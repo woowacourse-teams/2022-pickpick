@@ -17,7 +17,6 @@ function useOuterClick({ callback, requiredRefCount = 1 }: Props) {
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (
-        innerRefArray.length &&
         callbackRef.current &&
         !innerRefArray.some(
           (ref) =>
