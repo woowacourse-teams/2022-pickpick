@@ -9,7 +9,7 @@ interface Props {
 
 function useOuterClick({ callback, requiredRefCount = 1 }: Props) {
   const callbackRef = useRef<CallbackType>();
-  const innerRefArray = [...Array(requiredRefCount)].map(() =>
+  const innerRefArray = [...Array(requiredRefCount ?? 1)].map(() =>
     useRef<HTMLDivElement>(null)
   );
   callbackRef.current = callback;
