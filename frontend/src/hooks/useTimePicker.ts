@@ -1,3 +1,4 @@
+import { PICKER_OPTION_SCROLL } from "@src/@constants";
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
 import { useEffect, useRef, useState } from "react";
 import useInput from "./useInput";
@@ -89,29 +90,31 @@ function useTimePicker({ remindDate }: Props) {
   useEffect(() => {
     if (meridiemRef.current) {
       meridiemRef.current.scrollTo({
-        top: checkedMeridiem === "오전" ? 0 : 22,
-        behavior: "smooth",
+        top: checkedMeridiem === "오전" ? 0 : PICKER_OPTION_SCROLL.HEIGHT,
+        behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
 
     if (AMHourRef.current) {
       AMHourRef.current.scrollTo({
-        top: Number(checkedHour) * 22.5,
-        behavior: "smooth",
+        top: Number(checkedHour) * PICKER_OPTION_SCROLL.HEIGHT,
+        behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
 
     if (PMHourRef.current) {
       PMHourRef.current.scrollTo({
-        top: (Number(checkedHour) === 12 ? 0 : Number(checkedHour)) * 22.5,
-        behavior: "smooth",
+        top:
+          (Number(checkedHour) === 12 ? 0 : Number(checkedHour)) *
+          PICKER_OPTION_SCROLL.HEIGHT,
+        behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
 
     if (minuteRef.current) {
       minuteRef.current.scrollTo({
-        top: (Number(checkedMinute) / 10) * 22.7,
-        behavior: "smooth",
+        top: (Number(checkedMinute) / 10) * PICKER_OPTION_SCROLL.HEIGHT,
+        behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
   }, [checkedMeridiem, checkedHour, checkedMinute, timeDropdownFlag]);

@@ -29,8 +29,9 @@ export const TextOptionContainer = styled.div`
     height: 22px;
     border-radius: 3px;
     position: absolute;
-    top: 48px;
+    top: 53px;
     left: 0;
+    right: 0;
     opacity: 0.4;
     pointer-events: none;
 
@@ -45,7 +46,6 @@ export const TextOptionsWrapper = styled.div`
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
