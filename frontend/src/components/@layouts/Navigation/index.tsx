@@ -37,10 +37,14 @@ function Navigation() {
     handleToggleModal: handleToggleLogoutButton,
   } = useModal();
 
-  const { innerRef: drawerInnerRef } = useOuterClick(handleCloseDrawer);
-  const { innerRef: logoutButtonInnerRef } = useOuterClick(
-    handleCloseLogoutButton
-  );
+  const { innerRefArray: drawerInnerRefArray } = useOuterClick({
+    callback: handleCloseDrawer,
+    requiredRefCount: 2,
+  });
+
+  const { innerRef: logoutButtonInnerRef } = useOuterClick({
+    callback: handleCloseLogoutButton,
+  });
 
   const handleLogout = () => {
     handleCloseLogoutButton();
@@ -49,7 +53,7 @@ function Navigation() {
 
   return (
     <Styled.Container>
-      <div ref={drawerInnerRef}>
+      <div ref={drawerInnerRefArray[0]}>
         <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
           <MenuIcon
             width="24px"
@@ -120,10 +124,12 @@ function Navigation() {
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
-          <Drawer
-            channels={data?.channels}
-            handleCloseDrawer={handleCloseDrawer}
-          />
+          <div ref={drawerInnerRefArray[1]}>
+            <Drawer
+              channels={data?.channels}
+              handleCloseDrawer={handleCloseDrawer}
+            />
+          </div>
         </>
       </Portal>
 
