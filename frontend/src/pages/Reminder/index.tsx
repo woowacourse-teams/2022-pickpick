@@ -11,8 +11,8 @@ import ReminderModal from "@src/components/ReminderModal";
 import useModal from "@src/hooks/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import { useEffect } from "react";
 import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
+import useScrollToTop from "@src/hooks/useScrollToTop";
 
 function Reminder() {
   const {
@@ -33,11 +33,7 @@ function Reminder() {
     handleCloseModal: handleCloseReminderModal,
   } = useModal();
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  useScrollToTop();
 
   return (
     <Styled.Container>
