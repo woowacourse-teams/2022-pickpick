@@ -50,7 +50,7 @@ public class ChannelSubscriptionService {
 
         validateDuplicatedSubscription(channel, member);
 
-        channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(memberId)));
+        channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(member)));
     }
 
     private void validateDuplicatedSubscription(final Channel channel, final Member member) {
@@ -59,8 +59,8 @@ public class ChannelSubscriptionService {
         }
     }
 
-    private int getMaxViewOrder(final Long memberId) {
-        return channelSubscriptions.findFirstByMemberIdOrderByViewOrderDesc(memberId)
+    private int getMaxViewOrder(final Member member) {
+        return channelSubscriptions.findFirstByMemberOrderByViewOrderDesc(member)
                 .map(it -> it.getViewOrder() + ORDER_NEXT)
                 .orElse(ORDER_FIRST);
     }
