@@ -31,7 +31,7 @@ export const Hr = styled.hr`
 `;
 
 export const Title = styled.h1`
-  font-weight: bold;
+  font-weight: 600;
 
   ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.LARGE_BODY};

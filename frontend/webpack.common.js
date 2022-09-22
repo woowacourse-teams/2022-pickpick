@@ -21,23 +21,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts|tsx)$/,
-        exclude: /node_module/,
-        use: {
-          loader: "babel-loader",
-        },
-      },
-      {
-        test: /\.tsx?$/,
+        test: /\.(ts|tsx)?$/,
         use: "ts-loader",
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|gif|woff)$/i,
-        loader: "file-loader",
-        options: {
-          name: "[path][name].[ext]",
-        },
+        test: /\.(png|jpe?g|woff|woff2|ttf)$/i,
+        type: "asset/resource",
       },
       {
         test: /\.svg$/,

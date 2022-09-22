@@ -2,10 +2,11 @@ import * as Styled from "./style";
 import Button from "@src/components/@shared/Button";
 import { FlexRow } from "@src/@styles/shared";
 import LogoIcon from "@public/assets/icons/pickpick.svg";
+import { SLACK_LOGIN_URL } from "@src/@constants";
 
 function Home() {
   const handleNavigateToAddChannel = () => {
-    location.href = `https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&redirect_uri=${process.env.SLACK_REDIRECT_URL}&client_id=3740298320131.3743463195250`;
+    location.href = SLACK_LOGIN_URL;
   };
 
   return (

@@ -3,5 +3,7 @@ declare module "*.svg" {
   export default content;
 }
 
+declare module "*.woff2";
 declare module "*.woff";
+declare module "*.ttf";
 declare module "*.png";

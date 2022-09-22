@@ -37,7 +37,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         // given
         Map<String, Object> request = Map.of("bookmarkId", "");
         List<Long> expectedIds = List.of(1L);
-        boolean expectedIsLast = true;
+        boolean expectedHasPast = false;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 2L, request);
@@ -46,7 +46,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
-        assertThat(bookmarkResponses.isLast()).isEqualTo(expectedIsLast);
+        assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
         assertThat(convertToIds(bookmarkResponses)).containsExactlyElementsOf(expectedIds);
     }
 
@@ -56,7 +56,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("bookmarkId", "23");
         List<Long> expectedIds = List.of(22L, 21L, 20L, 19L, 18L, 17L, 16L, 15L, 14L, 13L, 12L, 11L, 10L, 9L, 8L, 7L,
                 6L, 5L, 4L, 3L);
-        boolean expectedIsLast = false;
+        boolean expectedHasPast = true;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 1L, request);
@@ -65,7 +65,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
-        assertThat(bookmarkResponses.isLast()).isEqualTo(expectedIsLast);
+        assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
         assertThat(convertToIds(bookmarkResponses)).containsExactlyElementsOf(expectedIds);
     }
 

@@ -93,3 +93,10 @@ export const THEME_KIND = {
   LIGHT: "LIGHT",
   DARK: "DARK",
 } as const;
+
+export const SLACK_LOGIN_URL = `https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&redirect_uri=${process.env.SLACK_REDIRECT_URL}&client_id=3740298320131.3743463195250`;
+
+export const PICKER_OPTION_SCROLL = {
+  HEIGHT: 22,
+  BEHAVIOR: "smooth",
+} as const;

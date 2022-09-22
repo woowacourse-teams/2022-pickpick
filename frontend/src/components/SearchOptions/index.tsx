@@ -1,5 +1,6 @@
 import { SubscribedChannel } from "@src/@types/shared";
 import Button from "@src/components/@shared/Button";
+import { memo } from "react";
 import * as Styled from "./style";
 
 interface Props {
@@ -63,4 +64,4 @@ function SearchOptions({
   );
 }
 
-export default SearchOptions;
+export default memo(SearchOptions);

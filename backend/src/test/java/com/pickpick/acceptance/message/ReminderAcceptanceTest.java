@@ -76,7 +76,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> request = Map.of("reminderId", "");
         List<Long> expectedIds = List.of(1L);
-        boolean expectedIsLast = true;
+        boolean expectedHasPast = false;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
@@ -86,7 +86,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
@@ -99,7 +99,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> request = Map.of("reminderId", "10");
         List<Long> expectedIds = List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L);
-        boolean expectedIsLast = true;
+        boolean expectedHasPast = false;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
@@ -109,20 +109,20 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
 
     @Test
-    void 리마인더_조회_시_가장_최신인_리마인더가_포함된다면_isLast가_True다() {
+    void 리마인더_조회_시_가장_최신인_리마인더가_포함된다면_hasFuture가_False다() {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         Map<String, Object> request = Map.of("reminderId", "");
         List<Long> expectedIds = List.of(1L);
-        boolean expectedIsLast = true;
+        boolean expectedHasPast = false;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
@@ -132,13 +132,13 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }
 
     @Test
-    void 리마인더_조회_시_가장_최신인_리마인더가_포함되지_않는다면_isLast가_False다() {
+    void 리마인더_조회_시_가장_최신인_리마인더가_포함되지_않는다면_hasFuture가_True다() {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
@@ -146,7 +146,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("reminderId", "2");
         List<Long> expectedIds = List.of(
                 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L);
-        boolean expectedIsLast = false;
+        boolean expectedHasPast = true;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
@@ -156,7 +156,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
-                () -> assertThat(reminderResponses.isLast()).isEqualTo(expectedIsLast),
+                () -> assertThat(reminderResponses.hasFuture()).isEqualTo(expectedHasPast),
                 () -> assertThat(convertToIds(reminderResponses)).containsExactlyElementsOf(expectedIds)
         );
     }

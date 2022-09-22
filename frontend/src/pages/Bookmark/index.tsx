@@ -1,40 +1,26 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "../Feed/style";
-import { useInfiniteQuery } from "react-query";
-import { ResponseBookmarks, CustomError } from "@src/@types/shared";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseBookmarks, parseTime } from "@src/@utils";
-import { nextBookmarksCallback } from "@src/api/utils";
-import { QUERY_KEY } from "@src/@constants";
-import { getBookmarks } from "@src/api/bookmarks";
-import useBookmark from "@src/hooks/useBookmark";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
 import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
-import { useEffect } from "react";
+import { extractResponseBookmarks, parseTime } from "@src/@utils";
+import useGetInfiniteBookmarks from "@src/hooks/query/useGetInfiniteBookmarks";
+import useScrollToTop from "@src/hooks/useScrollToTop";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
-    useInfiniteQuery<ResponseBookmarks, CustomError>(
-      QUERY_KEY.BOOKMARKS,
-      getBookmarks,
-      {
-        getNextPageParam: nextBookmarksCallback,
-      }
-    );
+    useGetInfiniteBookmarks();
 
-  const { handleRemoveBookmark } = useBookmark({
-    handleSettle: refetch,
+  const { handleRemoveBookmark } = useMutateBookmark({
+    handleSettleRemoveBookmark: refetch,
   });
 
   const parsedData = extractResponseBookmarks(data);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  useScrollToTop();
 
   return (
     <Styled.Container>

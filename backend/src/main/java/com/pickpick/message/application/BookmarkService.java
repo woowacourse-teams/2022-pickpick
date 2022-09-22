@@ -11,10 +11,10 @@ import com.pickpick.message.domain.BookmarkRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QBookmark;
+import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
-import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -56,7 +56,7 @@ public class BookmarkService {
     public BookmarkResponses find(final BookmarkFindRequest request, final Long memberId) {
         List<Bookmark> bookmarkList = findBookmarks(request, memberId);
 
-        return new BookmarkResponses(toBookmarkResponseList(bookmarkList), isLast(bookmarkList, memberId));
+        return new BookmarkResponses(toBookmarkResponseList(bookmarkList), hasPast(bookmarkList, memberId));
     }
 
     private List<Bookmark> findBookmarks(final BookmarkFindRequest request, final Long memberId) {
@@ -92,22 +92,22 @@ public class BookmarkService {
         return QBookmark.bookmark.message.postedDate.before(messageDate);
     }
 
-    private boolean isLast(final List<Bookmark> bookmarkList, final Long memberId) {
+    private boolean hasPast(final List<Bookmark> bookmarkList, final Long memberId) {
         if (bookmarkList.isEmpty()) {
-            return true;
+            return false;
         }
 
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(QBookmark.bookmark)
                 .where(QBookmark.bookmark.member.id.eq(memberId))
-                .where(meetIsLastCondition(bookmarkList))
+                .where(meetHasPastCondition(bookmarkList))
                 .fetchFirst();
 
-        return Objects.isNull(result);
+        return result != null;
     }
 
-    private BooleanExpression meetIsLastCondition(final List<Bookmark> bookmarkList) {
+    private BooleanExpression meetHasPastCondition(final List<Bookmark> bookmarkList) {
         Bookmark targetBookmark = bookmarkList.get(bookmarkList.size() - 1);
 
         LocalDateTime messageDate = targetBookmark.getMessage().getPostedDate();

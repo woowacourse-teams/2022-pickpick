@@ -2,22 +2,23 @@ package com.pickpick.slackevent.application.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static utils.JsonUtils.toJson;
 
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @DisplayName("MemberJoinService는")
-@Import(MemberJoinService.class)
-@DataJpaTest
+@SpringBootTest
 class MemberJoinServiceTest {
 
     private static final String SLACK_ID = "U03MKN0UW";
@@ -27,6 +28,14 @@ class MemberJoinServiceTest {
 
     @Autowired
     private MemberRepository members;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("MEMBER_JOIN 타입에 대해서만 true를 반환한다")
     @CsvSource(value = {"MEMBER_JOIN,true",
@@ -47,7 +56,7 @@ class MemberJoinServiceTest {
     void teamJoinEvent(final String realName, final String displayName, final String expectedName) {
         // given
         Optional<Member> memberBeforeSave = members.findBySlackId(SLACK_ID);
-        Map<String, Object> teamJoinEvent = createTeamJoinEvent(realName, displayName, expectedName);
+        String teamJoinEvent = createTeamJoinEvent(realName, displayName, expectedName);
 
         // when
         memberJoinService.execute(teamJoinEvent);
@@ -61,19 +70,21 @@ class MemberJoinServiceTest {
         );
     }
 
-    private Map<String, Object> createTeamJoinEvent(final String realName, final String displayName,
-                                                    final String thumbnailUrl) {
-        return Map.of(
-                "event", Map.of(
-                        "type", "team_join",
-                        "user", Map.of(
-                                "id", SLACK_ID,
-                                "profile", Map.of(
-                                        "real_name", realName,
-                                        "display_name", displayName,
-                                        "image_512", thumbnailUrl
+    private String createTeamJoinEvent(final String realName, final String displayName,
+                                       final String thumbnailUrl) {
+        return toJson(
+                Map.of(
+                        "event", Map.of(
+                                "type", "team_join",
+                                "user", Map.of(
+                                        "id", SLACK_ID,
+                                        "profile", Map.of(
+                                                "real_name", realName,
+                                                "display_name", displayName,
+                                                "image_48", thumbnailUrl
+                                        )
                                 )
-                        )
-                ));
+                        ))
+        );
     }
 }

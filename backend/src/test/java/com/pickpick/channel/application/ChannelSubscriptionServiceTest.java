@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.channel.domain.ChannelSubscription;
+import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
@@ -15,14 +17,13 @@ import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 class ChannelSubscriptionServiceTest {
 
     private static final long NOT_EXISTED_CHANNEL_ID = 1L;
@@ -34,7 +35,18 @@ class ChannelSubscriptionServiceTest {
     private ChannelRepository channels;
 
     @Autowired
+    private ChannelSubscriptionRepository channelSubscriptions;
+
+    @Autowired
     private MemberRepository members;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("채널 구독을 단건 저장")
     @Test
@@ -45,7 +57,7 @@ class ChannelSubscriptionServiceTest {
         subscribeChannel(member, channel);
 
         // then
-        assertThat(channelSubscriptionService.findAllOrderByViewOrder(member.getId())).hasSize(1);
+        assertThat(channelSubscriptionService.findByMemberId(member.getId()).getChannels()).hasSize(1);
     }
 
     @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
@@ -85,12 +97,13 @@ class ChannelSubscriptionServiceTest {
         subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
 
         // when
-        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
-                member.getId());
-
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
+                .findByMemberId(member.getId())
+                .getChannels();
+        
         // then
-        assertThat(channelSubscriptions).extracting("channel")
-                .containsExactly(channel3, channel1, channel2);
+        assertThat(channelSubscriptions).extracting("id")
+                .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
     }
 
     @DisplayName("채널 구독 순서를 변경하기")
@@ -106,18 +119,19 @@ class ChannelSubscriptionServiceTest {
 
         // when
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2),
+                new ChannelOrderRequest(channel2.getId(), 1),
+                new ChannelOrderRequest(channel1.getId(), 2),
                 new ChannelOrderRequest(channel3.getId(), 3)
         );
         channelSubscriptionService.updateOrders(request, member.getId());
 
-        List<ChannelSubscription> channelSubscriptions = channelSubscriptionService.findAllOrderByViewOrder(
-                member.getId());
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
+                .findByMemberId(member.getId())
+                .getChannels();
 
         //then
-        assertThat(channelSubscriptions).extracting("channel")
-                .containsExactly(channel1, channel2, channel3);
+        assertThat(channelSubscriptions).extracting("id")
+                .containsExactly(channel2.getId(), channel1.getId(), channel3.getId());
     }
 
     @DisplayName("채널 구독 순서 변경 시 중복 viewOrder가 들어올 경우 에러 발생")
@@ -222,21 +236,17 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.delete(channel.getId(), member.getId());
 
         // then
-        boolean isSubscribed = channelSubscriptionService.findAll(member.getId())
-                .get(0)
-                .isSubscribed();
+        boolean isSubscribed = channelSubscriptions.existsByChannelAndMember(channel, member);
 
         assertThat(isSubscribed).isFalse();
     }
 
     private Member saveMember() {
-        Member member = members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
-        return member;
+        return members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
     }
 
     private Channel saveChannel(final String slackId, final String channelName) {
-        Channel channel = channels.save(new Channel(slackId, channelName));
-        return channel;
+        return channels.save(new Channel(slackId, channelName));
     }
 
     private void subscribeChannel(Member member, Channel channel) {

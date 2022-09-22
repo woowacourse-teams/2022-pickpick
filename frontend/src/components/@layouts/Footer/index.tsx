@@ -1,4 +1,4 @@
-import GithubIcon from "@public/assets/icons/GithubIcon.svg";
+import GithubIcon from "@src/components/@svgIcons/GithubIcon";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import * as Styled from "./style";
 

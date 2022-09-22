@@ -149,7 +149,7 @@ public class ReminderControllerTest extends RestDocsTestSupport {
                                         .description("메시지 수정 날짜"),
                                 fieldWithPath("reminders.[].remindDate").type(JsonFieldType.STRING)
                                         .description("리마인드 날짜"),
-                                fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 리마인더 메시지 여부")
+                                fieldWithPath("hasFuture").type(JsonFieldType.BOOLEAN).description("더 미래의 리마인더 조회 가능 여부")
                         )
                 ));
     }

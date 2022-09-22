@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private MemberRepository members;
-
-    @Disabled
-    @Test
-    void 프로젝트_기동_시점에_유저가_저장되어_있어야_한다() {
-        // given
-        List<Member> members = this.members.findAll();
-
-        // when & then
-        assertThat(members.isEmpty()).isFalse();
-    }
 
     @Test
     void 슬랙_워크스페이스에_신규_멤버가_참여하면_저장되어야_한다() {
@@ -69,7 +58,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                                 "profile", Map.of(
                                         "real_name", realName,
                                         "display_name", displayName,
-                                        "image_512", thumbnailUrl
+                                        "image_48", thumbnailUrl
                                 )
                         )
                 ));

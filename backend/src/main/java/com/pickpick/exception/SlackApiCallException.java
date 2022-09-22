@@ -2,11 +2,13 @@ package com.pickpick.exception;
 
 public class SlackApiCallException extends RuntimeException {
 
+    private static final String DEFAULT_MESSAGE = "슬랙 API 호출 실패";
+
     public SlackApiCallException(final Exception e) {
         super(e);
     }
 
-    public SlackApiCallException(final String message) {
-        super(message);
+    public SlackApiCallException(final String apiMethod) {
+        super(String.format("%s -> api method : %s", DEFAULT_MESSAGE, apiMethod));
     }
 }

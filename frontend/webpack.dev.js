@@ -7,6 +7,8 @@ const { join } = require("path");
 const { DefinePlugin } = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 require("dotenv").config({ path: join(__dirname, "./.env.development") });
 
@@ -22,5 +24,6 @@ module.exports = merge(common, {
         process.env.SLACK_REDIRECT_URL
       ),
     }),
+    new BundleAnalyzerPlugin(),
   ],
 });

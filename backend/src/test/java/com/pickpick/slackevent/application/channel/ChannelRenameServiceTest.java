@@ -2,18 +2,19 @@ package com.pickpick.slackevent.application.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import java.util.Map;
-import javax.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@Transactional
 @SpringBootTest
 class ChannelRenameServiceTest {
 
@@ -23,6 +24,14 @@ class ChannelRenameServiceTest {
     @Autowired
     private ChannelRenameService channelRenameService;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
+
     @DisplayName("채널 이름 변경 이벤트가 전달되면 채널 이름이 변경된다")
     @Test
     void channelNameShouldBeChangedOnChannelRenameEvent() {
@@ -30,12 +39,14 @@ class ChannelRenameServiceTest {
         Channel channel = channels.save(new Channel("slackId", "channelName"));
 
         String expectedChannelName = "변경된 채널 이름";
-        Map<String, Object> request = Map.of(
-                "type", "channel_rename",
-                "channel", Map.of(
-                        "id", channel.getSlackId(),
-                        "name", expectedChannelName,
-                        "created", "1234567890")
+        String request = toJson(
+                Map.of(
+                        "type", "channel_rename",
+                        "channel", Map.of(
+                                "id", channel.getSlackId(),
+                                "name", expectedChannelName,
+                                "created", "1234567890")
+                )
         );
 
         // when
@@ -52,12 +63,14 @@ class ChannelRenameServiceTest {
     @Test
     void exceptionOccursWhenMatchedChannelDoesNotExist() {
         // given
-        Map<String, Object> request = Map.of(
-                "type", "channel_rename",
-                "channel", Map.of(
-                        "id", "NOT_EXIST_CHANNEL_SLACK_ID",
-                        "name", "NAME CHANGE REQUEST VALUE",
-                        "created", "1234567890")
+        String request = toJson(
+                Map.of(
+                        "type", "channel_rename",
+                        "channel", Map.of(
+                                "id", "NOT_EXIST_CHANNEL_SLACK_ID",
+                                "name", "NAME CHANGE REQUEST VALUE",
+                                "created", "1234567890")
+                )
         );
 
         // when & then

@@ -2,24 +2,23 @@ package com.pickpick.slackevent.application.channel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import java.time.LocalDateTime;
 import java.util.Map;
-import javax.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql("/truncate.sql")
-@Transactional
 @SpringBootTest
 class ChannelDeletedServiceTest {
 
@@ -55,6 +54,14 @@ class ChannelDeletedServiceTest {
     @Autowired
     private ChannelDeletedService channelDeletedService;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
+
     @DisplayName("채널 삭제 이벤트가 전달되면 채널과 메시지들이 삭제된다")
     @Test
     void channelAndMessagesShouldBeDeletedOnChannelDeletedEvent() {
@@ -64,9 +71,11 @@ class ChannelDeletedServiceTest {
         messages.save(SAMPLE_MESSAGE_1);
         messages.save(SAMPLE_MESSAGE_2);
 
-        Map<String, Object> request = Map.of(
-                "type", "channel_deleted",
-                "channel", SAMPLE_CHANNEL.getSlackId()
+        String request = toJson(
+                Map.of(
+                        "type", "channel_deleted",
+                        "channel", SAMPLE_CHANNEL.getSlackId()
+                )
         );
 
         // when

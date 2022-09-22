@@ -1,10 +1,10 @@
 import * as Styled from "./style";
 import { PATH_NAME } from "@src/@constants";
-import MenuIcon from "@public/assets/icons/MenuIcon.svg";
-import StarIcon from "@public/assets/icons/StarIcon.svg";
-import HomeIcon from "@public/assets/icons/HomeIcon.svg";
-import ReminderIconInactive from "@public/assets/icons/ReminderIcon-Inactive.svg";
-import InfoIcon from "@public/assets/icons/InfoIcon.svg";
+import StarIcon from "@src/components/@svgIcons/StarIcon";
+import MenuIcon from "@src/components/@svgIcons/MenuIcon";
+import HomeIcon from "@src/components/@svgIcons/HomeIcon";
+import InfoIcon from "@src/components/@svgIcons/InfoIcon";
+import ReminderIconInactive from "@src/components/@svgIcons/ReminderIconInactive";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
@@ -15,7 +15,7 @@ import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
 import { useTheme } from "styled-components";
 import { Theme } from "@src/@types/shared";
-import useGetSubscribedChannels from "@src/hooks/useGetSubscribedChannels";
+import useGetSubscribedChannels from "@src/hooks/query/useGetSubscribedChannels";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 import useOuterClick from "@src/hooks/useOuterClick";
 
@@ -37,10 +37,15 @@ function Navigation() {
     handleToggleModal: handleToggleLogoutButton,
   } = useModal();
 
-  const { innerRef: drawerInnerRef } = useOuterClick(handleCloseDrawer);
-  const { innerRef: logoutButtonInnerRef } = useOuterClick(
-    handleCloseLogoutButton
-  );
+  const [menuIconInnerRef, drawerInnerRef] = useOuterClick({
+    callback: handleCloseDrawer,
+    requiredInnerRefCount: 2,
+  });
+
+  const [logoutButtonInnerRef] = useOuterClick({
+    callback: handleCloseLogoutButton,
+    requiredInnerRefCount: 1,
+  });
 
   const handleLogout = () => {
     handleCloseLogoutButton();
@@ -49,7 +54,7 @@ function Navigation() {
 
   return (
     <Styled.Container>
-      <div ref={drawerInnerRef}>
+      <div ref={menuIconInnerRef}>
         <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
           <MenuIcon
             width="24px"
@@ -120,10 +125,12 @@ function Navigation() {
       <Portal isOpened={isMenuDrawerOpened}>
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
-          <Drawer
-            channels={data?.channels}
-            handleCloseDrawer={handleCloseDrawer}
-          />
+          <div ref={drawerInnerRef}>
+            <Drawer
+              channels={data?.channels}
+              handleCloseDrawer={handleCloseDrawer}
+            />
+          </div>
         </>
       </Portal>
 

@@ -85,7 +85,8 @@ class MessageControllerTest extends RestDocsTestSupport {
                                         fieldWithPath("messages.[].isSetReminded").type(JsonFieldType.BOOLEAN)
                                                 .description("리마인더 등록 여부"),
                                         fieldWithPath("messages.[].remindDate").type(JsonFieldType.STRING).optional().description("리마인더 등록된 날짜"),
-                                        fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("마지막 메시지 여부"),
+                                        fieldWithPath("hasPast").type(JsonFieldType.BOOLEAN).description("더 과거의 메시지 조회 가능 여부"),
+                                        fieldWithPath("hasFuture").type(JsonFieldType.BOOLEAN).description("더 미래의 메시지 조회 가능 여부"),
                                         fieldWithPath("isNeedPastMessage").type(JsonFieldType.BOOLEAN)
                                                 .description("위/아래 스크롤 방향")
                                 )

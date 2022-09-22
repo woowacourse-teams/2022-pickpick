@@ -1,5 +1,6 @@
 package com.pickpick.member.application;
 
+import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.slack.api.methods.MethodsClient;
@@ -25,7 +26,7 @@ public class MemberInitializer {
     }
 
     @PostConstruct
-    void setupMember() throws SlackApiException, IOException {
+    void setupMember() {
         List<String> savedSlackIds = findSavedSlackIds();
         List<Member> currentWorkspaceMembers = fetchWorkspaceMembers();
         List<Member> membersToSave = filterMembersToSave(savedSlackIds, currentWorkspaceMembers);
@@ -40,9 +41,13 @@ public class MemberInitializer {
                 .collect(Collectors.toList());
     }
 
-    private List<Member> fetchWorkspaceMembers() throws IOException, SlackApiException {
-        return toMembers(slackClient.usersList(request -> request)
-                .getMembers());
+    private List<Member> fetchWorkspaceMembers() {
+        try {
+            return toMembers(slackClient.usersList(request -> request)
+                    .getMembers());
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException("usersList");
+        }
     }
 
     private List<Member> filterMembersToSave(final List<String> savedSlackIds,

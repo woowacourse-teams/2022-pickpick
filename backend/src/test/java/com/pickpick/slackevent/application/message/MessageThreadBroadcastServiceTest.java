@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -23,14 +25,13 @@ import com.slack.api.model.Conversation;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql("/truncate.sql")
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
 
@@ -42,20 +43,21 @@ class MessageThreadBroadcastServiceTest {
             "메시지 전송!",
             SAMPLE_MEMBER,
             SAMPLE_CHANNEL,
-            TimeUtils.toLocalDateTime("1234567890"),
-            TimeUtils.toLocalDateTime("1234567890")
+            TimeUtils.toLocalDateTime("1656919966.864259"),
+            TimeUtils.toLocalDateTime("1656919966.864259")
     );
-    private final Map<String, Object> MESSAGE_THREAD_BROADCAST_REQUEST =
+    private final String MESSAGE_THREAD_BROADCAST_REQUEST = toJson(
             Map.of("event", Map.of(
                             "type", SlackEvent.MESSAGE_THREAD_BROADCAST.getType(),
                             "subtype", SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype(),
                             "channel", SAMPLE_CHANNEL.getSlackId(),
                             "text", SAMPLE_MESSAGE.getText(),
                             "user", SAMPLE_MEMBER.getSlackId(),
-                            "ts", "1234567890",
+                            "ts", "1656919966.864259",
                             "client_msg_id", SAMPLE_MESSAGE.getSlackId()
                     )
-            );
+            )
+    );
     @Autowired
     private MessageThreadBroadcastService messageThreadBroadcastService;
 
@@ -68,8 +70,17 @@ class MessageThreadBroadcastServiceTest {
     @Autowired
     private ChannelRepository channels;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @MockBean
     private MethodsClient slackClient;
+
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 채널이 없으면 채널 생성 후 메시지를 저장한다")
     @Test
@@ -144,8 +155,8 @@ class MessageThreadBroadcastServiceTest {
         SlackMessageDto messageDto = new SlackMessageDto(
                 SAMPLE_MEMBER.getSlackId(),
                 SAMPLE_MESSAGE.getSlackId(),
-                "1234567890",
-                "1234567890",
+                "1656919966.864259",
+                "1656919966.864259",
                 "수정된 메시지 텍스트",
                 SAMPLE_CHANNEL.getSlackId());
 
@@ -173,8 +184,8 @@ class MessageThreadBroadcastServiceTest {
         SlackMessageDto messageDto = new SlackMessageDto(
                 SAMPLE_MEMBER.getSlackId(),
                 SAMPLE_MESSAGE.getSlackId(),
-                "1234567890",
-                "1234567890",
+                "1656919966.864259",
+                "1656919966.864259",
                 "messageText",
                 SAMPLE_CHANNEL.getSlackId());
 

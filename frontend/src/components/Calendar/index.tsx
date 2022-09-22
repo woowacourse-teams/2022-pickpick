@@ -1,6 +1,6 @@
 import * as Styled from "./style";
-import LeftArrowIcon from "@public/assets/icons/ArrowIcon-Left.svg";
-import RightArrowIcon from "@public/assets/icons/ArrowIcon-Right.svg";
+import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
+import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
 import useCalendar from "@src/hooks/useCalendar";
 import WrapperButton from "../@shared/WrapperButton";
 import { Link } from "react-router-dom";
@@ -16,7 +16,8 @@ interface Props {
 
 function Calendar({ channelId, handleCloseCalendar }: Props) {
   const {
-    date,
+    todayDate,
+    firstOfMonthDate,
     getCurrentDays,
     isFutureMonth,
     isCurrentMonth,
@@ -28,18 +29,22 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
     <Styled.Container>
       <Styled.Month>
         <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
-          <LeftArrowIcon width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconLeft width="24px" height="24px" fill="#8B8B8B" />
         </WrapperButton>
+
         <Styled.Title>
-          {date.getFullYear()}년 {MONTHS[date.getMonth()]}월
+          {`${firstOfMonthDate.getFullYear()}년 ${
+            MONTHS[firstOfMonthDate.getMonth()]
+          }월`}
         </Styled.Title>
+
         <WrapperButton
           kind="smallIcon"
           onClick={handleIncrementMonth}
           isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
         >
-          <RightArrowIcon width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconRight width="24px" height="24px" fill="#8B8B8B" />
         </WrapperButton>
       </Styled.Month>
 
@@ -50,24 +55,42 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
       </Styled.Weekdays>
 
       <Styled.Days>
-        {getCurrentDays().map((day, index) => (
-          <Link
-            key={index}
-            to={`/feed/${channelId}/${ISOConverter(
-              `${date.getFullYear()}-${MONTHS[date.getMonth()]}-${day}`
-            )}`}
-          >
+        {getCurrentDays().map((day, index) => {
+          const isBlank = day === "";
+          const isFuture = day > todayDate.getDate() && isFutureMonth();
+          const isCurrentDay = day === todayDate.getDate() && isCurrentMonth();
+
+          return isBlank || isFuture ? (
             <Styled.Day
-              isBlank={day === ""}
-              isCurrentDay={day === new Date().getDate() && isCurrentMonth()}
-              isFuture={day > new Date().getDate() && isFutureMonth()}
+              isBlank={isBlank}
+              isCurrentDay={isCurrentDay}
+              isFuture={isFuture}
               onClick={handleCloseCalendar}
             >
               {day}
               <div></div>
             </Styled.Day>
-          </Link>
-        ))}
+          ) : (
+            <Link
+              key={index}
+              to={`/feed/${channelId}/${ISOConverter(
+                `${todayDate.getFullYear()}-${
+                  MONTHS[todayDate.getMonth()]
+                }-${day}`
+              )}`}
+            >
+              <Styled.Day
+                isBlank={isBlank}
+                isCurrentDay={isCurrentDay}
+                isFuture={isFuture}
+                onClick={handleCloseCalendar}
+              >
+                {day}
+                <div></div>
+              </Styled.Day>
+            </Link>
+          );
+        })}
       </Styled.Days>
     </Styled.Container>
   );

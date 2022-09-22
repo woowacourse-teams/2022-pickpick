@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -23,17 +25,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@AutoConfigureMockMvc
 @SpringBootTest
 class MessageFileShareServiceTest {
 
@@ -44,8 +43,8 @@ class MessageFileShareServiceTest {
             "메시지 전송!",
             SAMPLE_MEMBER,
             SAMPLE_CHANNEL,
-            TimeUtils.toLocalDateTime("1234567890"),
-            TimeUtils.toLocalDateTime("1234567890")
+            TimeUtils.toLocalDateTime("1656919966.864259"),
+            TimeUtils.toLocalDateTime("1656919966.864259")
     );
 
     @Autowired
@@ -59,9 +58,16 @@ class MessageFileShareServiceTest {
 
     @Autowired
     private ChannelRepository channels;
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
     @MockBean
     private MethodsClient slackClient;
+
+    @AfterEach
+    void tearDown() {
+        databaseCleaner.clear();
+    }
 
     @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있지 않으면 채널 신규 저장 후 메시지를 저장한다")
     @ValueSource(strings = {"", " ", "파일과 함께 전송한 메시지 text"})
@@ -128,16 +134,18 @@ class MessageFileShareServiceTest {
         return conversationsInfoResponse;
     }
 
-    private Map<String, Object> fileShareRequest(final String text) {
-        return Map.of("event", Map.of(
+    private String fileShareRequest(final String text) {
+        Map<String, Object> request = Map.of("event", Map.of(
                 "type", MESSAGE_FILE_SHARE.getType(),
                 "subtype", MESSAGE_FILE_SHARE.getSubtype(),
                 "files", new ArrayList<>(),
                 "channel", SAMPLE_CHANNEL.getSlackId(),
                 "text", text,
                 "user", SAMPLE_MEMBER.getSlackId(),
-                "ts", "1234567890",
+                "ts", "1656919966.864259",
                 "client_msg_id", SAMPLE_MESSAGE.getSlackId())
         );
+
+        return toJson(request);
     }
 }
