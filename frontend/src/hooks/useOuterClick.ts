@@ -6,11 +6,6 @@ interface Props {
   callback: CallbackType;
   requiredInnerRefCount: number;
 }
-/**
- * 함수 반환 객체
- * innerRef - innerRefArray 의 첫번째 값 반환
- * innerRefArray
- */
 
 function useOuterClick({ callback, requiredInnerRefCount = 1 }: Props) {
   const callbackRef = useRef<CallbackType>();
@@ -37,7 +32,7 @@ function useOuterClick({ callback, requiredInnerRefCount = 1 }: Props) {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
-  return { innerRef: innerRefArray[0], innerRefArray };
+  return innerRefArray;
 }
 
 export default useOuterClick;
