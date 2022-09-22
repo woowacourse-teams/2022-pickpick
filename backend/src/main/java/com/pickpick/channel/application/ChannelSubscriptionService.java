@@ -66,6 +66,16 @@ public class ChannelSubscriptionService {
                 .orElse(ORDER_FIRST);
     }
 
+    public ChannelSubscriptionResponses findByMemberId(final Long memberId) {
+        List<ChannelSubscriptionResponse> channelSubscriptionResponses = channelSubscriptions.findAllByMemberIdOrderByViewOrder(
+                        memberId)
+                .stream()
+                .map(ChannelSubscriptionResponse::from)
+                .collect(Collectors.toList());
+
+        return new ChannelSubscriptionResponses(channelSubscriptionResponses);
+    }
+
     @Transactional
     public void updateOrders(final List<ChannelOrderRequest> orderRequests, final Long memberId) {
         List<ChannelSubscription> subscribedChannels = channelSubscriptions.findAllByMemberId(memberId);
@@ -141,15 +151,5 @@ public class ChannelSubscriptionService {
         if (!channelSubscriptions.existsByChannelAndMember(channel, member)) {
             throw new SubscriptionNotExistException(channel.getId());
         }
-    }
-
-    public ChannelSubscriptionResponses findByMemberId(final Long memberId) {
-        List<ChannelSubscriptionResponse> channelSubscriptionResponses = channelSubscriptions.findAllByMemberIdOrderByViewOrder(
-                        memberId)
-                .stream()
-                .map(ChannelSubscriptionResponse::from)
-                .collect(Collectors.toList());
-
-        return new ChannelSubscriptionResponses(channelSubscriptionResponses);
     }
 }
