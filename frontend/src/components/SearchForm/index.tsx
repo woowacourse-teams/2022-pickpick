@@ -14,6 +14,8 @@ function SearchForm({ currentKeyword, currentChannelIds }: Props) {
   const {
     allChannels,
     selectedChannelIds,
+    getCurrentChannels,
+    getRemainingChannels,
     handleToggleChannel,
     handleToggleAllChannels,
   } = useSelectChannels({ currentChannelIds });
@@ -40,12 +42,8 @@ function SearchForm({ currentKeyword, currentChannelIds }: Props) {
               {allChannels && isDropdownOpened && (
                 <SearchOptions
                   allChannels={allChannels}
-                  currentChannels={allChannels.filter(({ id }) =>
-                    currentChannelIds.includes(id)
-                  )}
-                  remainingChannels={allChannels.filter(
-                    ({ id }) => !currentChannelIds.includes(id)
-                  )}
+                  currentChannels={getCurrentChannels}
+                  remainingChannels={getRemainingChannels}
                   selectedChannelIds={selectedChannelIds}
                   handleToggleChannel={handleToggleChannel}
                   handleToggleAllChannels={handleToggleAllChannels}
