@@ -67,8 +67,8 @@ public class ChannelSubscriptionService {
     }
 
     public ChannelSubscriptionResponses findByMemberId(final Long memberId) {
-        List<ChannelSubscriptionResponse> channelSubscriptionResponses = channelSubscriptions.findAllByMemberIdOrderByViewOrder(
-                        memberId)
+        List<ChannelSubscriptionResponse> channelSubscriptionResponses = channelSubscriptions
+                .findAllByMemberIdOrderByViewOrder(memberId)
                 .stream()
                 .map(ChannelSubscriptionResponse::from)
                 .collect(Collectors.toList());

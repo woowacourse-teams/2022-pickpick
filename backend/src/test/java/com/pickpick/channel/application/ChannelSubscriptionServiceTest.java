@@ -97,8 +97,10 @@ class ChannelSubscriptionServiceTest {
         subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
 
         // when
-        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
-                member.getId()).getChannels();
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
+                .findByMemberId(member.getId())
+                .getChannels();
+        
         // then
         assertThat(channelSubscriptions).extracting("id")
                 .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
@@ -123,8 +125,9 @@ class ChannelSubscriptionServiceTest {
         );
         channelSubscriptionService.updateOrders(request, member.getId());
 
-        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
-                member.getId()).getChannels();
+        List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
+                .findByMemberId(member.getId())
+                .getChannels();
 
         //then
         assertThat(channelSubscriptions).extracting("id")
