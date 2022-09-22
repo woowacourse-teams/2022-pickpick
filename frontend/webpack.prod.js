@@ -16,6 +16,9 @@ module.exports = merge(common, {
       "process.env.SLACK_REDIRECT_URL": JSON.stringify(
         process.env.SLACK_REDIRECT_URL
       ),
+      "process.env.SLACK_CLIENT_ID": JSON.stringify(
+        process.env.SLACK_CLIENT_ID
+      ),
     }),
   ],
 });
