@@ -39,11 +39,12 @@ function Navigation() {
 
   const { innerRefArray: drawerInnerRefArray } = useOuterClick({
     callback: handleCloseDrawer,
-    requiredRefCount: 2,
+    requiredInnerRefCount: 2,
   });
 
   const { innerRef: logoutButtonInnerRef } = useOuterClick({
     callback: handleCloseLogoutButton,
+    requiredInnerRefCount: 1,
   });
 
   const handleLogout = () => {

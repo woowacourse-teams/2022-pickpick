@@ -4,14 +4,14 @@ type CallbackType = () => void;
 
 interface Props {
   callback: CallbackType;
-  requiredRefCount?: number;
+  requiredInnerRefCount: number;
 }
 
-function useOuterClick({ callback, requiredRefCount = 1 }: Props) {
+function useOuterClick({ callback, requiredInnerRefCount = 1 }: Props) {
   const callbackRef = useRef<CallbackType>();
-  const innerRefArray = [...Array(requiredRefCount || 1)].map(() =>
-    useRef<HTMLDivElement>(null)
-  );
+  const innerRefArray = [
+    ...Array(requiredInnerRefCount <= 0 ? 1 : requiredInnerRefCount),
+  ].map(() => useRef<HTMLDivElement>(null));
   callbackRef.current = callback;
 
   useEffect(() => {
