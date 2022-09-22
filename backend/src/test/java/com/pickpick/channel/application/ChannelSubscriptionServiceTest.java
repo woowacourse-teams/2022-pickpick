@@ -57,7 +57,7 @@ class ChannelSubscriptionServiceTest {
         subscribeChannel(member, channel);
 
         // then
-        assertThat(channelSubscriptionService.findByMemberId(member.getId())).hasSize(1);
+        assertThat(channelSubscriptionService.findByMemberId(member.getId()).getChannels()).hasSize(1);
     }
 
     @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
@@ -98,7 +98,7 @@ class ChannelSubscriptionServiceTest {
 
         // when
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
-                member.getId());
+                member.getId()).getChannels();
         // then
         assertThat(channelSubscriptions).extracting("id")
                 .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
@@ -124,7 +124,7 @@ class ChannelSubscriptionServiceTest {
         channelSubscriptionService.updateOrders(request, member.getId());
 
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService.findByMemberId(
-                member.getId());
+                member.getId()).getChannels();
 
         //then
         assertThat(channelSubscriptions).extracting("id")
