@@ -1,5 +1,4 @@
 import { PATH_NAME } from "@src/@constants";
-import Footer from "@src/components/@layouts/Footer";
 import Header from "@src/components/@layouts/Header";
 import Button from "@src/components/@shared/Button";
 import * as LayoutStyled from "@src/components/@layouts/LayoutContainer/style";
@@ -21,7 +20,6 @@ function UnexpectedError() {
           </a>
         </FlexColumn>
       </LayoutStyled.Main>
-      <Footer />
     </LayoutStyled.Container>
   );
 }
