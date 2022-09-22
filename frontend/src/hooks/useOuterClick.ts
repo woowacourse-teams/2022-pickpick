@@ -2,18 +2,26 @@ import { useEffect, useRef } from "react";
 
 type CallbackType = () => void;
 
-function useOuterClick(callback: CallbackType) {
-  const callbackRef = useRef<CallbackType>();
-  const innerRef = useRef<HTMLDivElement>(null);
+interface Props {
+  callback: CallbackType;
+  requiredInnerRefCount: number;
+}
 
+function useOuterClick({ callback, requiredInnerRefCount = 1 }: Props) {
+  const callbackRef = useRef<CallbackType>();
+  const innerRefArray = [
+    ...Array(requiredInnerRefCount <= 0 ? 1 : requiredInnerRefCount),
+  ].map(() => useRef<HTMLDivElement>(null));
   callbackRef.current = callback;
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (
-        innerRef.current &&
         callbackRef.current &&
-        !innerRef.current.contains(event.target as HTMLDivElement)
+        !innerRefArray.some(
+          (ref) =>
+            ref.current && ref.current.contains(event.target as HTMLDivElement)
+        )
       ) {
         callbackRef.current();
       }
@@ -22,9 +30,9 @@ function useOuterClick(callback: CallbackType) {
     document.addEventListener("click", handleClick);
 
     return () => document.removeEventListener("click", handleClick);
-  }, [callbackRef, innerRef]);
+  }, []);
 
-  return { innerRef };
+  return innerRefArray;
 }
 
 export default useOuterClick;
