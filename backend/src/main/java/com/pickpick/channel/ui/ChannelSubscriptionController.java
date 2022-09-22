@@ -27,7 +27,7 @@ public class ChannelSubscriptionController {
 
     @GetMapping
     public ChannelSubscriptionResponses getAllChannels(final @AuthenticationPrincipal Long memberId) {
-        return new ChannelSubscriptionResponses(channelSubscriptionService.findByMemberId(memberId));
+        return channelSubscriptionService.findByMemberId(memberId);
     }
 
     @PostMapping
