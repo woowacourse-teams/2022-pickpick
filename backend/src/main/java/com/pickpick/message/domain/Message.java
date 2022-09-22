@@ -37,7 +37,7 @@ public class Message {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "posted_date", nullable = false)
+    @Column(name = "posted_date", nullable = false, columnDefinition = "timestamp(6)")
     private LocalDateTime postedDate;
 
     @Column(name = "modified_date", nullable = false)

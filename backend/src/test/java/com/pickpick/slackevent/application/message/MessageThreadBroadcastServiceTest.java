@@ -43,8 +43,8 @@ class MessageThreadBroadcastServiceTest {
             "메시지 전송!",
             SAMPLE_MEMBER,
             SAMPLE_CHANNEL,
-            TimeUtils.toLocalDateTime("1234567890"),
-            TimeUtils.toLocalDateTime("1234567890")
+            TimeUtils.toLocalDateTime("1656919966.864259"),
+            TimeUtils.toLocalDateTime("1656919966.864259")
     );
     private final String MESSAGE_THREAD_BROADCAST_REQUEST = toJson(
             Map.of("event", Map.of(
@@ -53,7 +53,7 @@ class MessageThreadBroadcastServiceTest {
                             "channel", SAMPLE_CHANNEL.getSlackId(),
                             "text", SAMPLE_MESSAGE.getText(),
                             "user", SAMPLE_MEMBER.getSlackId(),
-                            "ts", "1234567890",
+                            "ts", "1656919966.864259",
                             "client_msg_id", SAMPLE_MESSAGE.getSlackId()
                     )
             )
@@ -155,8 +155,8 @@ class MessageThreadBroadcastServiceTest {
         SlackMessageDto messageDto = new SlackMessageDto(
                 SAMPLE_MEMBER.getSlackId(),
                 SAMPLE_MESSAGE.getSlackId(),
-                "1234567890",
-                "1234567890",
+                "1656919966.864259",
+                "1656919966.864259",
                 "수정된 메시지 텍스트",
                 SAMPLE_CHANNEL.getSlackId());
 
@@ -184,8 +184,8 @@ class MessageThreadBroadcastServiceTest {
         SlackMessageDto messageDto = new SlackMessageDto(
                 SAMPLE_MEMBER.getSlackId(),
                 SAMPLE_MESSAGE.getSlackId(),
-                "1234567890",
-                "1234567890",
+                "1656919966.864259",
+                "1656919966.864259",
                 "messageText",
                 SAMPLE_CHANNEL.getSlackId());
 
