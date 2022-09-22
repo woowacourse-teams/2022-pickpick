@@ -40,12 +40,14 @@ class ChannelRenameServiceTest {
 
         String expectedChannelName = "변경된 채널 이름";
         String request = toJson(
-                Map.of(
-                        "type", "channel_rename",
-                        "channel", Map.of(
-                                "id", channel.getSlackId(),
-                                "name", expectedChannelName,
-                                "created", "1234567890")
+                Map.of("event",
+                        Map.of(
+                                "type", "channel_rename",
+                                "channel", Map.of(
+                                        "id", channel.getSlackId(),
+                                        "name", expectedChannelName,
+                                        "created", "1234567890")
+                        )
                 )
         );
 
@@ -64,12 +66,14 @@ class ChannelRenameServiceTest {
     void exceptionOccursWhenMatchedChannelDoesNotExist() {
         // given
         String request = toJson(
-                Map.of(
-                        "type", "channel_rename",
-                        "channel", Map.of(
-                                "id", "NOT_EXIST_CHANNEL_SLACK_ID",
-                                "name", "NAME CHANGE REQUEST VALUE",
-                                "created", "1234567890")
+                Map.of("event",
+                        Map.of(
+                                "type", "channel_rename",
+                                "channel", Map.of(
+                                        "id", "NOT_EXIST_CHANNEL_SLACK_ID",
+                                        "name", "NAME CHANGE REQUEST VALUE",
+                                        "created", "1234567890")
+                        )
                 )
         );
 
