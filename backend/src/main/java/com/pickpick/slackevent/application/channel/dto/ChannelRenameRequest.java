@@ -5,16 +5,18 @@ import lombok.Getter;
 @Getter
 public class ChannelRenameRequest {
 
-    private ChannelDto channel;
+    private ChannelEventDto event;
 
     private ChannelRenameRequest() {
     }
 
-    public ChannelRenameRequest(final ChannelDto channel) {
-        this.channel = channel;
+    public ChannelRenameRequest(final ChannelEventDto event) {
+        this.event = event;
     }
 
     public SlackChannelRenameDto toDto() {
+        ChannelDto channel = event.getChannel();
+
         return new SlackChannelRenameDto(
                 channel.getId(),
                 channel.getName()
