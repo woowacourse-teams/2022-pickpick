@@ -16,7 +16,7 @@ public class ChannelRenameRequest {
 
     public SlackChannelRenameDto toDto() {
         ChannelDto channel = event.getChannel();
-        
+
         return new SlackChannelRenameDto(
                 channel.getId(),
                 channel.getName()

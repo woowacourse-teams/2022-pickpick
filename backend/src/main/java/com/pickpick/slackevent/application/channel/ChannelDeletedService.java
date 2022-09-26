@@ -29,9 +29,8 @@ public class ChannelDeletedService implements SlackEventService {
         channels.deleteBySlackId(channelSlackId);
     }
 
-    private String extractChannelSlackId(final String requestBody) {
-        ChannelDeletedRequest request = JsonUtils.convert(requestBody, ChannelDeletedRequest.class);
-        return request.getEvent().getChannel();
+    private String extractChannelSlackId(final Map<String, Object> requestBody) {
+        return (String) requestBody.get(CHANNEL_SLACK_ID);
     }
 
     @Override
