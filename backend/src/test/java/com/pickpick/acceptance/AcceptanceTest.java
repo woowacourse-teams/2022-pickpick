@@ -3,7 +3,7 @@ package com.pickpick.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.config.DatabaseCleaner;
+import com.pickpick.support.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

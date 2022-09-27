@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
@@ -21,6 +20,7 @@ import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderSaveRequest;
+import com.pickpick.support.DatabaseCleaner;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;

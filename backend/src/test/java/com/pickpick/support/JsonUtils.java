@@ -1,4 +1,4 @@
-package utils;
+package com.pickpick.support;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

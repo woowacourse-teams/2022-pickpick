@@ -1,4 +1,4 @@
-package com.pickpick.config;
+package com.pickpick.support;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
