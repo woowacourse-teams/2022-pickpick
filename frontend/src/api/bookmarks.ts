@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseBookmarks } from "@src/@types/shared";
-import { fetcher } from ".";
+import { fetcher } from  "@src/api";
 import { getPrivateHeaders } from "@src/api/utils";
 
 interface GetBookmarkParam {

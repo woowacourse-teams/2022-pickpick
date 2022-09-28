@@ -1,10 +1,10 @@
 import { RefObject, ChangeEventHandler } from "react";
 import { FlexColumn } from "@src/@styles/shared";
-import DateTimePickerOptions from "../DateTimePickerOptions";
-import DateTimePickerToggle from "../DateTimePickerToggle";
-import Dropdown from "../Dropdown";
-import * as Styled from "../DatePicker/style";
-import ReminderIconActive from "../@svgIcons/ReminderIconActive";
+import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
+import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
+import Dropdown from "@src/components/Dropdown";
+import * as Styled from "@src/components/DatePicker/style";
+import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
 
 export const generateTimeOptions = () => {
   const meridiems = ["오전", "오후"];
