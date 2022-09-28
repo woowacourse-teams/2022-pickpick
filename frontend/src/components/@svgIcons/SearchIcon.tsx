@@ -1,4 +1,4 @@
-import { SVGProps } from "react";
+import { memo, SVGProps } from "react";
 
 function SearchIcon({ width, height, fill }: SVGProps<SVGAElement>) {
   return (
@@ -21,4 +21,4 @@ function SearchIcon({ width, height, fill }: SVGProps<SVGAElement>) {
   );
 }
 
-export default SearchIcon;
+export default memo(SearchIcon);

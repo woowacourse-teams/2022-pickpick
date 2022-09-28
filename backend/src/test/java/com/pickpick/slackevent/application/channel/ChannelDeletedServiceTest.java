@@ -72,9 +72,11 @@ class ChannelDeletedServiceTest {
         messages.save(SAMPLE_MESSAGE_2);
 
         String request = toJson(
-                Map.of(
-                        "type", "channel_deleted",
-                        "channel", SAMPLE_CHANNEL.getSlackId()
+                Map.of("event",
+                        Map.of(
+                                "type", "channel_deleted",
+                                "channel", SAMPLE_CHANNEL.getSlackId()
+                        )
                 )
         );
 
