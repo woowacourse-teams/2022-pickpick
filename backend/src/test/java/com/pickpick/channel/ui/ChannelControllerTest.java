@@ -15,11 +15,12 @@ import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 class ChannelControllerTest extends RestDocsTestSupport {
+
+    private static final String API_CHANNELS = "/api/channels";
 
     @DisplayName("구독 여부를 포함하여 채널을 조회한다.")
     @Test
@@ -28,9 +29,7 @@ class ChannelControllerTest extends RestDocsTestSupport {
         when(channelService.findAll(anyLong()))
                 .thenReturn(channels);
 
-        ResultActions result = mockMvc.perform(RestDocumentationRequestBuilders
-                        .get("/api/channels")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token"))
+        ResultActions result = mockMvc.perform(getRequest(API_CHANNELS))
                 .andExpect(status().isOk());
 
         //docs
