@@ -3,6 +3,7 @@ package com.pickpick.config;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.auth.application.AuthService;
 import com.pickpick.auth.support.JwtTokenProvider;
@@ -19,17 +20,22 @@ import com.pickpick.message.ui.MessageController;
 import com.pickpick.message.ui.ReminderController;
 import com.pickpick.slackevent.application.SlackEventServiceFinder;
 import com.pickpick.slackevent.ui.SlackEventController;
+import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -101,6 +107,36 @@ public class RestDocsTestSupport {
     void setup() {
         given(jwtTokenProvider.getPayload(any()))
                 .willReturn("1"); // memberId를 반환
+    }
+
+    protected MockHttpServletRequestBuilder getRequest(String uri) {
+        return MockMvcRequestBuilders
+                .get(uri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token");
+    }
+
+    protected MockHttpServletRequestBuilder deleteRequest(final String uri) {
+        return RestDocumentationRequestBuilders
+                .delete(uri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .param("channelId", "2");
+    }
+
+    protected MockHttpServletRequestBuilder postRequest(final String uri, final String body)
+            throws JsonProcessingException {
+        return MockMvcRequestBuilders
+                .post(uri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON);
+    }
+
+    protected MockHttpServletRequestBuilder putRequest(final String uri, final String body) {
+        return MockMvcRequestBuilders
+                .put(uri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON);
     }
 
 //    @AfterEach
