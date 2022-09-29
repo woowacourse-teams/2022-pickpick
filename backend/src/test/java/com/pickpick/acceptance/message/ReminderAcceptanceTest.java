@@ -10,7 +10,6 @@ import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -28,9 +26,6 @@ import org.springframework.test.context.jdbc.Sql;
 public class ReminderAcceptanceTest extends AcceptanceTest {
 
     private static final String REMINDER_API_URL = "/api/reminders";
-
-    @SpyBean
-    private Clock clock;
 
     @Test
     void 리마인더_생성() {

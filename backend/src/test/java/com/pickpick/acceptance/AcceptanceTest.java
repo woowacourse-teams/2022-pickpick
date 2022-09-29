@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.support.DatabaseCleaner;
+import com.slack.api.methods.MethodsClient;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.Clock;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +16,8 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,8 +28,15 @@ public class AcceptanceTest {
 
     @LocalServerPort
     int port;
+
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @SpyBean
+    protected Clock clock;
+
+    @MockBean
+    protected MethodsClient slackClient;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

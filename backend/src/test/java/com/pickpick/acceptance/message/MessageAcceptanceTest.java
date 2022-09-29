@@ -9,7 +9,6 @@ import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +22,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/message.sql"})
@@ -35,8 +33,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
     private static final String MESSAGE_API_URL = "/api/messages";
     private static final long MEMBER_ID = 1L;
 
-    @SpyBean
-    private Clock clock;
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(

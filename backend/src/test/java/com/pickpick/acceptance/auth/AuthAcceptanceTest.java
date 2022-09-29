@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.config.dto.ErrorResponse;
-import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
@@ -23,7 +22,6 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/member.sql"})
@@ -38,16 +36,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
-    @MockBean
-    private MethodsClient slackClient;
-
     @Test
     void 정상_로그인() throws SlackApiException, IOException {
         // given
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .willReturn(generateOAuthV2AccessResponse());
         given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .willReturn(generateUsersIdentityResponse(MEMBER_SLACK_ID));
+                .willReturn(generateUsersIdentityResponse());
 
         // when
         ExtractableResponse<Response> response = get(LOGIN_API_URL, Map.of("code", "1234"));
@@ -65,10 +60,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         return response;
     }
 
-    private UsersIdentityResponse generateUsersIdentityResponse(final String slackId) {
+    private UsersIdentityResponse generateUsersIdentityResponse() {
         UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
         User user = new User();
-        user.setId(slackId);
+        user.setId(MEMBER_SLACK_ID);
         usersIdentityResponse.setUser(user);
         return usersIdentityResponse;
     }
