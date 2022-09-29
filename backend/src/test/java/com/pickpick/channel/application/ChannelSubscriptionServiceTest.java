@@ -245,17 +245,37 @@ class ChannelSubscriptionServiceTest {
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
 
+    @DisplayName("채널 구독 취소")
+    @Test
+    void unsubscribeChannel() {
+        // given
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        subscribeChannel(bom, notice);
+
+        boolean beforeUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
+
+        // when
+        channelSubscriptionService.delete(notice.getId(), bom.getId());
+
+        // then
+        boolean afterUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
+
+        assertAll(
+                () -> assertThat(beforeUnsubscribe).isTrue(),
+                () -> assertThat(afterUnsubscribe).isFalse()
+        );
+    }
+
     @DisplayName("구독 중이 아닌 채널 구독 취소시 예외 발생")
     @Test
     void unsubscribeInvalidChannelSubscription() {
         // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
-        channelSubscriptionService.delete(channel.getId(), member.getId());
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.delete(channel.getId(), member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.delete(notice.getId(), bom.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
 
@@ -268,23 +288,6 @@ class ChannelSubscriptionServiceTest {
         // when & then
         assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, member.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
-    }
-
-    @DisplayName("채널 구독 취소")
-    @Test
-    void unsubscribeChannel() {
-        // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
-
-        // when
-        channelSubscriptionService.delete(channel.getId(), member.getId());
-
-        // then
-        boolean isSubscribed = channelSubscriptions.existsByChannelAndMember(channel, member);
-
-        assertThat(isSubscribed).isFalse();
     }
 
     private Member bom() {
