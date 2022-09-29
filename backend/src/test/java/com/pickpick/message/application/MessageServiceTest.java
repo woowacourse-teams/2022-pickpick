@@ -301,54 +301,30 @@ class MessageServiceTest {
                     .orElseThrow(NoSuchElementException::new);
         }
 
-        @DisplayName("쿼리 파라미터에 채널ID와 메세지ID가 존재하고, 앞선 메시지를 조회한다면")
-        @Nested
-        class channelIdAndMessageIdNeedPastMessageFalseInParameters {
+        private List<Long> extractIdsCreatedBeforeTargetOrderByDate(final List<Message> messages,
+                                                                    final Message target) {
+            List<Long> dateOrderedIdsBeforeTarget = messages.stream()
+                    .filter(message -> !message.getText().isEmpty()
+                            && message.getPostedDate().isBefore(target.getPostedDate()))
+                    .sorted(Comparator.comparing(Message::getPostedDate).reversed())
+                    .map(Message::getId)
+                    .collect(Collectors.toList());
 
-            Message targetMessage = noticeMessages.get(TARGET_INDEX);
-
-            MessageRequest request = futureFromTargetMessageInChannels(List.of(notice), targetMessage, MESSAGE_COUNT);
-            MessageResponses response = messageService.find(summer.getId(), request);
-
-            @DisplayName("메시지 기준 해당 채널의 미래 메시지를 작성시간 내림차순 조회한다 ")
-            @Test
-            void messagesAfterTargetMessageInChannel() {
-                List<MessageResponse> foundMessages = response.getMessages();
-                List<Long> expectedIds = extractIdsCreatedAfterTargetOrderByDate(noticeMessages, targetMessage,
-                        MESSAGE_COUNT);
-                boolean isFutureMessages = foundMessages.stream()
-                        .allMatch(message -> message.getPostedDate().isAfter(targetMessage.getPostedDate()));
-
-                assertAll(
-                        () -> assertThat(foundMessages).extracting("id").containsExactlyElementsOf(expectedIds),
-                        () -> assertThat(isFutureMessages).isTrue()
-                );
-            }
+            return dateOrderedIdsBeforeTarget.subList(0, MessageServiceTest.MESSAGE_COUNT);
         }
 
-        @DisplayName("쿼리 파라미터에 채널ID와 메시지ID가 존재하고, 지난 메시지를 조회한다면")
-        @Nested
-        class channelIdAndMessageIdInParametersNeedPastMessageIsTrue {
+        private List<Long> extractIdsCreatedAfterTargetOrderByDate(final List<Message> messages, final Message target) {
+            List<Long> reverseOrderedIdsAfterTarget = messages.stream()
+                    .filter(message -> !message.getText().isEmpty()
+                            && message.getPostedDate().isAfter(target.getPostedDate()))
+                    .sorted(Comparator.comparing(Message::getPostedDate))
+                    .map(Message::getId)
+                    .collect(Collectors.toList());
 
-            Message targetMessage = noticeMessages.get(TARGET_INDEX);
+            List<Long> idsSlicedByCount = reverseOrderedIdsAfterTarget.subList(0, MessageServiceTest.MESSAGE_COUNT);
+            Collections.reverse(idsSlicedByCount);
 
-            MessageRequest request = pastFromTargetMessageInChannels(List.of(notice), targetMessage, MESSAGE_COUNT);
-            MessageResponses response = messageService.find(summer.getId(), request);
-
-            @DisplayName("메시지 기준 해당 채널의 과거 메시지를 작성시간 내림차순 조회한다")
-            @Test
-            void pastMessagesInChannelFromTargetMessage() {
-                List<MessageResponse> foundMessages = response.getMessages();
-                List<Long> expectedIds = extractIdsCreatedBeforeTargetOrderByDate(noticeMessages, targetMessage,
-                        MESSAGE_COUNT);
-                boolean isPastMessages = foundMessages.stream()
-                        .allMatch(message -> message.getPostedDate().isBefore(targetMessage.getPostedDate()));
-
-                assertAll(
-                        () -> assertThat(foundMessages).extracting("id").containsExactlyElementsOf(expectedIds),
-                        () -> assertThat(isPastMessages).isTrue()
-                );
-            }
+            return idsSlicedByCount;
         }
 
         @DisplayName("isBookmarked 필드는")
@@ -472,18 +448,29 @@ class MessageServiceTest {
             }
         }
 
+        @DisplayName("쿼리 파라미터에 채널ID와 메세지ID가 존재하고, 앞선 메시지를 조회한다면")
+        @Nested
+        class channelIdAndMessageIdNeedPastMessageFalseInParameters {
 
-        private List<Long> extractIdsCreatedBeforeTargetOrderByDate(final List<Message> messages,
-                                                                    final Message target,
-                                                                    final int count) {
-            List<Long> dateOrderedIdsBeforeTarget = messages.stream()
-                    .filter(message -> !message.getText().isEmpty()
-                            && message.getPostedDate().isBefore(target.getPostedDate()))
-                    .sorted(Comparator.comparing(Message::getPostedDate).reversed())
-                    .map(Message::getId)
-                    .collect(Collectors.toList());
+            Message targetMessage = noticeMessages.get(TARGET_INDEX);
 
-            return dateOrderedIdsBeforeTarget.subList(0, count);
+            MessageRequest request = futureFromTargetMessageInChannels(List.of(notice), targetMessage, MESSAGE_COUNT);
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("메시지 기준 해당 채널의 미래 메시지를 작성시간 내림차순 조회한다 ")
+            @Test
+            void messagesAfterTargetMessageInChannel() {
+                List<MessageResponse> foundMessages = response.getMessages();
+                List<Long> expectedIds = extractIdsCreatedAfterTargetOrderByDate(noticeMessages, targetMessage
+                );
+                boolean isFutureMessages = foundMessages.stream()
+                        .allMatch(message -> message.getPostedDate().isAfter(targetMessage.getPostedDate()));
+
+                assertAll(
+                        () -> assertThat(foundMessages).extracting("id").containsExactlyElementsOf(expectedIds),
+                        () -> assertThat(isFutureMessages).isTrue()
+                );
+            }
         }
 
         private Member summer() {
@@ -515,20 +502,29 @@ class MessageServiceTest {
             return dateOrderedMessageIds.subList(0, count);
         }
 
-        private List<Long> extractIdsCreatedAfterTargetOrderByDate(final List<Message> messages,
-                                                                   final Message target,
-                                                                   final int count) {
-            List<Long> reverseOrderedIdsAfterTarget = messages.stream()
-                    .filter(message -> !message.getText().isEmpty()
-                            && message.getPostedDate().isAfter(target.getPostedDate()))
-                    .sorted(Comparator.comparing(Message::getPostedDate))
-                    .map(Message::getId)
-                    .collect(Collectors.toList());
+        @DisplayName("쿼리 파라미터에 채널ID와 메시지ID가 존재하고, 지난 메시지를 조회한다면")
+        @Nested
+        class channelIdAndMessageIdInParametersNeedPastMessageIsTrue {
 
-            List<Long> idsSlicedByCount = reverseOrderedIdsAfterTarget.subList(0, count);
-            Collections.reverse(idsSlicedByCount);
+            Message targetMessage = noticeMessages.get(TARGET_INDEX);
 
-            return idsSlicedByCount;
+            MessageRequest request = pastFromTargetMessageInChannels(List.of(notice), targetMessage, MESSAGE_COUNT);
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("메시지 기준 해당 채널의 과거 메시지를 작성시간 내림차순 조회한다")
+            @Test
+            void pastMessagesInChannelFromTargetMessage() {
+                List<MessageResponse> foundMessages = response.getMessages();
+                List<Long> expectedIds = extractIdsCreatedBeforeTargetOrderByDate(noticeMessages, targetMessage
+                );
+                boolean isPastMessages = foundMessages.stream()
+                        .allMatch(message -> message.getPostedDate().isBefore(targetMessage.getPostedDate()));
+
+                assertAll(
+                        () -> assertThat(foundMessages).extracting("id").containsExactlyElementsOf(expectedIds),
+                        () -> assertThat(isPastMessages).isTrue()
+                );
+            }
         }
     }
 }
