@@ -19,6 +19,7 @@ import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class ChannelSubscriptionServiceTest {
     void save() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(new Channel("C00001", "공지사항"));
+        Channel notice = channels.save(notice());
 
         ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bom.getId());
 
@@ -95,6 +96,39 @@ class ChannelSubscriptionServiceTest {
         // when & then
         assertThatThrownBy(() -> subscribeChannel(bom, notice))
                 .isInstanceOf(SubscriptionDuplicateException.class);
+    }
+
+    @DisplayName("구독 요청 순서대로 채널의 view order 지정")
+    @Test
+    void setViewOrderByRequestOrder() {
+        // given
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+
+        // when
+        subscribeChannel(bom, notice);
+        subscribeChannel(bom, freeChat);
+
+        List<ChannelSubscriptionResponse> foundChannels =
+                channelSubscriptionService.findByMemberId(bom.getId()).getChannels();
+
+        // then
+        ChannelSubscriptionResponse firstSubscribed = extractTargetChannel(foundChannels, notice);
+        ChannelSubscriptionResponse secondSubscribed = extractTargetChannel(foundChannels, freeChat);
+
+        assertAll(
+                () -> assertThat(firstSubscribed.getOrder()).isEqualTo(1),
+                () -> assertThat(secondSubscribed.getOrder()).isEqualTo(2)
+        );
+    }
+
+    private ChannelSubscriptionResponse extractTargetChannel(final List<ChannelSubscriptionResponse> foundChannels,
+                                                             final Channel target) {
+        return foundChannels.stream()
+                .filter(channel -> channel.getId().equals(target.getId()))
+                .findAny()
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @DisplayName("구독한 채널 조회 시 view order 순서대로 출력")
@@ -259,6 +293,10 @@ class ChannelSubscriptionServiceTest {
 
     private Channel notice() {
         return new Channel("C00001", "공지사항");
+    }
+
+    private Channel freeChat() {
+        return new Channel("C00002", "잡담");
     }
 
     private Member saveMember() {
