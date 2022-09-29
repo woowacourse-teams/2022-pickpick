@@ -110,8 +110,9 @@ class ChannelSubscriptionServiceTest {
         subscribeChannel(bom, notice);
         subscribeChannel(bom, freeChat);
 
-        List<ChannelSubscriptionResponse> foundChannels =
-                channelSubscriptionService.findByMemberId(bom.getId()).getChannels();
+        List<ChannelSubscriptionResponse> foundChannels = channelSubscriptionService
+                .findByMemberId(bom.getId())
+                .getChannels();
 
         // then
         ChannelSubscriptionResponse firstSubscribed = extractTargetChannel(foundChannels, notice);
@@ -121,14 +122,6 @@ class ChannelSubscriptionServiceTest {
                 () -> assertThat(firstSubscribed.getOrder()).isEqualTo(1),
                 () -> assertThat(secondSubscribed.getOrder()).isEqualTo(2)
         );
-    }
-
-    private ChannelSubscriptionResponse extractTargetChannel(final List<ChannelSubscriptionResponse> foundChannels,
-                                                             final Channel target) {
-        return foundChannels.stream()
-                .filter(channel -> channel.getId().equals(target.getId()))
-                .findAny()
-                .orElseThrow(NoSuchElementException::new);
     }
 
     @DisplayName("구독한 채널 조회 시 view order 순서대로 출력")
@@ -180,7 +173,7 @@ class ChannelSubscriptionServiceTest {
                 .containsExactly(freeChat.getId(), notice.getId(), qna.getId());
     }
 
-    @DisplayName("채널 구독 순서 변경 시 중복 viewOrder가 들어올 경우 에러 발생")
+    @DisplayName("채널 구독 순서 변경 시 중복 view order 가 들어올 경우 에러 발생")
     @Test
     void updateChannelSubscriptionOrderWithDuplicateViewOrder() {
         // given
@@ -306,12 +299,20 @@ class ChannelSubscriptionServiceTest {
         return new Channel("C00003", "질문답변");
     }
 
-    private void subscribeChannel(Member member, Channel channel) {
+    private void subscribeChannel(final Member member, final Channel channel) {
         ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
         channelSubscriptionService.save(request, member.getId());
     }
 
-    private void subscribeChannelsInListOrder(Member member, List<Channel> channels) {
+    private ChannelSubscriptionResponse extractTargetChannel(final List<ChannelSubscriptionResponse> foundChannels,
+                                                             final Channel target) {
+        return foundChannels.stream()
+                .filter(channel -> channel.getId().equals(target.getId()))
+                .findAny()
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private void subscribeChannelsInListOrder(final Member member, final List<Channel> channels) {
         for (Channel channel : channels) {
             subscribeChannel(member, channel);
         }
