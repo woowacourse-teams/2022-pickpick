@@ -2,6 +2,7 @@ package com.pickpick.channel.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -9,6 +10,7 @@ import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
 import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
@@ -52,12 +54,22 @@ class ChannelSubscriptionServiceTest {
     @Test
     void save() {
         // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
+        Member bom = members.save(new Member("U00003", "봄", "https://bom.png"));
+        Channel notice = channels.save(new Channel("C00001", "공지사항"));
+
+        ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bom.getId());
+
+        // when
+        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(notice.getId());
+        channelSubscriptionService.save(request, bom.getId());
+
+        ChannelSubscriptionResponses subscriptionsAfterSave = channelSubscriptionService.findByMemberId(bom.getId());
 
         // then
-        assertThat(channelSubscriptionService.findByMemberId(member.getId()).getChannels()).hasSize(1);
+        assertAll(
+                () -> assertThat(subscriptionsBeforeSave.getChannels()).isEmpty(),
+                () -> assertThat(subscriptionsAfterSave.getChannels()).hasSize(1)
+        );
     }
 
     @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
@@ -100,7 +112,7 @@ class ChannelSubscriptionServiceTest {
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
                 .findByMemberId(member.getId())
                 .getChannels();
-        
+
         // then
         assertThat(channelSubscriptions).extracting("id")
                 .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
