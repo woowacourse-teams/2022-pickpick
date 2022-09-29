@@ -135,70 +135,70 @@ class ChannelSubscriptionServiceTest {
     @Test
     void subscribeChannelOrderIsLast() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+        Channel qna = channels.save(qna());
 
-        subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
+        subscribeChannelsInListOrder(bom, List.of(qna, notice, freeChat));
 
         // when
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
-                .findByMemberId(member.getId())
+                .findByMemberId(bom.getId())
                 .getChannels();
 
         // then
         assertThat(channelSubscriptions).extracting("id")
-                .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
+                .containsExactly(qna.getId(), notice.getId(), freeChat.getId());
     }
 
     @DisplayName("채널 구독 순서를 변경하기")
     @Test
     void updateChannelSubscriptionOrder() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+        Channel qna = channels.save(qna());
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
         // when
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel2.getId(), 1),
-                new ChannelOrderRequest(channel1.getId(), 2),
-                new ChannelOrderRequest(channel3.getId(), 3)
+                new ChannelOrderRequest(freeChat.getId(), 1),
+                new ChannelOrderRequest(notice.getId(), 2),
+                new ChannelOrderRequest(qna.getId(), 3)
         );
-        channelSubscriptionService.updateOrders(request, member.getId());
+        channelSubscriptionService.updateOrders(request, bom.getId());
 
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
-                .findByMemberId(member.getId())
+                .findByMemberId(bom.getId())
                 .getChannels();
 
         //then
         assertThat(channelSubscriptions).extracting("id")
-                .containsExactly(channel2.getId(), channel1.getId(), channel3.getId());
+                .containsExactly(freeChat.getId(), notice.getId(), qna.getId());
     }
 
     @DisplayName("채널 구독 순서 변경 시 중복 viewOrder가 들어올 경우 에러 발생")
     @Test
     void updateChannelSubscriptionOrderWithDuplicateViewOrder() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+        Channel qna = channels.save(qna());
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2),
-                new ChannelOrderRequest(channel3.getId(), 2)
+                new ChannelOrderRequest(notice.getId(), 1),
+                new ChannelOrderRequest(freeChat.getId(), 2),
+                new ChannelOrderRequest(qna.getId(), 2)
         );
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, bom.getId()))
                 .isInstanceOf(SubscriptionOrderDuplicateException.class);
     }
 
@@ -206,21 +206,21 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithInvalidChannelId() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+        Channel unsubscribed = channels.save(qna());
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat));
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2),
-                new ChannelOrderRequest(channel3.getId(), 3)
+                new ChannelOrderRequest(notice.getId(), 1),
+                new ChannelOrderRequest(freeChat.getId(), 2),
+                new ChannelOrderRequest(unsubscribed.getId(), 3)
         );
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, bom.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
 
@@ -228,20 +228,20 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithNotEnoughChannelId() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+        Channel qna = channels.save(qna());
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2)
+                new ChannelOrderRequest(notice.getId(), 1),
+                new ChannelOrderRequest(freeChat.getId(), 2)
         );
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, bom.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
 
@@ -283,10 +283,10 @@ class ChannelSubscriptionServiceTest {
     @Test
     void unsubscribeNotExistedChannel() {
         // given
-        Member member = saveMember();
+        Member bom = members.save(bom());
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, bom.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
 
@@ -302,12 +302,8 @@ class ChannelSubscriptionServiceTest {
         return new Channel("C00002", "잡담");
     }
 
-    private Member saveMember() {
-        return members.save(bom());
-    }
-
-    private Channel saveChannel(final String slackId, final String channelName) {
-        return channels.save(new Channel(slackId, channelName));
+    private Channel qna() {
+        return new Channel("C00003", "질문답변");
     }
 
     private void subscribeChannel(Member member, Channel channel) {
