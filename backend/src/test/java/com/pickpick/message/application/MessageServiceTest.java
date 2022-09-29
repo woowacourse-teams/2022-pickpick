@@ -294,7 +294,7 @@ class MessageServiceTest {
             }
         }
 
-        private MessageResponse filterOnlyTargetMessage(final Message target, final List<MessageResponse> messages) {
+        private MessageResponse extractTargetMessage(final Message target, final List<MessageResponse> messages) {
             return messages.stream()
                     .filter(message -> message.getId().equals(target.getId()))
                     .findAny()
@@ -365,7 +365,7 @@ class MessageServiceTest {
             @Test
             void trueIfBookmarked() {
                 List<MessageResponse> messages = response.getMessages();
-                MessageResponse bookmarkedMessage = filterOnlyTargetMessage(targetMessage, messages);
+                MessageResponse bookmarkedMessage = extractTargetMessage(targetMessage, messages);
 
                 assertThat(bookmarkedMessage.isBookmarked()).isTrue();
             }
@@ -430,7 +430,7 @@ class MessageServiceTest {
                 MessageResponses response = messageService.find(summer.getId(), request);
                 List<MessageResponse> messages = response.getMessages();
 
-                MessageResponse remindedMessage = filterOnlyTargetMessage(targetMessage, messages);
+                MessageResponse remindedMessage = extractTargetMessage(targetMessage, messages);
 
                 assertAll(
                         () -> assertThat(remindedMessage.isSetReminded()).isFalse(),
@@ -446,7 +446,7 @@ class MessageServiceTest {
                 MessageResponses response = messageService.find(summer.getId(), request);
                 List<MessageResponse> messages = response.getMessages();
 
-                MessageResponse remindedMessage = filterOnlyTargetMessage(targetMessage, messages);
+                MessageResponse remindedMessage = extractTargetMessage(targetMessage, messages);
 
                 assertAll(
                         () -> assertThat(remindedMessage.isSetReminded()).isFalse(),
@@ -462,7 +462,7 @@ class MessageServiceTest {
                 MessageResponses response = messageService.find(summer.getId(), request);
                 List<MessageResponse> messages = response.getMessages();
 
-                MessageResponse remindedMessage = filterOnlyTargetMessage(targetMessage, messages);
+                MessageResponse remindedMessage = extractTargetMessage(targetMessage, messages);
 
                 assertAll(
                         () -> assertThat(remindedMessage.isSetReminded()).isTrue(),
