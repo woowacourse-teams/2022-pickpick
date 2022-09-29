@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.SlackApiCallException;
+import com.pickpick.support.DatabaseCleaner;
 import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;

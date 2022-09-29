@@ -1,8 +1,8 @@
 package com.pickpick.slackevent;
 
+import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static utils.JsonUtils.toJson;
 
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
