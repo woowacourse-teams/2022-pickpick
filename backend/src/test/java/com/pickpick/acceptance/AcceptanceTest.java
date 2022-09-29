@@ -22,6 +22,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
@@ -86,6 +87,16 @@ public class AcceptanceTest {
     protected ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
         return RestAssured.given()
                 .queryParams(queryParams)
+                .log().all()
+                .when()
+                .get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> getWithToken(final String uri, final String token) {
+        return RestAssured.given()
+                .header("Authorization", "Bearer " + token)
                 .log().all()
                 .when()
                 .get(uri)

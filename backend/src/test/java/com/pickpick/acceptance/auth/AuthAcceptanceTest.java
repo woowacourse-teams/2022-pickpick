@@ -14,7 +14,6 @@ import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
 import com.slack.api.methods.response.users.UsersIdentityResponse;
 import com.slack.api.methods.response.users.UsersIdentityResponse.User;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.IOException;
@@ -22,11 +21,9 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/member.sql"})
-@DisplayName("인증 인가 기능")
 @SuppressWarnings("NonAsciiCharacters")
+@DisplayName("인증 & 인가 인수 테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String LOGIN_API_URL = "/api/slack-login";
@@ -44,12 +41,32 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
                 .willReturn(generateUsersIdentityResponse());
 
+        회원가입();
+
         // when
         ExtractableResponse<Response> response = get(LOGIN_API_URL, Map.of("code", "1234"));
 
         // then
         상태코드_200_확인(response);
         응답_바디에_토큰_존재(response);
+    }
+
+    private void 회원가입() {
+        Map<String, Object> request = Map.of(
+                "event", Map.of(
+                        "type", "team_join",
+                        "user", Map.of(
+                                "id", MEMBER_SLACK_ID,
+                                "profile", Map.of(
+                                        "real_name", "봄",
+                                        "display_name", "가을",
+                                        "image_48", "bom.png"
+                                )
+                        )
+                ));
+
+        ExtractableResponse<Response> response = post("/api/event", request);
+        상태코드_200_확인(response);
     }
 
     private OAuthV2AccessResponse generateOAuthV2AccessResponse() {
@@ -92,16 +109,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo("INVALID_TOKEN");
-    }
-
-    private ExtractableResponse<Response> getWithToken(final String uri, final String token) {
-        return RestAssured.given()
-                .header("Authorization", "Bearer " + token)
-                .log().all()
-                .when()
-                .get(uri)
-                .then().log().all()
-                .extract();
     }
 
     @Test
