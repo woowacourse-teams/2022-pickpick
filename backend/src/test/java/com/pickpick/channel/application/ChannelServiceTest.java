@@ -1,11 +1,13 @@
 package com.pickpick.channel.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.channel.domain.ChannelSubscription;
+import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.channel.ui.dto.ChannelResponses;
 import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -30,6 +32,9 @@ class ChannelServiceTest {
     private MemberRepository members;
 
     @Autowired
+    private ChannelSubscriptionRepository channelSubscriptions;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @AfterEach
@@ -37,30 +42,42 @@ class ChannelServiceTest {
         databaseCleaner.clear();
     }
 
-    @DisplayName("전체 채널 목록을 조회한다.")
+    @DisplayName("전체 채널을 조회하면 모든 채널 목록과 각각의 구독 여부가 나온다")
     @Test
-    void selectAllChannels() {
+    void findAll() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "공지사항");
-        Channel channel2 = saveChannel("slackId2", "잡담 게시판");
+        Member yeonLog = members.save(new Member("U00001", "연로그", "https://yeonLog.png"));
+
+        Channel notice = channels.save(new Channel("C00001", "공지사항"));
+        Channel freeChat = channels.save(new Channel("C00002", "잡담"));
+        Channel qna = channels.save(new Channel("C00003", "질문답변"));
+
+        channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
         // when
-        ChannelResponses responses = channelService.findAll(member.getId());
+        List<ChannelResponse> foundChannels = channelService.findAll(yeonLog.getId()).getChannels();
+        List<Long> subscribedChannelIds = filterSubscribedChannelIds(foundChannels);
+        List<Long> unsubscribedChannelIds = filterNotSubscribedChannelIds(foundChannels);
 
         // then
-        List<Long> actualIds = responses.getChannels()
-                .stream()
+        assertAll(
+                () -> assertThat(foundChannels).hasSize(3),
+                () -> assertThat(subscribedChannelIds).containsExactly(freeChat.getId()),
+                () -> assertThat(unsubscribedChannelIds).containsExactly(notice.getId(), qna.getId())
+        );
+    }
+
+    private List<Long> filterSubscribedChannelIds(final List<ChannelResponse> foundChannels) {
+        return foundChannels.stream()
+                .filter(ChannelResponse::isSubscribed)
                 .map(ChannelResponse::getId)
                 .collect(Collectors.toList());
-        assertThat(actualIds).containsExactly(channel1.getId(), channel2.getId());
     }
 
-    private Member saveMember() {
-        return members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
-    }
-
-    private Channel saveChannel(final String slackId, final String channelName) {
-        return channels.save(new Channel(slackId, channelName));
+    private List<Long> filterNotSubscribedChannelIds(final List<ChannelResponse> foundChannels) {
+        return foundChannels.stream()
+                .filter(channel -> !channel.isSubscribed())
+                .map(ChannelResponse::getId)
+                .collect(Collectors.toList());
     }
 }
