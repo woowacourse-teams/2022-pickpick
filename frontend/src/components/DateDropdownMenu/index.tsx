@@ -1,4 +1,4 @@
-import DateDropdownOption from "../DateDropdownOption";
+import DateDropdownOption from "@src/components/DateDropdownOption";
 import * as Styled from "./style";
 
 interface Props {

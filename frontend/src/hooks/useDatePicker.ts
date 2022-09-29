@@ -1,7 +1,7 @@
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
 import { getDateInformation } from "@src/@utils";
 import { useEffect, useRef, useState } from "react";
-import useInput from "./useInput";
+import useInput from "@src/hooks/useInput";
 
 const parseDate = (ISODateTime: string) => {
   const [fullDate] = ISODateTime.split("T");

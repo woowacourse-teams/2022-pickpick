@@ -1,7 +1,7 @@
 import { getMessagesDate } from "@src/@utils";
-import DateDropdownMenu from "../DateDropdownMenu";
-import DateDropdownToggle from "../DateDropdownToggle";
-import Dropdown from "../Dropdown";
+import DateDropdownMenu from "@src/components/DateDropdownMenu";
+import DateDropdownToggle from "@src/components/DateDropdownToggle";
+import Dropdown from "@src/components/Dropdown";
 import * as Styled from "./style";
 
 interface Props {

@@ -3,7 +3,7 @@ import {
   ResponseChannels,
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
-import { fetcher } from ".";
+import { fetcher } from "@src/api";
 import { getPrivateHeaders } from "@src/api/utils";
 
 export const getChannels = async () => {

@@ -11,7 +11,7 @@ export const FlexRow = styled.div`
   `}
 `;
 
-export const FlexColumn = styled.div<FlexStyle>`
+export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
 
