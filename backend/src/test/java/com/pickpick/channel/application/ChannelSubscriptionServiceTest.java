@@ -54,7 +54,7 @@ class ChannelSubscriptionServiceTest {
     @Test
     void save() {
         // given
-        Member bom = members.save(new Member("U00003", "봄", "https://bom.png"));
+        Member bom = members.save(bom());
         Channel notice = channels.save(new Channel("C00001", "공지사항"));
 
         ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bom.getId());
@@ -72,15 +72,15 @@ class ChannelSubscriptionServiceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
+    @DisplayName("존재하지 않는 채널 ID로 구독 요청 시 에러 발생")
     @Test
     void saveByNotExistedChannelId() {
         // given
-        Member member = saveMember();
+        Member bom = members.save(bom());
         ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(NOT_EXISTED_CHANNEL_ID);
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.save(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.save(request, bom.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
 
@@ -88,12 +88,12 @@ class ChannelSubscriptionServiceTest {
     @Test
     void saveAlreadySubscribedChannel() {
         // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
+        Member bom = members.save(bom());
+        Channel notice = channels.save(notice());
+        subscribeChannel(bom, notice);
 
         // when & then
-        assertThatThrownBy(() -> subscribeChannel(member, channel))
+        assertThatThrownBy(() -> subscribeChannel(bom, notice))
                 .isInstanceOf(SubscriptionDuplicateException.class);
     }
 
@@ -253,8 +253,16 @@ class ChannelSubscriptionServiceTest {
         assertThat(isSubscribed).isFalse();
     }
 
+    private Member bom() {
+        return new Member("U00003", "봄", "https://bom.png");
+    }
+
+    private Channel notice() {
+        return new Channel("C00001", "공지사항");
+    }
+
     private Member saveMember() {
-        return members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
+        return members.save(bom());
     }
 
     private Channel saveChannel(final String slackId, final String channelName) {
