@@ -378,7 +378,10 @@ class MessageServiceTest {
                         .filter(message -> !message.getId().equals(targetMessage.getId()))
                         .collect(Collectors.toList());
 
-                assertThat(exceptTargetMessage).allMatch(message -> !message.isBookmarked());
+                assertAll(
+                        () -> assertThat(exceptTargetMessage).isNotEmpty(),
+                        () -> assertThat(exceptTargetMessage).allMatch(message -> !message.isBookmarked())
+                );
             }
         }
 
