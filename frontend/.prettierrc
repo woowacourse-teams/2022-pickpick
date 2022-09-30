@@ -7,9 +7,6 @@
     "^@src/components/(.*)$",
     "^@src/hooks/(.*)$",
     "^@src/@(.*)",
-
-    "^@src/@styles/(.*)$",
-    "^@src/@types/(.*)$",
     "^@src/api/(.*)$",
     "^@src/mocks/(.*)$",
     "^[./]"
