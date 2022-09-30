@@ -8,13 +8,16 @@ import com.slack.api.methods.MethodsClient;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import java.time.Clock;
 import java.util.Map;
+import java.util.function.Function;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -42,6 +45,24 @@ public class AcceptanceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
+    @Value("${log}")
+    private boolean showLog;
+
+    private ExtractableResponse<Response> request(Function<RequestSpecification, Response> function) {
+        if (showLog) {
+            RequestSpecification given = RestAssured.given().log().all();
+            return function.apply(given)
+                    .then()
+                    .log().all()
+                    .extract();
+        }
+        
+        RequestSpecification given = RestAssured.given();
+        return function.apply(given)
+                .then()
+                .extract();
+    }
+
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
@@ -53,104 +74,95 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> post(final String uri, final Object object) {
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object,
                                                                 final Long memberId) {
         String token = createToken(memberId);
 
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> get(final String uri) {
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .when()
                 .get(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
-        return RestAssured.given()
+        return request(given -> given
                 .queryParams(queryParams)
                 .log().all()
                 .when()
                 .get(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> getWithToken(final String uri, final String token) {
-        return RestAssured.given()
+        return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .log().all()
                 .when()
                 .get(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
         String token = createToken(memberId);
 
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .get(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
                                                                final Map<String, Object> request) {
         String token = createToken(memberId);
 
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .queryParams(request)
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .get(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object,
                                                                final Long memberId) {
         String token = createToken(memberId);
 
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .put(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     protected ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
         String token = createToken(memberId);
 
-        return RestAssured.given().log().all()
+        return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .delete(uri)
-                .then().log().all()
-                .extract();
+        );
     }
 
     private String createToken(final Long memberId) {
