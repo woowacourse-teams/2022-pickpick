@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import Dimmer from "@src/components/@shared/Dimmer";
@@ -89,7 +89,7 @@ function Feed() {
               const parsedDate = postedDate.split("T")[0];
 
               return (
-                <React.Fragment key={id}>
+                <Fragment key={id}>
                   {isRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
@@ -122,7 +122,7 @@ function Feed() {
                       />
                     </>
                   </MessageCard>
-                </React.Fragment>
+                </Fragment>
               );
             }
           )}
