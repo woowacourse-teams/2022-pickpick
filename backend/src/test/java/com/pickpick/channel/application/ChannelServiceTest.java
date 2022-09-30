@@ -1,5 +1,8 @@
 package com.pickpick.channel.application;
 
+import static com.pickpick.fixture.ChannelFactory.freeChat;
+import static com.pickpick.fixture.ChannelFactory.notice;
+import static com.pickpick.fixture.ChannelFactory.qna;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -48,9 +51,9 @@ class ChannelServiceTest {
         // given
         Member yeonLog = members.save(new Member("U00001", "연로그", "https://yeonLog.png"));
 
-        Channel notice = channels.save(new Channel("C00001", "공지사항"));
-        Channel freeChat = channels.save(new Channel("C00002", "잡담"));
-        Channel qna = channels.save(new Channel("C00003", "질문답변"));
+        Channel notice = channels.save(notice());
+        Channel freeChat = channels.save(freeChat());
+        Channel qna = channels.save(qna());
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 

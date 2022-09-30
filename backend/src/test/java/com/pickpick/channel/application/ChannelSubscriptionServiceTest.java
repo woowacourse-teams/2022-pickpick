@@ -1,5 +1,8 @@
 package com.pickpick.channel.application;
 
+import static com.pickpick.fixture.ChannelFactory.freeChat;
+import static com.pickpick.fixture.ChannelFactory.notice;
+import static com.pickpick.fixture.ChannelFactory.qna;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -285,18 +288,6 @@ class ChannelSubscriptionServiceTest {
 
     private Member bom() {
         return new Member("U00003", "봄", "https://bom.png");
-    }
-
-    private Channel notice() {
-        return new Channel("C00001", "공지사항");
-    }
-
-    private Channel freeChat() {
-        return new Channel("C00002", "잡담");
-    }
-
-    private Channel qna() {
-        return new Channel("C00003", "질문답변");
     }
 
     private void subscribeChannel(final Member member, final Channel channel) {

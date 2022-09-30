@@ -1,5 +1,6 @@
 package com.pickpick.slackevent.application.channel;
 
+import static com.pickpick.fixture.ChannelFactory.notice;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -46,7 +47,7 @@ class ChannelDeletedServiceTest {
     void channelAndMessagesShouldBeDeletedOnChannelDeletedEvent() {
         // given
         Member hope = members.save(new Member("U00004", "호프", "https://hope.png"));
-        Channel notice = channels.save(new Channel("C00001", "공지사항"));
+        Channel notice = channels.save(notice());
         messages.save(MessageFixtures.PLAIN_20220712_18_00_00.create(notice, hope));
         messages.save(MessageFixtures.PLAIN_20220715_14_00_00.create(notice, hope));
 
