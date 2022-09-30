@@ -1,6 +1,6 @@
 import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
-import * as Styled from "../Feed/style";
+import * as Styled from "@src/pages/Feed/style";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { extractResponseReminders, parseTime } from "@src/@utils";
@@ -21,7 +21,6 @@ function Reminder() {
     handleInitializeReminderTarget,
   } = useSetReminderTargetMessage();
 
-  useGetInfiniteReminders;
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useGetInfiniteReminders();
 

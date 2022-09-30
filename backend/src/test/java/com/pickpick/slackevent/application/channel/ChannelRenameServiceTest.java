@@ -1,13 +1,13 @@
 package com.pickpick.slackevent.application.channel;
 
+import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.exception.channel.ChannelNotFoundException;
+import com.pickpick.support.DatabaseCleaner;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

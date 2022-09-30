@@ -12,7 +12,7 @@ import {
   Home,
   Certification,
   SearchResult,
-} from "./pages";
+} from "@src/pages";
 
 const routes = [
   {

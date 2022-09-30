@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
-import com.pickpick.config.RestDocsTestSupport;
+import com.pickpick.support.RestDocsTestSupport;
 import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;

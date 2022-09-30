@@ -1,4 +1,4 @@
-import * as Styled from "../Feed/style";
+import * as Styled from "@src/pages/Feed/style";
 import React, { useEffect } from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import { FlexColumn } from "@src/@styles/shared";
@@ -34,7 +34,6 @@ function SpecificDateFeed() {
     handleInitializeReminderTarget,
   } = useSetReminderTargetMessage();
 
-  useGetInfiniteMessages;
   const {
     data,
     isFetching,
@@ -76,13 +75,6 @@ function SpecificDateFeed() {
   });
 
   const parsedData = extractResponseMessages(data);
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [queryKey]);
 
   useScrollToTop({ dependencies: [queryKey] });
 

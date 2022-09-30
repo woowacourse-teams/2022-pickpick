@@ -1,17 +1,17 @@
 package com.pickpick.slackevent.application.message;
 
+import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static utils.JsonUtils.toJson;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.utils.TimeUtils;
 import java.time.LocalDateTime;
 import java.util.List;

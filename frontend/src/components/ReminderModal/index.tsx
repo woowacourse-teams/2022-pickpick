@@ -3,8 +3,8 @@ import { FlexRow } from "@src/@styles/shared";
 import useMutateReminder from "@src/hooks/query/useMutateReminder";
 import useTimePicker from "@src/hooks/useTimePicker";
 import useDatePicker from "@src/hooks/useDatePicker";
-import DatePicker from "../DatePicker";
-import TimePicker from "../TimePicker";
+import DatePicker from "@src/components/DatePicker";
+import TimePicker from "@src/components/TimePicker";
 
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 

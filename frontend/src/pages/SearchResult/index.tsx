@@ -1,4 +1,4 @@
-import * as Styled from "../Feed/style";
+import * as Styled from "@src/pages/Feed/style";
 import MessageCard from "@src/components/MessageCard";
 import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
 import { FlexColumn } from "@src/@styles/shared";

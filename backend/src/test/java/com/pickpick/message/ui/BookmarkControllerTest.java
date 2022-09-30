@@ -12,8 +12,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.config.RestDocsTestSupport;
 import com.pickpick.message.ui.dto.BookmarkRequest;
+import com.pickpick.support.RestDocsTestSupport;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,5 +1,5 @@
 import { snackbarState } from "@src/@atoms";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 type openHandler = (message: string) => void;
 
@@ -9,7 +9,7 @@ interface ReturnType {
 }
 
 function useSnackbar(): ReturnType {
-  const [_, setState] = useRecoilState(snackbarState);
+  const setState = useSetRecoilState(snackbarState);
 
   const openSuccessSnackbar = (message: string) => {
     setState({

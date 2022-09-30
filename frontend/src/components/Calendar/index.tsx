@@ -2,7 +2,7 @@ import * as Styled from "./style";
 import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
 import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
 import useCalendar from "@src/hooks/useCalendar";
-import WrapperButton from "../@shared/WrapperButton";
+import WrapperButton from "@src/components/@shared/WrapperButton";
 import { Link } from "react-router-dom";
 import { ISOConverter } from "@src/@utils";
 
