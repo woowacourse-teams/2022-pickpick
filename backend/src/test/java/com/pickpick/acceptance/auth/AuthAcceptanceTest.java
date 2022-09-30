@@ -44,10 +44,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         회원가입();
 
         // when
-        ExtractableResponse<Response> response = get(LOGIN_API_URL, Map.of("code", "1234"));
+        ExtractableResponse<Response> response = restHandler.get(LOGIN_API_URL, Map.of("code", "1234"));
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
         응답_바디에_토큰_존재(response);
     }
 
@@ -65,8 +65,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                         )
                 ));
 
-        ExtractableResponse<Response> response = post("/api/event", request);
-        상태코드_200_확인(response);
+        ExtractableResponse<Response> response = restHandler.post("/api/event", request);
+        restHandler.상태코드_200_확인(response);
     }
 
     private OAuthV2AccessResponse generateOAuthV2AccessResponse() {
@@ -92,10 +92,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void 유효한_토큰_검증() {
         // given & when
-        ExtractableResponse<Response> response = getWithCreateToken(CERTIFICATION_API_URL, 2L);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(CERTIFICATION_API_URL, 2L);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
@@ -104,10 +104,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = "abcde12345";
 
         // when
-        ExtractableResponse<Response> response = getWithToken(CERTIFICATION_API_URL, invalidToken);
+        ExtractableResponse<Response> response = restHandler.getWithToken(CERTIFICATION_API_URL, invalidToken);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo("INVALID_TOKEN");
     }
 
@@ -118,10 +118,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(CERTIFICATION_API_URL, invalidToken);
+        ExtractableResponse<Response> response = restHandler.getWithToken(CERTIFICATION_API_URL, invalidToken);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
     }
 
     @Test
@@ -131,10 +131,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(CERTIFICATION_API_URL, invalidToken);
+        ExtractableResponse<Response> response = restHandler.getWithToken(CERTIFICATION_API_URL, invalidToken);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo("INVALID_TOKEN");
     }
 }

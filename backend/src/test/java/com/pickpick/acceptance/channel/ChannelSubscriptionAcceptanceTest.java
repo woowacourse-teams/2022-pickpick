@@ -48,7 +48,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> subscriptionResponse = 구독_요청(channelIdToSubscribe);
 
         // then
-        상태코드_200_확인(subscriptionResponse);
+        restHandler.상태코드_200_확인(subscriptionResponse);
         채널_구독_완료_확인(channelIdToSubscribe);
     }
 
@@ -75,7 +75,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> unsubscribeResponse = 구독_취소_요청(channelIdToUnSubscribe);
 
         // then
-        상태코드_200_확인(unsubscribeResponse);
+        restHandler.상태코드_200_확인(unsubscribeResponse);
         채널_구독_취소_확인(channelIdToUnSubscribe);
     }
 
@@ -92,7 +92,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 유저_구독_채널_목록_조회_요청();
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
         구독이_올바른_순서로_조회됨(response, channelIdToSubscribe1, channelIdToSubscribe2);
     }
 
@@ -102,7 +102,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청();
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
 
         ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청();
         구독이_올바른_순서로_조회됨(subscriptionResponse, channelIdToSubscribe2, channelIdToSubscribe1);
@@ -121,7 +121,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_INVALID_ORDER");
     }
@@ -138,7 +138,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_DUPLICATE");
     }
@@ -157,7 +157,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_NOT_EXIST");
     }
@@ -173,7 +173,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_NOT_EXIST");
     }
@@ -184,7 +184,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 구독_요청(channelIdToSubscribe1);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_DUPLICATE");
     }
@@ -198,14 +198,14 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 구독_취소_요청(channelIdToSubscribe1);
 
         // then
-        상태코드_400_확인(response);
+        restHandler.상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_NOT_EXIST");
     }
 
 
     private ExtractableResponse<Response> 유저_구독_채널_목록_조회_요청() {
-        return getWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, 2L);
+        return restHandler.getWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, 2L);
     }
 
     private void 구독이_올바른_순서로_조회됨(
@@ -226,7 +226,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private ExtractableResponse<Response> 구독_채널_순서_변경_요청(final List<ChannelOrderRequest> request) {
-        return putWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, request, 2L);
+        return restHandler.putWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, request, 2L);
     }
 
     private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청() {

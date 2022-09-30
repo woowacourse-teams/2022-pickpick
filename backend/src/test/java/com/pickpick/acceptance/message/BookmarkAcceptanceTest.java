@@ -26,10 +26,11 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     @Test
     void 북마크_생성() {
         // given & when
-        ExtractableResponse<Response> response = postWithCreateToken(BOOKMARK_API_URL, Map.of("messageId", 1), 1L);
+        ExtractableResponse<Response> response = restHandler.postWithCreateToken(BOOKMARK_API_URL,
+                Map.of("messageId", 1), 1L);
 
         // then
-        상태코드_확인(response, HttpStatus.CREATED);
+        restHandler.상태코드_확인(response, HttpStatus.CREATED);
     }
 
     @Test
@@ -40,10 +41,10 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         boolean expectedHasPast = false;
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 2L, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(BOOKMARK_API_URL, 2L, request);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        restHandler.상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
         assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
@@ -59,10 +60,10 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         boolean expectedHasPast = true;
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 1L, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(BOOKMARK_API_URL, 1L, request);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        restHandler.상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
         assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
@@ -82,11 +83,12 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long messageId = 2L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
+        ExtractableResponse<Response> response = restHandler.deleteWithCreateToken(
+                BOOKMARK_API_URL + "?messageId=" + messageId,
                 1L);
 
         // then
-        상태코드_확인(response, HttpStatus.NO_CONTENT);
+        restHandler.상태코드_확인(response, HttpStatus.NO_CONTENT);
     }
 
     @Test
@@ -95,11 +97,12 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         long messageId = 1L;
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
+        ExtractableResponse<Response> response = restHandler.deleteWithCreateToken(
+                BOOKMARK_API_URL + "?messageId=" + messageId,
                 1L);
 
         // then
-        상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        restHandler.상태코드_확인(response, HttpStatus.BAD_REQUEST);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "BOOKMARK_DELETE_FAILURE");
     }

@@ -81,10 +81,10 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         Map<String, String> request = Map.of("token", token, "type", type, "challenge", challenge);
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, request);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, request);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
@@ -93,40 +93,40 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> messageCreatedRequest = createEventRequest("");
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
     void 메시지_수정_요청_시_메시지_내용과_수정_시간이_업데이트_된다() {
         // given
         Map<String, Object> messageCreatedRequest = createEventRequest("");
-        post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
+        restHandler.post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
 
         Map<String, Object> messageChangedRequest = createEventRequest(SlackEvent.MESSAGE_CHANGED.getSubtype());
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageChangedRequest);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, messageChangedRequest);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
     void 메시지_삭제_요청_시_메시지가_삭제_된다() {
         // given
         Map<String, Object> messageCreatedRequest = createEventRequest("");
-        post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
+        restHandler.post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
 
         Map<String, Object> messageDeletedRequest = createEventRequest(SlackEvent.MESSAGE_DELETED.getSubtype());
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageDeletedRequest);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, messageDeletedRequest);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
@@ -135,10 +135,10 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> messageThreadBroadcastRequest = createEventRequest("thread_broadcast");
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageThreadBroadcastRequest);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, messageThreadBroadcastRequest);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
@@ -147,24 +147,24 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> messageThreadBroadcastRequest = createThreadBroadcastEventRequest();
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, messageThreadBroadcastRequest);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, messageThreadBroadcastRequest);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 
     @Test
     void 파일_공유_메시지_요청_시_메시지가_저장된다() {
         // given
         Map<String, Object> messageCreatedRequest = createEventRequest("");
-        post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
+        restHandler.post(MESSAGE_EVENT_API_URL, messageCreatedRequest);
 
         Map<String, Object> fileShareMessageRequest = createEventRequest(SlackEvent.MESSAGE_FILE_SHARE.getSubtype());
 
         // when
-        ExtractableResponse<Response> response = post(MESSAGE_EVENT_API_URL, fileShareMessageRequest);
+        ExtractableResponse<Response> response = restHandler.post(MESSAGE_EVENT_API_URL, fileShareMessageRequest);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
     }
 }

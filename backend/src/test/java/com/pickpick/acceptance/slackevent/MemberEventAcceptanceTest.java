@@ -22,10 +22,11 @@ class MemberEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> memberUpdatedRequest = createEventRequest("실제이름", "표시이름", "test.png");
 
         // when
-        ExtractableResponse<Response> memberChangedResponse = post(MEMBER_EVENT_API_URL, memberUpdatedRequest);
+        ExtractableResponse<Response> memberChangedResponse = restHandler.post(MEMBER_EVENT_API_URL,
+                memberUpdatedRequest);
 
         // then
-        상태코드_200_확인(memberChangedResponse);
+        restHandler.상태코드_200_확인(memberChangedResponse);
     }
 
     private Map<String, Object> createEventRequest(final String realName, final String displayName,

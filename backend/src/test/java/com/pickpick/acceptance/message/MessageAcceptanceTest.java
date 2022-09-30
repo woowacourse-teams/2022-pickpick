@@ -113,13 +113,13 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedhasPast,
                     final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
         // given & when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
 
         // then
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         assertAll(
-                () -> 상태코드_200_확인(response),
+                () -> restHandler.상태코드_200_확인(response),
                 () -> assertThat(messageResponses.hasPast()).isEqualTo(expectedhasPast),
                 () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
                 () -> assertThat(messageResponses.getMessages())
@@ -135,11 +135,11 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
         assertThat(messageResponses.isNeedPastMessage()).isTrue();
     }
 
@@ -149,11 +149,11 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("jupjup", "", "5", "false", "", "");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
         assertThat(messageResponses.isNeedPastMessage()).isFalse();
     }
 
@@ -165,13 +165,13 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
         MessageResponse messageResponse = response.as(MessageResponses.class)
                 .getMessages()
                 .get(0);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
         assertAll(
                 () -> assertThat(messageResponse.isSetReminded()).isFalse(),
                 () -> assertThat(messageResponse.getRemindDate()).isNull()
@@ -186,13 +186,13 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = restHandler.getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
         MessageResponse messageResponse = response.as(MessageResponses.class)
                 .getMessages()
                 .get(0);
 
         // then
-        상태코드_200_확인(response);
+        restHandler.상태코드_200_확인(response);
         assertAll(
                 () -> assertThat(messageResponse.isSetReminded()).isTrue(),
                 () -> assertThat(messageResponse.getRemindDate()).isNotNull()
