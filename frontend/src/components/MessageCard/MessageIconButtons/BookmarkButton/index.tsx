@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 import IconButton from "@src/components/@shared/IconButton";
 import StarIcon from "@src/components/@svgIcons/StarIcon";
 import { FlexRow } from "@src/@styles/shared";
-import * as Styled from "../style";
+import * as Styled from "../@styles/style";
 
 interface Props {
   isActive: boolean;

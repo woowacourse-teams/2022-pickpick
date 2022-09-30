@@ -6,6 +6,7 @@ import * as Styled from "./style";
 
 function ThemeToggler() {
   const { theme, handleToggleTheme } = useModeTheme();
+
   return (
     <Styled.Container>
       <Styled.CheckBox
@@ -13,9 +14,11 @@ function ThemeToggler() {
         checked={theme === THEME_KIND.DARK}
         onChange={handleToggleTheme}
       />
+
       <Styled.LeftIconContainer isVisible={theme === THEME_KIND.LIGHT}>
         <MoonIcon width="13" height="13" />
       </Styled.LeftIconContainer>
+
       <Styled.RightIconContainer isVisible={theme === THEME_KIND.DARK}>
         <SunIcon width="13" height="13" />
       </Styled.RightIconContainer>

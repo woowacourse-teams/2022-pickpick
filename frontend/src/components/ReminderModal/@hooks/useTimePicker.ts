@@ -2,38 +2,11 @@ import { PICKER_OPTION_SCROLL } from "@src/@constants";
 import { getDateInformation, getMeridiemTime } from "@src/@utils";
 import { useEffect, useRef, useState } from "react";
 import useInput from "@src/hooks/useInput";
-
-const parseTime = (ISODateTime: string) => {
-  const [_, fullTime] = ISODateTime.split("T");
-  const [hour, minute] = fullTime.split(":");
-  const { meridiem: meridiem, hour: meridiemHour } = getMeridiemTime(
-    Number(hour)
-  );
-
-  return {
-    meridiem,
-    meridiemHour,
-    minute,
-  };
-};
-
-const convertTimeToStepTenMinuteTime = ({
-  hour,
-  minute,
-}: {
-  hour: number;
-  minute: number;
-}) => {
-  if (minute > 50) {
-    return { parsedHour: hour + 1, parsedMinute: 0 };
-  }
-
-  return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
-};
-
-const invalidMeridiem = (value: string) => {
-  return value !== "오전" && value !== "오후";
-};
+import {
+  convertTimeToStepTenMinuteTime,
+  invalidMeridiem,
+  parseTime,
+} from "@src/components/ReminderModal/@utils";
 
 interface Props {
   remindDate: string;

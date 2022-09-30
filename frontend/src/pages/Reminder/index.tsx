@@ -2,15 +2,15 @@ import { FlexColumn } from "@src/@styles/shared";
 import MessageCard from "@src/components/MessageCard";
 import * as Styled from "@src/pages/Feed/style";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseReminders, parseTime } from "@src/@utils";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
+import { extractResponseReminders, parseMeridemTime } from "@src/@utils";
 import EmptyStatus from "@src/components/EmptyStatus";
 import Portal from "@src/components/@shared/Portal";
 import Dimmer from "@src/components/@shared/Dimmer";
 import ReminderModal from "@src/components/ReminderModal";
 import useModal from "@src/hooks/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
 import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
 import useScrollToTop from "@src/hooks/useScrollToTop";
 
@@ -59,7 +59,7 @@ function Reminder() {
                   <MessageCard
                     key={id}
                     username={username}
-                    date={`${date} ${parseTime(remindDate)}`}
+                    date={`${date} ${parseMeridemTime(remindDate)}`}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={true}

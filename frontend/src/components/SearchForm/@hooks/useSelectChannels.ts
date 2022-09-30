@@ -20,6 +20,7 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
     useState<number[]>(currentChannelIds);
   const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
   const { data } = useGetSubscribedChannels();
+
   const allChannels = useMemo(() => data?.channels ?? [], [data?.channels]);
 
   const getCurrentChannels = useMemo(() => {

@@ -1,30 +1,11 @@
 import { RefObject, ChangeEventHandler } from "react";
 import { FlexColumn } from "@src/@styles/shared";
 import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
-import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
-import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
+import DateTimePickerOptions from "@src/components/ReminderModal/DateTimePicker/DateTimePickerOptions";
+import DateTimePickerToggle from "@src/components/ReminderModal/DateTimePicker/DateTimePickerToggle";
 import Dropdown from "@src/components/Dropdown";
 import * as Styled from "./style";
-import { getDateInformation } from "@src/@utils";
-
-const generateDateOptions = () => {
-  const { year, month } = getDateInformation(new Date());
-  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
-
-  const years = [year, year + 1, year + 2].map((year) => year.toString());
-  const months = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
-  );
-  const dates = Array.from({ length: lastDate }, (_, index) =>
-    (index + 1).toString()
-  );
-
-  return {
-    years,
-    months,
-    dates,
-  };
-};
+import { generateDateOptions } from "@src/components/ReminderModal/@utils";
 
 interface Props {
   yearRef: RefObject<HTMLDivElement>;

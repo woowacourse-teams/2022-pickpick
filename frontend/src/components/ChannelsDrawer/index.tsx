@@ -12,7 +12,7 @@ interface Props {
   handleCloseDrawer: () => void;
 }
 
-function Drawer({ channels = [], handleCloseDrawer }: Props) {
+function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
   const { channelId } = useParams();
   const theme = useTheme() as Theme;
 
@@ -63,4 +63,4 @@ function Drawer({ channels = [], handleCloseDrawer }: Props) {
   );
 }
 
-export default Drawer;
+export default ChannelsDrawer;

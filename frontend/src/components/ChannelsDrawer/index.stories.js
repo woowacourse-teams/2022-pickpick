@@ -1,12 +1,12 @@
-import Drawer from ".";
+import ChannelsDrawer from ".";
 import { subscribedChannels } from "@src/mocks/data/channels";
 
 export default {
-  title: "Component/Drawer",
-  component: Drawer,
+  title: "Component/ChannelsDrawer",
+  component: ChannelsDrawer,
 };
 
-const Template = (args) => <Drawer {...args} />;
+const Template = (args) => <ChannelsDrawer {...args} />;
 
 export const DefaultTemplate = Template.bind({});
 

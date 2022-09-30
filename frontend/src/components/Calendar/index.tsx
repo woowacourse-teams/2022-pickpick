@@ -1,7 +1,7 @@
 import * as Styled from "./style";
 import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
 import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
-import useCalendar from "@src/hooks/useCalendar";
+import useCalendar from "@src/components/Calendar/@hooks/useCalendar";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import { Link } from "react-router-dom";
 import { ISOConverter } from "@src/@utils";
@@ -60,17 +60,21 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           const isFuture = day > todayDate.getDate() && isFutureMonth();
           const isCurrentDay = day === todayDate.getDate() && isCurrentMonth();
 
-          return isBlank || isFuture ? (
-            <Styled.Day
-              isBlank={isBlank}
-              isCurrentDay={isCurrentDay}
-              isFuture={isFuture}
-              onClick={handleCloseCalendar}
-            >
-              {day}
-              <div></div>
-            </Styled.Day>
-          ) : (
+          if (isBlank || isFuture) {
+            return (
+              <Styled.Day
+                isBlank={isBlank}
+                isCurrentDay={isCurrentDay}
+                isFuture={isFuture}
+                onClick={handleCloseCalendar}
+              >
+                {day}
+                <div></div>
+              </Styled.Day>
+            );
+          }
+
+          return (
             <Link
               key={index}
               to={`/feed/${channelId}/${ISOConverter(
