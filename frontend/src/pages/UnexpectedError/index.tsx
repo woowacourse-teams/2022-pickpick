@@ -7,7 +7,7 @@ import { FlexColumn } from "@src/@styles/shared";
 
 function UnexpectedError() {
   return (
-    <LayoutStyled.Container>
+    <div>
       <Header />
 
       <LayoutStyled.Main hasMarginTop={true}>
@@ -23,7 +23,7 @@ function UnexpectedError() {
           </a>
         </FlexColumn>
       </LayoutStyled.Main>
-    </LayoutStyled.Container>
+    </div>
   );
 }
 

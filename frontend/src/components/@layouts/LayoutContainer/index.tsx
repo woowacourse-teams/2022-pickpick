@@ -13,11 +13,11 @@ function LayoutContainer({ children }: PropsWithChildren) {
     pathname !== PATH_NAME.HOME && pathname !== PATH_NAME.ADD_CHANNEL;
 
   return (
-    <Styled.Container>
+    <div>
       {hasHeader() && <Header />}
       <Styled.Main hasMarginTop={hasHeader()}>{children}</Styled.Main>
       {hasNavBar() && <Navigation />}
-    </Styled.Container>
+    </div>
   );
 }
 

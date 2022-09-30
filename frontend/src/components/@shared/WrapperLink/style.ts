@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { Kind } from "../WrapperButton";
 
 export const Container = styled(NavLink)`
-  cursor: pointer;
   background-color: inherit;
+  cursor: pointer;
 
   ${({ kind }: { kind?: Kind }) => kind && kindTable[kind]}
 `;

@@ -4,14 +4,16 @@ import styled, { css } from "styled-components";
 export const Container = styled.div`
   display: grid;
   justify-items: center;
+
   margin: 40vh 0;
 `;
 
 export const DefaultLoadingCSS = css`
+  grid-area: 1/1;
+
   width: 50px;
   height: 50px;
   border-radius: 100%;
-  grid-area: 1/1;
 `;
 
 export const LeftCircle = styled.div`

@@ -8,17 +8,20 @@ interface StyledProps extends StyledDefaultProps {
 }
 
 export const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   position: fixed;
-  bottom: 100px;
   left: 50%;
-  transform: translate(-50%, 0);
+  bottom: 100px;
+
   width: 300px;
   min-height: 60px;
   padding: 16px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+  transform: translate(-50%, 0);
   z-index: 3;
 
   ${({ theme, status }: StyledProps) => css`

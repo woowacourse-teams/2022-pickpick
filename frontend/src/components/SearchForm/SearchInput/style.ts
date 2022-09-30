@@ -5,9 +5,10 @@ export const Container = styled.div``;
 
 export const Input = styled.input`
   display: inline-block;
-  outline: none;
-  border: none;
+
   width: 100%;
+  border: none;
+  outline: none;
   background-color: transparent;
 
   ${({ theme }: StyledDefaultProps) => css`
@@ -24,11 +25,11 @@ export const Input = styled.input`
 `;
 
 export const SearchButton = styled.button`
+  padding: 0.25rem 0.938rem;
   border: none;
   border-radius: 4px;
   white-space: nowrap;
   cursor: pointer;
-  padding: 0.25rem 0.938rem;
 
   ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.CAPTION};
