@@ -23,7 +23,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -94,20 +93,19 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
     void delete() throws Exception {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.set("messageId", "2");
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete(BOOKMARK_API_URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer 1")
-                        .params(requestParams)
+
+        ResultActions result = mockMvc.perform(deleteRequest(BOOKMARK_API_URL, requestParams))
+                .andExpect(status().isNoContent());
+
+        // docs
+        result.andDo(restDocs.document(
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
+                ),
+                requestParameters(
+                        parameterWithName("messageId").description("북마크 삭제할 메세지 아이디")
                 )
-                .andExpect(status().isNoContent())
-                .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저 식별 토큰(Bearer)")
-                        ),
-                        requestParameters(
-                                parameterWithName("messageId").description("북마크 삭제할 메세지 아이디")
-                        )
-                ));
+        ));
     }
 
     private BookmarkResponses createBookmarkResponses() {
@@ -120,8 +118,8 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
                                 .username("써머")
                                 .userThumbnail("https://summer.png")
                                 .text("메시지 내용")
-                                .postedDate(LocalDateTime.now())
-                                .modifiedDate(LocalDateTime.now())
+                                .postedDate(LocalDateTime.now().minusDays(1))
+                                .modifiedDate(LocalDateTime.now().minusDays(1))
                                 .build(),
                         BookmarkResponse.builder()
                                 .id(2L)
@@ -132,6 +130,16 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
                                 .text("또 다른 메시지 내용")
                                 .postedDate(LocalDateTime.now())
                                 .modifiedDate(LocalDateTime.now())
+                                .build(),
+                        BookmarkResponse.builder()
+                                .id(3L)
+                                .messageId(33L)
+                                .memberId(3L)
+                                .username("연로그")
+                                .userThumbnail("https://yeonlog.png")
+                                .text("다른 메시지 내용")
+                                .postedDate(LocalDateTime.now().minusDays(2))
+                                .modifiedDate(LocalDateTime.now().minusDays(2))
                                 .build()
                 ),
                 true

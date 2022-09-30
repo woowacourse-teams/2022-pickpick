@@ -25,6 +25,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
 
@@ -84,7 +86,10 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
         doNothing().when(channelSubscriptionService)
                 .delete(anyLong(), anyLong());
 
-        ResultActions result = mockMvc.perform(deleteRequest(API_CHANNEL_SUBSCRIPTION))
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("channelId", "2");
+
+        ResultActions result = mockMvc.perform(deleteRequest(API_CHANNEL_SUBSCRIPTION, params))
                 .andExpect(status().isOk());
 
         // docs
