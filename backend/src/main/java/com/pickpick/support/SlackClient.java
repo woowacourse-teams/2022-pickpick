@@ -99,18 +99,19 @@ public class SlackClient {
         return new Member(user.getId(), user.getProfile().getDisplayName(), user.getProfile().getImage48());
     }
 
-    public void sendMessage(final Reminder reminder)
-            throws IOException, SlackApiException, SlackSendMessageFailureException {
-
+    public void sendMessage(final Reminder reminder) {
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
                 .channel(reminder.getMember().getSlackId())
                 .text(String.format(REMINDER_TEXT_FORMAT, reminder.getMessage().getText()))
                 .build();
 
-        ChatPostMessageResponse response = methodsClient.chatPostMessage(request);
-
-        if (!response.isOk()) {
-            throw new SlackSendMessageFailureException(response.getError());
+        try {
+            ChatPostMessageResponse response = methodsClient.chatPostMessage(request);
+            if (!response.isOk()) {
+                throw new SlackSendMessageFailureException(response.getError());
+            }
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException(e);
         }
     }
 }

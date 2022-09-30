@@ -1,11 +1,8 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.message.SlackSendMessageFailureException;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.support.SlackClient;
-import com.slack.api.methods.SlackApiException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +31,8 @@ public class ReminderSender {
         List<Reminder> foundReminders = reminders.findAllByRemindDate(now);
 
         for (Reminder reminder : foundReminders) {
-            try {
-                slackClient.sendMessage(reminder);
-            } catch (IOException | SlackApiException | SlackSendMessageFailureException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                reminders.deleteById(reminder.getId());
-            }
+            slackClient.sendMessage(reminder);
+            reminders.deleteById(reminder.getId());
         }
     }
 }
