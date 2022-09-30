@@ -66,8 +66,8 @@ class MemberJoinServiceTest {
         Optional<Member> memberBeforeJoin = members.findBySlackId(slackId);
 
         // when
-        String teamJoinEvent = createTeamJoinEvent(slackId, "고재증", "꼬재");
-        memberJoinService.execute(teamJoinEvent);
+        String request = createTeamJoinEvent(slackId, "고재증", "꼬재");
+        memberJoinService.execute(request);
 
         // then
         Optional<Member> memberAfterJoin = members.findBySlackId(slackId);
@@ -87,8 +87,8 @@ class MemberJoinServiceTest {
         String displayName = "꼬재";
 
         // when
-        String teamJoinEvent = createTeamJoinEvent(slackId, realName, displayName);
-        memberJoinService.execute(teamJoinEvent);
+        String request = createTeamJoinEvent(slackId, realName, displayName);
+        memberJoinService.execute(request);
 
         // then
         Member memberAfterJoin = members.findBySlackId(slackId)
@@ -106,8 +106,8 @@ class MemberJoinServiceTest {
         String displayName = "";
 
         // when
-        String teamJoinEvent = createTeamJoinEvent(slackId, realName, displayName);
-        memberJoinService.execute(teamJoinEvent);
+        String request = createTeamJoinEvent(slackId, realName, displayName);
+        memberJoinService.execute(request);
 
         // then
         Member memberAfterJoin = members.findBySlackId(slackId)
