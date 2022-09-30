@@ -1,5 +1,6 @@
 package com.pickpick.slackevent.application.member;
 
+import static com.pickpick.fixture.MemberFixtures.KKOJAE;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,51 +36,58 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByDisplayName() {
         // given
-        Member kkojae = members.save(new Member("U00005", "꼬재", "https://kkojae.png"));
+        Member kkojae = members.save(KKOJAE.create());
 
         // when
-        String request = memberChangedEvent(kkojae.getSlackId(), "고재증", "굿이에요굿굿굿", "https://kkojae.png");
+        String realName = "고재증";
+        String displayName = "굿이에요굿굿굿";
+
+        String request = memberChangedEvent(kkojae.getSlackId(), realName, displayName, kkojae.getThumbnailUrl());
         memberChangedService.execute(request);
 
         // then
         Member actual = members.findById(kkojae.getId())
                 .orElseThrow(() -> new MemberNotFoundException(kkojae.getId()));
 
-        assertThat(actual.getUsername()).isEqualTo("굿이에요굿굿굿");
+        assertThat(actual.getUsername()).isEqualTo(displayName);
     }
 
     @DisplayName("사용자 이름 변경 시 display_name 이 빈 문자열이라면 real_name 으로 변경")
     @Test
     void changeUsernameByRealNameWhenDisplayNameIsBlank() {
         // given
-        Member kkojae = members.save(new Member("U00005", "꼬재", "https://kkojae.png"));
+        Member kkojae = members.save(KKOJAE.create());
 
         // when
-        String request = memberChangedEvent(kkojae.getSlackId(), "고재증", "", "https://kkojae.png");
+        String realName = "고재증";
+        String displayName = "";
+
+        String request = memberChangedEvent(kkojae.getSlackId(), realName, displayName, kkojae.getThumbnailUrl());
         memberChangedService.execute(request);
 
         // then
         Member actual = members.findById(kkojae.getId())
                 .orElseThrow(() -> new MemberNotFoundException(kkojae.getId()));
 
-        assertThat(actual.getUsername()).isEqualTo("고재증");
+        assertThat(actual.getUsername()).isEqualTo(realName);
     }
 
     @DisplayName("사용자 프로필 이미지 변경")
     @Test
     void changedThumbnailUrl() {
         // given
-        Member kkojae = members.save(new Member("U00005", "꼬재", "https://kkojae.png"));
+        Member kkojae = members.save(KKOJAE.create());
 
         // when
-        String request = memberChangedEvent(kkojae.getSlackId(), "고재증", "꼬재", "https://gojaejeong.png");
+        String changedThumbnailUrl = "https://gojaejeong.png";
+        String request = memberChangedEvent(kkojae.getSlackId(), "고재증", kkojae.getUsername(), changedThumbnailUrl);
         memberChangedService.execute(request);
 
         // then
         Member actual = members.findById(kkojae.getId())
                 .orElseThrow(() -> new MemberNotFoundException(kkojae.getId()));
 
-        assertThat(actual.getThumbnailUrl()).isEqualTo("https://gojaejeong.png");
+        assertThat(actual.getThumbnailUrl()).isEqualTo(changedThumbnailUrl);
     }
 
     private String memberChangedEvent(final String slackId, final String realName,
