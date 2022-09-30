@@ -109,10 +109,18 @@ public class RestDocsTestSupport {
                 .willReturn("1"); // memberId를 반환
     }
 
-    protected MockHttpServletRequestBuilder getRequest(String uri) {
+    protected MockHttpServletRequestBuilder getRequest(final String uri) {
         return MockMvcRequestBuilders
                 .get(uri)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token");
+    }
+
+    protected MockHttpServletRequestBuilder getWithParams(final String uri,
+                                                          final MultiValueMap<String, String> requestParam) {
+        return MockMvcRequestBuilders
+                .get(uri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .params(requestParam);
     }
 
     protected MockHttpServletRequestBuilder postRequest(final String uri, final String body)
