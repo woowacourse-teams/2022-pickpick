@@ -18,7 +18,7 @@ import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
-import com.pickpick.config.RestDocsTestSupport;
+import com.pickpick.config.DocsControllerTest;
 import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
-
+class ChannelSubscriptionControllerTest extends DocsControllerTest {
 
     private static final String API_CHANNEL_SUBSCRIPTION = "/api/channel-subscription";
 
@@ -41,7 +40,7 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
         when(channelSubscriptionService.findByMemberId(any()))
                 .thenReturn(responses);
 
-        ResultActions result = mockMvc.perform(getRequest(API_CHANNEL_SUBSCRIPTION))
+        ResultActions result = mockMvc.perform(get(API_CHANNEL_SUBSCRIPTION))
                 .andExpect(status().isOk());
 
         // docs
@@ -66,7 +65,7 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
 
         String body = objectMapper.writeValueAsString(subscriptionRequest);
 
-        ResultActions result = mockMvc.perform(postRequest(API_CHANNEL_SUBSCRIPTION, body))
+        ResultActions result = mockMvc.perform(post(API_CHANNEL_SUBSCRIPTION, body))
                 .andExpect(status().isOk());
 
         // docs
@@ -89,7 +88,7 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("channelId", "2");
 
-        ResultActions result = mockMvc.perform(deleteRequest(API_CHANNEL_SUBSCRIPTION, params))
+        ResultActions result = mockMvc.perform(delete(API_CHANNEL_SUBSCRIPTION, params))
                 .andExpect(status().isOk());
 
         // docs
@@ -117,7 +116,7 @@ class ChannelSubscriptionControllerTest extends RestDocsTestSupport {
                 )
         );
 
-        ResultActions result = mockMvc.perform(putRequest(API_CHANNEL_SUBSCRIPTION, body))
+        ResultActions result = mockMvc.perform(put(API_CHANNEL_SUBSCRIPTION, body))
                 .andExpect(status().isOk());
 
         // docs

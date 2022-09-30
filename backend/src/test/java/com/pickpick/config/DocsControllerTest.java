@@ -40,8 +40,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@AutoConfigureMockMvc
 @WebMvcTest({
         AuthController.class,
         ChannelController.class,
@@ -53,7 +51,9 @@ import org.springframework.web.context.WebApplicationContext;
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
-public class RestDocsTestSupport {
+public class DocsControllerTest {
+
+    private static final String BEARER_JWT_TOKEN = "Bearer provided.jwt.token";
 
     @MockBean
     protected AuthService authService;
@@ -88,8 +88,6 @@ public class RestDocsTestSupport {
     @Autowired
     protected ObjectMapper objectMapper;
 
-//    @Autowired
-//    private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
     public void setUp(
@@ -106,50 +104,45 @@ public class RestDocsTestSupport {
     @BeforeEach
     void setup() {
         given(jwtTokenProvider.getPayload(any()))
-                .willReturn("1"); // memberId를 반환
+                .willReturn("1");
     }
 
-    protected MockHttpServletRequestBuilder getRequest(final String uri) {
+    protected MockHttpServletRequestBuilder get(final String uri) {
         return MockMvcRequestBuilders
                 .get(uri)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token");
+                .header(HttpHeaders.AUTHORIZATION, BEARER_JWT_TOKEN);
     }
 
     protected MockHttpServletRequestBuilder getWithParams(final String uri,
                                                           final MultiValueMap<String, String> requestParam) {
         return MockMvcRequestBuilders
                 .get(uri)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_JWT_TOKEN)
                 .params(requestParam);
     }
 
-    protected MockHttpServletRequestBuilder postRequest(final String uri, final String body)
+    protected MockHttpServletRequestBuilder post(final String uri, final String body)
             throws JsonProcessingException {
         return MockMvcRequestBuilders
                 .post(uri)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_JWT_TOKEN)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
-    protected MockHttpServletRequestBuilder putRequest(final String uri, final String body) {
+    protected MockHttpServletRequestBuilder put(final String uri, final String body) {
         return MockMvcRequestBuilders
                 .put(uri)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_JWT_TOKEN)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
-    protected MockHttpServletRequestBuilder deleteRequest(final String uri,
-                                                          final MultiValueMap<String, String> requestParams) {
+    protected MockHttpServletRequestBuilder delete(final String uri,
+                                                   final MultiValueMap<String, String> requestParams) {
         return MockMvcRequestBuilders
                 .delete(uri)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer provided.jwt.token")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_JWT_TOKEN)
                 .params(requestParams);
     }
-
-//    @AfterEach
-//    void clear() {
-//        databaseCleaner.clear();
-//    }
 }

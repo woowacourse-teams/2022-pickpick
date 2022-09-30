@@ -12,7 +12,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.pickpick.config.RestDocsTestSupport;
+import com.pickpick.config.DocsControllerTest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-public class BookmarkControllerTest extends RestDocsTestSupport {
+public class BookmarkControllerTest extends DocsControllerTest {
 
     private static final String BOOKMARK_API_URL = "/api/bookmarks";
 
@@ -38,7 +38,7 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
         when(bookmarkService.find(any(), anyLong()))
                 .thenReturn(responses);
 
-        ResultActions result = mockMvc.perform(getRequest(BOOKMARK_API_URL))
+        ResultActions result = mockMvc.perform(get(BOOKMARK_API_URL))
                 .andExpect(status().isOk());
 
         // docs
@@ -74,7 +74,7 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
         String body = objectMapper.writeValueAsString(
                 new BookmarkRequest(1L)
         );
-        ResultActions result = mockMvc.perform(postRequest(BOOKMARK_API_URL, body))
+        ResultActions result = mockMvc.perform(post(BOOKMARK_API_URL, body))
                 .andExpect(status().isCreated());
 
         // docs
@@ -94,7 +94,7 @@ public class BookmarkControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.set("messageId", "2");
 
-        ResultActions result = mockMvc.perform(deleteRequest(BOOKMARK_API_URL, requestParams))
+        ResultActions result = mockMvc.perform(delete(BOOKMARK_API_URL, requestParams))
                 .andExpect(status().isNoContent());
 
         // docs

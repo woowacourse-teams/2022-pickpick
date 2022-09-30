@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelResponses;
-import com.pickpick.config.RestDocsTestSupport;
+import com.pickpick.config.DocsControllerTest;
 import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-class ChannelControllerTest extends RestDocsTestSupport {
+class ChannelControllerTest extends DocsControllerTest {
 
-    private static final String API_CHANNELS = "/api/channels";
+    private static final String CHANNEL_API_URL = "/api/channels";
 
     @DisplayName("구독 여부를 포함하여 채널을 조회한다.")
     @Test
@@ -29,7 +29,7 @@ class ChannelControllerTest extends RestDocsTestSupport {
         when(channelService.findAll(anyLong()))
                 .thenReturn(channels);
 
-        ResultActions result = mockMvc.perform(getRequest(API_CHANNELS))
+        ResultActions result = mockMvc.perform(get(CHANNEL_API_URL))
                 .andExpect(status().isOk());
 
         //docs

@@ -11,7 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.pickpick.config.RestDocsTestSupport;
+import com.pickpick.config.DocsControllerTest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 
-class MessageControllerTest extends RestDocsTestSupport {
+class MessageControllerTest extends DocsControllerTest {
 
     private static final String MESSAGES_API_URL = "/api/messages";
 
