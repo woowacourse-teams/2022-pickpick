@@ -3,6 +3,7 @@ package com.pickpick.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.auth.support.JwtTokenProvider;
+import com.pickpick.config.dto.ErrorResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -146,5 +147,9 @@ public class RestHandler {
 
     public void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
         assertThat(response.statusCode()).isEqualTo(httpStatus.value());
+    }
+
+    public String 에러_코드(final ExtractableResponse<Response> response) {
+        return response.jsonPath().getObject("", ErrorResponse.class).getCode();
     }
 }
