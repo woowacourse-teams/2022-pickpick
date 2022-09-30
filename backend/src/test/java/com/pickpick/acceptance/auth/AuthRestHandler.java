@@ -1,7 +1,6 @@
 package com.pickpick.acceptance.auth;
 
 import static com.pickpick.acceptance.RestHandler.get;
-import static com.pickpick.acceptance.RestHandler.getWithCreateToken;
 import static com.pickpick.acceptance.RestHandler.getWithToken;
 import static com.pickpick.acceptance.RestHandler.post;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
@@ -38,10 +37,6 @@ public class AuthRestHandler {
     public static ExtractableResponse<Response> 로그인(final String code) {
         Map<String, Object> request = Map.of("code", code);
         return get(LOGIN_API_URL, request);
-    }
-
-    public static ExtractableResponse<Response> 토큰_검증(final long memberId) {
-        return getWithCreateToken(CERTIFICATION_API_URL, memberId);
     }
 
     public static ExtractableResponse<Response> 토큰_검증(final String token) {

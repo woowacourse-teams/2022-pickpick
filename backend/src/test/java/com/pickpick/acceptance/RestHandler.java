@@ -2,7 +2,6 @@ package com.pickpick.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.config.dto.ErrorResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -10,7 +9,6 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.Map;
 import java.util.function.Function;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,15 +18,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestHandler {
 
-    private static JwtTokenProvider jwtTokenProvider;
     private static boolean showLog;
 
-    @Autowired
-    public void setJwtTokenProvider(final JwtTokenProvider provider) {
-        jwtTokenProvider = provider;
-    }
-
-    public void setShowLog(@Value("${log}") boolean value) {
+    @Value("${log}")
+    public void setShowLog(boolean value) {
         showLog = value;
     }
 
@@ -41,10 +34,8 @@ public class RestHandler {
         );
     }
 
-    public static ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object,
-                                                                    final Long memberId) {
-        String token = createToken(memberId);
-
+    public static ExtractableResponse<Response> postWithToken(final String uri, final Object object,
+                                                              final String token) {
         return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .body(object)
@@ -55,44 +46,23 @@ public class RestHandler {
     }
 
     public static ExtractableResponse<Response> get(final String uri) {
-        return request(given -> given
-                .when()
-                .get(uri)
-        );
+        return get(uri, Map.of());
     }
 
     public static ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
         return request(given -> given
                 .queryParams(queryParams)
-                .log().all()
                 .when()
                 .get(uri)
         );
     }
 
     public static ExtractableResponse<Response> getWithToken(final String uri, final String token) {
-        return request(given -> given
-                .header("Authorization", "Bearer " + token)
-                .log().all()
-                .when()
-                .get(uri)
-        );
+        return getWithToken(uri, token, Map.of());
     }
 
-    public static ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
-        String token = createToken(memberId);
-
-        return request(given -> given
-                .header("Authorization", "Bearer " + token)
-                .when()
-                .get(uri)
-        );
-    }
-
-    public static ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
-                                                                   final Map<String, Object> request) {
-        String token = createToken(memberId);
-
+    public static ExtractableResponse<Response> getWithToken(final String uri, final String token,
+                                                             final Map<String, Object> request) {
         return request(given -> given
                 .queryParams(request)
                 .header("Authorization", "Bearer " + token)
@@ -102,9 +72,7 @@ public class RestHandler {
     }
 
     public static ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object,
-                                                                   final Long memberId) {
-        String token = createToken(memberId);
-
+                                                                   final String token) {
         return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .body(object)
@@ -114,9 +82,7 @@ public class RestHandler {
         );
     }
 
-    public static ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
-        String token = createToken(memberId);
-
+    public static ExtractableResponse<Response> deleteWithCreateToken(final String uri, final String token) {
         return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .when()
@@ -137,10 +103,6 @@ public class RestHandler {
         return function.apply(given)
                 .then()
                 .extract();
-    }
-
-    private static String createToken(final Long memberId) {
-        return jwtTokenProvider.createToken(String.valueOf(memberId));
     }
 
     public static void 상태코드_200_확인(final ExtractableResponse<Response> response) {

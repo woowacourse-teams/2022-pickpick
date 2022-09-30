@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Value;
 @DisplayName("인증 & 인가 인수 테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
@@ -76,8 +75,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 유효한_토큰_검증() {
-        // given & when
-        ExtractableResponse<Response> response = 토큰_검증(2L);
+        // given
+        String token = jwtTokenProvider.createToken("2");
+
+        // when
+        ExtractableResponse<Response> response = 토큰_검증(token);
 
         // then
         상태코드_200_확인(response);

@@ -1,23 +1,30 @@
 package com.pickpick.acceptance.channel;
 
-import static com.pickpick.acceptance.RestHandler.getWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.deleteWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.getWithToken;
+import static com.pickpick.acceptance.RestHandler.postWithToken;
 import static com.pickpick.acceptance.RestHandler.putWithCreateToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
+import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.config.dto.ErrorResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/channel.sql"})
@@ -25,11 +32,19 @@ import org.springframework.test.context.jdbc.Sql;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
+    private static final String CHANNEL_SUBSCRIPTION_API_URL = "/api/channel-subscription";
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     private Long channelIdToSubscribe1;
     private Long channelIdToSubscribe2;
+    private String token;
 
     @BeforeEach
     void subscribe() {
+        token = jwtTokenProvider.createToken("2");
+
         ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
 
@@ -209,7 +224,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
 
 
     private ExtractableResponse<Response> 유저_구독_채널_목록_조회_요청() {
-        return getWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, 2L);
+        return getWithToken(CHANNEL_SUBSCRIPTION_API_URL, token);
     }
 
     private void 구독이_올바른_순서로_조회됨(
@@ -230,7 +245,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private ExtractableResponse<Response> 구독_채널_순서_변경_요청(final List<ChannelOrderRequest> request) {
-        return putWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, request, 2L);
+        return putWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, request, token);
     }
 
     private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청() {
@@ -240,5 +255,23 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         );
 
         return 구독_채널_순서_변경_요청(request);
+    }
+
+    private List<Long> 구독중이_아닌_채널_id_목록_추출(final ExtractableResponse<Response> response) {
+        return response.jsonPath()
+                .getList("channels.", ChannelResponse.class)
+                .stream()
+                .filter(it -> !it.isSubscribed())
+                .map(ChannelResponse::getId)
+                .collect(Collectors.toList());
+    }
+
+    private ExtractableResponse<Response> 구독_요청(final Long channelId) {
+        ChannelSubscriptionRequest channelSubscriptionRequest = new ChannelSubscriptionRequest(channelId);
+        return postWithToken(CHANNEL_SUBSCRIPTION_API_URL, channelSubscriptionRequest, token);
+    }
+
+    private ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
+        return deleteWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL + "?channelId=" + channelId, token);
     }
 }

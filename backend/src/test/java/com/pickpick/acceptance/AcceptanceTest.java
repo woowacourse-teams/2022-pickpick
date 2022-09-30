@@ -1,7 +1,5 @@
 package com.pickpick.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.support.DatabaseCleaner;
 import com.slack.api.methods.MethodsClient;
@@ -29,6 +27,9 @@ public class AcceptanceTest {
 
     @MockBean
     protected MethodsClient slackClient;
+
+    @Autowired
+    protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
