@@ -1,26 +1,30 @@
-import { FlexColumn } from "@src/@styles/shared";
-import MessageCard from "@src/components/MessageCard";
-import * as Styled from "./style";
 import React from "react";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
-import { extractResponseMessages, parseMeridemTime } from "@src/@utils";
-import useMessageDate from "@src/hooks/useMessageDate";
 import { useLocation, useParams } from "react-router-dom";
-import DateDropdown from "@src/components/DateDropdown";
-import useModal from "@src/hooks/useModal";
-import Portal from "@src/components/@shared/Portal";
+
 import Dimmer from "@src/components/@shared/Dimmer";
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Portal from "@src/components/@shared/Portal";
 import Calendar from "@src/components/Calendar";
+import DateDropdown from "@src/components/DateDropdown";
 import EmptyStatus from "@src/components/EmptyStatus";
-import SearchForm from "@src/components/SearchForm";
-import ReminderModal from "@src/components/ReminderModal";
-import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+import MessageCard from "@src/components/MessageCard";
 import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
+import ReminderModal from "@src/components/ReminderModal";
+import SearchForm from "@src/components/SearchForm";
+
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useMessageDate from "@src/hooks/useMessageDate";
+import useModal from "@src/hooks/useModal";
 import useScrollToTop from "@src/hooks/useScrollToTop";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseMessages, parseMeridemTime } from "@src/@utils";
+
+import * as Styled from "./style";
 
 function Feed() {
   const { channelId } = useParams();

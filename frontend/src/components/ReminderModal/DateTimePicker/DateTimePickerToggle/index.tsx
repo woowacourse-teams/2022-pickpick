@@ -1,6 +1,9 @@
 import { PropsWithChildren } from "react";
+
 import ArrowIconDown from "@src/components/@svgIcons/ArrowIconDown";
+
 import { FlexRow } from "@src/@styles/shared";
+
 import * as Styled from "./style";
 
 interface Props {

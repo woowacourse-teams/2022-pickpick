@@ -1,5 +1,7 @@
-import { parsedOptionText } from "@src/@utils";
 import { ChangeEventHandler } from "react";
+
+import { parsedOptionText } from "@src/@utils";
+
 import * as Styled from "./style";
 
 interface Props {

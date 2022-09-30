@@ -1,7 +1,8 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
-import { SnackbarStatus } from "@src/@types/shared";
+
 import { SNACKBAR_STATUS } from "@src/@constants";
+import { StyledDefaultProps } from "@src/@types/shared";
+import { SnackbarStatus } from "@src/@types/shared";
 
 interface StyledProps extends StyledDefaultProps {
   status: SnackbarStatus;

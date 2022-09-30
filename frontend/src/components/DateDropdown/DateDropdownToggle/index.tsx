@@ -1,7 +1,10 @@
 import { ButtonHTMLAttributes } from "react";
-import * as Styled from "./style";
+
 import ArrowIconDown from "@src/components/@svgIcons/ArrowIconDown";
+
 import { FlexRow } from "@src/@styles/shared";
+
+import * as Styled from "./style";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;

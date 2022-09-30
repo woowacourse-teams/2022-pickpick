@@ -1,6 +1,8 @@
-import { FlexColumn } from "@src/@styles/shared";
-import usePushPreviousPage from "@src/hooks/usePushPreviousPage";
 import Button from "@src/components/@shared/Button";
+
+import usePushPreviousPage from "@src/hooks/usePushPreviousPage";
+
+import { FlexColumn } from "@src/@styles/shared";
 
 function EmptyStatus() {
   const pushPreviousPage = usePushPreviousPage();

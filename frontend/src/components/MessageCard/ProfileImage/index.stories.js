@@ -1,5 +1,6 @@
-import ProfileImage from ".";
 import MockImage from "@public/assets/images/MockImage.png";
+
+import ProfileImage from ".";
 
 export default {
   title: "@Component/ProfileImage",

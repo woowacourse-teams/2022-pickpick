@@ -1,5 +1,6 @@
+import { LazyExoticComponent, Suspense, lazy } from "react";
+
 import Loader from "@src/components/Loader";
-import { lazy, LazyExoticComponent, Suspense } from "react";
 
 interface LoadableType {
   Component: LazyExoticComponent<() => JSX.Element>;

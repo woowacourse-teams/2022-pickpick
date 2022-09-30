@@ -1,9 +1,12 @@
 import { useEffect } from "react";
-import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
 import { useRecoilState } from "recoil";
+
+import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
+
 import { themeState } from "@src/@atoms";
-import { ThemeKind } from "@src/@types/shared";
 import { THEME_KIND } from "@src/@constants";
+import { ThemeKind } from "@src/@types/shared";
+
 interface ReturnType {
   theme: ThemeKind;
   handleToggleTheme: () => void;

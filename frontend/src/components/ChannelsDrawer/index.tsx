@@ -1,12 +1,16 @@
-import * as Styled from "./style";
-import PlusIcon from "@src/components/@svgIcons/PlusIcon";
-import { FlexColumn, FlexRow } from "@src/@styles/shared";
-import WrapperLink from "@src/components/@shared/WrapperLink";
-import { PATH_NAME } from "@src/@constants";
-import { SubscribedChannel, Theme } from "@src/@types/shared";
-import { useTheme } from "styled-components";
-import ThemeToggler from "@src/components/ThemeToggler";
 import { useParams } from "react-router-dom";
+import { useTheme } from "styled-components";
+
+import WrapperLink from "@src/components/@shared/WrapperLink";
+import PlusIcon from "@src/components/@svgIcons/PlusIcon";
+import ThemeToggler from "@src/components/ThemeToggler";
+
+import { PATH_NAME } from "@src/@constants";
+import { FlexColumn, FlexRow } from "@src/@styles/shared";
+import { SubscribedChannel, Theme } from "@src/@types/shared";
+
+import * as Styled from "./style";
+
 interface Props {
   channels?: SubscribedChannel[];
   handleCloseDrawer: () => void;

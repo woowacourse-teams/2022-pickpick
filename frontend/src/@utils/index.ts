@@ -1,3 +1,5 @@
+import { InfiniteData } from "react-query";
+
 import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
 import {
   Bookmark,
@@ -7,7 +9,6 @@ import {
   ResponseMessages,
   ResponseReminders,
 } from "@src/@types/shared";
-import { InfiniteData } from "react-query";
 
 export const getMeridiemTime = (time: number) => {
   if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time.toString() };

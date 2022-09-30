@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+
 import { StyledDefaultProps } from "@src/@types/shared";
 
 interface ChannelNameStyledProps extends StyledDefaultProps {

@@ -1,6 +1,9 @@
-import { SubscribedChannel } from "@src/@types/shared";
-import Button from "@src/components/@shared/Button";
 import { memo } from "react";
+
+import Button from "@src/components/@shared/Button";
+
+import { SubscribedChannel } from "@src/@types/shared";
+
 import * as Styled from "./style";
 
 interface Props {

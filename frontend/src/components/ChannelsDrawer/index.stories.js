@@ -1,5 +1,6 @@
-import ChannelsDrawer from ".";
 import { subscribedChannels } from "@src/mocks/data/channels";
+
+import ChannelsDrawer from ".";
 
 export default {
   title: "Component/ChannelsDrawer",

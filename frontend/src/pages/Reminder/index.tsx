@@ -1,18 +1,21 @@
-import { FlexColumn } from "@src/@styles/shared";
-import MessageCard from "@src/components/MessageCard";
 import * as Styled from "@src/pages/Feed/style";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
-import { extractResponseReminders, parseMeridemTime } from "@src/@utils";
-import EmptyStatus from "@src/components/EmptyStatus";
-import Portal from "@src/components/@shared/Portal";
+
 import Dimmer from "@src/components/@shared/Dimmer";
-import ReminderModal from "@src/components/ReminderModal";
-import useModal from "@src/hooks/useModal";
-import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Portal from "@src/components/@shared/Portal";
+import EmptyStatus from "@src/components/EmptyStatus";
+import MessageCard from "@src/components/MessageCard";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
+import ReminderModal from "@src/components/ReminderModal";
+
 import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
+import useModal from "@src/hooks/useModal";
 import useScrollToTop from "@src/hooks/useScrollToTop";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseReminders, parseMeridemTime } from "@src/@utils";
 
 function Reminder() {
   const {

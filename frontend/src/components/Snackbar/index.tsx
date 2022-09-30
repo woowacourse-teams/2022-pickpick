@@ -1,9 +1,11 @@
-import * as Styled from "./style";
+import { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import { useRecoilState } from "recoil";
+
 import { snackbarState } from "@src/@atoms";
-import { useEffect, useRef } from "react";
 import { SNACKBAR_STATUS } from "@src/@constants";
+
+import * as Styled from "./style";
 
 function Snackbar() {
   const [{ isOpened, message, status }, setState] =

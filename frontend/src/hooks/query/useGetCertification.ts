@@ -1,7 +1,9 @@
+import { useQuery } from "react-query";
+
 import { QUERY_KEY } from "@src/@constants";
 import { CustomError, ResponseToken } from "@src/@types/shared";
+
 import { slackLogin } from "@src/api/auth";
-import { useQuery } from "react-query";
 
 interface Props {
   slackCode: string;

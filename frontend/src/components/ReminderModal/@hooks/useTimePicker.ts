@@ -1,12 +1,15 @@
-import { PICKER_OPTION_SCROLL } from "@src/@constants";
-import { getDateInformation, getMeridiemTime } from "@src/@utils";
 import { useEffect, useRef, useState } from "react";
-import useInput from "@src/hooks/useInput";
+
 import {
   convertTimeToStepTenMinuteTime,
   invalidMeridiem,
   parseTime,
 } from "@src/components/ReminderModal/@utils";
+
+import useInput from "@src/hooks/useInput";
+
+import { PICKER_OPTION_SCROLL } from "@src/@constants";
+import { getDateInformation, getMeridiemTime } from "@src/@utils";
 
 interface Props {
   remindDate: string;

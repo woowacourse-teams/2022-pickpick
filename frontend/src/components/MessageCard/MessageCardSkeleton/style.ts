@@ -1,5 +1,6 @@
+import styled, { css, keyframes } from "styled-components";
+
 import { StyledDefaultProps } from "@src/@types/shared";
-import styled, { keyframes, css } from "styled-components";
 
 const refresh = keyframes`
   0% {

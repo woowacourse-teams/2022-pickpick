@@ -1,9 +1,12 @@
 import { PropsWithChildren } from "react";
-import * as Styled from "./style";
+import { useLocation } from "react-router-dom";
+
 import Header from "@src/components/@layouts/Header";
 import Navigation from "@src/components/@layouts/Navigation";
-import { useLocation } from "react-router-dom";
+
 import { PATH_NAME } from "@src/@constants";
+
+import * as Styled from "./style";
 
 function LayoutContainer({ children }: PropsWithChildren) {
   const { pathname } = useLocation();

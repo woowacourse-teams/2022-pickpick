@@ -1,5 +1,7 @@
+import styled, { CSSProp, css } from "styled-components";
+
 import { StyledDefaultProps, Theme } from "@src/@types/shared";
-import styled, { css, CSSProp } from "styled-components";
+
 import { ButtonText } from ".";
 
 export const Container = styled.div`
