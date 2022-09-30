@@ -2,11 +2,7 @@ package com.pickpick.channel.application;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.SlackApiCallException;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.model.Conversation;
-import java.io.IOException;
+import com.pickpick.support.SlackClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,28 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChannelCreateService {
 
     private final ChannelRepository channels;
-    private final MethodsClient slackClient;
+    private final SlackClient slackClient;
 
-    public ChannelCreateService(final ChannelRepository channels, final MethodsClient slackClient) {
+    public ChannelCreateService(final ChannelRepository channels, final SlackClient slackClient) {
         this.channels = channels;
         this.slackClient = slackClient;
     }
 
     public Channel createChannel(final String channelSlackId) {
-        try {
-            Conversation conversation = slackClient
-                    .conversationsInfo(request -> request.channel(channelSlackId))
-                    .getChannel();
-
-            Channel channel = toChannel(conversation);
-
-            return channels.save(channel);
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException("conversationsInfo");
-        }
-    }
-
-    private Channel toChannel(final Conversation channel) {
-        return new Channel(channel.getId(), channel.getName());
+        Channel channel = slackClient.findChannel(channelSlackId);
+        return channels.save(channel);
     }
 }
