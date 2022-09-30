@@ -30,41 +30,6 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
         조회된_채널_목록_개수_확인(response, 6);
     }
 
-    @Test
-    void 채널_구독() {
-        // given
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-        Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
-
-        // when
-        ExtractableResponse<Response> subscriptionResponse = 구독_요청(channelIdToSubscribe);
-
-        // then
-        상태코드_200_확인(subscriptionResponse);
-        채널_구독_완료_확인(channelIdToSubscribe);
-    }
-
-    @Test
-    void 채널_구독_취소() {
-        // given
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-
-        Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
-        Long channelIdToUnSubscribe = unsubscribedChannelIds.get(1);
-
-        구독_요청(channelIdToSubscribe);
-        구독_요청(channelIdToUnSubscribe);
-
-        // when
-        ExtractableResponse<Response> unsubscribeResponse = 구독_취소_요청(channelIdToUnSubscribe);
-
-        // then
-        상태코드_200_확인(unsubscribeResponse);
-        채널_구독_취소_확인(channelIdToUnSubscribe);
-    }
-
     protected ExtractableResponse<Response> 유저_전체_채널_목록_조회_요청() {
         return getWithCreateToken("/api/channels", 2L);
     }
@@ -85,20 +50,6 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
 
     protected ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
         return deleteWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL + "?channelId=" + channelId, 2L);
-    }
-
-    private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-
-        assertThat(unsubscribedChannelIds).doesNotContain(channelIdToSubscribe);
-    }
-
-    private void 채널_구독_취소_확인(final Long channelIdToUnSubscribe) {
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-
-        assertThat(unsubscribedChannelIds).contains(channelIdToUnSubscribe);
     }
 
     private void 조회된_채널_목록_개수_확인(final ExtractableResponse<Response> response, final int expectedSize) {

@@ -36,6 +36,56 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         구독_요청(channelIdToSubscribe2);
     }
 
+
+    @Test
+    void 채널_구독() {
+        // given
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
+        Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
+
+        // when
+        ExtractableResponse<Response> subscriptionResponse = 구독_요청(channelIdToSubscribe);
+
+        // then
+        상태코드_200_확인(subscriptionResponse);
+        채널_구독_완료_확인(channelIdToSubscribe);
+    }
+
+    private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
+
+        assertThat(unsubscribedChannelIds).doesNotContain(channelIdToSubscribe);
+    }
+
+    @Test
+    void 채널_구독_취소() {
+        // given
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
+
+        Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
+        Long channelIdToUnSubscribe = unsubscribedChannelIds.get(1);
+
+        구독_요청(channelIdToSubscribe);
+        구독_요청(channelIdToUnSubscribe);
+
+        // when
+        ExtractableResponse<Response> unsubscribeResponse = 구독_취소_요청(channelIdToUnSubscribe);
+
+        // then
+        상태코드_200_확인(unsubscribeResponse);
+        채널_구독_취소_확인(channelIdToUnSubscribe);
+    }
+
+    private void 채널_구독_취소_확인(final Long channelIdToUnSubscribe) {
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
+
+        assertThat(unsubscribedChannelIds).contains(channelIdToUnSubscribe);
+    }
+
     @Test
     void 채널_구독_조회() {
         // given & when
