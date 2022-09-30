@@ -1,16 +1,19 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   margin-top: 20px;
 `;
 
 export const ScrollContainer = styled.div`
   display: flex;
   gap: 5px;
+
   overflow: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;

@@ -1,5 +1,6 @@
-import { snackbarState } from "@src/@atoms";
 import { useSetRecoilState } from "recoil";
+
+import { snackbarState } from "@src/@atoms";
 
 type openHandler = (message: string) => void;
 

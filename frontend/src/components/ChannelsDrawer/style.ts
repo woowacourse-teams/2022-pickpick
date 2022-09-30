@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+
 import { StyledDefaultProps } from "@src/@types/shared";
 
 interface ChannelNameStyledProps extends StyledDefaultProps {
@@ -6,13 +7,15 @@ interface ChannelNameStyledProps extends StyledDefaultProps {
 }
 
 export const Container = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 228px;
   height: calc(100% - 78px);
   padding: 20px 0;
   border-radius: 0 4px 4px 0;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
   z-index: 2;
 
   ${({ theme }: StyledDefaultProps) => css`
@@ -21,8 +24,8 @@ export const Container = styled.div`
 `;
 
 export const Hr = styled.hr`
-  padding: 0 10px;
   height: 1px;
+  padding: 0 10px;
   border: 0;
 
   ${({ theme }: StyledDefaultProps) => css`
@@ -50,6 +53,6 @@ export const ChannelName = styled.p`
 
 export const ThemeTogglerContainer = styled.div`
   position: absolute;
-  bottom: 10px;
   left: 20px;
+  bottom: 10px;
 `;

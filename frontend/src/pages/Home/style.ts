@@ -1,5 +1,6 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.div`
   width: 100%;
@@ -9,6 +10,7 @@ export const Container = styled.div`
 export const GreetingContainer = styled.section`
   display: flex;
   flex-direction: column;
+
   max-width: 600px;
   padding: 50px 40px 40px;
   margin: 0 auto;
@@ -17,10 +19,11 @@ export const GreetingContainer = styled.section`
 export const UsageContainer = styled.section`
   display: flex;
   flex-direction: column;
-  padding: 30px 43px;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 40px;
+
+  padding: 30px 43px;
 
   ${({ theme }: StyledDefaultProps) => css`
     background-color: ${theme.COLOR.BACKGROUND.SECONDARY};

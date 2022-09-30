@@ -1,10 +1,11 @@
-import ReactDOM from "react-dom/client";
 import App from "@src/App";
-import { BrowserRouter } from "react-router-dom";
-import ErrorBoundary from "@src/components/ErrorBoundary";
-import UnexpectedError from "@src/pages/UnexpectedError";
-import { RecoilRoot } from "recoil";
 import { initMSW } from "@src/mocks";
+import UnexpectedError from "@src/pages/UnexpectedError";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+
+import ErrorBoundary from "@src/components/ErrorBoundary";
 
 initMSW();
 

@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
+
+import useSnackbar from "@src/hooks/useSnackbar";
+
 import { ERROR_MESSAGE_BY_CODE, PATH_NAME } from "@src/@constants";
 import { CustomError } from "@src/@types/shared";
-import { useNavigate } from "react-router-dom";
-import useSnackbar from "@src/hooks/useSnackbar";
 
 interface ReturnType {
   handleError: (error: any) => void;

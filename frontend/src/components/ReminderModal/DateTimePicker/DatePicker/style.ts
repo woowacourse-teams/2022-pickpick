@@ -1,5 +1,6 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Subtitle = styled.h2`
   font-weight: 600;
@@ -11,10 +12,13 @@ export const Subtitle = styled.h2`
 `;
 
 export const TextOptionContainer = styled.div`
-  height: 128px;
   display: flex;
+
+  height: 128px;
   border-radius: 4px;
+
   position: relative;
+
   z-index: 1;
 
   ${({ theme }: StyledDefaultProps) => css`
@@ -23,17 +27,20 @@ export const TextOptionContainer = styled.div`
   `}
 
   &::before {
-    content: "";
     display: block;
+
     width: 251px;
     height: 22px;
     border-radius: 3px;
+    opacity: 0.4;
+
     position: absolute;
     top: 53px;
     left: 0;
     right: 0;
-    opacity: 0.4;
+
     pointer-events: none;
+    content: "";
 
     ${({ theme }: StyledDefaultProps) => css`
       background-color: ${theme.COLOR.BACKGROUND.TERTIARY};
@@ -46,6 +53,7 @@ export const TextOptionsWrapper = styled.div`
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
+
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;

@@ -1,5 +1,7 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
+
 import { Props } from ".";
 
 interface StyledProps extends StyledDefaultProps {
@@ -12,6 +14,7 @@ export const Container = styled.div<Props>`
   left: 0;
   right: 0;
   bottom: 0;
+
   z-index: 2;
 
   ${({ theme, hasBackgroundColor }: StyledProps) => css`

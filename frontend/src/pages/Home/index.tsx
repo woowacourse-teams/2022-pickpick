@@ -1,8 +1,11 @@
-import * as Styled from "./style";
-import Button from "@src/components/@shared/Button";
-import { FlexRow } from "@src/@styles/shared";
 import LogoIcon from "@public/assets/icons/pickpick.svg";
+
+import Button from "@src/components/@shared/Button";
+
 import { SLACK_LOGIN_URL } from "@src/@constants";
+import { FlexRow } from "@src/@styles/shared";
+
+import * as Styled from "./style";
 
 function Home() {
   const handleNavigateToAddChannel = () => {

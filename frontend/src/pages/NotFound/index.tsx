@@ -1,7 +1,10 @@
+import { Link } from "react-router-dom";
+
+import Button from "@src/components/@shared/Button";
+
 import { PATH_NAME } from "@src/@constants";
 import { FlexColumn } from "@src/@styles/shared";
-import Button from "@src/components/@shared/Button";
-import { Link } from "react-router-dom";
+
 import * as Styled from "./style";
 
 function NotFound() {

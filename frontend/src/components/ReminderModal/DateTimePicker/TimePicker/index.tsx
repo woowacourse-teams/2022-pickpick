@@ -1,11 +1,13 @@
-import { RefObject, ChangeEventHandler } from "react";
-import { FlexColumn } from "@src/@styles/shared";
+import { ChangeEventHandler, RefObject } from "react";
+
+import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
+import Dropdown from "@src/components/Dropdown";
+import { generateTimeOptions } from "@src/components/ReminderModal/@utils";
+import * as Styled from "@src/components/ReminderModal/DateTimePicker/DatePicker/style";
 import DateTimePickerOptions from "@src/components/ReminderModal/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/ReminderModal/DateTimePicker/DateTimePickerToggle";
-import Dropdown from "@src/components/Dropdown";
-import * as Styled from "@src/components/ReminderModal/DateTimePicker/DatePicker/style";
-import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
-import { generateTimeOptions } from "@src/components/ReminderModal/@utils";
+
+import { FlexColumn } from "@src/@styles/shared";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;

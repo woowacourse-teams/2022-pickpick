@@ -1,12 +1,14 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-radius: 4px;
+  justify-content: space-between;
+
   padding: 2px 6px;
+  border-radius: 4px;
   cursor: pointer;
 
   ${({ theme }: StyledDefaultProps) => css`

@@ -14,14 +14,17 @@ export const Container = styled.label`
 
 export const Radio = styled.input`
   display: none;
+
   position: absolute;
   opacity: 0;
 `;
 
 export const TextOption = styled.span`
   display: flex;
-  height: 22px;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
+  height: 22px;
+
   cursor: pointer;
 `;

@@ -1,7 +1,10 @@
 import { PropsWithChildren } from "react";
-import * as Styled from "./style";
+
 import ProfileImage from "@src/components/MessageCard/ProfileImage";
+
 import { FlexRow } from "@src/@styles/shared";
+
+import * as Styled from "./style";
 
 interface Props {
   username: string;

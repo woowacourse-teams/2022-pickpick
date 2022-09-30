@@ -1,8 +1,10 @@
-import React from "react";
+import { ImgHTMLAttributes } from "react";
+
 import DefaultProfileImage from "@public/assets/images/DefaultProfileImage.png";
+
 import * as Styled from "./style";
 
-interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   src?: string;
 }
 

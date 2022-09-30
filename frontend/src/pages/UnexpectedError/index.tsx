@@ -1,13 +1,15 @@
-import { PATH_NAME } from "@src/@constants";
 import Header from "@src/components/@layouts/Header";
-import Button from "@src/components/@shared/Button";
 import * as LayoutStyled from "@src/components/@layouts/LayoutContainer/style";
-import * as Styled from "./style";
+import Button from "@src/components/@shared/Button";
+
+import { PATH_NAME } from "@src/@constants";
 import { FlexColumn } from "@src/@styles/shared";
+
+import * as Styled from "./style";
 
 function UnexpectedError() {
   return (
-    <LayoutStyled.Container>
+    <div>
       <Header />
 
       <LayoutStyled.Main hasMarginTop={true}>
@@ -23,7 +25,7 @@ function UnexpectedError() {
           </a>
         </FlexColumn>
       </LayoutStyled.Main>
-    </LayoutStyled.Container>
+    </div>
   );
 }
 

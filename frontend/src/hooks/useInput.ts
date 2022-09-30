@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, ChangeEventHandler } from "react";
+import { ChangeEvent, ChangeEventHandler, useState } from "react";
 
 interface Props {
   initialValue: string;

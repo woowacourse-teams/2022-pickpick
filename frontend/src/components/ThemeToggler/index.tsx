@@ -1,7 +1,10 @@
-import { THEME_KIND } from "@src/@constants";
-import useModeTheme from "@src/hooks/useModeTheme";
 import MoonIcon from "@src/components/@svgIcons/MoonIcon";
 import SunIcon from "@src/components/@svgIcons/SunIcon";
+
+import useModeTheme from "@src/hooks/useModeTheme";
+
+import { THEME_KIND } from "@src/@constants";
+
 import * as Styled from "./style";
 
 function ThemeToggler() {

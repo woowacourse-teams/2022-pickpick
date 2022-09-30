@@ -1,14 +1,17 @@
 import styled, { css } from "styled-components";
+
 import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.ul`
-  box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
   width: 125px;
   padding: 8px 12px;
+  border-radius: 4px;
+
   position: absolute;
   top: 22px;
   left: 0;
+  box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
+
   z-index: 1;
 
   ${({ theme }: StyledDefaultProps) => css`
@@ -27,9 +30,9 @@ export const Option = styled.li`
 `;
 
 export const Button = styled.button`
-  border: none;
-  cursor: pointer;
-  background-color: inherit;
   width: 100%;
+  border: none;
+  background-color: inherit;
   text-align: left;
+  cursor: pointer;
 `;

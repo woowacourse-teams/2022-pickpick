@@ -1,10 +1,13 @@
 import { PropsWithChildren } from "react";
-import { PATH_NAME, QUERY_KEY } from "@src/@constants";
-import { isCertificated } from "@src/api/auth";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+
 import Loader from "@src/components/Loader";
+
+import { PATH_NAME, QUERY_KEY } from "@src/@constants";
+
+import { isCertificated } from "@src/api/auth";
 
 function PublicRouter({ children }: PropsWithChildren) {
   const navigate = useNavigate();

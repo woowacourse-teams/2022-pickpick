@@ -1,14 +1,16 @@
-import {
-  ACCESS_TOKEN_KEY,
-  QUERY_KEY,
-  MESSAGES,
-  PATH_NAME,
-} from "@src/@constants";
-import { deleteCookie, setCookie } from "@src/@utils";
 import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import useSnackbar from "@src/hooks/useSnackbar";
+
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
+import useSnackbar from "@src/hooks/useSnackbar";
+
+import {
+  ACCESS_TOKEN_KEY,
+  MESSAGES,
+  PATH_NAME,
+  QUERY_KEY,
+} from "@src/@constants";
+import { deleteCookie, setCookie } from "@src/@utils";
 
 interface ReturnType {
   login: (token: string, isFirstLogin: boolean) => void;

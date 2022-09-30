@@ -1,4 +1,5 @@
 import { FlexColumn } from "@src/@styles/shared";
+
 import * as Styled from "./style";
 
 function MessageCardSkeleton() {
