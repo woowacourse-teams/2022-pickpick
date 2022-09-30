@@ -75,6 +75,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
 
+        assertThat(unsubscribedChannelIds).isNotEmpty();
         assertThat(unsubscribedChannelIds).doesNotContain(channelIdToSubscribe);
     }
 
