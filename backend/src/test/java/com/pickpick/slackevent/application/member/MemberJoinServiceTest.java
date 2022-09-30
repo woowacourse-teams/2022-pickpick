@@ -62,11 +62,11 @@ class MemberJoinServiceTest {
     @Test
     void saveNewMember() {
         // given
-        String slackId = "U0000000005";
+        String slackId = "U0000000001";
         Optional<Member> memberBeforeJoin = members.findBySlackId(slackId);
 
         // when
-        String request = createTeamJoinEvent(slackId, "고재증", "꼬재");
+        String request = createTeamJoinEvent(slackId, "최혜원", "써머");
         memberJoinService.execute(request);
 
         // then
@@ -82,9 +82,9 @@ class MemberJoinServiceTest {
     @Test
     void saveUsernameAsDisplayName() {
         // given
-        String slackId = "U0000000005";
-        String realName = "고재증";
-        String displayName = "꼬재";
+        String slackId = "U0000000001";
+        String realName = "최혜원";
+        String displayName = "써머";
 
         // when
         String request = createTeamJoinEvent(slackId, realName, displayName);
@@ -101,8 +101,8 @@ class MemberJoinServiceTest {
     @Test
     void saveUsernameAsRealNameIfDisplayNameIsEmpty() {
         // given
-        String slackId = "U0000000005";
-        String realName = "고재증";
+        String slackId = "U0000000001";
+        String realName = "최혜원";
         String displayName = "";
 
         // when
@@ -126,7 +126,7 @@ class MemberJoinServiceTest {
                                         "profile", Map.of(
                                                 "real_name", realName,
                                                 "display_name", displayName,
-                                                "image_48", "https://kkojae.png"
+                                                "image_48", "https://summer.png"
                                         )
                                 )
                         ))

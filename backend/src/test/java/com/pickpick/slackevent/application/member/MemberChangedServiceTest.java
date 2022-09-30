@@ -1,6 +1,6 @@
 package com.pickpick.slackevent.application.member;
 
-import static com.pickpick.fixture.MemberFixtures.KKOJAE;
+import static com.pickpick.fixture.MemberFactory.summer;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,18 +36,18 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByDisplayName() {
         // given
-        Member kkojae = members.save(KKOJAE.create());
+        Member summer = members.save(summer());
 
         // when
-        String realName = "고재증";
-        String displayName = "굿이에요굿굿굿";
+        String realName = "최혜원";
+        String displayName = "겨울";
 
-        String request = memberChangedEvent(kkojae.getSlackId(), realName, displayName, kkojae.getThumbnailUrl());
+        String request = memberChangedEvent(summer.getSlackId(), realName, displayName, summer.getThumbnailUrl());
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(kkojae.getId())
-                .orElseThrow(() -> new MemberNotFoundException(kkojae.getId()));
+        Member actual = members.findById(summer.getId())
+                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
 
         assertThat(actual.getUsername()).isEqualTo(displayName);
     }
@@ -56,18 +56,18 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByRealNameWhenDisplayNameIsBlank() {
         // given
-        Member kkojae = members.save(KKOJAE.create());
+        Member summer = members.save(summer());
 
         // when
-        String realName = "고재증";
+        String realName = "최혜원";
         String displayName = "";
 
-        String request = memberChangedEvent(kkojae.getSlackId(), realName, displayName, kkojae.getThumbnailUrl());
+        String request = memberChangedEvent(summer.getSlackId(), realName, displayName, summer.getThumbnailUrl());
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(kkojae.getId())
-                .orElseThrow(() -> new MemberNotFoundException(kkojae.getId()));
+        Member actual = members.findById(summer.getId())
+                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
 
         assertThat(actual.getUsername()).isEqualTo(realName);
     }
@@ -76,16 +76,16 @@ class MemberChangedServiceTest {
     @Test
     void changedThumbnailUrl() {
         // given
-        Member kkojae = members.save(KKOJAE.create());
+        Member summer = members.save(summer());
 
         // when
-        String changedThumbnailUrl = "https://gojaejeong.png";
-        String request = memberChangedEvent(kkojae.getSlackId(), "고재증", kkojae.getUsername(), changedThumbnailUrl);
+        String changedThumbnailUrl = "https://hyewon.png";
+        String request = memberChangedEvent(summer.getSlackId(), "최혜원", summer.getUsername(), changedThumbnailUrl);
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(kkojae.getId())
-                .orElseThrow(() -> new MemberNotFoundException(kkojae.getId()));
+        Member actual = members.findById(summer.getId())
+                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
 
         assertThat(actual.getThumbnailUrl()).isEqualTo(changedThumbnailUrl);
     }
