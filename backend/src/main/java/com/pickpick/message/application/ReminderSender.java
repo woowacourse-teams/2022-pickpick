@@ -20,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ReminderSender {
 
-    private static final String REMINDER_TEXT_FORMAT = "리마인드 메시지가 도착했습니다!\uD83D\uDC39 \n> %s";
+    private static final String REMINDER_TEXT_FORMAT =
+            "============================ \n " +
+                    "*리마인드 메시지가 도착했습니다*!\uD83D\uDC39 \n" +
+                    "============================ \n %s";
     private static final String ERROR_TEXT = "";
 
     private final ReminderRepository reminders;
