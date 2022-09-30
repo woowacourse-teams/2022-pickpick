@@ -1,30 +1,11 @@
 import { RefObject, ChangeEventHandler } from "react";
 import { FlexColumn } from "@src/@styles/shared";
-import DateTimePickerOptions from "@src/components/DateTimePickerOptions";
-import DateTimePickerToggle from "@src/components/DateTimePickerToggle";
+import DateTimePickerOptions from "@src/components/ReminderModal/DateTimePicker/DateTimePickerOptions";
+import DateTimePickerToggle from "@src/components/ReminderModal/DateTimePicker/DateTimePickerToggle";
 import Dropdown from "@src/components/Dropdown";
-import * as Styled from "@src/components/DatePicker/style";
+import * as Styled from "@src/components/ReminderModal/DateTimePicker/DatePicker/style";
 import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
-
-export const generateTimeOptions = () => {
-  const meridiems = ["오전", "오후"];
-  const AMHours = Array.from({ length: 12 }, (_, index) => index.toString());
-  const PMHours = Array.from({ length: 12 }, (_, index) => {
-    if (index === 0) return "12";
-
-    return index.toString();
-  });
-  const minutes = Array.from({ length: 6 }, (_, index) =>
-    (index * 10).toString()
-  );
-
-  return {
-    meridiems,
-    AMHours,
-    PMHours,
-    minutes,
-  };
-};
+import { generateTimeOptions } from "@src/components/ReminderModal/@utils";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;

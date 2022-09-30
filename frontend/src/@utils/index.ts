@@ -17,7 +17,7 @@ export const getMeridiemTime = (time: number) => {
   return { meridiem: TIME.PM, hour: (time - TIME.NOON).toString() };
 };
 
-export const parseTime = (date: string): string => {
+export const parseMeridemTime = (date: string): string => {
   const dateInstance = new Date(date);
   const hour = dateInstance.getHours();
   const minute = dateInstance.getMinutes();

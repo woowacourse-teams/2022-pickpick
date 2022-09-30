@@ -9,7 +9,7 @@ import WrapperButton from "@src/components/@shared/WrapperButton";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
 import WrapperLink from "@src/components/@shared/WrapperLink";
-import Drawer from "@src/components/Drawer";
+import ChannelsDrawer from "@src/components/ChannelsDrawer";
 import useModal from "@src/hooks/useModal";
 import Button from "@src/components/@shared/Button";
 import useAuthentication from "@src/hooks/useAuthentication";
@@ -126,7 +126,7 @@ function Navigation() {
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
           <div ref={drawerInnerRef}>
-            <Drawer
+            <ChannelsDrawer
               channels={data?.channels}
               handleCloseDrawer={handleCloseDrawer}
             />

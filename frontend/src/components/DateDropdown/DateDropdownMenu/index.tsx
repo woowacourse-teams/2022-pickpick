@@ -1,4 +1,4 @@
-import DateDropdownOption from "@src/components/DateDropdownOption";
+import DateDropdownOption from "@src/components/DateDropdown/DateDropdownOption";
 import * as Styled from "./style";
 
 interface Props {
@@ -11,7 +11,9 @@ function DateDropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
   return (
     <Styled.Container>
       <DateDropdownOption channelId={channelId} date={date} />
+
       <hr />
+
       <Styled.Option>
         <Styled.Button type="button" onClick={handleOpenCalendar}>
           특정 날짜로 이동

@@ -33,13 +33,16 @@ function useModeTheme(): ReturnType {
     const storedTheme = getStoredTheme();
     if (storedTheme === THEME_KIND.DARK || storedTheme === THEME_KIND.LIGHT) {
       handleChangeTheme(storedTheme);
+
       return;
     }
 
     if (window.matchMedia("(prefers-color-scheme: light)").matches) {
       handleChangeTheme(THEME_KIND.LIGHT);
+
       return;
     }
+
     handleChangeTheme(THEME_KIND.DARK);
   }, []);
 

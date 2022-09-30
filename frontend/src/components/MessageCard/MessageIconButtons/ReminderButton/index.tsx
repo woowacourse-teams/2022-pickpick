@@ -1,7 +1,7 @@
 import { MouseEventHandler } from "react";
 import { FlexRow } from "@src/@styles/shared";
 import IconButton from "@src/components/@shared/IconButton";
-import * as Styled from "../style";
+import * as Styled from "../@styles/style";
 import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
 
 interface Props {

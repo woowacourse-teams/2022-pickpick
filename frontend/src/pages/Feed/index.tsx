@@ -3,8 +3,8 @@ import MessageCard from "@src/components/MessageCard";
 import * as Styled from "./style";
 import React from "react";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseMessages, parseTime } from "@src/@utils";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
+import { extractResponseMessages, parseMeridemTime } from "@src/@utils";
 import useMessageDate from "@src/hooks/useMessageDate";
 import { useLocation, useParams } from "react-router-dom";
 import DateDropdown from "@src/components/DateDropdown";
@@ -16,8 +16,8 @@ import EmptyStatus from "@src/components/EmptyStatus";
 import SearchForm from "@src/components/SearchForm";
 import ReminderModal from "@src/components/ReminderModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
+import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
 import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
 import useScrollToTop from "@src/hooks/useScrollToTop";
@@ -95,7 +95,7 @@ function Feed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={parseTime(postedDate)}
+                    date={parseMeridemTime(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}

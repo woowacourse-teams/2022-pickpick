@@ -2,17 +2,7 @@ import { PICKER_OPTION_SCROLL } from "@src/@constants";
 import { getDateInformation } from "@src/@utils";
 import { useEffect, useRef, useState } from "react";
 import useInput from "@src/hooks/useInput";
-
-const parseDate = (ISODateTime: string) => {
-  const [fullDate] = ISODateTime.split("T");
-  const [year, month, date] = fullDate.split("-");
-
-  return {
-    year,
-    month,
-    date,
-  };
-};
+import { parseDate } from "@src/components/ReminderModal/@utils";
 
 interface Props {
   remindDate: string;

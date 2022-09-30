@@ -1,8 +1,8 @@
-import SearchOptions from "@src/components/SearchOptions";
-import SearchInput from "@src/components/SearchInput";
+import SearchOptions from "@src/components/SearchForm/SearchOptions";
+import SearchInput from "@src/components/SearchForm/SearchInput";
 import * as Styled from "./style";
-import useSelectChannels from "@src/hooks/useSelectChannels";
-import useSubmitSearchForm from "@src/hooks/useSubmitSearchForm";
+import useSelectChannels from "@src/components/SearchForm/@hooks/useSelectChannels";
+import useSubmitSearchForm from "@src/components/SearchForm/@hooks/useSubmitSearchForm";
 import Dropdown from "@src/components/Dropdown";
 
 interface Props {

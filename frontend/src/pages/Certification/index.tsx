@@ -7,8 +7,8 @@ import useAuthentication from "@src/hooks/useAuthentication";
 import useGetCertification from "@src/hooks/query/useGetCertification";
 
 function Certification() {
-  const slackCode = useGetSearchParam("code");
   const navigate = useNavigate();
+  const slackCode = useGetSearchParam("code");
   const { login } = useAuthentication();
   const { isSuccess, isError, data } = useGetCertification({ slackCode });
 
