@@ -1,4 +1,19 @@
 {
   "printWidth": 80,
-  "singleQuote": false
+  "singleQuote": false,
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^@public/(.*)$",
+    "^@src/components/(.*)$",
+    "^@src/hooks/(.*)$",
+    "^@src/@(.*)",
+
+    "^@src/@styles/(.*)$",
+    "^@src/@types/(.*)$",
+    "^@src/api/(.*)$",
+    "^@src/mocks/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
