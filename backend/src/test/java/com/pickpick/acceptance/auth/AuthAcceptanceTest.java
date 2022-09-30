@@ -1,5 +1,11 @@
 package com.pickpick.acceptance.auth;
 
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
+import static com.pickpick.acceptance.RestHandler.에러_코드;
+import static com.pickpick.acceptance.auth.AuthRestHandler.로그인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
+import static com.pickpick.acceptance.auth.AuthRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -18,36 +24,33 @@ import io.restassured.response.Response;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("인증 & 인가 인수 테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "U03MC231";
 
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
-    @Autowired
-    private AuthHandler authHandler;
-
     @Test
     void 정상_로그인() throws SlackApiException, IOException {
         // given
+        String memberSlackId = "U03MC231";
+
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .willReturn(generateOAuthV2AccessResponse());
         given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .willReturn(generateUsersIdentityResponse());
+                .willReturn(generateUsersIdentityResponse(memberSlackId));
 
-        authHandler.회원가입(MEMBER_SLACK_ID);
+        회원가입(memberSlackId);
 
         // when
-        ExtractableResponse<Response> response = authHandler.로그인("1234");
+        ExtractableResponse<Response> response = 로그인("1234");
 
         // then
-        restHandler.상태코드_200_확인(response);
+        상태코드_200_확인(response);
         응답_바디에_토큰_존재(response);
     }
 
@@ -59,10 +62,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         return response;
     }
 
-    private UsersIdentityResponse generateUsersIdentityResponse() {
+    private UsersIdentityResponse generateUsersIdentityResponse(final String slackId) {
         UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
         User user = new User();
-        user.setId(MEMBER_SLACK_ID);
+        user.setId(slackId);
         usersIdentityResponse.setUser(user);
         return usersIdentityResponse;
     }
@@ -74,10 +77,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void 유효한_토큰_검증() {
         // given & when
-        ExtractableResponse<Response> response = authHandler.토큰_검증(2L);
+        ExtractableResponse<Response> response = 토큰_검증(2L);
 
         // then
-        restHandler.상태코드_200_확인(response);
+        상태코드_200_확인(response);
     }
 
     @Test
@@ -86,11 +89,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = "abcde12345";
 
         // when
-        ExtractableResponse<Response> response = authHandler.토큰_검증(invalidToken);
+        ExtractableResponse<Response> response = 토큰_검증(invalidToken);
 
         // then
-        restHandler.상태코드_400_확인(response);
-        assertThat(restHandler.에러_코드(response)).isEqualTo("INVALID_TOKEN");
+        상태코드_400_확인(response);
+        assertThat(에러_코드(response)).isEqualTo("INVALID_TOKEN");
     }
 
     @Test
@@ -100,10 +103,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = authHandler.토큰_검증(invalidToken);
+        ExtractableResponse<Response> response = 토큰_검증(invalidToken);
 
         // then
-        restHandler.상태코드_400_확인(response);
+        상태코드_400_확인(response);
     }
 
     @Test
@@ -113,10 +116,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String invalidToken = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = authHandler.토큰_검증(invalidToken);
+        ExtractableResponse<Response> response = 토큰_검증(invalidToken);
 
         // then
-        restHandler.상태코드_400_확인(response);
-        assertThat(restHandler.에러_코드(response)).isEqualTo("INVALID_TOKEN");
+        상태코드_400_확인(response);
+        assertThat(에러_코드(response)).isEqualTo("INVALID_TOKEN");
     }
 }

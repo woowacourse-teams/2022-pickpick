@@ -1,24 +1,23 @@
 package com.pickpick.acceptance.auth;
 
-import com.pickpick.acceptance.RestHandler;
+import static com.pickpick.acceptance.RestHandler.get;
+import static com.pickpick.acceptance.RestHandler.getWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.getWithToken;
+import static com.pickpick.acceptance.RestHandler.post;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings("NonAsciiCharacters")
-@Component
-public class AuthHandler {
+public class AuthRestHandler {
 
     private static final String LOGIN_API_URL = "/api/slack-login";
     private static final String CERTIFICATION_API_URL = "/api/certification";
     private static final String SLACK_EVENT_API_URL = "/api/event";
 
-    @Autowired
-    private RestHandler restHandler;
-
-    public void 회원가입(final String slackId) {
+    public static void 회원가입(final String slackId) {
         Map<String, Object> request = Map.of(
                 "event", Map.of(
                         "type", "team_join",
@@ -32,20 +31,20 @@ public class AuthHandler {
                         )
                 ));
 
-        ExtractableResponse<Response> response = restHandler.post(SLACK_EVENT_API_URL, request);
-        restHandler.상태코드_200_확인(response);
+        ExtractableResponse<Response> response = post(SLACK_EVENT_API_URL, request);
+        상태코드_200_확인(response);
     }
 
-    public ExtractableResponse<Response> 로그인(final String code) {
+    public static ExtractableResponse<Response> 로그인(final String code) {
         Map<String, Object> request = Map.of("code", code);
-        return restHandler.get(LOGIN_API_URL, request);
+        return get(LOGIN_API_URL, request);
     }
 
-    public ExtractableResponse<Response> 토큰_검증(final long memberId) {
-        return restHandler.getWithCreateToken(CERTIFICATION_API_URL, memberId);
+    public static ExtractableResponse<Response> 토큰_검증(final long memberId) {
+        return getWithCreateToken(CERTIFICATION_API_URL, memberId);
     }
 
-    public ExtractableResponse<Response> 토큰_검증(final String token) {
-        return restHandler.getWithToken(CERTIFICATION_API_URL, token);
+    public static ExtractableResponse<Response> 토큰_검증(final String token) {
+        return getWithToken(CERTIFICATION_API_URL, token);
     }
 }

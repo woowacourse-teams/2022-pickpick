@@ -20,13 +20,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestHandler {
 
+    private static JwtTokenProvider jwtTokenProvider;
+    private static boolean showLog;
+
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public void setJwtTokenProvider(final JwtTokenProvider provider) {
+        jwtTokenProvider = provider;
+    }
 
-    @Value("${log}")
-    private boolean showLog;
+    public void setShowLog(@Value("${log}") boolean value) {
+        showLog = value;
+    }
 
-    public ExtractableResponse<Response> post(final String uri, final Object object) {
+    public static ExtractableResponse<Response> post(final String uri, final Object object) {
         return request(given -> given
                 .body(object)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -35,8 +41,8 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object,
-                                                             final Long memberId) {
+    public static ExtractableResponse<Response> postWithCreateToken(final String uri, final Object object,
+                                                                    final Long memberId) {
         String token = createToken(memberId);
 
         return request(given -> given
@@ -48,14 +54,14 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> get(final String uri) {
+    public static ExtractableResponse<Response> get(final String uri) {
         return request(given -> given
                 .when()
                 .get(uri)
         );
     }
 
-    public ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
+    public static ExtractableResponse<Response> get(final String uri, final Map<String, Object> queryParams) {
         return request(given -> given
                 .queryParams(queryParams)
                 .log().all()
@@ -64,7 +70,7 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> getWithToken(final String uri, final String token) {
+    public static ExtractableResponse<Response> getWithToken(final String uri, final String token) {
         return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .log().all()
@@ -73,7 +79,7 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
+    public static ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId) {
         String token = createToken(memberId);
 
         return request(given -> given
@@ -83,8 +89,8 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
-                                                            final Map<String, Object> request) {
+    public static ExtractableResponse<Response> getWithCreateToken(final String uri, final Long memberId,
+                                                                   final Map<String, Object> request) {
         String token = createToken(memberId);
 
         return request(given -> given
@@ -95,8 +101,8 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object,
-                                                            final Long memberId) {
+    public static ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object,
+                                                                   final Long memberId) {
         String token = createToken(memberId);
 
         return request(given -> given
@@ -108,7 +114,7 @@ public class RestHandler {
         );
     }
 
-    public ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
+    public static ExtractableResponse<Response> deleteWithCreateToken(final String uri, final Long memberId) {
         String token = createToken(memberId);
 
         return request(given -> given
@@ -118,7 +124,7 @@ public class RestHandler {
         );
     }
 
-    private ExtractableResponse<Response> request(Function<RequestSpecification, Response> function) {
+    private static ExtractableResponse<Response> request(Function<RequestSpecification, Response> function) {
         if (showLog) {
             RequestSpecification given = RestAssured.given().log().all();
             return function.apply(given)
@@ -133,23 +139,23 @@ public class RestHandler {
                 .extract();
     }
 
-    private String createToken(final Long memberId) {
+    private static String createToken(final Long memberId) {
         return jwtTokenProvider.createToken(String.valueOf(memberId));
     }
 
-    public void 상태코드_200_확인(final ExtractableResponse<Response> response) {
+    public static void 상태코드_200_확인(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public void 상태코드_400_확인(final ExtractableResponse<Response> response) {
+    public static void 상태코드_400_확인(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    public void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
+    public static void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
         assertThat(response.statusCode()).isEqualTo(httpStatus.value());
     }
 
-    public String 에러_코드(final ExtractableResponse<Response> response) {
+    public static String 에러_코드(final ExtractableResponse<Response> response) {
         return response.jsonPath().getObject("", ErrorResponse.class).getCode();
     }
 }

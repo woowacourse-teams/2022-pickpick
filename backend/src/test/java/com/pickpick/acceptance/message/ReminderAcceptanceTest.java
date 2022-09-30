@@ -1,6 +1,11 @@
 package com.pickpick.acceptance.message;
 
-
+import static com.pickpick.acceptance.RestHandler.deleteWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.getWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.postWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.putWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_확인;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
@@ -30,11 +35,11 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_생성() {
         // given & when
-        ExtractableResponse<Response> response = restHandler.postWithCreateToken(REMINDER_API_URL,
+        ExtractableResponse<Response> response = postWithCreateToken(REMINDER_API_URL,
                 Map.of("messageId", 1, "reminderDate", "2022-08-10T19:21:55"), 1L);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.CREATED);
+        상태코드_확인(response, HttpStatus.CREATED);
     }
 
     @Test
@@ -43,10 +48,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("messageId", "1");
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 2L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
 
         // then
-        restHandler.상태코드_200_확인(response);
+        상태코드_200_확인(response);
         ReminderResponse reminderResponse = response.jsonPath().getObject("", ReminderResponse.class);
         assertThat(reminderResponse.getId()).isEqualTo(1L);
     }
@@ -57,10 +62,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("messageId", "100");
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 2L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.NOT_FOUND);
+        상태코드_확인(response, HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -74,10 +79,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         boolean expectedHasPast = false;
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 2L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
@@ -97,10 +102,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         boolean expectedHasPast = false;
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 1L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
@@ -120,10 +125,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         boolean expectedHasPast = false;
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 2L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 2L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
@@ -144,10 +149,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         boolean expectedHasPast = true;
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 1L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
@@ -172,10 +177,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("reminderId", "");
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 1L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
 
         int size = response.jsonPath()
                 .getObject("", ReminderResponses.class)
@@ -195,10 +200,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("reminderId", "", "count", count);
 
         // when
-        ExtractableResponse<Response> response = restHandler.getWithCreateToken(REMINDER_API_URL, 1L, request);
+        ExtractableResponse<Response> response = getWithCreateToken(REMINDER_API_URL, 1L, request);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
 
         int size = response.jsonPath()
                 .getObject("", ReminderResponses.class)
@@ -214,10 +219,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("messageId", "2", "reminderDate", LocalDateTime.now().toString());
 
         // when
-        ExtractableResponse<Response> response = restHandler.putWithCreateToken(REMINDER_API_URL, request, 1L);
+        ExtractableResponse<Response> response = putWithCreateToken(REMINDER_API_URL, request, 1L);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.OK);
+        상태코드_확인(response, HttpStatus.OK);
     }
 
     @Test
@@ -226,10 +231,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("messageId", "1", "reminderDate", LocalDateTime.now().toString());
 
         // when
-        ExtractableResponse<Response> response = restHandler.putWithCreateToken(REMINDER_API_URL, request, 1L);
+        ExtractableResponse<Response> response = putWithCreateToken(REMINDER_API_URL, request, 1L);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        상태코드_확인(response, HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -238,12 +243,12 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         long messageId = 2L;
 
         // when
-        ExtractableResponse<Response> response = restHandler.deleteWithCreateToken(
+        ExtractableResponse<Response> response = deleteWithCreateToken(
                 REMINDER_API_URL + "?messageId=" + messageId,
                 1L);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.NO_CONTENT);
+        상태코드_확인(response, HttpStatus.NO_CONTENT);
     }
 
     @Test
@@ -252,11 +257,11 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         long messageId = 1L;
 
         // when
-        ExtractableResponse<Response> response = restHandler.deleteWithCreateToken(
+        ExtractableResponse<Response> response = deleteWithCreateToken(
                 REMINDER_API_URL + "?messageId=" + messageId,
                 1L);
 
         // then
-        restHandler.상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        상태코드_확인(response, HttpStatus.BAD_REQUEST);
     }
 }

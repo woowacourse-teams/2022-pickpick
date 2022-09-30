@@ -1,5 +1,7 @@
 package com.pickpick.acceptance.member;
 
+import static com.pickpick.acceptance.RestHandler.post;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -33,7 +35,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         Map<String, Object> teamJoinEvent = createTeamJoinEvent("진짜이름", "표시이름", "https://somebody.png");
 
         // when
-        ExtractableResponse<Response> teamJoinEventResponse = restHandler.post(SLACK_EVENT_API_URL, teamJoinEvent);
+        ExtractableResponse<Response> teamJoinEventResponse = post(SLACK_EVENT_API_URL, teamJoinEvent);
         List<Member> 신규_참여_후_전체_멤버 = members.findAll();
         int 신규_참여_후_멤버_수 = 신규_참여_후_전체_멤버.size();
         Optional<Member> 신규_참여_멤버 = 신규_참여_후_전체_멤버.stream()
@@ -41,7 +43,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> restHandler.상태코드_200_확인(teamJoinEventResponse),
+                () -> 상태코드_200_확인(teamJoinEventResponse),
                 () -> assertThat(신규_참여_전_멤버_수 + 1).isEqualTo(신규_참여_후_멤버_수),
                 () -> assertThat(신규_참여_멤버).isPresent(),
                 () -> assertThat(신규_참여_멤버.get().getSlackId()).isEqualTo(SLACK_ID)

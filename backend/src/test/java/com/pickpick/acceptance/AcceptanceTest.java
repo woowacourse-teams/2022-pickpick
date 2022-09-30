@@ -24,9 +24,6 @@ public class AcceptanceTest {
     @LocalServerPort
     int port;
 
-    @Autowired
-    protected RestHandler restHandler;
-
     @SpyBean
     protected Clock clock;
 
