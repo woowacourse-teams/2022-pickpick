@@ -7,11 +7,10 @@ import static utils.JsonUtils.toJson;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.config.DatabaseCleaner;
+import com.pickpick.fixture.MessageFixtures;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
-import java.time.LocalDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,26 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ChannelDeletedServiceTest {
-
-    private static final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
-    private static final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
-    private static final Message SAMPLE_MESSAGE_1 = new Message(
-            "aaaa1f84-8acf-46ab-b93d-85177cee3e97",
-            "첫번째 메시지 전송!",
-            SAMPLE_MEMBER,
-            SAMPLE_CHANNEL,
-            LocalDateTime.now(),
-            LocalDateTime.now()
-    );
-
-    private static final Message SAMPLE_MESSAGE_2 = new Message(
-            "bbbb1f84-8acf-46ab-b93d-85177cee3e99",
-            "두번째 메시지 전송!",
-            SAMPLE_MEMBER,
-            SAMPLE_CHANNEL,
-            LocalDateTime.now(),
-            LocalDateTime.now()
-    );
 
     @Autowired
     private ChannelRepository channels;
@@ -66,16 +45,16 @@ class ChannelDeletedServiceTest {
     @Test
     void channelAndMessagesShouldBeDeletedOnChannelDeletedEvent() {
         // given
-        channels.save(SAMPLE_CHANNEL);
-        members.save(SAMPLE_MEMBER);
-        messages.save(SAMPLE_MESSAGE_1);
-        messages.save(SAMPLE_MESSAGE_2);
+        Member hope = members.save(new Member("U00004", "호프", "https://hope.png"));
+        Channel notice = channels.save(new Channel("C00001", "공지사항"));
+        messages.save(MessageFixtures.PLAIN_20220712_18_00_00.create(notice, hope));
+        messages.save(MessageFixtures.PLAIN_20220715_14_00_00.create(notice, hope));
 
         String request = toJson(
                 Map.of("event",
                         Map.of(
                                 "type", "channel_deleted",
-                                "channel", SAMPLE_CHANNEL.getSlackId()
+                                "channel", notice.getSlackId()
                         )
                 )
         );
