@@ -51,7 +51,7 @@ class ChannelCreateServiceTest {
         // given
         given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
                 .willReturn(setUpChannelMockData());
-        
+
         Optional<Channel> channelBeforeExecute = channels.findBySlackId("channelSlackId");
 
         // when
@@ -72,7 +72,7 @@ class ChannelCreateServiceTest {
         given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
                 .willThrow(SlackApiException.class);
 
-        // when & then33333
+        // when & then
         assertThatThrownBy(() -> channelCreateService.createChannel("channelSlackId"))
                 .isInstanceOf(SlackApiCallException.class);
     }
