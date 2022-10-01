@@ -8,7 +8,6 @@ import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
-import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
@@ -133,8 +132,7 @@ public class ChannelSubscriptionService {
 
     @Transactional
     public void delete(final Long channelId, final Long memberId) {
-        Channel channel = channels.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        Channel channel = channels.getById(channelId);
 
         Member member = members.getById(memberId);
 
