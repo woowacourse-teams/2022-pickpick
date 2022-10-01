@@ -1,9 +1,9 @@
 package com.pickpick.acceptance.channel;
 
-import static com.pickpick.acceptance.RestHandler.deleteWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.deleteWithToken;
 import static com.pickpick.acceptance.RestHandler.getWithToken;
 import static com.pickpick.acceptance.RestHandler.postWithToken;
-import static com.pickpick.acceptance.RestHandler.putWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.putWithToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +54,6 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         구독_요청(channelIdToSubscribe1);
         구독_요청(channelIdToSubscribe2);
     }
-
 
     @Test
     void 채널_구독() {
@@ -246,7 +245,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private ExtractableResponse<Response> 구독_채널_순서_변경_요청(final List<ChannelOrderRequest> request) {
-        return putWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL, request, token);
+        return putWithToken(CHANNEL_SUBSCRIPTION_API_URL, request, token);
     }
 
     private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청() {
@@ -273,6 +272,6 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
-        return deleteWithCreateToken(CHANNEL_SUBSCRIPTION_API_URL + "?channelId=" + channelId, token);
+        return deleteWithToken(CHANNEL_SUBSCRIPTION_API_URL + "?channelId=" + channelId, token);
     }
 }

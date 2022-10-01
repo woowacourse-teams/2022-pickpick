@@ -1,8 +1,9 @@
 package com.pickpick.acceptance.message;
 
-import static com.pickpick.acceptance.RestHandler.deleteWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.deleteWithToken;
+import static com.pickpick.acceptance.RestHandler.getWithToken;
 import static com.pickpick.acceptance.RestHandler.postWithToken;
-import static com.pickpick.acceptance.RestHandler.putWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.putWithToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_확인;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 import com.pickpick.acceptance.AcceptanceTest;
-import com.pickpick.acceptance.RestHandler;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import io.restassured.response.ExtractableResponse;
@@ -50,7 +50,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_200_확인(response);
@@ -65,7 +65,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.NOT_FOUND);
@@ -83,7 +83,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -107,7 +107,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -131,7 +131,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -156,7 +156,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -185,7 +185,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -209,7 +209,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -229,7 +229,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = putWithCreateToken(REMINDER_API_URL, request, token);
+        ExtractableResponse<Response> response = putWithToken(REMINDER_API_URL, request, token);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -242,7 +242,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = putWithCreateToken(REMINDER_API_URL, request, token);
+        ExtractableResponse<Response> response = putWithToken(REMINDER_API_URL, request, token);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);
@@ -255,7 +255,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(
+        ExtractableResponse<Response> response = deleteWithToken(
                 REMINDER_API_URL + "?messageId=" + messageId,
                 token);
 
@@ -270,7 +270,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(
+        ExtractableResponse<Response> response = deleteWithToken(
                 REMINDER_API_URL + "?messageId=" + messageId,
                 token);
 

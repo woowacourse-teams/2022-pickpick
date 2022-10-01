@@ -1,6 +1,6 @@
 package com.pickpick.acceptance.message;
 
-import static com.pickpick.acceptance.RestHandler.deleteWithCreateToken;
+import static com.pickpick.acceptance.RestHandler.deleteWithToken;
 import static com.pickpick.acceptance.RestHandler.getWithToken;
 import static com.pickpick.acceptance.RestHandler.postWithToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_확인;
@@ -93,7 +93,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(
+        ExtractableResponse<Response> response = deleteWithToken(
                 BOOKMARK_API_URL + "?messageId=" + messageId,
                 token);
 
@@ -108,7 +108,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(
+        ExtractableResponse<Response> response = deleteWithToken(
                 BOOKMARK_API_URL + "?messageId=" + messageId,
                 token);
 

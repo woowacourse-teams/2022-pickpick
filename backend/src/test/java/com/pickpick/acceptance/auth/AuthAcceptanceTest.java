@@ -86,7 +86,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 유효하지_않은_토큰_검증() {
+    void 유효하지_않은_토큰_검증_시_예외_처리() {
         // given
         String invalidToken = "abcde12345";
 
@@ -99,7 +99,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 만료된_토큰_검증() {
+    void 만료된_토큰_검증_시_예외_처리() {
         // given
         JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(secretKey, 0);
         String invalidToken = jwtTokenProvider.createToken("1");
@@ -112,7 +112,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 시그니처가_다른_토큰_검증() {
+    void 시그니처가_다른_토큰_검증_시_예외_처리() {
         // given
         JwtTokenProvider jwtTokenProvider = new JwtTokenProvider("other" + secretKey, 60000);
         String invalidToken = jwtTokenProvider.createToken("1");

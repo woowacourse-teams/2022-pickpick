@@ -71,8 +71,8 @@ public class RestHandler {
         );
     }
 
-    public static ExtractableResponse<Response> putWithCreateToken(final String uri, final Object object,
-                                                                   final String token) {
+    public static ExtractableResponse<Response> putWithToken(final String uri, final Object object,
+                                                             final String token) {
         return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .body(object)
@@ -82,7 +82,7 @@ public class RestHandler {
         );
     }
 
-    public static ExtractableResponse<Response> deleteWithCreateToken(final String uri, final String token) {
+    public static ExtractableResponse<Response> deleteWithToken(final String uri, final String token) {
         return request(given -> given
                 .header("Authorization", "Bearer " + token)
                 .when()
