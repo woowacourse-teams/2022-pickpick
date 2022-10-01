@@ -32,7 +32,7 @@ class MemberChangedServiceTest {
         databaseCleaner.clear();
     }
 
-    @DisplayName("사용자 이름 변경 시 기본적으로 display_name 으로 변경")
+    @DisplayName("사용자 이름 변경 시 display_name이 빈 문자열이 아니면 해당 값으로 변경")
     @Test
     void changeUsernameByDisplayName() {
         // given
