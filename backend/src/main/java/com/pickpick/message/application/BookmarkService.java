@@ -1,7 +1,6 @@
 package com.pickpick.message.application;
 
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
-import com.pickpick.exception.message.BookmarkNotFoundException;
 import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -82,8 +81,7 @@ public class BookmarkService {
             return null;
         }
 
-        Bookmark bookmark = bookmarks.findById(bookmarkId)
-                .orElseThrow(() -> new BookmarkNotFoundException(bookmarkId));
+        Bookmark bookmark = bookmarks.getById(bookmarkId);
 
         LocalDateTime messageDate = bookmark.getMessage().getPostedDate();
 
