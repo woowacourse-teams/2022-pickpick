@@ -145,8 +145,10 @@ class BookmarkServiceTest {
 
         Member hope = members.save(new Member("U00004", "호프", "https://hope.png"));
         Member kkojae = members.save(new Member("U000005", "꼬재", "https://kkojae.png"));
+
         Channel notice = channels.save(new Channel("C000001", "공지사항"));
         List<Message> savedMessages = createAndSaveMessages(notice, kkojae);
+
         List<Bookmark> hopesBookmarks = saveBookmarksAtDifferentTimes(hope, savedMessages);
         List<Bookmark> kkojaesBookmarks = saveBookmarksAtDifferentTimes(kkojae, savedMessages);
 
@@ -234,7 +236,7 @@ class BookmarkServiceTest {
             void limitCount() {
                 List<BookmarkResponse> foundBookmarks = bookmarkService.find(request, hope.getId()).getBookmarks();
 
-                assertThat(foundBookmarks.size()).isEqualTo(count);
+                assertThat(foundBookmarks).hasSize(count);
             }
         }
 
@@ -250,7 +252,10 @@ class BookmarkServiceTest {
             void findCreatedBefore() {
                 List<BookmarkResponse> foundBookmarks = bookmarkService.find(request, hope.getId()).getBookmarks();
 
-                assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId());
+                assertAll(
+                        () -> assertThat(foundBookmarks).isNotEmpty(),
+                        () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
+                );
             }
         }
 
