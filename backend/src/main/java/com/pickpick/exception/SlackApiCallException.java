@@ -11,4 +11,9 @@ public class SlackApiCallException extends RuntimeException {
     public SlackApiCallException(final String apiMethod) {
         super(String.format("%s -> api method : %s", DEFAULT_MESSAGE, apiMethod));
     }
+
+    public SlackApiCallException(final String apiMethod, final String slackErrorMessage) {
+        super(String.format("%s -> api method : %s, slack message : %S", DEFAULT_MESSAGE, apiMethod,
+                slackErrorMessage));
+    }
 }

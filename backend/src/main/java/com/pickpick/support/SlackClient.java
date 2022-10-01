@@ -3,17 +3,22 @@ package com.pickpick.support;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.config.SlackProperties;
 import com.pickpick.exception.SlackApiCallException;
-import com.pickpick.exception.message.SlackSendMessageFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.SlackApiTextResponse;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
+import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
+import com.slack.api.methods.response.users.UsersIdentityResponse;
+import com.slack.api.methods.response.users.UsersListResponse;
 import com.slack.api.model.Conversation;
 import com.slack.api.model.User;
+import com.slack.api.model.User.Profile;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,20 +41,25 @@ public class SlackClient {
     }
 
     public String findAccessToken(final String code) {
-        OAuthV2AccessRequest request = OAuthV2AccessRequest.builder()
+        OAuthV2AccessRequest request = generateOAuthRequest(code);
+
+        try {
+            OAuthV2AccessResponse response = methodsClient.oauthV2Access(request);
+            validateResponse("oauthV2Access", response);
+            return response.getAuthedUser().getAccessToken();
+
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException("oauthV2Access");
+        }
+    }
+
+    private OAuthV2AccessRequest generateOAuthRequest(final String code) {
+        return OAuthV2AccessRequest.builder()
                 .clientId(slackProperties.getClientId())
                 .clientSecret(slackProperties.getClientSecret())
                 .redirectUri(slackProperties.getRedirectUrl())
                 .code(code)
                 .build();
-
-        try {
-            return methodsClient.oauthV2Access(request)
-                    .getAuthedUser()
-                    .getAccessToken();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException("oauthV2Access");
-        }
     }
 
     public String findMemberSlackId(final String accessToken) {
@@ -58,9 +68,9 @@ public class SlackClient {
                 .build();
 
         try {
-            return methodsClient.usersIdentity(request)
-                    .getUser()
-                    .getId();
+            UsersIdentityResponse response = methodsClient.usersIdentity(request);
+            validateResponse("usersIdentity", response);
+            return response.getUser().getId();
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException("usersIdentity");
         }
@@ -68,10 +78,11 @@ public class SlackClient {
 
     public Channel findChannel(final String channelSlackId) {
         try {
-            Conversation conversation = methodsClient
-                    .conversationsInfo(request -> request.channel(channelSlackId))
-                    .getChannel();
+            ConversationsInfoResponse response = methodsClient.conversationsInfo(
+                    request -> request.channel(channelSlackId));
+            validateResponse("conversationsInfo", response);
 
+            Conversation conversation = response.getChannel();
             return new Channel(conversation.getId(), conversation.getName());
 
         } catch (IOException | SlackApiException e) {
@@ -81,9 +92,9 @@ public class SlackClient {
 
     public List<Member> findAllWorkspaceMembers() {
         try {
-            List<User> users = methodsClient.usersList(request -> request)
-                    .getMembers();
-            return toMembers(users);
+            UsersListResponse response = methodsClient.usersList(request -> request);
+            validateResponse("usersList", response);
+            return toMembers(response.getMembers());
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException("usersList");
         }
@@ -96,7 +107,12 @@ public class SlackClient {
     }
 
     private Member toMember(final User user) {
-        return new Member(user.getId(), user.getProfile().getDisplayName(), user.getProfile().getImage48());
+        Profile profile = user.getProfile();
+        String username = profile.getDisplayName();
+        if (username.isBlank()) {
+            username = profile.getRealName();
+        }
+        return new Member(user.getId(), username, profile.getImage48());
     }
 
     public void sendMessage(final Reminder reminder) {
@@ -107,11 +123,15 @@ public class SlackClient {
 
         try {
             ChatPostMessageResponse response = methodsClient.chatPostMessage(request);
-            if (!response.isOk()) {
-                throw new SlackSendMessageFailureException(response.getError());
-            }
+            validateResponse("chatPostMessage", response);
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(e);
+        }
+    }
+
+    private <T extends SlackApiTextResponse> void validateResponse(final String methodName, final T response) {
+        if (!response.isOk()) {
+            throw new SlackApiCallException(methodName, response.getError());
         }
     }
 }
