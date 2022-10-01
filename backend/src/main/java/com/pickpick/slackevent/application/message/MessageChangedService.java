@@ -1,6 +1,5 @@
 package com.pickpick.slackevent.application.message;
 
-import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -34,8 +33,7 @@ public class MessageChangedService implements SlackEventService {
             return;
         }
 
-        Message message = messages.findBySlackId(slackMessageDto.getSlackId())
-                .orElseThrow(() -> new MessageNotFoundException(slackMessageDto.getSlackId()));
+        Message message = messages.getBySlackId(slackMessageDto.getSlackId());
 
         message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate());
     }

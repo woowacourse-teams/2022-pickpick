@@ -1,6 +1,5 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
@@ -49,8 +48,7 @@ public class ReminderService {
     public void save(final Long memberId, final ReminderSaveRequest request) {
         Member member = members.getById(memberId);
 
-        Message message = messages.findById(request.getMessageId())
-                .orElseThrow(() -> new MessageNotFoundException(request.getMessageId()));
+        Message message = messages.getById(request.getMessageId());
 
         Reminder reminder = new Reminder(member, message, request.getReminderDate());
         reminders.save(reminder);
