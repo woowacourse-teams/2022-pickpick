@@ -117,7 +117,8 @@ public class RestHandler {
         assertThat(response.statusCode()).isEqualTo(httpStatus.value());
     }
 
-    public static String 에러_코드(final ExtractableResponse<Response> response) {
-        return response.jsonPath().getObject("", ErrorResponse.class).getCode();
+    public static void 에러코드_확인(final ExtractableResponse<Response> response, final String errorCode) {
+        String responseErrorCode = response.jsonPath().getObject("", ErrorResponse.class).getCode();
+        assertThat(responseErrorCode).isEqualTo(errorCode);
     }
 }

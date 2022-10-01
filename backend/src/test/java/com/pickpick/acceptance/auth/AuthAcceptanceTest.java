@@ -2,7 +2,7 @@ package com.pickpick.acceptance.auth;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
-import static com.pickpick.acceptance.RestHandler.에러_코드;
+import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
 import static com.pickpick.acceptance.auth.AuthRestHandler.회원가입;
@@ -95,7 +95,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
-        assertThat(에러_코드(response)).isEqualTo("INVALID_TOKEN");
+        에러코드_확인(response, "INVALID_TOKEN");
     }
 
     @Test
@@ -122,6 +122,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
-        assertThat(에러_코드(response)).isEqualTo("INVALID_TOKEN");
+        에러코드_확인(response, "INVALID_TOKEN");
     }
 }
