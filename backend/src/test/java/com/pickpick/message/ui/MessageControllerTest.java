@@ -11,9 +11,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.pickpick.config.DocsControllerTest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
+import com.pickpick.support.DocsControllerTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.http.HttpHeaders;

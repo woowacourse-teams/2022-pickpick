@@ -12,10 +12,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.pickpick.config.DocsControllerTest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
+import com.pickpick.support.DocsControllerTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.http.HttpHeaders;
