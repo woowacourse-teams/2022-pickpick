@@ -190,52 +190,6 @@ class BookmarkServiceTest {
             assertThat(response.hasPast()).isTrue();
         }
 
-        private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
-            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
-                    .map(messageFixture -> messageFixture.create(channel, member))
-                    .collect(Collectors.toList());
-
-            for (Message fixture : messagesInChannel) {
-                messages.save(fixture);
-            }
-
-            return messagesInChannel;
-        }
-
-        private List<Bookmark> saveBookmarksAtDifferentTimes(final Member member, final List<Message> messages) {
-            List<Bookmark> savedBookmarks = new ArrayList<>();
-            int totalSize = messages.size();
-
-            for (int i = 0; i < totalSize; i++) {
-                given(dateTimeProvider.getNow()).willReturn(
-                        Optional.of(LocalDateTime.of(2022, 9, 1, 0, 0, 0).plusHours(i)));
-                savedBookmarks.add(bookmarks.save(new Bookmark(member, messages.get(totalSize - i - 1))));
-            }
-
-            return savedBookmarks;
-        }
-
-        private List<Long> extractIds(final List<Bookmark> bookmarks) {
-            return bookmarks.stream()
-                    .map(Bookmark::getId)
-                    .collect(Collectors.toList());
-        }
-
-        private List<Long> extractIdsOrderByCreatedTimeDesc(final List<Bookmark> bookmarks) {
-            return bookmarks.stream()
-                    .sorted(Comparator.comparing(Bookmark::getCreatedDate).reversed())
-                    .map(Bookmark::getId)
-                    .collect(Collectors.toList());
-        }
-
-        private List<Long> extractIdsOrderByCreatedTimeDescDefaultLimit(final List<Bookmark> bookmarks) {
-            return bookmarks.stream()
-                    .sorted(Comparator.comparing(Bookmark::getCreatedDate).reversed())
-                    .limit(20)
-                    .map(Bookmark::getId)
-                    .collect(Collectors.toList());
-        }
-
         @DisplayName("정렬 기준은")
         @Nested
         class bookmarkIdAndCountInParams {
@@ -298,6 +252,54 @@ class BookmarkServiceTest {
 
                 assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId());
             }
+        }
+
+        private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
+            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+                    .map(messageFixture -> messageFixture.create(channel, member))
+                    .collect(Collectors.toList());
+
+            for (Message fixture : messagesInChannel) {
+                messages.save(fixture);
+            }
+
+            return messagesInChannel;
+        }
+
+        private List<Bookmark> saveBookmarksAtDifferentTimes(final Member member, final List<Message> messages) {
+            List<Bookmark> savedBookmarks = new ArrayList<>();
+            int totalSize = messages.size();
+
+            for (int i = 0; i < totalSize; i++) {
+                given(dateTimeProvider.getNow()).willReturn(
+                        Optional.of(LocalDateTime.of(2022, 9, 1, 0, 0, 0).plusHours(i)));
+
+                Bookmark bookmark = bookmarks.save(new Bookmark(member, messages.get(totalSize - i - 1)));
+                savedBookmarks.add(bookmark);
+            }
+
+            return savedBookmarks;
+        }
+
+        private List<Long> extractIds(final List<Bookmark> bookmarks) {
+            return bookmarks.stream()
+                    .map(Bookmark::getId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractIdsOrderByCreatedTimeDesc(final List<Bookmark> bookmarks) {
+            return bookmarks.stream()
+                    .sorted(Comparator.comparing(Bookmark::getCreatedDate).reversed())
+                    .map(Bookmark::getId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractIdsOrderByCreatedTimeDescDefaultLimit(final List<Bookmark> bookmarks) {
+            return bookmarks.stream()
+                    .sorted(Comparator.comparing(Bookmark::getCreatedDate).reversed())
+                    .limit(20)
+                    .map(Bookmark::getId)
+                    .collect(Collectors.toList());
         }
     }
 }
