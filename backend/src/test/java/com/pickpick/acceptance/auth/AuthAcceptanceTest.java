@@ -53,26 +53,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         응답_바디에_토큰_존재(response);
     }
 
-    private OAuthV2AccessResponse generateOAuthV2AccessResponse() {
-        OAuthV2AccessResponse response = new OAuthV2AccessResponse();
-        AuthedUser authedUser = new AuthedUser();
-        authedUser.setAccessToken("token");
-        response.setAuthedUser(authedUser);
-        return response;
-    }
-
-    private UsersIdentityResponse generateUsersIdentityResponse(final String slackId) {
-        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
-        User user = new User();
-        user.setId(slackId);
-        usersIdentityResponse.setUser(user);
-        return usersIdentityResponse;
-    }
-
-    private void 응답_바디에_토큰_존재(final ExtractableResponse<Response> response) {
-        assertThat(response.jsonPath().getString("token")).isNotBlank();
-    }
-
     @Test
     void 유효한_토큰_검증() {
         // given
@@ -123,5 +103,25 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_400_확인(response);
         에러코드_확인(response, "INVALID_TOKEN");
+    }
+
+    private OAuthV2AccessResponse generateOAuthV2AccessResponse() {
+        OAuthV2AccessResponse response = new OAuthV2AccessResponse();
+        AuthedUser authedUser = new AuthedUser();
+        authedUser.setAccessToken("token");
+        response.setAuthedUser(authedUser);
+        return response;
+    }
+
+    private UsersIdentityResponse generateUsersIdentityResponse(final String slackId) {
+        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
+        User user = new User();
+        user.setId(slackId);
+        usersIdentityResponse.setUser(user);
+        return usersIdentityResponse;
+    }
+
+    private void 응답_바디에_토큰_존재(final ExtractableResponse<Response> response) {
+        assertThat(response.jsonPath().getString("token")).isNotBlank();
     }
 }

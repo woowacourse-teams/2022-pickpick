@@ -1,12 +1,12 @@
 package com.pickpick.acceptance.message;
 
+import static com.pickpick.acceptance.RestHandler.getWithToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 import com.pickpick.acceptance.AcceptanceTest;
-import com.pickpick.acceptance.RestHandler;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
@@ -117,7 +117,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken(MEMBER_ID);
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(MESSAGE_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
 
         // then
         MessageResponses messageResponses = response.as(MessageResponses.class);
@@ -140,7 +140,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(MESSAGE_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         // then
@@ -155,7 +155,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("jupjup", "", "5", "false", "", "");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(MESSAGE_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         // then
@@ -173,7 +173,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(MESSAGE_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponse messageResponse = response.as(MessageResponses.class)
                 .getMessages()
                 .get(0);
@@ -196,7 +196,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
 
         // when
-        ExtractableResponse<Response> response = RestHandler.getWithToken(MESSAGE_API_URL, token, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponse messageResponse = response.as(MessageResponses.class)
                 .getMessages()
                 .get(0);
