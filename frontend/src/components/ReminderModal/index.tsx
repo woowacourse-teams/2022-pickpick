@@ -1,10 +1,13 @@
-import * as Styled from "./style";
-import { FlexRow } from "@src/@styles/shared";
+import useDatePicker from "@src/components/ReminderModal/@hooks/useDatePicker";
+import useTimePicker from "@src/components/ReminderModal/@hooks/useTimePicker";
+import DatePicker from "@src/components/ReminderModal/DateTimePicker/DatePicker";
+import TimePicker from "@src/components/ReminderModal/DateTimePicker/TimePicker";
+
 import useMutateReminder from "@src/hooks/query/useMutateReminder";
-import useTimePicker from "@src/hooks/useTimePicker";
-import useDatePicker from "@src/hooks/useDatePicker";
-import DatePicker from "@src/components/DatePicker";
-import TimePicker from "@src/components/TimePicker";
+
+import { FlexRow } from "@src/@styles/shared";
+
+import * as Styled from "./style";
 
 export type ButtonText = "생성" | "수정" | "취소" | "삭제";
 
@@ -50,6 +53,7 @@ function ReminderModal({
 
   const { handleCreateReminder, handleModifyReminder, handleRemoveReminder } =
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
+
   return (
     <Styled.Container>
       <Styled.Title>리마인더 생성</Styled.Title>

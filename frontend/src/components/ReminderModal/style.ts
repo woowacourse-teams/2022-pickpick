@@ -1,5 +1,7 @@
+import styled, { CSSProp, css } from "styled-components";
+
 import { StyledDefaultProps, Theme } from "@src/@types/shared";
-import styled, { css, CSSProp } from "styled-components";
+
 import { ButtonText } from ".";
 
 export const Container = styled.div`
@@ -7,9 +9,11 @@ export const Container = styled.div`
   padding: 14px;
   border-radius: 4px;
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
+
   position: fixed;
   top: 25%;
   left: 50%;
+
   transform: translate(-50%);
   z-index: 2;
 
@@ -61,12 +65,13 @@ interface ButtonTextProps extends StyledDefaultProps {
 }
 
 export const Button = styled.button`
+  padding: 4px 12px;
   border: none;
   border-radius: 4px;
   white-space: nowrap;
-  cursor: pointer;
   background-color: inherit;
-  padding: 4px 12px;
+  cursor: pointer;
+
   z-index: 1;
 
   ${({ theme, text }: ButtonTextProps) => css`

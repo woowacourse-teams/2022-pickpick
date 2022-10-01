@@ -1,5 +1,7 @@
 package com.pickpick.acceptance.message;
 
+import static com.pickpick.acceptance.RestHandler.getWithToken;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
@@ -9,7 +11,6 @@ import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -23,20 +24,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/message.sql"})
-
 @DisplayName("메시지 기능")
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
     private static final String MESSAGE_API_URL = "/api/messages";
-    private static final long MEMBER_ID = 1L;
+    private static final String MEMBER_ID = "1";
 
-    @SpyBean
-    private Clock clock;
 
     private static Stream<Arguments> methodSource() {
         return Stream.of(
@@ -114,17 +111,20 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     @MethodSource("methodSource")
     @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedhasPast,
+    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedHasPast,
                     final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
-        // given & when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        // given
+        String token = jwtTokenProvider.createToken(MEMBER_ID);
+
+        // when
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
 
         // then
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         assertAll(
                 () -> 상태코드_200_확인(response),
-                () -> assertThat(messageResponses.hasPast()).isEqualTo(expectedhasPast),
+                () -> assertThat(messageResponses.hasPast()).isEqualTo(expectedHasPast),
                 () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
                 () -> assertThat(messageResponses.getMessages())
                         .extracting("id")
@@ -136,10 +136,11 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     void 메시지_조회_시_needPastMessage_true_응답_확인(final String needPastMessage) {
         // given
+        String token = jwtTokenProvider.createToken(MEMBER_ID);
         Map<String, Object> request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         // then
@@ -150,10 +151,11 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 메시지_조회_시_needPastMessage가_False일_경우_응답_확인() {
         // given
+        String token = jwtTokenProvider.createToken(MEMBER_ID);
         Map<String, Object> request = createQueryParams("jupjup", "", "5", "false", "", "");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponses messageResponses = response.as(MessageResponses.class);
 
         // then
@@ -166,10 +168,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-13T00:00:00Z"));
+
+        String token = jwtTokenProvider.createToken(MEMBER_ID);
         Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponse messageResponse = response.as(MessageResponses.class)
                 .getMessages()
                 .get(0);
@@ -187,10 +191,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+
+        String token = jwtTokenProvider.createToken(MEMBER_ID);
         Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
+        ExtractableResponse<Response> response = getWithToken(MESSAGE_API_URL, token, request);
         MessageResponse messageResponse = response.as(MessageResponses.class)
                 .getMessages()
                 .get(0);

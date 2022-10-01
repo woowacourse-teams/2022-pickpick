@@ -1,6 +1,8 @@
+import { fetcher } from "@src/api";
+
 import { API_ENDPOINT } from "@src/@constants";
 import { ResponseMessages } from "@src/@types/shared";
-import { fetcher } from  "@src/api";
+
 import { getPrivateHeaders } from "@src/api/utils";
 
 interface PageParam {

@@ -1,6 +1,8 @@
-import { API_ENDPOINT } from "@src/@constants";
 import { fetcher } from "@src/api";
+
+import { API_ENDPOINT } from "@src/@constants";
 import { ResponseToken } from "@src/@types/shared";
+
 import { getPrivateHeaders, getPublicHeaders } from "@src/api/utils";
 
 export const isCertificated = async () => {

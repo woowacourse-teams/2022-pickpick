@@ -1,5 +1,6 @@
-import MessageCard from ".";
 import MockImage from "@public/assets/images/MockImage.png";
+
+import MessageCard from ".";
 
 export default {
   title: "@Component/MessageCard",

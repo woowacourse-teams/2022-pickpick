@@ -1,20 +1,18 @@
-import RobotoBoldWoff2 from "@public/assets/fonts/Roboto-Bold.woff2";
-import RobotoBoldWoff from "@public/assets/fonts/Roboto-Bold.woff";
-import RobotoBoldTtf from "@public/assets/fonts/Roboto-Bold.ttf";
-
-import RobotoRegularWoff2 from "@public/assets/fonts/Roboto-Regular.woff2";
-import RobotoRegularWoff from "@public/assets/fonts/Roboto-Regular.woff";
-import RobotoRegularTtf from "@public/assets/fonts/Roboto-Regular.ttf";
-
-import RobotoLightWoff2 from "@public/assets/fonts/Roboto-Light.woff2";
-import RobotoLightWoff from "@public/assets/fonts/Roboto-Light.woff";
-import RobotoLightTtf from "@public/assets/fonts/Roboto-Light.ttf";
-
-import TwayairWoff2 from "@public/assets/fonts/tway_air.woff2";
-import TwayairWoff from "@public/assets/fonts/tway_air.woff";
-import TwayairTtf from "@public/assets/fonts/tway_air.ttf";
-
 import { createGlobalStyle, css } from "styled-components";
+
+import RobotoBoldTtf from "@public/assets/fonts/Roboto-Bold.ttf";
+import RobotoBoldWoff from "@public/assets/fonts/Roboto-Bold.woff";
+import RobotoBoldWoff2 from "@public/assets/fonts/Roboto-Bold.woff2";
+import RobotoLightTtf from "@public/assets/fonts/Roboto-Light.ttf";
+import RobotoLightWoff from "@public/assets/fonts/Roboto-Light.woff";
+import RobotoLightWoff2 from "@public/assets/fonts/Roboto-Light.woff2";
+import RobotoRegularTtf from "@public/assets/fonts/Roboto-Regular.ttf";
+import RobotoRegularWoff from "@public/assets/fonts/Roboto-Regular.woff";
+import RobotoRegularWoff2 from "@public/assets/fonts/Roboto-Regular.woff2";
+import TwayairTtf from "@public/assets/fonts/tway_air.ttf";
+import TwayairWoff from "@public/assets/fonts/tway_air.woff";
+import TwayairWoff2 from "@public/assets/fonts/tway_air.woff2";
+
 import { Theme } from "@src/@types/shared";
 
 const GlobalStyle = createGlobalStyle<{ theme: Theme }>`

@@ -1,26 +1,30 @@
-import { FlexColumn } from "@src/@styles/shared";
-import MessageCard from "@src/components/MessageCard";
-import * as Styled from "./style";
-import React from "react";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseMessages, parseTime } from "@src/@utils";
-import useMessageDate from "@src/hooks/useMessageDate";
+import { Fragment } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import DateDropdown from "@src/components/DateDropdown";
-import useModal from "@src/hooks/useModal";
-import Portal from "@src/components/@shared/Portal";
+
 import Dimmer from "@src/components/@shared/Dimmer";
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Portal from "@src/components/@shared/Portal";
 import Calendar from "@src/components/Calendar";
+import DateDropdown from "@src/components/DateDropdown";
 import EmptyStatus from "@src/components/EmptyStatus";
-import SearchForm from "@src/components/SearchForm";
+import MessageCard from "@src/components/MessageCard";
+import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import SearchForm from "@src/components/SearchForm";
+
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useMessageDate from "@src/hooks/useMessageDate";
+import useModal from "@src/hooks/useModal";
 import useScrollToTop from "@src/hooks/useScrollToTop";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseMessages, parseMeridemTime } from "@src/@utils";
+
+import * as Styled from "./style";
 
 function Feed() {
   const { channelId } = useParams();
@@ -85,7 +89,7 @@ function Feed() {
               const parsedDate = postedDate.split("T")[0];
 
               return (
-                <React.Fragment key={id}>
+                <Fragment key={id}>
                   {isRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
@@ -95,7 +99,7 @@ function Feed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={parseTime(postedDate)}
+                    date={parseMeridemTime(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}
@@ -118,7 +122,7 @@ function Feed() {
                       />
                     </>
                   </MessageCard>
-                </React.Fragment>
+                </Fragment>
               );
             }
           )}

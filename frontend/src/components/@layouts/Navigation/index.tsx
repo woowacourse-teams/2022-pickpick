@@ -1,23 +1,27 @@
-import * as Styled from "./style";
-import { PATH_NAME } from "@src/@constants";
-import StarIcon from "@src/components/@svgIcons/StarIcon";
-import MenuIcon from "@src/components/@svgIcons/MenuIcon";
-import HomeIcon from "@src/components/@svgIcons/HomeIcon";
-import InfoIcon from "@src/components/@svgIcons/InfoIcon";
-import ReminderIconInactive from "@src/components/@svgIcons/ReminderIconInactive";
-import WrapperButton from "@src/components/@shared/WrapperButton";
+import { useTheme } from "styled-components";
+
+import Button from "@src/components/@shared/Button";
 import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
+import WrapperButton from "@src/components/@shared/WrapperButton";
 import WrapperLink from "@src/components/@shared/WrapperLink";
-import Drawer from "@src/components/Drawer";
-import useModal from "@src/hooks/useModal";
-import Button from "@src/components/@shared/Button";
-import useAuthentication from "@src/hooks/useAuthentication";
-import { useTheme } from "styled-components";
-import { Theme } from "@src/@types/shared";
+import HomeIcon from "@src/components/@svgIcons/HomeIcon";
+import InfoIcon from "@src/components/@svgIcons/InfoIcon";
+import MenuIcon from "@src/components/@svgIcons/MenuIcon";
+import ReminderIconInactive from "@src/components/@svgIcons/ReminderIconInactive";
+import StarIcon from "@src/components/@svgIcons/StarIcon";
+import ChannelsDrawer from "@src/components/ChannelsDrawer";
+
 import useGetSubscribedChannels from "@src/hooks/query/useGetSubscribedChannels";
-import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
+import useAuthentication from "@src/hooks/useAuthentication";
+import useModal from "@src/hooks/useModal";
 import useOuterClick from "@src/hooks/useOuterClick";
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
+
+import { PATH_NAME } from "@src/@constants";
+import { Theme } from "@src/@types/shared";
+
+import * as Styled from "./style";
 
 function Navigation() {
   const { logout } = useAuthentication();
@@ -126,7 +130,7 @@ function Navigation() {
         <>
           <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
           <div ref={drawerInnerRef}>
-            <Drawer
+            <ChannelsDrawer
               channels={data?.channels}
               handleCloseDrawer={handleCloseDrawer}
             />

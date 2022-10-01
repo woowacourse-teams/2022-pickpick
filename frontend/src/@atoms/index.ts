@@ -1,6 +1,7 @@
+import { atom } from "recoil";
+
 import { SNACKBAR_STATUS, THEME_KIND } from "@src/@constants";
 import { SnackbarStatus, ThemeKind } from "@src/@types/shared";
-import { atom } from "recoil";
 
 interface SnackbarState {
   isOpened: boolean;

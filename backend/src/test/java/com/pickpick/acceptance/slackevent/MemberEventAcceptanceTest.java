@@ -1,5 +1,8 @@
 package com.pickpick.acceptance.slackevent;
 
+import static com.pickpick.acceptance.RestHandler.post;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
@@ -22,7 +25,8 @@ class MemberEventAcceptanceTest extends AcceptanceTest {
         Map<String, Object> memberUpdatedRequest = createEventRequest("실제이름", "표시이름", "test.png");
 
         // when
-        ExtractableResponse<Response> memberChangedResponse = post(MEMBER_EVENT_API_URL, memberUpdatedRequest);
+        ExtractableResponse<Response> memberChangedResponse = post(MEMBER_EVENT_API_URL,
+                memberUpdatedRequest);
 
         // then
         상태코드_200_확인(memberChangedResponse);

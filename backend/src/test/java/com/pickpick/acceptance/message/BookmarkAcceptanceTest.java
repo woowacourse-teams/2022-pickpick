@@ -1,5 +1,9 @@
 package com.pickpick.acceptance.message;
 
+import static com.pickpick.acceptance.RestHandler.deleteWithToken;
+import static com.pickpick.acceptance.RestHandler.getWithToken;
+import static com.pickpick.acceptance.RestHandler.postWithToken;
+import static com.pickpick.acceptance.RestHandler.상태코드_확인;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTest;
@@ -25,8 +29,12 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 북마크_생성() {
-        // given & when
-        ExtractableResponse<Response> response = postWithCreateToken(BOOKMARK_API_URL, Map.of("messageId", 1), 1L);
+        // given
+        String token = jwtTokenProvider.createToken("1");
+
+        // when
+        ExtractableResponse<Response> response = postWithToken(BOOKMARK_API_URL,
+                Map.of("messageId", 1), token);
 
         // then
         상태코드_확인(response, HttpStatus.CREATED);
@@ -38,8 +46,10 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("bookmarkId", "");
         List<Long> expectedIds = List.of(1L);
 
+        String token = jwtTokenProvider.createToken("2");
+
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 2L, request);
+        ExtractableResponse<Response> response = getWithToken(BOOKMARK_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -55,16 +65,16 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         Map<String, Object> request = Map.of("bookmarkId", "23");
         List<Long> expectedIds = List.of(22L, 21L, 20L, 19L, 18L, 17L, 16L, 15L, 14L, 13L, 12L, 11L, 10L, 9L, 8L, 7L,
                 6L, 5L, 4L, 3L);
-        boolean expectedHasPast = true;
+        String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 1L, request);
+        ExtractableResponse<Response> response = getWithToken(BOOKMARK_API_URL, token, request);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
-        assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
+        assertThat(bookmarkResponses.hasPast()).isTrue();
         assertThat(convertToIds(bookmarkResponses)).containsExactlyElementsOf(expectedIds);
     }
 
@@ -79,10 +89,12 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     void 북마크_정상_삭제() {
         // given
         long messageId = 2L;
+        String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
-                1L);
+        ExtractableResponse<Response> response = deleteWithToken(
+                BOOKMARK_API_URL + "?messageId=" + messageId,
+                token);
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
@@ -92,10 +104,12 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     void 사용자에게_존재하지_않는_북마크_삭제() {
         // given
         long messageId = 1L;
+        String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = deleteWithCreateToken(BOOKMARK_API_URL + "?messageId=" + messageId,
-                1L);
+        ExtractableResponse<Response> response = deleteWithToken(
+                BOOKMARK_API_URL + "?messageId=" + messageId,
+                token);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);

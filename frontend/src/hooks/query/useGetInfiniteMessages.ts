@@ -1,7 +1,9 @@
+import { useInfiniteQuery } from "react-query";
+
 import { QUERY_KEY } from "@src/@constants";
 import { CustomError, ResponseMessages } from "@src/@types/shared";
+
 import { getMessages } from "@src/api/messages";
-import { useInfiniteQuery } from "react-query";
 
 interface Props {
   queryKey: string[];

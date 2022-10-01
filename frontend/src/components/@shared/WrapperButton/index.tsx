@@ -1,4 +1,5 @@
-import { PropsWithChildren, ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+
 import * as Styled from "./style";
 
 export type Kind = "bigIcon" | "smallIcon" | "text";

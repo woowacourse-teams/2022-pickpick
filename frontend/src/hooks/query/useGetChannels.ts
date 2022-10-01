@@ -1,7 +1,9 @@
+import { useQuery } from "react-query";
+
 import { QUERY_KEY } from "@src/@constants";
 import { CustomError, ResponseChannels } from "@src/@types/shared";
+
 import { getChannels } from "@src/api/channels";
-import { useQuery } from "react-query";
 
 function useGetChannels() {
   return useQuery<ResponseChannels, CustomError>(
