@@ -1,5 +1,6 @@
-import { subscribeChannel, unsubscribeChannel } from "@src/api/channels";
 import { useMutation } from "react-query";
+
+import { subscribeChannel, unsubscribeChannel } from "@src/api/channels";
 
 interface Props {
   handleSettleSubscribeChannel?: () => void;

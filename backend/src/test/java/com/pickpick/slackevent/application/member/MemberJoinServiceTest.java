@@ -1,13 +1,13 @@
 package com.pickpick.slackevent.application.member;
 
+import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static utils.JsonUtils.toJson;
 
-import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.support.DatabaseCleaner;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;

@@ -1,14 +1,17 @@
-import { FlexColumn } from "@src/@styles/shared";
-import MessageCard from "@src/components/MessageCard";
-import * as Styled from "../Feed/style";
+import * as Styled from "@src/pages/Feed/style";
+
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import EmptyStatus from "@src/components/EmptyStatus";
-import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
-import { extractResponseBookmarks, parseTime } from "@src/@utils";
+import MessageCard from "@src/components/MessageCard";
+import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
+
 import useGetInfiniteBookmarks from "@src/hooks/query/useGetInfiniteBookmarks";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
 import useScrollToTop from "@src/hooks/useScrollToTop";
+
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseBookmarks, parseMeridemTime } from "@src/@utils";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
@@ -45,7 +48,7 @@ function Bookmark() {
                   key={id}
                   username={username}
                   isRemindedMessage={false}
-                  date={parseTime(postedDate)}
+                  date={parseMeridemTime(postedDate)}
                   text={text}
                   thumbnail={userThumbnail}
                 >

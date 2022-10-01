@@ -1,6 +1,7 @@
-import { useLocation } from "react-router-dom";
-import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
 
 function useRecentFeedPath() {
   const { key, pathname } = useLocation();
@@ -12,7 +13,9 @@ function useRecentFeedPath() {
 
   useEffect(() => {
     const name = pathname.split("/")[1];
+
     if (name !== "feed") return;
+
     setRecentFeedPath(pathname);
   }, [pathname, key]);
 

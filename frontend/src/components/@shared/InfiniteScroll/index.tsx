@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
-import useIntersectionObserver from "@src/hooks/useIntersectionObserver";
+
+import useIntersectionObserver from "@src/components/@shared/InfiniteScroll/@hooks/useIntersectionObserver";
 
 export interface Props {
   callback: () => void;

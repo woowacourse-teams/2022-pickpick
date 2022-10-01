@@ -1,6 +1,8 @@
-import useDropdown from "@src/hooks/useDropdown";
-import useOuterClick from "@src/hooks/useOuterClick";
 import { RefObject, useEffect } from "react";
+
+import useDropdown from "@src/components/Dropdown/@hooks/useDropdown";
+
+import useOuterClick from "@src/hooks/useOuterClick";
 
 interface ChildrenProps {
   innerRef: RefObject<HTMLDivElement>;

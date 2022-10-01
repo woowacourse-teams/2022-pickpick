@@ -1,7 +1,7 @@
-import React from "react";
+import { CSSProperties } from "react";
 import styled, { css } from "styled-components";
 
-type FlexStyle = Omit<React.CSSProperties, "display" | "flexDirection">;
+type FlexStyle = Omit<CSSProperties, "display" | "flexDirection">;
 
 export const FlexRow = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ export const FlexRow = styled.div`
   `}
 `;
 
-export const FlexColumn = styled.div<FlexStyle>`
+export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
 

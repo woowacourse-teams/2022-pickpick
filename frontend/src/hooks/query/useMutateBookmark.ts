@@ -1,5 +1,6 @@
-import { postBookmark, deleteBookmark } from "@src/api/bookmarks";
 import { useMutation } from "react-query";
+
+import { deleteBookmark, postBookmark } from "@src/api/bookmarks";
 
 interface Props {
   handleSettleAddBookmark?: () => void;

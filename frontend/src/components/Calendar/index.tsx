@@ -1,10 +1,13 @@
-import * as Styled from "./style";
-import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
-import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
-import useCalendar from "@src/hooks/useCalendar";
-import WrapperButton from "../@shared/WrapperButton";
 import { Link } from "react-router-dom";
+
+import WrapperButton from "@src/components/@shared/WrapperButton";
+import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
+import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
+import useCalendar from "@src/components/Calendar/@hooks/useCalendar";
+
 import { ISOConverter } from "@src/@utils";
+
+import * as Styled from "./style";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
@@ -60,17 +63,21 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           const isFuture = day > todayDate.getDate() && isFutureMonth();
           const isCurrentDay = day === todayDate.getDate() && isCurrentMonth();
 
-          return isBlank || isFuture ? (
-            <Styled.Day
-              isBlank={isBlank}
-              isCurrentDay={isCurrentDay}
-              isFuture={isFuture}
-              onClick={handleCloseCalendar}
-            >
-              {day}
-              <div></div>
-            </Styled.Day>
-          ) : (
+          if (isBlank || isFuture) {
+            return (
+              <Styled.Day
+                isBlank={isBlank}
+                isCurrentDay={isCurrentDay}
+                isFuture={isFuture}
+                onClick={handleCloseCalendar}
+              >
+                {day}
+                <div></div>
+              </Styled.Day>
+            );
+          }
+
+          return (
             <Link
               key={index}
               to={`/feed/${channelId}/${ISOConverter(

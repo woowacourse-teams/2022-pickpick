@@ -12,6 +12,7 @@ function useOuterClick({ callback, requiredInnerRefCount = 1 }: Props) {
   const innerRefArray = [
     ...Array(requiredInnerRefCount <= 0 ? 1 : requiredInnerRefCount),
   ].map(() => useRef<HTMLDivElement>(null));
+
   callbackRef.current = callback;
 
   useEffect(() => {

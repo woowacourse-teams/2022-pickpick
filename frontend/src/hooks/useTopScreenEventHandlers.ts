@@ -1,4 +1,4 @@
-import { useEffect, useRef, WheelEventHandler, TouchEventHandler } from "react";
+import { TouchEventHandler, WheelEventHandler, useEffect, useRef } from "react";
 
 interface Props {
   isCallable?: boolean;

@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { NavLinkProps } from "react-router-dom";
-import { Kind } from "../WrapperButton";
+
+import { Kind } from "@src/components/@shared/WrapperButton";
+
 import * as Styled from "./style";
 
 interface Props extends NavLinkProps {

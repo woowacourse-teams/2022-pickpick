@@ -1,6 +1,5 @@
 package com.pickpick.message.application;
 
-import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_15_00_00;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
 import static com.pickpick.fixture.MessageRequestFactory.futureFromTargetMessageInChannels;
@@ -15,7 +14,6 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.config.DatabaseCleaner;
 import com.pickpick.fixture.MessageFixtures;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -28,6 +26,7 @@ import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
+import com.pickpick.support.DatabaseCleaner;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -35,11 +34,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -81,14 +83,15 @@ class MessageServiceTest {
     @SpyBean
     private Clock clock;
 
-    @AfterEach
-    void tearDown() {
-        databaseCleaner.clear();
-    }
-
     @DisplayName("메시지 조회 시")
+    @TestInstance(Lifecycle.PER_CLASS)
     @Nested
     class find {
+
+        @AfterAll
+        void afterAll() {
+            databaseCleaner.clear();
+        }
 
         Member summer = members.save(summer());
         Channel notice = channels.save(notice());
@@ -117,7 +120,6 @@ class MessageServiceTest {
 
                 assertThat(isEmptyMessageFiltered).isTrue();
             }
-
         }
 
         @DisplayName("조회 할 과거 메시지가 남아 있다면")
@@ -134,7 +136,6 @@ class MessageServiceTest {
 
                 assertThat(hasPast).isTrue();
             }
-
         }
 
         @DisplayName("조회 할 과거 메시지가 더 이상 없다면")
@@ -151,7 +152,6 @@ class MessageServiceTest {
 
                 assertThat(hasPast).isFalse();
             }
-
         }
 
         @DisplayName("조회 할 미래 메시지가 남아 있다면")
@@ -205,7 +205,6 @@ class MessageServiceTest {
 
                 assertThat(containsKeyword).isTrue();
             }
-
         }
 
         @DisplayName("쿼리 파라미터가 하나도 없다면")
@@ -226,7 +225,6 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages).hasSize(MESSAGE_COUNT_DEFAULT)
                 );
             }
-
         }
 
         @DisplayName("쿼리 파라미터 중 count만 존재한다면")
@@ -247,7 +245,6 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages).hasSize(MESSAGE_COUNT)
                 );
             }
-
         }
 
         @DisplayName("쿼리 파라미터에 하나의 채널 ID가 있다면")
@@ -269,7 +266,6 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages).extracting("id").containsAll(freeChatMessagesId)
                 );
             }
-
         }
 
         @DisplayName("쿼리 파라미터에 복수의 채널 ID가 있다면")
@@ -296,7 +292,28 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages).extracting("id").doesNotContainAnyElementsOf(qnaMessagesId)
                 );
             }
+        }
 
+        private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
+            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+                    .map(messageFixture -> messageFixture.create(channel, member))
+                    .collect(Collectors.toList());
+
+            for (Message fixture : messagesInChannel) {
+                messages.save(fixture);
+            }
+
+            return messagesInChannel;
+        }
+
+        private List<Long> extractDateOrderedIds(final List<Message> messages, final int count) {
+            List<Long> dateOrderedMessageIds = messages.stream()
+                    .filter(message -> !message.getText().isEmpty())
+                    .sorted(Comparator.comparing(Message::getPostedDate).reversed())
+                    .map(Message::getId)
+                    .collect(Collectors.toList());
+
+            return dateOrderedMessageIds.subList(0, count);
         }
 
         @DisplayName("쿼리 파라미터에 채널ID와 메세지ID가 존재하고, 앞선 메시지를 조회한다면")
@@ -312,8 +329,8 @@ class MessageServiceTest {
             @Test
             void messagesAfterTargetMessageInChannel() {
                 List<MessageResponse> foundMessages = response.getMessages();
-                List<Long> expectedIds = extractIdsCreatedAfterTarget(noticeMessages, targetMessage,
-                        MESSAGE_COUNT);
+                List<Long> expectedIds = extractIdsCreatedAfterTargetOrderByDate(noticeMessages, targetMessage
+                );
                 boolean isFutureMessages = foundMessages.stream()
                         .allMatch(message -> message.getPostedDate().isAfter(targetMessage.getPostedDate()));
 
@@ -322,7 +339,165 @@ class MessageServiceTest {
                         () -> assertThat(isFutureMessages).isTrue()
                 );
             }
+        }
 
+        private MessageResponse extractTargetMessage(final Message target, final List<MessageResponse> messages) {
+            return messages.stream()
+                    .filter(message -> message.getId().equals(target.getId()))
+                    .findAny()
+                    .orElseThrow(NoSuchElementException::new);
+        }
+
+        private Member summer() {
+            return new Member("U00001", "써머", "https://summer.png");
+        }
+
+        private Channel notice() {
+            return new Channel("C00001", "공지사항");
+        }
+
+        private Channel freeChat() {
+            return new Channel("C00002", "잡담");
+        }
+
+        private List<Long> extractIdsCreatedAfterTargetOrderByDate(final List<Message> messages, final Message target) {
+            List<Long> reverseOrderedIdsAfterTarget = messages.stream()
+                    .filter(message -> !message.getText().isEmpty()
+                            && message.getPostedDate().isAfter(target.getPostedDate()))
+                    .sorted(Comparator.comparing(Message::getPostedDate))
+                    .map(Message::getId)
+                    .collect(Collectors.toList());
+
+            List<Long> idsSlicedByCount = reverseOrderedIdsAfterTarget.subList(0, MessageServiceTest.MESSAGE_COUNT);
+            Collections.reverse(idsSlicedByCount);
+
+            return idsSlicedByCount;
+        }
+
+        private List<Long> extractIdsCreatedBeforeTargetOrderByDate(final List<Message> messages,
+                                                                    final Message target) {
+            List<Long> dateOrderedIdsBeforeTarget = messages.stream()
+                    .filter(message -> !message.getText().isEmpty()
+                            && message.getPostedDate().isBefore(target.getPostedDate()))
+                    .sorted(Comparator.comparing(Message::getPostedDate).reversed())
+                    .map(Message::getId)
+                    .collect(Collectors.toList());
+
+            return dateOrderedIdsBeforeTarget.subList(0, MessageServiceTest.MESSAGE_COUNT);
+        }
+
+        private List<Long> extractIds(final List<Message> messages) {
+            return messages.stream()
+                    .filter(message -> !message.getText().isEmpty())
+                    .map(Message::getId)
+                    .collect(Collectors.toList());
+        }
+
+        @DisplayName("isBookmarked 필드는")
+        @Nested
+        class isBookmarked {
+
+            Bookmark bookmark = bookmarks.save(new Bookmark(summer, noticeMessages.get(0)));
+
+            MessageRequest request = fromLatestInChannels(List.of(notice), noticeMessages.size());
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("북마크 되었다면 true다")
+            @Test
+            void trueIfBookmarked() {
+                List<MessageResponse> messages = response.getMessages();
+                MessageResponse bookmarkedMessage = extractTargetMessage(bookmark.getMessage(), messages);
+
+                assertThat(bookmarkedMessage.isBookmarked()).isTrue();
+            }
+
+            @DisplayName("북마크 되지 않았다면 false다")
+            @Test
+            void falseIfNotBookmarked() {
+                List<MessageResponse> foundMessages = response.getMessages();
+                List<MessageResponse> exceptTargetMessage = foundMessages.stream()
+                        .filter(message -> !message.getId().equals(bookmark.getMessage().getId()))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(exceptTargetMessage).isNotEmpty(),
+                        () -> assertThat(exceptTargetMessage).allMatch(message -> !message.isBookmarked())
+                );
+            }
+        }
+
+        @DisplayName("리마인더 관련 필드는")
+        @Nested
+        class reminder {
+            Reminder reminder = reminders.save(
+                    new Reminder(summer, noticeMessages.get(0), LocalDateTime.parse("2022-08-12T00:00:00")));
+
+            MessageRequest request = fromLatestInChannels(List.of(notice), noticeMessages.size());
+
+            @DisplayName("리마인더가 등록되지 않았다면 isReminder는 false, remindDate는 null이다")
+            @Test
+            void isSetRemindedFalseAndRemindDateNullIfNotReminded() {
+                MessageResponses response = messageService.find(summer.getId(), request);
+                List<MessageResponse> messages = response.getMessages();
+
+                List<MessageResponse> exceptTargetMessage = messages.stream()
+                        .filter(message -> !message.getId().equals(reminder.getMessage().getId()))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(exceptTargetMessage).allMatch(message -> !message.isSetReminded()),
+                        () -> assertThat(exceptTargetMessage).allMatch(message -> message.getRemindDate() == null)
+                );
+            }
+
+            @DisplayName("등록된 리마인더 시간이 LocalDateTime.now()보다 과거면 isSetReminded는 false, remindDate는 null이다")
+            @Test
+            void remindDateIsPastIsSetRemindedFalseAndRemindDateNull() {
+                given(clock.instant())
+                        .willReturn(Instant.parse("2022-08-11T23:50:00Z"));
+                MessageResponses response = messageService.find(summer.getId(), request);
+                List<MessageResponse> messages = response.getMessages();
+
+                MessageResponse remindedMessage = extractTargetMessage(reminder.getMessage(), messages);
+
+                assertAll(
+                        () -> assertThat(remindedMessage.isSetReminded()).isFalse(),
+                        () -> assertThat(remindedMessage.getRemindDate()).isNull()
+                );
+            }
+
+            @DisplayName("등록된 리마인더 시간이 LocalDateTime.now()와 동일하면 isSetReminded는 false, remindDate는 null이다")
+            @Test
+            void remindDateIsSameAsNowSetRemindedFalseAndRemindDateNull() {
+                given(clock.instant())
+                        .willReturn(Instant.parse("2022-08-12T00:00:00Z"));
+                MessageResponses response = messageService.find(summer.getId(), request);
+                List<MessageResponse> messages = response.getMessages();
+
+                MessageResponse remindedMessage = extractTargetMessage(reminder.getMessage(), messages);
+
+                assertAll(
+                        () -> assertThat(remindedMessage.isSetReminded()).isFalse(),
+                        () -> assertThat(remindedMessage.getRemindDate()).isNull()
+                );
+            }
+
+            @DisplayName("등록한 리마인더 시간이 LocalDateTime.now()보다 미래면 isSetReminded는 true, remindDate는 설정 시간값이다")
+            @Test
+            void remindDateIsFutureUsSetRemindedTrueAndRemindDateExists() {
+                given(clock.instant())
+                        .willReturn(Instant.parse("2022-08-11T00:00:00Z"));
+                MessageResponses response = messageService.find(summer.getId(), request);
+                List<MessageResponse> messages = response.getMessages();
+
+                MessageResponse remindedMessage = extractTargetMessage(reminder.getMessage(), messages);
+
+                assertAll(
+                        () -> assertThat(remindedMessage.isSetReminded()).isTrue(),
+                        () -> assertThat(remindedMessage.getRemindDate())
+                                .isEqualTo(LocalDateTime.parse("2022-08-12T00:00:00"))
+                );
+            }
         }
 
         @DisplayName("쿼리 파라미터에 채널ID와 메시지ID가 존재하고, 지난 메시지를 조회한다면")
@@ -338,7 +513,8 @@ class MessageServiceTest {
             @Test
             void pastMessagesInChannelFromTargetMessage() {
                 List<MessageResponse> foundMessages = response.getMessages();
-                List<Long> expectedIds = extractIdsCreatedBeforeTarget(noticeMessages, targetMessage, MESSAGE_COUNT);
+                List<Long> expectedIds = extractIdsCreatedBeforeTargetOrderByDate(noticeMessages, targetMessage
+                );
                 boolean isPastMessages = foundMessages.stream()
                         .allMatch(message -> message.getPostedDate().isBefore(targetMessage.getPostedDate()));
 
@@ -347,217 +523,6 @@ class MessageServiceTest {
                         () -> assertThat(isPastMessages).isTrue()
                 );
             }
-
         }
-
-        private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
-            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
-                    .map(messageFixture -> messageFixture.create(channel, member))
-                    .collect(Collectors.toList());
-
-            for (Message fixture : messagesInChannel) {
-                messages.save(fixture);
-            }
-
-            return messagesInChannel;
-        }
-    }
-
-    @DisplayName("북마크가 등록되지 않은 메시지라면, isBookmarked가 false 이다")
-    @Test
-    void isBookmarkedFalseIfNotBookmarked() {
-        // given
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
-
-        Message message = messages.save(PLAIN_20220712_15_00_00.create(notice, summer));
-        bookmarks.save(new Bookmark(summer, message));
-
-        MessageRequest request = emptyQueryParams();
-
-        // when
-        MessageResponses response = messageService.find(summer.getId(), request);
-        MessageResponse foundMessage = response.getMessages().get(0);
-
-        // then
-        assertThat(foundMessage.isBookmarked()).isTrue();
-    }
-
-    @DisplayName("북마크가 등록 된 메시지라면, isBookmarked가 true 이다")
-    @Test
-    void isBookmarkedIsTrueIfBookmarked() {
-        // given
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
-
-        Message message = messages.save(PLAIN_20220712_15_00_00.create(notice, summer));
-        bookmarks.save(new Bookmark(summer, message));
-
-        MessageRequest request = emptyQueryParams();
-
-        // when
-        MessageResponses response = messageService.find(summer.getId(), request);
-        MessageResponse foundMessage = response.getMessages().get(0);
-
-        // then
-        assertThat(foundMessage.isBookmarked()).isTrue();
-    }
-
-    @DisplayName("리마인더가 등록되지 않은 메시지라면, isReminder가 false이고, remindDate값이 null이다")
-    @Test
-    void isReminderFalseAndNullRemindDateIfNotReminded() {
-        // given
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
-
-        messages.save(PLAIN_20220712_15_00_00.create(notice, summer));
-
-        MessageRequest request = emptyQueryParams();
-
-        // when
-        MessageResponses response = messageService.find(summer.getId(), request);
-        MessageResponse foundMessage = response.getMessages().get(0);
-
-        // then
-        assertAll(
-                () -> assertThat(foundMessage.isSetReminded()).isFalse(),
-                () -> assertThat(foundMessage.getRemindDate()).isNull()
-        );
-    }
-
-    @DisplayName("리마인더가 등록된 메시지라면, isReminder가 true고, remindDate값이 조회된다")
-    @Test
-    void isReminderTrueAndRemindDateIfReminded() {
-        // given
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
-
-        Message message = messages.save(PLAIN_20220712_15_00_00.create(notice, summer));
-        LocalDateTime remindDate = LocalDateTime.now().plusDays(1);
-        reminders.save(new Reminder(summer, message, remindDate));
-
-        MessageRequest request = emptyQueryParams();
-
-        // when
-        MessageResponses response = messageService.find(summer.getId(), request);
-        MessageResponse foundMessage = response.getMessages().get(0);
-
-        // then
-        assertAll(
-                () -> assertThat(foundMessage.isSetReminded()).isTrue(),
-                () -> assertThat(foundMessage.getRemindDate()).isEqualTo(remindDate.toString())
-        );
-    }
-
-    @DisplayName("메시지에 리마인더가 있지만 LocalDateTime.now()보다 오래됐다면, isSetReminded가 false다")
-    @Test
-    void messageSetRemindedPastIsSetRemindedFalse() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-13T00:00:00Z"));
-        LocalDateTime pastFromMockTime = LocalDateTime.parse("2022-08-12T00:00:00");
-
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
-
-        Message message = messages.save(PLAIN_20220712_15_00_00.create(notice, summer));
-        reminders.save(new Reminder(summer, message, pastFromMockTime));
-
-        MessageRequest request = emptyQueryParams();
-
-        // when
-        MessageResponses response = messageService.find(summer.getId(), request);
-        MessageResponse foundMessage = response.getMessages().get(0);
-
-        // then
-        assertThat(foundMessage.isSetReminded()).isFalse();
-    }
-
-    @DisplayName("메시지에 리마인더가 있지만 LocalDateTime.now()과 일치한다면, isSetReminded가 false다")
-    @Test
-    void messageSetRemindedSameAsNowIsSetRemindedFalse() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-13T00:00:00Z"));
-        LocalDateTime sameAsMockTime = LocalDateTime.parse("2022-08-13T00:00:00");
-
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        subscriptions.save(new ChannelSubscription(notice, summer, VIEW_ORDER_FIRST));
-
-        Message message = messages.save(PLAIN_20220712_15_00_00.create(notice, summer));
-        reminders.save(new Reminder(summer, message, sameAsMockTime));
-
-        MessageRequest request = emptyQueryParams();
-
-        // when
-        MessageResponses response = messageService.find(summer.getId(), request);
-        MessageResponse foundMessage = response.getMessages().get(0);
-
-        // then
-        assertThat(foundMessage.isSetReminded()).isFalse();
-    }
-
-    private Member summer() {
-        return new Member("U00001", "써머", "https://summer.png");
-    }
-
-    private Channel notice() {
-        return new Channel("C00001", "공지사항");
-    }
-
-    private Channel freeChat() {
-        return new Channel("C00002", "잡담");
-    }
-
-    private List<Long> extractIds(final List<Message> messages) {
-        return messages.stream()
-                .filter(message -> !message.getText().isEmpty())
-                .map(Message::getId)
-                .collect(Collectors.toList());
-    }
-
-    private List<Long> extractDateOrderedIds(final List<Message> messages, final int count) {
-        List<Long> dateOrderedMessageIds = messages.stream()
-                .filter(message -> !message.getText().isEmpty())
-                .sorted(Comparator.comparing(Message::getPostedDate).reversed())
-                .map(Message::getId)
-                .collect(Collectors.toList());
-
-        return dateOrderedMessageIds.subList(0, count);
-    }
-
-    private List<Long> extractIdsCreatedBeforeTarget(final List<Message> messages,
-                                                     final Message target,
-                                                     final int count) {
-        List<Long> dateOrderedIdsBeforeTarget = messages.stream()
-                .filter(message -> !message.getText().isEmpty()
-                        && message.getPostedDate().isBefore(target.getPostedDate()))
-                .sorted(Comparator.comparing(Message::getPostedDate).reversed())
-                .map(Message::getId)
-                .collect(Collectors.toList());
-
-        return dateOrderedIdsBeforeTarget.subList(0, count);
-    }
-
-    private List<Long> extractIdsCreatedAfterTarget(final List<Message> messages,
-                                                    final Message target,
-                                                    final int count) {
-        List<Long> reverseOrderedIdsAfterTarget = messages.stream()
-                .filter(message -> !message.getText().isEmpty()
-                        && message.getPostedDate().isAfter(target.getPostedDate()))
-                .sorted(Comparator.comparing(Message::getPostedDate))
-                .map(Message::getId)
-                .collect(Collectors.toList());
-
-        List<Long> idsSlicedByCount = reverseOrderedIdsAfterTarget.subList(0, count);
-        Collections.reverse(idsSlicedByCount);
-
-        return idsSlicedByCount;
     }
 }

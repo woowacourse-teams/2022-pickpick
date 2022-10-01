@@ -1,9 +1,11 @@
+import { fetcher } from "@src/api";
+
 import { API_ENDPOINT } from "@src/@constants";
 import {
   ResponseChannels,
   ResponseSubscribedChannels,
 } from "@src/@types/shared";
-import { fetcher } from ".";
+
 import { getPrivateHeaders } from "@src/api/utils";
 
 export const getChannels = async () => {

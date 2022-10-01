@@ -1,5 +1,6 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 interface StyledDayProps extends StyledDefaultProps {
   isBlank: boolean;
@@ -8,15 +9,18 @@ interface StyledDayProps extends StyledDefaultProps {
 }
 
 export const Container = styled.div`
-  width: 280px;
-  height: 313px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  width: 280px;
+  height: 313px;
   padding: 18px;
+
   position: fixed;
   top: 40%;
   left: 50%;
+
   transform: translate(-50%, -50%);
   z-index: 2;
 
@@ -26,10 +30,11 @@ export const Container = styled.div`
 `;
 
 export const Month = styled.div`
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  width: 100%;
 `;
 
 export const Title = styled.h1`
@@ -39,10 +44,11 @@ export const Title = styled.h1`
 `;
 
 export const Weekdays = styled.div`
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
+
+  width: 100%;
 `;
 
 export const Weekday = styled.p`

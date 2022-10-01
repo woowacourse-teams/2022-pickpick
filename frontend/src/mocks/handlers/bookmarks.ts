@@ -1,6 +1,7 @@
-import { messages } from "../data/messages";
 import { rest } from "msw";
-import { SIZE, BODY_TYPE } from "../utils";
+
+import { messages } from "../data/messages";
+import { BODY_TYPE, SIZE } from "../utils";
 
 let bookmarks = [] as any;
 

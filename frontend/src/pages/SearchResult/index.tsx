@@ -1,24 +1,27 @@
-import * as Styled from "../Feed/style";
-import MessageCard from "@src/components/MessageCard";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { FlexColumn } from "@src/@styles/shared";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
-import {
-  getChannelIdsParams,
-  extractResponseMessages,
-  parseTime,
-} from "@src/@utils";
-import useModal from "@src/hooks/useModal";
-import Portal from "@src/components/@shared/Portal";
+import * as Styled from "@src/pages/Feed/style";
+
 import Dimmer from "@src/components/@shared/Dimmer";
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Portal from "@src/components/@shared/Portal";
+import MessageCard from "@src/components/MessageCard";
+import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import ReminderModal from "@src/components/ReminderModal";
-import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
 import SearchForm from "@src/components/SearchForm";
-import useGetSearchParam from "@src/hooks/useGetSearchParam";
+
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useGetSearchParam from "@src/hooks/useGetSearchParam";
+import useModal from "@src/hooks/useModal";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+
+import { FlexColumn } from "@src/@styles/shared";
+import {
+  extractResponseMessages,
+  getChannelIdsParams,
+  parseMeridemTime,
+} from "@src/@utils";
 
 function SearchResult() {
   const keyword = useGetSearchParam("keyword");
@@ -81,7 +84,7 @@ function SearchResult() {
               <MessageCard
                 key={id}
                 username={username}
-                date={parseTime(postedDate)}
+                date={parseMeridemTime(postedDate)}
                 text={text}
                 thumbnail={userThumbnail}
                 isRemindedMessage={false}

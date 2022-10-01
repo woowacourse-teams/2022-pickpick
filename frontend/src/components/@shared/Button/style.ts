@@ -1,5 +1,7 @@
-import styled, { css, CSSProp } from "styled-components";
+import styled, { CSSProp, css } from "styled-components";
+
 import { StyledDefaultProps, Theme } from "@src/@types/shared";
+
 import { Props, Size } from ".";
 
 const sizeTable: Record<Size, CSSProp<Theme>> = {

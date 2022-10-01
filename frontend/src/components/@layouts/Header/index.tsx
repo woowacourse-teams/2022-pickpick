@@ -1,5 +1,6 @@
-import * as Styled from "./style";
 import { SLACK_LOGIN_URL } from "@src/@constants";
+
+import * as Styled from "./style";
 
 function Header() {
   return (

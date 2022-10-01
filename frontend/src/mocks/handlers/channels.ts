@@ -1,4 +1,5 @@
 import { rest } from "msw";
+
 import { channels, subscribedChannels } from "../data/channels";
 
 const handlers = [
