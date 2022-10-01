@@ -1,8 +1,8 @@
 package com.pickpick.channel.application;
 
-import static com.pickpick.fixture.ChannelFactory.freeChat;
-import static com.pickpick.fixture.ChannelFactory.notice;
-import static com.pickpick.fixture.ChannelFactory.qna;
+import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.ChannelFixture.QNA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -59,15 +59,16 @@ class ChannelSubscriptionServiceTest {
     void save() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
+        Long bomId = bom.getId();
+        Channel notice = channels.save(NOTICE.create());
 
-        ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bom.getId());
+        ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bomId);
 
         // when
         ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(notice.getId());
-        channelSubscriptionService.save(request, bom.getId());
+        channelSubscriptionService.save(request, bomId);
 
-        ChannelSubscriptionResponses subscriptionsAfterSave = channelSubscriptionService.findByMemberId(bom.getId());
+        ChannelSubscriptionResponses subscriptionsAfterSave = channelSubscriptionService.findByMemberId(bomId);
 
         // then
         assertAll(
@@ -93,7 +94,7 @@ class ChannelSubscriptionServiceTest {
     void saveAlreadySubscribedChannel() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
+        Channel notice = channels.save(NOTICE.create());
         subscribeChannel(bom, notice);
 
         // when & then
@@ -106,8 +107,8 @@ class ChannelSubscriptionServiceTest {
     void setViewOrderByRequestOrder() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
+        Channel notice = channels.save(NOTICE.create());
+        Channel freeChat = channels.save(FREE_CHAT.create());
 
         // when
         subscribeChannel(bom, notice);
@@ -132,9 +133,9 @@ class ChannelSubscriptionServiceTest {
     void subscribeChannelOrderIsLast() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
-        Channel qna = channels.save(qna());
+        Channel notice = channels.save(NOTICE.create());
+        Channel freeChat = channels.save(FREE_CHAT.create());
+        Channel qna = channels.save(QNA.create());
 
         subscribeChannelsInListOrder(bom, List.of(qna, notice, freeChat));
 
@@ -153,9 +154,9 @@ class ChannelSubscriptionServiceTest {
     void updateChannelSubscriptionOrder() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
-        Channel qna = channels.save(qna());
+        Channel notice = channels.save(NOTICE.create());
+        Channel freeChat = channels.save(FREE_CHAT.create());
+        Channel qna = channels.save(QNA.create());
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
@@ -181,9 +182,9 @@ class ChannelSubscriptionServiceTest {
     void updateChannelSubscriptionOrderWithDuplicateViewOrder() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
-        Channel qna = channels.save(qna());
+        Channel notice = channels.save(NOTICE.create());
+        Channel freeChat = channels.save(FREE_CHAT.create());
+        Channel qna = channels.save(QNA.create());
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
@@ -203,9 +204,9 @@ class ChannelSubscriptionServiceTest {
     void updateChannelSubscriptionOrderWithInvalidChannelId() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
-        Channel unsubscribed = channels.save(qna());
+        Channel notice = channels.save(NOTICE.create());
+        Channel freeChat = channels.save(FREE_CHAT.create());
+        Channel unsubscribed = channels.save(QNA.create());
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat));
 
@@ -225,9 +226,9 @@ class ChannelSubscriptionServiceTest {
     void updateChannelSubscriptionOrderWithNotEnoughChannelId() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
-        Channel qna = channels.save(qna());
+        Channel notice = channels.save(NOTICE.create());
+        Channel freeChat = channels.save(FREE_CHAT.create());
+        Channel qna = channels.save(QNA.create());
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
@@ -246,20 +247,20 @@ class ChannelSubscriptionServiceTest {
     void unsubscribeChannel() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
+        Channel notice = channels.save(NOTICE.create());
         subscribeChannel(bom, notice);
 
-        boolean beforeUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
+        boolean isExistBeforeUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
 
         // when
         channelSubscriptionService.delete(notice.getId(), bom.getId());
 
         // then
-        boolean afterUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
+        boolean isExistAfterUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
 
         assertAll(
-                () -> assertThat(beforeUnsubscribe).isTrue(),
-                () -> assertThat(afterUnsubscribe).isFalse()
+                () -> assertThat(isExistBeforeUnsubscribe).isTrue(),
+                () -> assertThat(isExistAfterUnsubscribe).isFalse()
         );
     }
 
@@ -268,7 +269,7 @@ class ChannelSubscriptionServiceTest {
     void unsubscribeInvalidChannelSubscription() {
         // given
         Member bom = members.save(bom());
-        Channel notice = channels.save(notice());
+        Channel notice = channels.save(NOTICE.create());
 
         // when & then
         assertThatThrownBy(() -> channelSubscriptionService.delete(notice.getId(), bom.getId()))
