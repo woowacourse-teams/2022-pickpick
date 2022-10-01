@@ -1,6 +1,6 @@
 package com.pickpick.slackevent.application.member;
 
-import static com.pickpick.fixture.MemberFactory.summer;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +36,7 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByDisplayName() {
         // given
-        Member summer = members.save(summer());
+        Member summer = members.save(SUMMER.create());
 
         // when
         String realName = "최혜원";
@@ -56,7 +56,7 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByRealNameWhenDisplayNameIsBlank() {
         // given
-        Member summer = members.save(summer());
+        Member summer = members.save(SUMMER.create());
 
         // when
         String realName = "최혜원";
@@ -76,7 +76,7 @@ class MemberChangedServiceTest {
     @Test
     void changedThumbnailUrl() {
         // given
-        Member summer = members.save(summer());
+        Member summer = members.save(SUMMER.create());
 
         // when
         String changedThumbnailUrl = "https://hyewon.png";
