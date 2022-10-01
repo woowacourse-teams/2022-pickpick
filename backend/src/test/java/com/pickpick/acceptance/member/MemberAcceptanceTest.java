@@ -1,5 +1,7 @@
 package com.pickpick.acceptance.member;
 
+import static com.pickpick.acceptance.RestHandler.post;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

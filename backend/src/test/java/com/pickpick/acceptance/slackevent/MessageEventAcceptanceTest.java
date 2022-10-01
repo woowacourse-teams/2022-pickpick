@@ -1,5 +1,8 @@
 package com.pickpick.acceptance.slackevent;
 
+import static com.pickpick.acceptance.RestHandler.post;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
