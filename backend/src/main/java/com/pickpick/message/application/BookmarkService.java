@@ -18,7 +18,6 @@ import com.pickpick.message.ui.dto.BookmarkResponses;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +78,7 @@ public class BookmarkService {
     }
 
     private BooleanExpression bookmarkCreatedDateCondition(final Long bookmarkId) {
-        if (Objects.isNull(bookmarkId)) {
+        if (bookmarkId == null) {
             return null;
         }
 
