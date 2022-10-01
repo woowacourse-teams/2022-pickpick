@@ -3,7 +3,6 @@ package com.pickpick.acceptance.auth;
 import static com.pickpick.acceptance.RestHandler.get;
 import static com.pickpick.acceptance.RestHandler.getWithToken;
 import static com.pickpick.acceptance.RestHandler.post;
-import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -30,8 +29,7 @@ public class AuthRestHandler {
                         )
                 ));
 
-        ExtractableResponse<Response> response = post(SLACK_EVENT_API_URL, request);
-        상태코드_200_확인(response);
+        post(SLACK_EVENT_API_URL, request);
     }
 
     public static ExtractableResponse<Response> 로그인(final String code) {
