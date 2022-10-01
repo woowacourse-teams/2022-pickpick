@@ -10,8 +10,6 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     ChannelSubscription save(ChannelSubscription channelSubscription);
 
-    void saveAll(Iterable<ChannelSubscription> channelSubscriptions);
-
     @Query("select cs from ChannelSubscription cs where cs.member.id = :memberId")
     List<ChannelSubscription> findAllByMemberId(Long memberId);
 
