@@ -12,7 +12,6 @@ import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import java.util.List;
@@ -43,11 +42,9 @@ public class ChannelSubscriptionService {
     @Transactional
     public void save(final ChannelSubscriptionRequest subscriptionRequest, final Long memberId) {
         Long channelId = subscriptionRequest.getChannelId();
-        Channel channel = channels.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        Channel channel = channels.getById(channelId);
 
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
         validateDuplicatedSubscription(channel, member);
 
@@ -139,8 +136,7 @@ public class ChannelSubscriptionService {
         Channel channel = channels.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFoundException(channelId));
 
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
         validateSubscriptionExist(channel, member);
 

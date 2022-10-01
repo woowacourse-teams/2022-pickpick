@@ -1,6 +1,5 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
 import com.pickpick.exception.message.BookmarkNotFoundException;
 import com.pickpick.exception.message.MessageNotFoundException;
@@ -43,8 +42,7 @@ public class BookmarkService {
 
     @Transactional
     public void save(final Long memberId, final BookmarkRequest bookmarkRequest) {
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
         Message message = messages.findById(bookmarkRequest.getMessageId())
                 .orElseThrow(() -> new MessageNotFoundException(bookmarkRequest.getMessageId()));
