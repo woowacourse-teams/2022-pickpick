@@ -37,7 +37,6 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         // given
         Map<String, Object> request = Map.of("bookmarkId", "");
         List<Long> expectedIds = List.of(1L);
-        boolean expectedHasPast = false;
 
         // when
         ExtractableResponse<Response> response = getWithCreateToken(BOOKMARK_API_URL, 2L, request);
@@ -46,7 +45,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         상태코드_확인(response, HttpStatus.OK);
 
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
-        assertThat(bookmarkResponses.hasPast()).isEqualTo(expectedHasPast);
+        assertThat(bookmarkResponses.hasPast()).isFalse();
         assertThat(convertToIds(bookmarkResponses)).containsExactlyElementsOf(expectedIds);
     }
 
