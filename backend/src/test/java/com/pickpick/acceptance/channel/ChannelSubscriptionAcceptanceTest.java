@@ -10,8 +10,8 @@ import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_구독_�
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
-import static com.pickpick.fixture.ChannelFixtures.test_be_4기_공지;
-import static com.pickpick.fixture.ChannelFixtures.팀_공지;
+import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -46,7 +46,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 채널_구독() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
         long channelId = 1L;
 
         // when
@@ -60,7 +60,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 채널_구독_취소() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
         long channelId = 1L;
 
         구독_요청(token, channelId);
@@ -76,58 +76,58 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 채널_구독_조회() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
-        long team_notice_id = 1L;
-        구독_요청(token, team_notice_id);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
+        long notice_id = 1L;
+        구독_요청(token, notice_id);
 
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 2L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 2L;
+        구독_요청(token, free_chat_id);
 
         // when
         ExtractableResponse<Response> response = 유저_구독_채널_목록_조회_요청(token);
 
         // then
         상태코드_200_확인(response);
-        구독이_올바른_순서로_조회됨(response, team_notice_id, test_be_4_notice_id);
+        구독이_올바른_순서로_조회됨(response, notice_id, free_chat_id);
     }
 
     @Test
     void 구독_채널_순서_변경() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
-        long team_notice_id = 1L;
-        구독_요청(token, team_notice_id);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
+        long notice_id = 1L;
+        구독_요청(token, notice_id);
 
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 2L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 2L;
+        구독_요청(token, free_chat_id);
 
         // when
-        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청(token, team_notice_id, test_be_4_notice_id);
+        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청(token, notice_id, free_chat_id);
 
         // then
         상태코드_200_확인(response);
 
         ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청(token);
-        구독이_올바른_순서로_조회됨(subscriptionResponse, test_be_4_notice_id, team_notice_id);
+        구독이_올바른_순서로_조회됨(subscriptionResponse, free_chat_id, notice_id);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
     void 구독_채널_순서_변경_시_1보다_작은_순서가_들어올_경우_예외_발생(int invalidViewOrder) {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
-        long team_notice_id = 1L;
-        구독_요청(token, team_notice_id);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
+        long notice_id = 1L;
+        구독_요청(token, notice_id);
 
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 2L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 2L;
+        구독_요청(token, free_chat_id);
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(team_notice_id, invalidViewOrder),
-                new ChannelOrderRequest(test_be_4_notice_id, 1)
+                new ChannelOrderRequest(notice_id, invalidViewOrder),
+                new ChannelOrderRequest(free_chat_id, 1)
         );
 
         // when
@@ -141,17 +141,17 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_중복된_순서가_들어올_경우_예외_발생() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
-        long team_notice_id = 1L;
-        구독_요청(token, team_notice_id);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
+        long notice_id = 1L;
+        구독_요청(token, notice_id);
 
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 2L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 2L;
+        구독_요청(token, free_chat_id);
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(team_notice_id, 1),
-                new ChannelOrderRequest(test_be_4_notice_id, 1)
+                new ChannelOrderRequest(notice_id, 1),
+                new ChannelOrderRequest(free_chat_id, 1)
         );
 
         // when
@@ -165,16 +165,16 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_해당_멤버가_구독한_적_없는_채널_ID가_포함된_경우_예외_발생() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
-        long team_notice_id = 1L;
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
+        long notice_id = 1L;
 
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 2L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 2L;
+        구독_요청(token, free_chat_id);
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(team_notice_id, 1),
-                new ChannelOrderRequest(test_be_4_notice_id, 2)
+                new ChannelOrderRequest(notice_id, 1),
+                new ChannelOrderRequest(free_chat_id, 2)
         );
 
         // when
@@ -188,16 +188,16 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_해당_멤버의_모든_구독_채널이_요청에_포함되지_않을_경우_예외_발생() {
         // given
-        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
-        long team_notice_id = 1L;
-        구독_요청(token, team_notice_id);
+        채널_생성(MEMBER_SLACK_ID, NOTICE.create(), slackClient);
+        long notice_id = 1L;
+        구독_요청(token, notice_id);
 
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 2L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 2L;
+        구독_요청(token, free_chat_id);
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(test_be_4_notice_id, 1)
+                new ChannelOrderRequest(free_chat_id, 1)
         );
 
         // when
@@ -211,12 +211,12 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_중인_채널_다시_구독_요청() {
         // given
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 1L;
-        구독_요청(token, test_be_4_notice_id);
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 1L;
+        구독_요청(token, free_chat_id);
 
         // when
-        ExtractableResponse<Response> response = 구독_요청(token, test_be_4_notice_id);
+        ExtractableResponse<Response> response = 구독_요청(token, free_chat_id);
 
         // then
         상태코드_400_확인(response);
@@ -226,11 +226,11 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독하지_않은_채널_구독_취소() {
         // given
-        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
-        long test_be_4_notice_id = 1L;
+        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(), slackClient);
+        long free_chat_id = 1L;
 
         // when
-        ExtractableResponse<Response> response = 구독_취소_요청(token, test_be_4_notice_id);
+        ExtractableResponse<Response> response = 구독_취소_요청(token, free_chat_id);
 
         // then
         상태코드_400_확인(response);

@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.fixture.ChannelFixtures;
+import com.pickpick.fixture.ChannelFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -35,11 +35,11 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
         List<ChannelResponse> channels = response.jsonPath().getList("channels.", ChannelResponse.class);
 
         상태코드_200_확인(response);
-        assertThat(channels).hasSize(6);
+        assertThat(channels).hasSize(ChannelFixture.values().length);
     }
 
     private void 채널_목록_생성(final String memberSlackId) {
-        for (Channel channel : ChannelFixtures.allChannels()) {
+        for (Channel channel : ChannelFixture.allChannels()) {
             채널_생성(memberSlackId, channel, slackClient);
         }
     }
