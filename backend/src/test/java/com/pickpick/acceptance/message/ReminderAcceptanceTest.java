@@ -256,8 +256,8 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = deleteWithToken(
-                REMINDER_API_URL + "?messageId=" + messageId,
-                token);
+                REMINDER_API_URL,
+                token, Map.of("messageId", messageId));
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
@@ -271,8 +271,8 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = deleteWithToken(
-                REMINDER_API_URL + "?messageId=" + messageId,
-                token);
+                REMINDER_API_URL,
+                token, Map.of("messageId", messageId));
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);
