@@ -1,11 +1,12 @@
 package com.pickpick.acceptance.message;
 
-import static com.pickpick.acceptance.RestHandler.deleteWithToken;
-import static com.pickpick.acceptance.RestHandler.getWithToken;
-import static com.pickpick.acceptance.RestHandler.postWithToken;
-import static com.pickpick.acceptance.RestHandler.putWithToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_확인;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_단건_조회;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_목록_조회;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_삭제;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_생성;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_수정;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
@@ -18,7 +19,6 @@ import io.restassured.response.Response;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,14 +30,13 @@ import org.springframework.test.context.jdbc.Sql;
 @SuppressWarnings("NonAsciiCharacters")
 public class ReminderAcceptanceTest extends AcceptanceTest {
 
-    private static final String REMINDER_API_URL = "/api/reminders";
-
     @Test
-    void 리마인더_생성() {
-        // given & when
-        ExtractableResponse<Response> response = postWithToken(REMINDER_API_URL,
-                Map.of("messageId", 1, "reminderDate", "2022-08-10T19:21:55"),
-                jwtTokenProvider.createToken("1"));
+    void 리마인더_생성_검증() {
+        // given
+        String token = jwtTokenProvider.createToken("1");
+
+        // when
+        ExtractableResponse<Response> response = 리마인더_생성(token, 1, LocalDateTime.of(2022, 8, 10, 19, 21, 55));
 
         // then
         상태코드_확인(response, HttpStatus.CREATED);
@@ -46,11 +45,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_단건_조회_정상_응답() {
         // given
-        Map<String, Object> request = Map.of("messageId", "1");
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_단건_조회(token, 1L);
 
         // then
         상태코드_200_확인(response);
@@ -61,11 +59,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 존재하지_않는_리마인더_조회시_404_응답() {
         // given
-        Map<String, Object> request = Map.of("messageId", "100");
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_단건_조회(token, 100L);
 
         // then
         상태코드_확인(response, HttpStatus.NOT_FOUND);
@@ -77,13 +74,12 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        Map<String, Object> request = Map.of("reminderId", "");
+        String token = jwtTokenProvider.createToken("2");
         List<Long> expectedIds = List.of(1L);
         boolean expectedHasPast = false;
-        String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -101,13 +97,13 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        Map<String, Object> request = Map.of("reminderId", "10");
-        List<Long> expectedIds = List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L);
-        boolean expectedHasPast = false;
         String token = jwtTokenProvider.createToken("1");
 
+        List<Long> expectedIds = List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L);
+        boolean expectedHasPast = false;
+
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, 10L, null);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -125,13 +121,13 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        Map<String, Object> request = Map.of("reminderId", "");
-        List<Long> expectedIds = List.of(1L);
-        boolean expectedHasPast = false;
         String token = jwtTokenProvider.createToken("2");
 
+        List<Long> expectedIds = List.of(1L);
+        boolean expectedHasPast = false;
+
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -149,14 +145,14 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        Map<String, Object> request = Map.of("reminderId", "2");
+        String token = jwtTokenProvider.createToken("1");
+
         List<Long> expectedIds = List.of(
                 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L);
         boolean expectedHasPast = true;
-        String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, 2L, null);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -181,11 +177,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         given(clock.instant())
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
-        Map<String, Object> request = Map.of("reminderId", "");
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -205,11 +200,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
                 .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
 
         int count = 10;
-        Map<String, Object> request = Map.of("reminderId", "", "count", count);
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = getWithToken(REMINDER_API_URL, token, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, count);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -225,11 +219,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_정상_수정() {
         // given
-        Map<String, Object> request = Map.of("messageId", "2", "reminderDate", LocalDateTime.now().toString());
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = putWithToken(REMINDER_API_URL, request, token);
+        ExtractableResponse<Response> response = 리마인더_수정(token, 2L, LocalDateTime.now());
 
         // then
         상태코드_확인(response, HttpStatus.OK);
@@ -238,11 +231,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 사용자에게_존재하지_않는_리마인더_수정() {
         // given
-        Map<String, Object> request = Map.of("messageId", "1", "reminderDate", LocalDateTime.now().toString());
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = putWithToken(REMINDER_API_URL, request, token);
+        ExtractableResponse<Response> response = 리마인더_수정(token, 1L, LocalDateTime.now());
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);
@@ -255,9 +247,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("2");
 
         // when
-        ExtractableResponse<Response> response = deleteWithToken(
-                REMINDER_API_URL,
-                token, Map.of("messageId", messageId));
+        ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);
 
         // then
         상태코드_확인(response, HttpStatus.NO_CONTENT);
@@ -270,9 +260,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         // when
-        ExtractableResponse<Response> response = deleteWithToken(
-                REMINDER_API_URL,
-                token, Map.of("messageId", messageId));
+        ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);
 
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);
