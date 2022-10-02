@@ -5,7 +5,7 @@ import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
-import static com.pickpick.acceptance.auth.AuthRestHandler.회원가입;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
