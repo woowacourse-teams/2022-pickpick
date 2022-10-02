@@ -17,6 +17,9 @@ import org.springframework.restdocs.snippet.TemplatedSnippet;
 
 public class ErrorCodeSnippet extends TemplatedSnippet {
 
+    private static final String EXCEPTION_PACKAGE = "com.pickpick.exception";
+    private static final String RUNTIME_EXCEPTION = "RuntimeException";
+
     protected ErrorCodeSnippet(final String snippetName, final String templateName) {
         super(snippetName, templateName, null);
     }
@@ -39,36 +42,49 @@ public class ErrorCodeSnippet extends TemplatedSnippet {
         return model;
     }
 
-    public void addErrorCodes(final List<Map<String, Object>> fields) {
+    private void addErrorCodes(final List<Map<String, Object>> fields) {
         Set<? extends Class<?>> exceptionClasses = findExceptionClasses();
         for (Class<?> aClass : exceptionClasses) {
             Map<String, Object> model = new HashMap<>();
-            try {
-                Field errorCodeField = aClass.getDeclaredField("ERROR_CODE");
-                Field clientMessageField = aClass.getDeclaredField("CLIENT_MESSAGE");
-                errorCodeField.setAccessible(true);
-                clientMessageField.setAccessible(true);
-                String errorCode = errorCodeField.get(null).toString();
-                String errorMessage = clientMessageField.get(null).toString();
-                System.out.println(errorCode);
-                System.out.println(errorMessage);
-                model.put("path", errorCode);
-                model.put("description", errorMessage);
-                fields.add(model);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                // ignored
-            }
+            addErrorCode(fields, aClass, model);
         }
     }
 
-    public Set<? extends Class<?>> findExceptionClasses() {
+    private Set<? extends Class<?>> findExceptionClasses() {
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AssignableTypeFilter(BadRequestException.class));
         provider.addIncludeFilter(new AssignableTypeFilter(NotFoundException.class));
 
-        Set<BeanDefinition> components = provider.findCandidateComponents("com.pickpick.exception");
+        Set<BeanDefinition> components = provider.findCandidateComponents(EXCEPTION_PACKAGE);
         return components.stream()
                 .map(ErrorCodeSnippet::apply)
+                .filter(this::isCustomException)
                 .collect(Collectors.toSet());
+    }
+
+    private boolean isCustomException(final Class<?> aClass) {
+        return !aClass.getSuperclass().getSimpleName().equals(RUNTIME_EXCEPTION);
+    }
+
+    private void addErrorCode(final List<Map<String, Object>> fields, final Class<?> aClass,
+                              final Map<String, Object> model) {
+        try {
+            String errorCode = extractFieldValue(aClass, "ERROR_CODE");
+            String errorMessage = extractFieldValue(aClass, "CLIENT_MESSAGE");
+            model.put("errorCode", errorCode);
+            model.put("errorMessage", errorMessage);
+            fields.add(model);
+        } catch (NoSuchFieldException e) {
+            throw new BadRequestException("커스텀 예외 클래스 내부에 ErrorCode 및 ClientMessage 를 정의해야합니다.", "", "");
+        } catch (IllegalAccessException e) {
+            // ignored
+        }
+    }
+
+    private String extractFieldValue(final Class<?> aClass, final String fieldName)
+            throws NoSuchFieldException, IllegalAccessException {
+        Field errorCodeField = aClass.getDeclaredField(fieldName);
+        errorCodeField.setAccessible(true);
+        return errorCodeField.get(null).toString();
     }
 }
