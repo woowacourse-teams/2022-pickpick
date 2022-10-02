@@ -1,18 +1,19 @@
 package com.pickpick.acceptance.channel;
 
-import static com.pickpick.acceptance.RestHandler.deleteWithToken;
-import static com.pickpick.acceptance.RestHandler.getWithToken;
-import static com.pickpick.acceptance.RestHandler.postWithToken;
-import static com.pickpick.acceptance.RestHandler.putWithToken;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_채널_순서_변경_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_취소_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_구독_채널_목록_조회_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.config.dto.ErrorResponse;
 import io.restassured.response.ExtractableResponse;
@@ -28,11 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"/channel.sql"})
-@DisplayName("채널 구독 기능")
+@DisplayName("채널 구독 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
-
-    private static final String CHANNEL_SUBSCRIPTION_API_URL = "/api/channel-subscription";
+class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -45,25 +44,25 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     void subscribe() {
         token = jwtTokenProvider.createToken("2");
 
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
 
         channelIdToSubscribe1 = unsubscribedChannelIds.get(0);
         channelIdToSubscribe2 = unsubscribedChannelIds.get(1);
 
-        구독_요청(channelIdToSubscribe1);
-        구독_요청(channelIdToSubscribe2);
+        구독_요청(token, channelIdToSubscribe1);
+        구독_요청(token, channelIdToSubscribe2);
     }
 
     @Test
     void 채널_구독() {
         // given
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
         Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
 
         // when
-        ExtractableResponse<Response> subscriptionResponse = 구독_요청(channelIdToSubscribe);
+        ExtractableResponse<Response> subscriptionResponse = 구독_요청(token, channelIdToSubscribe);
 
         // then
         상태코드_200_확인(subscriptionResponse);
@@ -71,7 +70,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
 
         assertThat(unsubscribedChannelIds).isNotEmpty();
@@ -81,17 +80,17 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     @Test
     void 채널_구독_취소() {
         // given
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
 
         Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
         Long channelIdToUnSubscribe = unsubscribedChannelIds.get(1);
 
-        구독_요청(channelIdToSubscribe);
-        구독_요청(channelIdToUnSubscribe);
+        구독_요청(token, channelIdToSubscribe);
+        구독_요청(token, channelIdToUnSubscribe);
 
         // when
-        ExtractableResponse<Response> unsubscribeResponse = 구독_취소_요청(channelIdToUnSubscribe);
+        ExtractableResponse<Response> unsubscribeResponse = 구독_취소_요청(token, channelIdToUnSubscribe);
 
         // then
         상태코드_200_확인(unsubscribeResponse);
@@ -99,7 +98,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     }
 
     private void 채널_구독_취소_확인(final Long channelIdToUnSubscribe) {
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청();
+        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
         List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
 
         assertThat(unsubscribedChannelIds).contains(channelIdToUnSubscribe);
@@ -108,7 +107,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     @Test
     void 채널_구독_조회() {
         // given & when
-        ExtractableResponse<Response> response = 유저_구독_채널_목록_조회_요청();
+        ExtractableResponse<Response> response = 유저_구독_채널_목록_조회_요청(token);
 
         // then
         상태코드_200_확인(response);
@@ -118,12 +117,12 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     @Test
     void 구독_채널_순서_변경() {
         // given & when
-        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청();
+        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청(token);
 
         // then
         상태코드_200_확인(response);
 
-        ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청();
+        ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청(token);
         구독이_올바른_순서로_조회됨(subscriptionResponse, channelIdToSubscribe2, channelIdToSubscribe1);
     }
 
@@ -137,7 +136,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -154,7 +153,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -165,7 +164,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_해당_멤버가_구독한_적_없는_채널_ID가_포함된_경우_예외_발생() {
         // given
-        구독_취소_요청(channelIdToSubscribe1);
+        구독_취소_요청(token, channelIdToSubscribe1);
 
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channelIdToSubscribe1, 1),
@@ -173,7 +172,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -189,7 +188,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(request);
+        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -200,7 +199,7 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     @Test
     void 구독_중인_채널_다시_구독_요청() {
         // given & when
-        ExtractableResponse<Response> response = 구독_요청(channelIdToSubscribe1);
+        ExtractableResponse<Response> response = 구독_요청(token, channelIdToSubscribe1);
 
         // then
         상태코드_400_확인(response);
@@ -211,20 +210,15 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
     @Test
     void 구독하지_않은_채널_구독_취소() {
         // given
-        구독_취소_요청(channelIdToSubscribe1);
+        구독_취소_요청(token, channelIdToSubscribe1);
 
         // when
-        ExtractableResponse<Response> response = 구독_취소_요청(channelIdToSubscribe1);
+        ExtractableResponse<Response> response = 구독_취소_요청(token, channelIdToSubscribe1);
 
         // then
         상태코드_400_확인(response);
         assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
                 "SUBSCRIPTION_NOT_EXIST");
-    }
-
-
-    private ExtractableResponse<Response> 유저_구독_채널_목록_조회_요청() {
-        return getWithToken(CHANNEL_SUBSCRIPTION_API_URL, token);
     }
 
     private void 구독이_올바른_순서로_조회됨(
@@ -244,17 +238,13 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
         });
     }
 
-    private ExtractableResponse<Response> 구독_채널_순서_변경_요청(final List<ChannelOrderRequest> request) {
-        return putWithToken(CHANNEL_SUBSCRIPTION_API_URL, request, token);
-    }
-
-    private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청() {
+    private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청(final String token) {
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channelIdToSubscribe2, 1),
                 new ChannelOrderRequest(channelIdToSubscribe1, 2)
         );
 
-        return 구독_채널_순서_변경_요청(request);
+        return 구독_채널_순서_변경_요청(token, request);
     }
 
     private List<Long> 구독중이_아닌_채널_id_목록_추출(final ExtractableResponse<Response> response) {
@@ -264,14 +254,5 @@ class ChannelSubscriptionAcceptanceTest extends ChannelAcceptanceTest {
                 .filter(it -> !it.isSubscribed())
                 .map(ChannelResponse::getId)
                 .collect(Collectors.toList());
-    }
-
-    private ExtractableResponse<Response> 구독_요청(final Long channelId) {
-        ChannelSubscriptionRequest channelSubscriptionRequest = new ChannelSubscriptionRequest(channelId);
-        return postWithToken(CHANNEL_SUBSCRIPTION_API_URL, channelSubscriptionRequest, token);
-    }
-
-    private ExtractableResponse<Response> 구독_취소_요청(final Long channelId) {
-        return deleteWithToken(CHANNEL_SUBSCRIPTION_API_URL + "?channelId=" + channelId, token);
     }
 }
