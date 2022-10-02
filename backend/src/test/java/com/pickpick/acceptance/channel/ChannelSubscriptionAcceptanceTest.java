@@ -2,20 +2,23 @@ package com.pickpick.acceptance.channel;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
+import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_채널_순서_변경_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_취소_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_구독_채널_목록_조회_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
+import static com.pickpick.fixture.ChannelFixtures.test_be_4기_공지;
+import static com.pickpick.fixture.ChannelFixtures.팀_공지;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.acceptance.AcceptanceTest;
-import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
-import com.pickpick.config.dto.ErrorResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -25,114 +28,106 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/channel.sql"})
 @DisplayName("채널 구독 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private static final String MEMBER_SLACK_ID = "slackId123";
 
-    private Long channelIdToSubscribe1;
-    private Long channelIdToSubscribe2;
     private String token;
 
     @BeforeEach
     void subscribe() {
-        token = jwtTokenProvider.createToken("2");
-
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-
-        channelIdToSubscribe1 = unsubscribedChannelIds.get(0);
-        channelIdToSubscribe2 = unsubscribedChannelIds.get(1);
-
-        구독_요청(token, channelIdToSubscribe1);
-        구독_요청(token, channelIdToSubscribe2);
+        회원가입(MEMBER_SLACK_ID);
+        token = jwtTokenProvider.createToken("1");
     }
 
     @Test
     void 채널_구독() {
         // given
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-        Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long channelId = 1L;
 
         // when
-        ExtractableResponse<Response> subscriptionResponse = 구독_요청(token, channelIdToSubscribe);
+        ExtractableResponse<Response> response = 구독_요청(token, channelId);
 
         // then
-        상태코드_200_확인(subscriptionResponse);
-        채널_구독_완료_확인(channelIdToSubscribe);
-    }
-
-    private void 채널_구독_완료_확인(final Long channelIdToSubscribe) {
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-
-        assertThat(unsubscribedChannelIds).isNotEmpty();
-        assertThat(unsubscribedChannelIds).doesNotContain(channelIdToSubscribe);
+        상태코드_200_확인(response);
+        assertThat(구독한_채널_id_목록()).contains(channelId);
     }
 
     @Test
     void 채널_구독_취소() {
         // given
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long channelId = 1L;
 
-        Long channelIdToSubscribe = unsubscribedChannelIds.get(0);
-        Long channelIdToUnSubscribe = unsubscribedChannelIds.get(1);
-
-        구독_요청(token, channelIdToSubscribe);
-        구독_요청(token, channelIdToUnSubscribe);
+        구독_요청(token, channelId);
 
         // when
-        ExtractableResponse<Response> unsubscribeResponse = 구독_취소_요청(token, channelIdToUnSubscribe);
+        ExtractableResponse<Response> response = 구독_취소_요청(token, channelId);
 
         // then
-        상태코드_200_확인(unsubscribeResponse);
-        채널_구독_취소_확인(channelIdToUnSubscribe);
-    }
-
-    private void 채널_구독_취소_확인(final Long channelIdToUnSubscribe) {
-        ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
-        List<Long> unsubscribedChannelIds = 구독중이_아닌_채널_id_목록_추출(response);
-
-        assertThat(unsubscribedChannelIds).contains(channelIdToUnSubscribe);
+        상태코드_200_확인(response);
+        assertThat(구독한_채널_id_목록()).doesNotContain(channelId);
     }
 
     @Test
     void 채널_구독_조회() {
-        // given & when
+        // given
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long team_notice_id = 1L;
+        구독_요청(token, team_notice_id);
+
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 2L;
+        구독_요청(token, test_be_4_notice_id);
+
+        // when
         ExtractableResponse<Response> response = 유저_구독_채널_목록_조회_요청(token);
 
         // then
         상태코드_200_확인(response);
-        구독이_올바른_순서로_조회됨(response, channelIdToSubscribe1, channelIdToSubscribe2);
+        구독이_올바른_순서로_조회됨(response, team_notice_id, test_be_4_notice_id);
     }
 
     @Test
     void 구독_채널_순서_변경() {
-        // given & when
-        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청(token);
+        // given
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long team_notice_id = 1L;
+        구독_요청(token, team_notice_id);
+
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 2L;
+        구독_요청(token, test_be_4_notice_id);
+
+        // when
+        ExtractableResponse<Response> response = 올바른_구독_채널_순서_변경_요청(token, team_notice_id, test_be_4_notice_id);
 
         // then
         상태코드_200_확인(response);
 
         ExtractableResponse<Response> subscriptionResponse = 유저_구독_채널_목록_조회_요청(token);
-        구독이_올바른_순서로_조회됨(subscriptionResponse, channelIdToSubscribe2, channelIdToSubscribe1);
+        구독이_올바른_순서로_조회됨(subscriptionResponse, test_be_4_notice_id, team_notice_id);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
     void 구독_채널_순서_변경_시_1보다_작은_순서가_들어올_경우_예외_발생(int invalidViewOrder) {
         // given
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long team_notice_id = 1L;
+        구독_요청(token, team_notice_id);
+
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 2L;
+        구독_요청(token, test_be_4_notice_id);
+
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channelIdToSubscribe1, invalidViewOrder),
-                new ChannelOrderRequest(channelIdToSubscribe2, 1)
+                new ChannelOrderRequest(team_notice_id, invalidViewOrder),
+                new ChannelOrderRequest(test_be_4_notice_id, 1)
         );
 
         // when
@@ -140,16 +135,23 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
-        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
-                "SUBSCRIPTION_INVALID_ORDER");
+        에러코드_확인(response, "SUBSCRIPTION_INVALID_ORDER");
     }
 
     @Test
     void 구독_채널_순서_변경_시_중복된_순서가_들어올_경우_예외_발생() {
         // given
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long team_notice_id = 1L;
+        구독_요청(token, team_notice_id);
+
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 2L;
+        구독_요청(token, test_be_4_notice_id);
+
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channelIdToSubscribe1, 1),
-                new ChannelOrderRequest(channelIdToSubscribe2, 1)
+                new ChannelOrderRequest(team_notice_id, 1),
+                new ChannelOrderRequest(test_be_4_notice_id, 1)
         );
 
         // when
@@ -157,18 +159,22 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
-        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
-                "SUBSCRIPTION_DUPLICATE");
+        에러코드_확인(response, "SUBSCRIPTION_DUPLICATE");
     }
 
     @Test
     void 구독_채널_순서_변경_시_해당_멤버가_구독한_적_없는_채널_ID가_포함된_경우_예외_발생() {
         // given
-        구독_취소_요청(token, channelIdToSubscribe1);
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long team_notice_id = 1L;
+
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 2L;
+        구독_요청(token, test_be_4_notice_id);
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channelIdToSubscribe1, 1),
-                new ChannelOrderRequest(channelIdToSubscribe2, 2)
+                new ChannelOrderRequest(team_notice_id, 1),
+                new ChannelOrderRequest(test_be_4_notice_id, 2)
         );
 
         // when
@@ -176,15 +182,22 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
-        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
-                "SUBSCRIPTION_NOT_EXIST");
+        에러코드_확인(response, "SUBSCRIPTION_NOT_EXIST");
     }
 
     @Test
     void 구독_채널_순서_변경_시_해당_멤버의_모든_구독_채널이_요청에_포함되지_않을_경우_예외_발생() {
         // given
+        채널_생성(MEMBER_SLACK_ID, 팀_공지.toChannel(), slackClient);
+        long team_notice_id = 1L;
+        구독_요청(token, team_notice_id);
+
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 2L;
+        구독_요청(token, test_be_4_notice_id);
+
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channelIdToSubscribe1, 1)
+                new ChannelOrderRequest(test_be_4_notice_id, 1)
         );
 
         // when
@@ -192,33 +205,46 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_400_확인(response);
-        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
-                "SUBSCRIPTION_NOT_EXIST");
+        에러코드_확인(response, "SUBSCRIPTION_NOT_EXIST");
     }
 
     @Test
     void 구독_중인_채널_다시_구독_요청() {
-        // given & when
-        ExtractableResponse<Response> response = 구독_요청(token, channelIdToSubscribe1);
+        // given
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 1L;
+        구독_요청(token, test_be_4_notice_id);
+
+        // when
+        ExtractableResponse<Response> response = 구독_요청(token, test_be_4_notice_id);
 
         // then
         상태코드_400_확인(response);
-        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
-                "SUBSCRIPTION_DUPLICATE");
+        에러코드_확인(response, "SUBSCRIPTION_DUPLICATE");
     }
 
     @Test
     void 구독하지_않은_채널_구독_취소() {
         // given
-        구독_취소_요청(token, channelIdToSubscribe1);
+        채널_생성(MEMBER_SLACK_ID, test_be_4기_공지.toChannel(), slackClient);
+        long test_be_4_notice_id = 1L;
 
         // when
-        ExtractableResponse<Response> response = 구독_취소_요청(token, channelIdToSubscribe1);
+        ExtractableResponse<Response> response = 구독_취소_요청(token, test_be_4_notice_id);
 
         // then
         상태코드_400_확인(response);
-        assertThat(response.jsonPath().getObject("", ErrorResponse.class).getCode()).isEqualTo(
-                "SUBSCRIPTION_NOT_EXIST");
+        에러코드_확인(response, "SUBSCRIPTION_NOT_EXIST");
+    }
+
+    private List<Long> 구독한_채널_id_목록() {
+        ExtractableResponse<Response> channelsResponse = 유저_전체_채널_목록_조회_요청(token);
+        return channelsResponse.jsonPath()
+                .getList("channels.", ChannelResponse.class)
+                .stream()
+                .filter(ChannelResponse::isSubscribed)
+                .map(ChannelResponse::getId)
+                .collect(Collectors.toList());
     }
 
     private void 구독이_올바른_순서로_조회됨(
@@ -238,21 +264,13 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         });
     }
 
-    private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청(final String token) {
+    private ExtractableResponse<Response> 올바른_구독_채널_순서_변경_요청(final String token, final Long channelIdToSubscribe1,
+                                                             final Long channelIdToSubscribe2) {
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(channelIdToSubscribe2, 1),
                 new ChannelOrderRequest(channelIdToSubscribe1, 2)
         );
 
         return 구독_채널_순서_변경_요청(token, request);
-    }
-
-    private List<Long> 구독중이_아닌_채널_id_목록_추출(final ExtractableResponse<Response> response) {
-        return response.jsonPath()
-                .getList("channels.", ChannelResponse.class)
-                .stream()
-                .filter(it -> !it.isSubscribed())
-                .map(ChannelResponse::getId)
-                .collect(Collectors.toList());
     }
 }
