@@ -75,7 +75,7 @@ public class ErrorCodeSnippet extends TemplatedSnippet {
             model.put("errorMessage", errorMessage);
             fields.add(model);
         } catch (NoSuchFieldException e) {
-            throw new BadRequestException("커스텀 예외 클래스 내부에 ErrorCode 및 ClientMessage 를 정의해야합니다.", "", "");
+            throw new IllegalStateException("커스텀 예외 클래스 내부에 ErrorCode 및 ClientMessage 를 정의해야합니다.");
         } catch (IllegalAccessException e) {
             // ignored
         }
