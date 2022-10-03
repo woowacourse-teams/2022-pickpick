@@ -86,14 +86,14 @@ class BookmarkServiceTest {
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
-            int beforeSave = findBookmarksSize(member);
+            int beforeSaveSize = findBookmarksSize(member);
 
             // when
             bookmarkService.save(member.getId(), bookmarkRequest);
 
             // then
-            int afterSave = findBookmarksSize(member);
-            assertThat(beforeSave + 1).isEqualTo(afterSave);
+            int afterSaveSize = findBookmarksSize(member);
+            assertThat(beforeSaveSize + 1).isEqualTo(afterSaveSize);
         }
 
         @DisplayName("북마크 삭제")
