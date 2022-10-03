@@ -197,7 +197,7 @@ class BookmarkServiceTest {
 
         @DisplayName("정렬 기준은")
         @Nested
-        class bookmarkIdAndCountInParams {
+        class findOrder {
 
             BookmarkFindRequest request = BookmarkFindRequestFactory.onlyCount(hopesBookmarks.size());
 
@@ -257,6 +257,26 @@ class BookmarkServiceTest {
 
                 assertAll(
                         () -> assertThat(foundBookmarks).isNotEmpty(),
+                        () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
+                );
+            }
+        }
+
+        @DisplayName("요청 파라미터에 북마크 id와 count가 모두 있다면")
+        @Nested
+        class bookmarkIdAndCountInParams {
+
+            Bookmark targetBookmark = hopesBookmarks.get(hopesBookmarks.size() - 1);
+            int count = 5;
+            BookmarkFindRequest request = BookmarkFindRequestFactory.bookmarkIdAndCount(targetBookmark.getId(), count);
+
+            @DisplayName("해당 북마크보다 과거에 추가된 북마크를 count개 조회한다")
+            @Test
+            void findCountBookmarksCreatedBeforeTarget() {
+                List<BookmarkResponse> foundBookmarks = bookmarkService.find(request, hope.getId()).getBookmarks();
+
+                assertAll(
+                        () -> assertThat(foundBookmarks).hasSize(count),
                         () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
                 );
             }
