@@ -1,5 +1,6 @@
 package com.pickpick.channel.domain;
 
+import com.pickpick.exception.channel.SubscriptionNotFoundException;
 import com.pickpick.member.domain.Member;
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +24,9 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
     boolean existsByChannelAndMember(Channel channel, Member member);
 
     void deleteAllByChannelAndMember(Channel channel, Member member);
+
+    default ChannelSubscription getFirstByMemberIdOrderByViewOrderAsc(final Long memberId) {
+        return findFirstByMemberIdOrderByViewOrderAsc(memberId)
+                .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
+    }
 }

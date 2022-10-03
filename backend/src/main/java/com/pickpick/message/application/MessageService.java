@@ -2,7 +2,6 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.exception.channel.SubscriptionNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QBookmark;
@@ -63,8 +62,7 @@ public class MessageService {
             return channelIds;
         }
 
-        ChannelSubscription firstSubscription = channelSubscriptions.findFirstByMemberIdOrderByViewOrderAsc(memberId)
-                .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
+        ChannelSubscription firstSubscription = channelSubscriptions.getFirstByMemberIdOrderByViewOrderAsc(memberId);
 
         return List.of(firstSubscription.getChannelId());
     }
