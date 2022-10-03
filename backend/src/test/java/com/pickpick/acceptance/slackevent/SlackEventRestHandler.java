@@ -1,17 +1,10 @@
 package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.post;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
-import com.slack.api.RequestConfigurator;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsInfoRequest.ConversationsInfoRequestBuilder;
 import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
 import com.slack.api.model.Conversation;
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,16 +30,9 @@ public class SlackEventRestHandler {
         post(SLACK_EVENT_API_URL, request);
     }
 
-    public static void 채널_생성(final String memberSlackId, final Channel channel, final MethodsClient slackClient) {
-        try {
-            given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
-                    .willReturn(setUpChannelMockData(channel));
-        } catch (IOException | SlackApiException e) {
-            e.printStackTrace();
-        }
+    public static void 채널_생성(final String memberSlackId, final Channel channel) {
         post(SLACK_EVENT_API_URL, createEventRequest(memberSlackId, channel));
     }
-
 
     private static ConversationsInfoResponse setUpChannelMockData(final Channel channel) {
         Conversation conversation = new Conversation();

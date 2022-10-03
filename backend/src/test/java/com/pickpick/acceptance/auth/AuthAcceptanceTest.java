@@ -7,21 +7,15 @@ import static com.pickpick.acceptance.auth.AuthRestHandler.로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
-import com.slack.api.methods.request.users.UsersIdentityRequest;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
 import com.slack.api.methods.response.users.UsersIdentityResponse;
 import com.slack.api.methods.response.users.UsersIdentityResponse.User;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,19 +28,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     private String secretKey;
 
     @Test
-    void 정상_로그인() throws SlackApiException, IOException {
+    void 정상_로그인() {
         // given
         String memberSlackId = "U03MC231";
-
-        given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .willReturn(generateOAuthV2AccessResponse());
-        given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .willReturn(generateUsersIdentityResponse(memberSlackId));
-
         회원가입(memberSlackId);
 
         // when
-        ExtractableResponse<Response> response = 로그인("1234");
+        ExtractableResponse<Response> response = 로그인(memberSlackId);
 
         // then
         상태코드_200_확인(response);
