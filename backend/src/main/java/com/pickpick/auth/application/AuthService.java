@@ -31,8 +31,8 @@ public class AuthService {
 
     @Transactional
     public LoginResponse login(final String code) {
-        String token = slackClient.findAccessToken(code);
-        String memberSlackId = slackClient.findMemberSlackId(token);
+        String token = slackClient.callAccessToken(code);
+        String memberSlackId = slackClient.callMemberSlackId(token);
 
         Member member = members.findBySlackId(memberSlackId)
                 .orElseThrow(() -> new MemberNotFoundException(memberSlackId));

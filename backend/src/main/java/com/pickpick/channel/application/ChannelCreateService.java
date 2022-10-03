@@ -19,7 +19,7 @@ public class ChannelCreateService {
     }
 
     public Channel createChannel(final String channelSlackId) {
-        Channel channel = slackClient.findChannel(channelSlackId);
+        Channel channel = slackClient.callChannel(channelSlackId);
         return channels.save(channel);
     }
 }

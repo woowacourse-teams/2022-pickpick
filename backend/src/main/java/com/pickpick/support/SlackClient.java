@@ -40,7 +40,7 @@ public class SlackClient {
         this.methodsClient = methodsClient;
     }
 
-    public String findAccessToken(final String code) {
+    public String callAccessToken(final String code) {
         OAuthV2AccessRequest request = generateOAuthRequest(code);
 
         try {
@@ -62,7 +62,7 @@ public class SlackClient {
                 .build();
     }
 
-    public String findMemberSlackId(final String accessToken) {
+    public String callMemberSlackId(final String accessToken) {
         UsersIdentityRequest request = UsersIdentityRequest.builder()
                 .token(accessToken)
                 .build();
@@ -76,7 +76,7 @@ public class SlackClient {
         }
     }
 
-    public Channel findChannel(final String channelSlackId) {
+    public Channel callChannel(final String channelSlackId) {
         try {
             ConversationsInfoResponse response = methodsClient.conversationsInfo(
                     request -> request.channel(channelSlackId));
