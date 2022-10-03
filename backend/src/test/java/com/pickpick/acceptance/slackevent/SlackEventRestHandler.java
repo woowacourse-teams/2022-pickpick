@@ -15,15 +15,32 @@ public class SlackEventRestHandler {
     private SlackEventRestHandler() {
     }
 
+    public static ExtractableResponse<Response> URL_검증(final String token, final String type, final String challenge) {
+        Map<String, Object> request = SlackEventRequestFactory.urlVerifyEvent(token, type, challenge);
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
     public static ExtractableResponse<Response> 회원가입(final String slackId) {
         Map<String, Object> request = SlackEventRequestFactory.memberJoinEvent(slackId);
         return post(SLACK_EVENT_API_URL, request);
     }
-    
+
     public static ExtractableResponse<Response> 멤버_정보_수정(final String slackId, final String realName,
                                                          final String displayName, final String thumbnailUrl) {
         Map<String, Object> request = SlackEventRequestFactory.memberUpdateEvent(slackId, realName, displayName,
                 thumbnailUrl);
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId,
+                                                       final String subtype) {
+        Map<String, Object> request = SlackEventRequestFactory.messageCreateEvent(memberSlackId, messageSlackId,
+                subtype);
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 브로드캐스트_메시지_전송(final String memberSlackId) {
+        Map<String, Object> request = SlackEventRequestFactory.threadBroadcastCreateEvent(memberSlackId);
         return post(SLACK_EVENT_API_URL, request);
     }
 
