@@ -1,6 +1,5 @@
 package com.pickpick.slackevent.application.member;
 
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -26,8 +25,7 @@ public class MemberChangedService implements SlackEventService {
         MemberProfileChangedDto memberProfileChangedDto = convert(requestBody);
 
         String slackId = memberProfileChangedDto.getSlackId();
-        Member member = members.findBySlackId(slackId)
-                .orElseThrow(() -> new MemberNotFoundException(slackId));
+        Member member = members.getBySlackId(slackId);
 
         member.update(memberProfileChangedDto.getUsername(), memberProfileChangedDto.getThumbnailUrl());
     }

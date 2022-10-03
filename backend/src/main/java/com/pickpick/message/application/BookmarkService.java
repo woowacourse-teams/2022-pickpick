@@ -1,9 +1,6 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
-import com.pickpick.exception.message.BookmarkNotFoundException;
-import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -41,11 +38,9 @@ public class BookmarkService {
 
     @Transactional
     public void save(final Long memberId, final BookmarkRequest bookmarkRequest) {
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
-        Message message = messages.findById(bookmarkRequest.getMessageId())
-                .orElseThrow(() -> new MessageNotFoundException(bookmarkRequest.getMessageId()));
+        Message message = messages.getById(bookmarkRequest.getMessageId());
 
         Bookmark bookmark = new Bookmark(member, message);
         bookmarks.save(bookmark);
@@ -82,8 +77,7 @@ public class BookmarkService {
             return null;
         }
 
-        Bookmark bookmark = bookmarks.findById(bookmarkId)
-                .orElseThrow(() -> new BookmarkNotFoundException(bookmarkId));
+        Bookmark bookmark = bookmarks.getById(bookmarkId);
 
         return QBookmark.bookmark.createdDate.before(bookmark.getCreatedDate());
     }
