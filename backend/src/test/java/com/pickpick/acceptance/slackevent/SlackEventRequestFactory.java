@@ -16,24 +16,18 @@ public class SlackEventRequestFactory {
     }
 
     public static Map<String, Object> memberJoinEvent(final String slackId) {
-        return Map.of(
-                "event", Map.of(
-                        "type", "team_join",
-                        "user", Map.of(
-                                "id", slackId,
-                                "profile", Map.of(
-                                        "real_name", "봄",
-                                        "display_name", "가을",
-                                        "image_48", "bom.png"
-                                )
-                        )
-                ));
+        return memberEvent(SlackEvent.MEMBER_JOIN.getType(), slackId, "realName", "displayName", "thumbnailUrl");
     }
 
     public static Map<String, Object> memberUpdateEvent(final String slackId, final String realName,
                                                         final String displayName, final String thumbnailUrl) {
+        return memberEvent(SlackEvent.MEMBER_CHANGED.getType(), slackId, realName, displayName, thumbnailUrl);
+    }
+
+    private static Map<String, Object> memberEvent(final String subtype, final String slackId, final String realName,
+                                                   final String displayName, final String thumbnailUrl) {
         return Map.of("event", Map.of(
-                        "type", SlackEvent.MEMBER_CHANGED.getType(),
+                        "type", subtype,
                         "user", Map.of(
                                 "id", slackId,
                                 "profile", Map.of(
