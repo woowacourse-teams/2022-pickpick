@@ -3,7 +3,6 @@ package com.pickpick.slackevent.application.message;
 import com.pickpick.channel.application.ChannelCreateService;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
@@ -50,8 +49,7 @@ public class MessageFileShareService implements SlackEventService {
     private Member findMember(final SlackMessageDto slackMessageDto) {
         String memberSlackId = slackMessageDto.getMemberSlackId();
 
-        return members.findBySlackId(memberSlackId)
-                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
+        return members.getBySlackId(memberSlackId);
     }
 
     private Channel findChannel(final SlackMessageDto slackMessageDto) {
