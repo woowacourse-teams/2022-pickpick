@@ -1,8 +1,5 @@
 package com.pickpick.message.application;
 
-import static com.pickpick.fixture.BookmarkFindRequestFactory.emptyQueryParams;
-import static com.pickpick.fixture.BookmarkFindRequestFactory.onlyBookmarkId;
-import static com.pickpick.fixture.BookmarkFindRequestFactory.onlyCount;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_18_00_00;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -132,7 +129,7 @@ class BookmarkServiceTest {
         }
 
         private int findBookmarksSize(final Member member) {
-            return bookmarkService.find(emptyQueryParams(), member.getId())
+            return bookmarkService.find(BookmarkFindRequestFactory.emptyQueryParams(), member.getId())
                     .getBookmarks()
                     .size();
         }
@@ -161,7 +158,8 @@ class BookmarkServiceTest {
         @Test
         void membersOwnBookmarks() {
             int totalSize = hopesBookmarks.size() + kkojaesBookmarks.size();
-            List<BookmarkResponse> foundHopesBookmarks = bookmarkService.find(onlyCount(totalSize), hope.getId())
+            List<BookmarkResponse> foundHopesBookmarks = bookmarkService.find(
+                            BookmarkFindRequestFactory.onlyCount(totalSize), hope.getId())
                     .getBookmarks();
 
             List<Long> hopesBookmarkIds = extractIds(hopesBookmarks);
@@ -178,7 +176,8 @@ class BookmarkServiceTest {
         @Test
         void noMoreBookmarksToFindHasPastTrue() {
             int totalSize = hopesBookmarks.size() + kkojaesBookmarks.size();
-            BookmarkResponses response = bookmarkService.find(onlyCount(totalSize), hope.getId());
+            BookmarkResponses response = bookmarkService.find(BookmarkFindRequestFactory.onlyCount(totalSize),
+                    hope.getId());
 
             assertThat(response.hasPast()).isFalse();
         }
@@ -187,7 +186,8 @@ class BookmarkServiceTest {
         @Test
         void moreBookmarksToFindHasPastTrue() {
             int lessThanTotal = kkojaesBookmarks.size() - 1;
-            BookmarkResponses response = bookmarkService.find(onlyCount(lessThanTotal), hope.getId());
+            BookmarkResponses response = bookmarkService.find(BookmarkFindRequestFactory.onlyCount(lessThanTotal),
+                    hope.getId());
 
             assertThat(response.hasPast()).isTrue();
         }
@@ -212,7 +212,7 @@ class BookmarkServiceTest {
         @Nested
         class emptyParams {
 
-            BookmarkFindRequest request = emptyQueryParams();
+            BookmarkFindRequest request = BookmarkFindRequestFactory.emptyQueryParams();
 
             @DisplayName("최근에 등록한 북마크부터 20개를 조회한다")
             @Test
@@ -229,7 +229,7 @@ class BookmarkServiceTest {
         class onlyCountInParams {
 
             int count = 3;
-            BookmarkFindRequest request = onlyCount(count);
+            BookmarkFindRequest request = BookmarkFindRequestFactory.onlyCount(count);
 
             @DisplayName("해당 개수만큼 조회한다")
             @Test
@@ -245,7 +245,7 @@ class BookmarkServiceTest {
         class onlyBookmarkIdInParams {
 
             Bookmark targetBookmark = hopesBookmarks.get(hopesBookmarks.size() - 1);
-            BookmarkFindRequest request = onlyBookmarkId(targetBookmark.getId());
+            BookmarkFindRequest request = BookmarkFindRequestFactory.onlyBookmarkId(targetBookmark.getId());
 
             @DisplayName("해당 북마크보다 과거에 추가된 북마크를 20개 조회한다")
             @Test
