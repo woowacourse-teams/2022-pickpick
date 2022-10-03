@@ -2,6 +2,8 @@ package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.URL_검증;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_삭제;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.브로드캐스트_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
@@ -53,8 +55,7 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID, "");
 
         // when
-        ExtractableResponse<Response> response = 메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID,
-                SlackEvent.MESSAGE_CHANGED.getSubtype());
+        ExtractableResponse<Response> response = 메시지_수정(MEMBER_SLACK_ID, MESSAGE_SLACK_ID);
 
         // then
         상태코드_200_확인(response);
@@ -66,8 +67,7 @@ class MessageEventAcceptanceTest extends AcceptanceTest {
         회원가입(MEMBER_SLACK_ID);
 
         // when
-        ExtractableResponse<Response> response = 메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID,
-                SlackEvent.MESSAGE_DELETED.getSubtype());
+        ExtractableResponse<Response> response = 메시지_삭제(MEMBER_SLACK_ID, MESSAGE_SLACK_ID);
 
         // then
         상태코드_200_확인(response);

@@ -3,6 +3,7 @@ package com.pickpick.acceptance.slackevent;
 import static com.pickpick.acceptance.RestHandler.post;
 
 import com.pickpick.channel.domain.Channel;
+import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Map;
@@ -37,6 +38,14 @@ public class SlackEventRestHandler {
         Map<String, Object> request = SlackEventRequestFactory.messageCreateEvent(memberSlackId, messageSlackId,
                 subtype);
         return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 메시지_수정(final String memberSlackId, final String messageSlackId) {
+        return 메시지_전송(memberSlackId, messageSlackId, SlackEvent.MESSAGE_CHANGED.getSubtype());
+    }
+
+    public static ExtractableResponse<Response> 메시지_삭제(final String memberSlackId, final String messageSlackId) {
+        return 메시지_전송(memberSlackId, messageSlackId, SlackEvent.MESSAGE_DELETED.getSubtype());
     }
 
     public static ExtractableResponse<Response> 브로드캐스트_메시지_전송(final String memberSlackId) {
