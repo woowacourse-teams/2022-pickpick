@@ -76,6 +76,7 @@ class AuthServiceTest {
         AuthedUser authedUser = new AuthedUser();
         authedUser.setAccessToken("token");
         response.setAuthedUser(authedUser);
+        response.setOk(true);
         return response;
     }
 
@@ -84,6 +85,7 @@ class AuthServiceTest {
         User user = new User();
         user.setId(slackId);
         usersIdentityResponse.setUser(user);
+        usersIdentityResponse.setOk(true);
         return usersIdentityResponse;
     }
 
