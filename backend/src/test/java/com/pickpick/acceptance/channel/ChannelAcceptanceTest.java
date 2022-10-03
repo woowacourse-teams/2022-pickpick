@@ -39,7 +39,7 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
     }
 
     private void 채널_목록_생성(final String memberSlackId) {
-        for (Channel channel : ChannelFixture.allChannels()) {
+        for (Channel channel : ChannelFixture.createAllChannels()) {
             채널_생성(memberSlackId, channel, slackClient);
         }
     }
