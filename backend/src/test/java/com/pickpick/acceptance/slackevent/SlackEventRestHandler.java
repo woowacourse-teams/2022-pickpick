@@ -3,8 +3,6 @@ package com.pickpick.acceptance.slackevent;
 import static com.pickpick.acceptance.RestHandler.post;
 
 import com.pickpick.channel.domain.Channel;
-import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
-import com.slack.api.model.Conversation;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,17 +30,6 @@ public class SlackEventRestHandler {
 
     public static void 채널_생성(final String memberSlackId, final Channel channel) {
         post(SLACK_EVENT_API_URL, createEventRequest(memberSlackId, channel));
-    }
-
-    private static ConversationsInfoResponse setUpChannelMockData(final Channel channel) {
-        Conversation conversation = new Conversation();
-        conversation.setId(channel.getSlackId());
-        conversation.setName(channel.getName());
-
-        ConversationsInfoResponse conversationsInfoResponse = new ConversationsInfoResponse();
-        conversationsInfoResponse.setChannel(conversation);
-
-        return conversationsInfoResponse;
     }
 
     private static Map<String, Object> createEventRequest(final String memberSlackId, final Channel channel) {
