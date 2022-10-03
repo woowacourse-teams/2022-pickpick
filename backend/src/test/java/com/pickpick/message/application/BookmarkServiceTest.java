@@ -1,5 +1,8 @@
 package com.pickpick.message.application;
 
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.HOPE;
+import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_18_00_00;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -78,8 +81,8 @@ class BookmarkServiceTest {
         @Test
         void save() {
             // given
-            Member member = members.save(new Member("U1234", "사용자", "user.png"));
-            Channel channel = channels.save(new Channel("C1234", "기본채널"));
+            Member member = members.save(HOPE.create());
+            Channel channel = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
@@ -97,8 +100,8 @@ class BookmarkServiceTest {
         @Test
         void delete() {
             // given
-            Member member = members.save(new Member("U1234", "사용자", "user.png"));
-            Channel channel = channels.save(new Channel("C1234", "기본채널"));
+            Member member = members.save(HOPE.create());
+            Channel channel = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             Bookmark bookmark = bookmarks.save(new Bookmark(member, message));
@@ -115,9 +118,9 @@ class BookmarkServiceTest {
         @Test
         void deleteOtherMembers() {
             // given
-            Member owner = members.save(new Member("U1234", "사용자", "user.png"));
-            Member other = members.save(new Member("U1235", "다른 사용자", "user.png"));
-            Channel channel = channels.save(new Channel("C1234", "기본채널"));
+            Member owner = members.save(HOPE.create());
+            Member other = members.save(KKOJAE.create());
+            Channel channel = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, other));
 
             Bookmark bookmark = new Bookmark(owner, message);
@@ -140,10 +143,10 @@ class BookmarkServiceTest {
     @Nested
     class find {
 
-        Member hope = members.save(new Member("U00004", "호프", "https://hope.png"));
-        Member kkojae = members.save(new Member("U000005", "꼬재", "https://kkojae.png"));
+        Member hope = members.save(HOPE.create());
+        Member kkojae = members.save(KKOJAE.create());
 
-        Channel notice = channels.save(new Channel("C000001", "공지사항"));
+        Channel notice = channels.save(NOTICE.create());
         List<Message> savedMessages = createAndSaveMessages(notice, kkojae);
 
         List<Bookmark> hopesBookmarks = saveBookmarksAtDifferentTimes(hope, savedMessages);
