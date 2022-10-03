@@ -3,6 +3,9 @@ package com.pickpick.acceptance.slackevent;
 import static com.pickpick.acceptance.RestHandler.post;
 
 import com.pickpick.channel.domain.Channel;
+import com.pickpick.slackevent.application.SlackEvent;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import java.util.Map;
 import java.util.UUID;
 
@@ -11,7 +14,7 @@ public class SlackEventRestHandler {
 
     private static final String SLACK_EVENT_API_URL = "/api/event";
 
-    public static void 회원가입(final String slackId) {
+    public static ExtractableResponse<Response> 회원가입(final String slackId) {
         Map<String, Object> request = Map.of(
                 "event", Map.of(
                         "type", "team_join",
@@ -25,7 +28,13 @@ public class SlackEventRestHandler {
                         )
                 ));
 
-        post(SLACK_EVENT_API_URL, request);
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 멤버_정보_수정(final String slackId, final String realName,
+                                                         final String displayName, final String thumbnailUrl) {
+        Map<String, Object> request = updateEventRequest(slackId, realName, displayName, thumbnailUrl);
+        return post(SLACK_EVENT_API_URL, request);
     }
 
     public static void 채널_생성(final String memberSlackId, final Channel channel) {
@@ -56,5 +65,21 @@ public class SlackEventRestHandler {
         );
 
         return Map.of("type", type, "event", event);
+    }
+
+    private static Map<String, Object> updateEventRequest(final String slackId, final String realName,
+                                                          final String displayName, final String thumbnailUrl) {
+        return Map.of("event", Map.of(
+                        "type", SlackEvent.MEMBER_CHANGED.getType(),
+                        "user", Map.of(
+                                "id", slackId,
+                                "profile", Map.of(
+                                        "real_name", realName,
+                                        "display_name", displayName,
+                                        "image_48", thumbnailUrl
+                                )
+                        )
+                )
+        );
     }
 }
