@@ -110,6 +110,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         AuthedUser authedUser = new AuthedUser();
         authedUser.setAccessToken("token");
         response.setAuthedUser(authedUser);
+        response.setOk(true);
         return response;
     }
 
@@ -118,6 +119,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         User user = new User();
         user.setId(slackId);
         usersIdentityResponse.setUser(user);
+        usersIdentityResponse.setOk(true);
         return usersIdentityResponse;
     }
 
