@@ -2,6 +2,7 @@ package com.pickpick.acceptance.message;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
+import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
 import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
@@ -214,6 +215,39 @@ class MessageAcceptanceTest extends AcceptanceTest {
         assertThat(메시지_개수(response)).isEqualTo(messageCount);
     }
 
+    @Test
+    void 북마크한_메시지는_isBookmarked가_true() {
+        // given
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        채널_구독_요청(token, 1L);
+        북마크_생성(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(북마크_여부(response)).isTrue();
+    }
+
+    @Test
+    void 북마크하지_않은_메시지는_isBookmarked가_false() {
+        // given
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(북마크_여부(response)).isFalse();
+    }
+
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
         return toMessageResponses(response)
                 .getMessages()
@@ -224,6 +258,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
     private int 메시지_개수(final ExtractableResponse<Response> response) {
         return toMessageResponses(response).getMessages().size();
+    }
+
+    private boolean 북마크_여부(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response).getMessages()
+                .get(0)
+                .isBookmarked();
     }
 
     private MessageResponses toMessageResponses(ExtractableResponse<Response> response) {
