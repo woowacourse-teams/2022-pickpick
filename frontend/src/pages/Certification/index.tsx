@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import Loader from "@src/components/Loader";
 
-import useGetCertification from "@src/hooks/query/useGetCertification";
+import useGetCertification from "@src/hooks/@query/useGetCertification";
+import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
 import useAuthentication from "@src/hooks/useAuthentication";
-import useGetSearchParam from "@src/hooks/useGetSearchParam";
 
 import { PATH_NAME } from "@src/@constants";
 

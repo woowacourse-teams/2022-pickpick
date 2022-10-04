@@ -14,11 +14,11 @@ import ReminderButton from "@src/components/MessageCard/MessageIconButtons/Remin
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import SearchForm from "@src/components/SearchForm";
 
-import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useModal from "@src/hooks/@shared/useModal";
+import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
-import useModal from "@src/hooks/useModal";
-import useScrollToTop from "@src/hooks/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 

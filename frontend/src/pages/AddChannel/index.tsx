@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 import Button from "@src/components/@shared/Button";
 
-import useGetChannels from "@src/hooks/query/useGetChannels";
-import useMutateChannels from "@src/hooks/query/useMutateChannels";
+import useGetChannels from "@src/hooks/@query/useGetChannels";
+import useMutateChannels from "@src/hooks/@query/useMutateChannels";
 
 import { PATH_NAME } from "@src/@constants";
 import { FlexColumn } from "@src/@styles/shared";

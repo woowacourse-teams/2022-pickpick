@@ -1,6 +1,6 @@
 import Button from "@src/components/@shared/Button";
 
-import usePushPreviousPage from "@src/hooks/usePushPreviousPage";
+import usePushPreviousPage from "@src/hooks/@shared/usePushPreviousPage";
 
 import { FlexColumn } from "@src/@styles/shared";
 
