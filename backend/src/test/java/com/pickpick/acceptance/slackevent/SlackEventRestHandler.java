@@ -6,6 +6,8 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -31,6 +33,16 @@ public class SlackEventRestHandler {
         Map<String, Object> request = SlackEventRequestFactory.memberUpdateEvent(slackId, realName, displayName,
                 thumbnailUrl);
         return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static void 메시지_목록_생성(final String memberSlackId, final int count, final LocalDateTime localDateTime) {
+        long time = localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+
+        for (int i = 1; i <= count; i++) {
+            String timestamp = String.valueOf(time + i);
+            Map<String, Object> request = SlackEventRequestFactory.messageCreateWithDateEvent(memberSlackId, timestamp);
+            post(SLACK_EVENT_API_URL, request);
+        }
     }
 
     public static void 메시지_목록_생성(final String memberSlackId, final int count) {

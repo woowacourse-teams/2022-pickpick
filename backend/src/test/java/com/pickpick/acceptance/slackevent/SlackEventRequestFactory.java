@@ -40,19 +40,24 @@ public class SlackEventRequestFactory {
         );
     }
 
+    public static Map<String, Object> messageCreateWithDateEvent(final String memberSlackId, final String timestamp) {
+        return messageCreateEvent(memberSlackId, UUID.randomUUID().toString(), SlackEvent.MESSAGE_CREATED.getSubtype(),
+                timestamp, "test");
+    }
+
     public static Map<String, Object> emptyMessageCreateEvent(final String memberSlackId, final String messageSlackId,
                                                               final String subtype) {
-        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "");
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "");
     }
 
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
                                                          final String subtype) {
-        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "text");
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "text");
     }
 
     private static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
-                                                          final String subtype, final String text) {
-        String timestamp = "1234567890.123456";
+                                                          final String subtype, final String timestamp,
+                                                          final String text) {
         String type = "event_callback";
 
         Map<String, Object> event = Map.of(
