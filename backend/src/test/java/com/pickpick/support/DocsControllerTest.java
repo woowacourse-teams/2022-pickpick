@@ -7,19 +7,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.auth.application.AuthService;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.auth.ui.AuthController;
 import com.pickpick.channel.application.ChannelService;
 import com.pickpick.channel.application.ChannelSubscriptionService;
-import com.pickpick.channel.ui.ChannelController;
-import com.pickpick.channel.ui.ChannelSubscriptionController;
 import com.pickpick.message.application.BookmarkService;
 import com.pickpick.message.application.MessageService;
 import com.pickpick.message.application.ReminderService;
-import com.pickpick.message.ui.BookmarkController;
-import com.pickpick.message.ui.MessageController;
-import com.pickpick.message.ui.ReminderController;
 import com.pickpick.slackevent.application.SlackEventServiceFinder;
-import com.pickpick.slackevent.ui.SlackEventController;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,15 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-@WebMvcTest({
-        AuthController.class,
-        ChannelController.class,
-        ChannelSubscriptionController.class,
-        BookmarkController.class,
-        MessageController.class,
-        ReminderController.class,
-        SlackEventController.class
-})
+@WebMvcTest
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
 public class DocsControllerTest {
