@@ -57,10 +57,6 @@ public class MessageRestHandler {
             return this;
         }
 
-        public MessageRequestBuilder build() {
-            return this;
-        }
-
         public Map<String, Object> getParams() {
             return params;
         }

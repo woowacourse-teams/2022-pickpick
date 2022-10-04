@@ -283,6 +283,42 @@ class MessageAcceptanceTest extends AcceptanceTest {
         assertThat(리마인드_여부(response)).isFalse();
     }
 
+    @Test
+    void 메시지_ID_3번이고_needPastMessage가_false인_경우_해당_메시지보다_미래_메시지를_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageId(3L)
+                .needPastMessage(false);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).isEqualTo(List.of(5L, 4L));
+    }
+
+    @Test
+    void 메시지_ID_3번이고_needPastMessage가_true인_경우_해당_메시지보다_미래_메시지를_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageId(3L)
+                .needPastMessage(true);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).isEqualTo(List.of(2L, 1L));
+    }
+
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
         return toMessageResponses(response)
                 .getMessages()
