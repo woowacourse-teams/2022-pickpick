@@ -1,8 +1,7 @@
-import { PropsWithChildren } from "react";
-
 import ProfileImage from "@src/components/MessageCard/ProfileImage";
 
 import { FlexRow } from "@src/@styles/shared";
+import { StrictPropsWithChildren } from "@src/@types/utils";
 
 import * as Styled from "./style";
 
@@ -21,7 +20,7 @@ function MessageCard({
   thumbnail,
   isRemindedMessage,
   children,
-}: PropsWithChildren<Props>) {
+}: StrictPropsWithChildren<Props>) {
   return (
     <Styled.Container>
       <FlexRow columnGap="8px" width="100%">

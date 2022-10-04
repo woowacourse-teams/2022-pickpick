@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useTheme } from "styled-components";
 
-import WrapperLink from "@src/components/@shared/WrapperLink";
+import WrapperLink from "@src/components/@shared/WrapperNavLink";
 import PlusIcon from "@src/components/@svgIcons/PlusIcon";
 import ThemeToggler from "@src/components/ThemeToggler";
 

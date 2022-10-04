@@ -27,8 +27,8 @@ import * as Styled from "./style";
 
 function Feed() {
   const { channelId } = useParams();
-  const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
+  const shouldRenderDate = useMessageDate();
 
   const {
     reminderTarget,
@@ -89,7 +89,7 @@ function Feed() {
 
               return (
                 <Fragment key={id}>
-                  {isRenderDate(parsedDate) && (
+                  {shouldRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
                       channelId={channelId ?? "main"}

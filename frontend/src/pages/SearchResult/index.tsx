@@ -23,8 +23,8 @@ import {
 } from "@src/@utils";
 
 function SearchResult() {
-  const keyword = useGetSearchParam("keyword");
-  const channelIds = useGetSearchParam("channelIds");
+  const keyword = useGetSearchParam({ key: "keyword" });
+  const channelIds = useGetSearchParam({ key: "channelIds" });
 
   const {
     reminderTarget,
