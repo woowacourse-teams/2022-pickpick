@@ -35,19 +35,23 @@ public class SlackEventRestHandler {
         return post(SLACK_EVENT_API_URL, request);
     }
 
-    public static void 메시지_목록_생성(final String memberSlackId, final int count, final LocalDateTime localDateTime) {
-        long time = localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+    public static void 메시지_목록_생성(final String memberSlackId, final int count) {
+        키워드를_포함한_메시지_목록_생성(memberSlackId, count, "");
+    }
+
+    public static void 키워드를_포함한_메시지_목록_생성(final String memberSlackId, final int count, final String keyword) {
+        long time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
 
         for (int i = 1; i <= count; i++) {
             String timestamp = String.valueOf(time + i);
-            Map<String, Object> request = SlackEventRequestFactory.messageCreateWithDateEvent(memberSlackId, timestamp);
+            Map<String, Object> request = SlackEventRequestFactory.messageCreateEvent(
+                    memberSlackId,
+                    String.format("MSG_SLACK_ID_%d", i),
+                    SlackEvent.MESSAGE_CREATED.getSubtype(),
+                    timestamp,
+                    String.format("%s %d", keyword, i)
+            );
             post(SLACK_EVENT_API_URL, request);
-        }
-    }
-
-    public static void 메시지_목록_생성(final String memberSlackId, final int count) {
-        for (int i = 1; i <= count; i++) {
-            메시지_전송(memberSlackId, "MSG_SLACK_ID" + i);
         }
     }
 

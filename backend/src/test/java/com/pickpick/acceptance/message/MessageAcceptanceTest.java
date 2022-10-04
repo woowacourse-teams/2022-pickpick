@@ -5,6 +5,7 @@ import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조�
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성_후_메시지_저장;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.키워드를_포함한_메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +16,6 @@ import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +58,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 조회할_과거_메시지가_있으면_hasPast가_true() {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
-        메시지_목록_생성(MEMBER_SLACK_ID, 21, LocalDateTime.now());
+        메시지_목록_생성(MEMBER_SLACK_ID, 21);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
                 .channelIds(1L);
@@ -75,7 +75,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 조회할_과거_메시지가_없으면_hasPast가_false() {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
-        메시지_목록_생성(MEMBER_SLACK_ID, 2, LocalDateTime.now());
+        메시지_목록_생성(MEMBER_SLACK_ID, 2);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
                 .channelIds(1L);
@@ -92,7 +92,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 조회할_미래_메시지가_있으면_hasFuture가_true() {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
-        메시지_목록_생성(MEMBER_SLACK_ID, 21, LocalDateTime.now());
+        메시지_목록_생성(MEMBER_SLACK_ID, 21);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
                 .messageId(3L)
@@ -110,7 +110,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 조회할_미래_메시지가_없으면_hasFuture가_false() {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
-        메시지_목록_생성(MEMBER_SLACK_ID, 11, LocalDateTime.now());
+        메시지_목록_생성(MEMBER_SLACK_ID, 11);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
                 .channelIds(1L);
@@ -121,6 +121,28 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_200_확인(response);
         assertThat(toMessageResponses(response).hasFuture()).isFalse();
+    }
+
+    @Test
+    void 키워드_검색() {
+        // given
+        String keyword = "줍줍";
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+
+        int messageCount = 5;
+        키워드를_포함한_메시지_목록_생성(MEMBER_SLACK_ID, messageCount, keyword);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .keyword(keyword)
+                .channelIds(1L);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        int size = toMessageResponses(response).getMessages().size();
+        assertThat(size).isEqualTo(messageCount);
     }
 
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
