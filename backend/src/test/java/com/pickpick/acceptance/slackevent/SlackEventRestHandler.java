@@ -33,6 +33,12 @@ public class SlackEventRestHandler {
         return post(SLACK_EVENT_API_URL, request);
     }
 
+    public static void 메시지_목록_생성(final String memberSlackId, final int count) {
+        for (int i = 1; i <= count; i++) {
+            메시지_전송(memberSlackId, "MSG_SLACK_ID" + i);
+        }
+    }
+
     public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId) {
         return 메시지_전송(memberSlackId, messageSlackId, SlackEvent.MESSAGE_CREATED.getSubtype());
     }

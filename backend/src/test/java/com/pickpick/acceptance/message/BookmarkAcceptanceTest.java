@@ -5,6 +5,7 @@ import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_삭제;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_조회;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성_후_메시지_저장;
@@ -76,7 +77,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 10;
-        메시지_목록_생성(messageCount);
+        메시지_목록_생성(MEMBER_SLACK_ID, messageCount);
 
         List<Long> messageIdsForBookmark = List.of(1L, 3L, 5L, 7L);
         북마크_목록_생성(token, messageIdsForBookmark);
@@ -90,12 +91,6 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
         assertThat(bookmarkResponses.hasPast()).isFalse();
         assertThat(convertToMessageIds(bookmarkResponses)).containsExactlyElementsOf(messageIdsForBookmark);
-    }
-
-    private void 메시지_목록_생성(final int count) {
-        for (int i = 1; i <= count; i++) {
-            메시지_전송(MEMBER_SLACK_ID, "MSG_SLACK_ID" + i);
-        }
     }
 
     private void 북마크_목록_생성(final String token, final List<Long> messageIds) {
