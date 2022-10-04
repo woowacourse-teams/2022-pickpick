@@ -1,7 +1,7 @@
 package com.pickpick.acceptance.message;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
 import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
@@ -43,9 +43,9 @@ class MessageAcceptanceTest extends AcceptanceTest {
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 10);
         빈_메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
 
-        MessageRequestBuilder request = new MessageRequestBuilder()
-                .channelIds(1L);
+        MessageRequestBuilder request = new MessageRequestBuilder();
 
         // when
         ExtractableResponse<Response> response = 메시지_조회(token, request);
@@ -60,9 +60,9 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 21);
+        채널_구독_요청(token, 1L);
 
-        MessageRequestBuilder request = new MessageRequestBuilder()
-                .channelIds(1L);
+        MessageRequestBuilder request = new MessageRequestBuilder();
 
         // when
         ExtractableResponse<Response> response = 메시지_조회(token, request);
@@ -77,9 +77,9 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 2);
+        채널_구독_요청(token, 1L);
 
-        MessageRequestBuilder request = new MessageRequestBuilder()
-                .channelIds(1L);
+        MessageRequestBuilder request = new MessageRequestBuilder();
 
         // when
         ExtractableResponse<Response> response = 메시지_조회(token, request);
@@ -94,10 +94,10 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 21);
+        채널_구독_요청(token, 1L);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
-                .messageId(3L)
-                .channelIds(1L);
+                .messageId(3L);
 
         // when
         ExtractableResponse<Response> response = 메시지_조회(token, request);
@@ -112,9 +112,9 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 11);
+        채널_구독_요청(token, 1L);
 
-        MessageRequestBuilder request = new MessageRequestBuilder()
-                .channelIds(1L);
+        MessageRequestBuilder request = new MessageRequestBuilder();
 
         // when
         ExtractableResponse<Response> response = 메시지_조회(token, request);
@@ -129,13 +129,13 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // given
         String keyword = "줍줍";
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        채널_구독_요청(token, 1L);
 
         int messageCount = 5;
         키워드를_포함한_메시지_목록_생성(MEMBER_SLACK_ID, messageCount, keyword);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
-                .keyword(keyword)
-                .channelIds(1L);
+                .keyword(keyword);
 
         // when
         ExtractableResponse<Response> response = 메시지_조회(token, request);
@@ -168,7 +168,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 메시지_조회_시_작성_시간_기준_내림차순으로_조회() {
         // given
         메시지_목록_생성(MEMBER_SLACK_ID, 5);
-        구독_요청(token, 1L);
+        채널_구독_요청(token, 1L);
 
         MessageRequestBuilder request = new MessageRequestBuilder();
 
