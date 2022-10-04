@@ -88,6 +88,24 @@ class MessageAcceptanceTest extends AcceptanceTest {
         assertThat(toMessageResponses(response).hasPast()).isFalse();
     }
 
+    @Test
+    void 조회할_미래_메시지가_있으면_hasFuture가_true() {
+        // given
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_목록_생성(MEMBER_SLACK_ID, 21, LocalDateTime.now());
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageId(3L)
+                .channelIds(1L);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+ 
+        // then
+        상태코드_200_확인(response);
+        assertThat(toMessageResponses(response).hasFuture()).isTrue();
+    }
+
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
         return toMessageResponses(response)
                 .getMessages()
