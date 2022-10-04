@@ -1,4 +1,4 @@
-export interface Message {
+export type Message = {
   id: number;
   username: string;
   postedDate: string;
@@ -7,9 +7,9 @@ export interface Message {
   userThumbnail: string;
   isBookmarked: boolean;
   isSetReminded: boolean;
-}
+};
 
-export interface Bookmark {
+export type Bookmark = {
   id: number;
   messageId: number;
   username: string;
@@ -17,9 +17,9 @@ export interface Bookmark {
   remindDate: string;
   text: string;
   userThumbnail: string;
-}
+};
 
-export interface Reminder {
+export type Reminder = {
   id: number;
   messageId: number;
   username: string;
@@ -28,45 +28,45 @@ export interface Reminder {
   postedDate: string;
   remindDate: string;
   modifyDate: string;
-}
+};
 
-export interface Channel {
+export type Channel = {
   id: string;
   name: string;
   isSubscribed: boolean;
-}
+};
 
-export interface SubscribedChannel {
+export type SubscribedChannel = {
   id: number;
   name: string;
   order: number;
-}
+};
 
-export interface ResponseReminders {
+export type ResponseReminders = {
   reminders: Reminder[];
   hasFuture: boolean;
-}
+};
 
-export interface ResponseBookmarks {
+export type ResponseBookmarks = {
   bookmarks: Bookmark[];
   hasPast: boolean;
-}
+};
 
-export interface ResponseMessages {
+export type ResponseMessages = {
   messages: Message[];
   hasPast: boolean;
   hasFuture: boolean;
-}
+};
 
-export interface ResponseChannels {
+export type ResponseChannels = {
   channels: Channel[];
-}
+};
 
-export interface ResponseSubscribedChannels {
+export type ResponseSubscribedChannels = {
   channels: SubscribedChannel[];
-}
+};
 
-export interface ResponseToken {
+export type ResponseToken = {
   token: string;
   isFirstLogin: boolean;
-}
+};
