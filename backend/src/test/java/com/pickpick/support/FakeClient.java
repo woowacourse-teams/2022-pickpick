@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SlackClientTest implements SlackClient {
+public class FakeClient implements ExternalClient {
 
     @Override
     public String callAccessToken(final String code) {

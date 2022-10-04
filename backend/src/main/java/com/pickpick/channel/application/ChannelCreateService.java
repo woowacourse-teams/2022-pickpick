@@ -2,7 +2,7 @@ package com.pickpick.channel.application;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.support.SlackClient;
+import com.pickpick.support.ExternalClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChannelCreateService {
 
     private final ChannelRepository channels;
-    private final SlackClient slackClient;
+    private final ExternalClient slackClient;
 
-    public ChannelCreateService(final ChannelRepository channels, final SlackClient slackClient) {
+    public ChannelCreateService(final ChannelRepository channels, final ExternalClient slackClient) {
         this.channels = channels;
         this.slackClient = slackClient;
     }

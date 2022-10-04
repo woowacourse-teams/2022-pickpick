@@ -9,7 +9,7 @@ public class TestConfig {
 
     @Primary
     @Bean
-    public SlackClient slackClient() {
-        return new SlackClientTest();
+    public ExternalClient externalClient() {
+        return new FakeClient();
     }
 }

@@ -2,7 +2,7 @@ package com.pickpick.acceptance;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.support.DatabaseCleaner;
-import com.pickpick.support.SlackClient;
+import com.pickpick.support.ExternalClient;
 import com.pickpick.support.TestConfig;
 import io.restassured.RestAssured;
 import java.time.Clock;
@@ -28,7 +28,7 @@ public class AcceptanceTest {
     protected Clock clock;
 
     @Autowired
-    protected SlackClient slackClient;
+    protected ExternalClient slackClient;
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
