@@ -7,12 +7,12 @@ import { themeState } from "@src/@atoms";
 import { THEME_KIND } from "@src/@constants";
 import { ThemeKind } from "@src/@types/shared";
 
-interface ReturnType {
+interface UseModeThemeResult {
   theme: ThemeKind;
   handleToggleTheme: () => void;
 }
 
-function useModeTheme(): ReturnType {
+function useModeTheme(): UseModeThemeResult {
   const [theme, setTheme] = useRecoilState(themeState);
 
   const { getItem: getStoredTheme, setItem: setStoredTheme } =

@@ -1,11 +1,14 @@
-import { useInfiniteQuery } from "react-query";
+import { UseInfiniteQueryResult, useInfiniteQuery } from "react-query";
 
 import { QUERY_KEY } from "@src/@constants";
 import { CustomError, ResponseBookmarks } from "@src/@types/shared";
 
 import { getBookmarks } from "@src/api/bookmarks";
 
-function useGetInfiniteBookmarks() {
+function useGetInfiniteBookmarks(): UseInfiniteQueryResult<
+  ResponseBookmarks,
+  CustomError
+> {
   return useInfiniteQuery<ResponseBookmarks, CustomError>(
     QUERY_KEY.BOOKMARKS,
     getBookmarks,

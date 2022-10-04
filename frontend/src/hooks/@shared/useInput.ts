@@ -5,13 +5,13 @@ interface Props {
   invalidation?: (value: string) => boolean;
 }
 
-interface ReturnType {
+interface UseInputResult {
   value: string;
   handleChangeValue: ChangeEventHandler<HTMLInputElement>;
   changeValue: (value: string) => void;
 }
 
-function useInput({ initialValue, invalidation }: Props): ReturnType {
+function useInput({ initialValue, invalidation }: Props): UseInputResult {
   const [value, setValue] = useState(initialValue);
 
   const handleChangeValue = (event: ChangeEvent<HTMLInputElement>) => {

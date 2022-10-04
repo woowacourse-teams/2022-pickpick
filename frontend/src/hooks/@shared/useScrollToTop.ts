@@ -4,7 +4,7 @@ interface Props {
   dependencies?: unknown[];
 }
 
-function useScrollToTop({ dependencies = [] }: Props = {}) {
+function useScrollToTop({ dependencies = [] }: Props = {}): void {
   useEffect(() => {
     window.scrollTo({
       top: 0,

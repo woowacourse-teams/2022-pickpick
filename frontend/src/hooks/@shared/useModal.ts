@@ -11,14 +11,14 @@ type Refetch = <TPageData>(
   options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
 ) => Promise<QueryObserverResult<ResponseSubscribedChannels, unknown>>;
 
-interface ReturnType {
+interface UseModalResult {
   isModalOpened: boolean;
   handleOpenModal: () => void;
   handleCloseModal: () => void;
   handleToggleModal: () => void;
 }
 
-function useModal(refetch?: Refetch): ReturnType {
+function useModal(refetch?: Refetch): UseModalResult {
   const [isModalOpened, setIsModalOpened] = useState(false);
 
   const handleOpenModal = () => {

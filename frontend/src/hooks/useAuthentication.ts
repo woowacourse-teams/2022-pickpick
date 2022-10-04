@@ -12,12 +12,12 @@ import {
 } from "@src/@constants";
 import { deleteCookie, setCookie } from "@src/@utils";
 
-interface ReturnType {
+interface UseAuthenticationResult {
   login: (token: string, isFirstLogin: boolean) => void;
   logout: () => void;
 }
 
-function useAuthentication(): ReturnType {
+function useAuthentication(): UseAuthenticationResult {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openSuccessSnackbar } = useSnackbar();

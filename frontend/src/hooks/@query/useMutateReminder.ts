@@ -103,7 +103,7 @@ const getReplaceDateTime = ({
   };
 };
 
-interface handlerProps {
+interface HandlerProps {
   messageId: number;
   checkedYear: string;
   checkedMonth: string;
@@ -118,32 +118,26 @@ interface Props {
   refetchFeed: () => void;
 }
 
-interface ReturnType {
-  handleCreateReminder: ({
-    messageId,
-    checkedYear,
-    checkedMonth,
-    checkedDate,
-    checkedMeridiem,
-    checkedHour,
-    checkedMinute,
-  }: handlerProps) => void;
-  handleModifyReminder: ({
-    messageId,
-    checkedYear,
-    checkedMonth,
-    checkedDate,
-    checkedMeridiem,
-    checkedHour,
-    checkedMinute,
-  }: handlerProps) => void;
+type Handler = ({
+  messageId,
+  checkedYear,
+  checkedMonth,
+  checkedDate,
+  checkedMeridiem,
+  checkedHour,
+  checkedMinute,
+}: HandlerProps) => void;
+
+interface UseMutateReminderResult {
+  handleCreateReminder: Handler;
+  handleModifyReminder: Handler;
   handleRemoveReminder: (messageId: number) => void;
 }
 
 function useMutateReminder({
   handleCloseReminderModal,
   refetchFeed,
-}: Props): ReturnType {
+}: Props): UseMutateReminderResult {
   const { openFailureSnackbar } = useSnackbar();
   const { mutate: addReminder } = useMutation(postReminder, {
     onSuccess: () => {
@@ -176,7 +170,7 @@ function useMutateReminder({
     checkedMeridiem,
     checkedHour,
     checkedMinute,
-  }: handlerProps) => {
+  }: HandlerProps) => {
     const {
       replaceCheckedYear,
       replaceCheckedMonth,
@@ -232,7 +226,7 @@ function useMutateReminder({
     checkedMeridiem,
     checkedHour,
     checkedMinute,
-  }: handlerProps) => {
+  }: HandlerProps) => {
     const {
       replaceCheckedYear,
       replaceCheckedMonth,

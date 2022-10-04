@@ -1,11 +1,14 @@
-import { useInfiniteQuery } from "react-query";
+import { UseInfiniteQueryResult, useInfiniteQuery } from "react-query";
 
 import { QUERY_KEY } from "@src/@constants";
 import { CustomError, ResponseReminders } from "@src/@types/shared";
 
 import { getReminders } from "@src/api/reminders";
 
-function useGetInfiniteReminders() {
+function useGetInfiniteReminders(): UseInfiniteQueryResult<
+  ResponseReminders,
+  CustomError
+> {
   return useInfiniteQuery<ResponseReminders, CustomError>(
     QUERY_KEY.REMINDERS,
     getReminders,

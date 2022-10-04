@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-type ReturnType = () => void;
+type UsePushPreviousPageResult = () => void;
 
-function usePushPreviousPage(): ReturnType {
+function usePushPreviousPage(): UsePushPreviousPageResult {
   const navigate = useNavigate();
 
   const pushPreviousPage = () => {
