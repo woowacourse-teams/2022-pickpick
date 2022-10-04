@@ -1,8 +1,7 @@
 import * as Styled from "@src/pages/Feed/style";
 
-import Dimmer from "@src/components/@shared/Dimmer";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import Portal from "@src/components/@shared/Portal";
+import Modal from "@src/components/@shared/Modal";
 import MessageCard from "@src/components/MessageCard";
 import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
@@ -114,26 +113,23 @@ function SearchResult() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isReminderModalOpened}>
-        <>
-          <Dimmer
-            hasBackgroundColor={true}
-            onClick={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-          />
-          <ReminderModal
-            messageId={reminderTarget.id}
-            remindDate={reminderTarget.remindDate ?? ""}
-            handleCloseReminderModal={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-            refetchFeed={refetch}
-          />
-        </>
-      </Portal>
+      <Modal
+        isOpened={isReminderModalOpened}
+        handleCloseModal={() => {
+          handleInitializeReminderTarget();
+          handleCloseReminderModal();
+        }}
+      >
+        <ReminderModal
+          messageId={reminderTarget.id}
+          remindDate={reminderTarget.remindDate ?? ""}
+          handleCloseReminderModal={() => {
+            handleInitializeReminderTarget();
+            handleCloseReminderModal();
+          }}
+          refetchFeed={refetch}
+        />
+      </Modal>
     </Styled.Container>
   );
 }

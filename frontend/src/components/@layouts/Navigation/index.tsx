@@ -1,8 +1,7 @@
 import { useTheme } from "styled-components";
 
 import Button from "@src/components/@shared/Button";
-import Dimmer from "@src/components/@shared/Dimmer";
-import Portal from "@src/components/@shared/Portal";
+import Modal from "@src/components/@shared/Modal";
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import WrapperLink from "@src/components/@shared/WrapperLink";
 import HomeIcon from "@src/components/@svgIcons/HomeIcon";
@@ -126,26 +125,23 @@ function Navigation() {
         </WrapperButton>
       </div>
 
-      <Portal isOpened={isMenuDrawerOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
-          <div ref={drawerInnerRef}>
-            <ChannelsDrawer
-              channels={data?.channels}
-              handleCloseDrawer={handleCloseDrawer}
-            />
-          </div>
-        </>
-      </Portal>
+      <Modal isOpened={isMenuDrawerOpened} handleCloseModal={handleCloseDrawer}>
+        <div ref={drawerInnerRef}>
+          <ChannelsDrawer
+            channels={data?.channels}
+            handleCloseDrawer={handleCloseDrawer}
+          />
+        </div>
+      </Modal>
 
-      <Portal isOpened={isLogoutButtonOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseLogoutButton} />
-          <Styled.LogoutButtonContainer>
-            <Button onClick={handleLogout}>로그아웃</Button>
-          </Styled.LogoutButtonContainer>
-        </>
-      </Portal>
+      <Modal
+        isOpened={isLogoutButtonOpened}
+        handleCloseModal={handleCloseLogoutButton}
+      >
+        <Styled.LogoutButtonContainer>
+          <Button onClick={handleLogout}>로그아웃</Button>
+        </Styled.LogoutButtonContainer>
+      </Modal>
     </Styled.Container>
   );
 }
