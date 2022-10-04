@@ -9,10 +9,10 @@ import ReminderButton from "@src/components/MessageCard/MessageIconButtons/Remin
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import SearchForm from "@src/components/SearchForm";
 
-import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
-import useGetSearchParam from "@src/hooks/useGetSearchParam";
-import useModal from "@src/hooks/useModal";
+import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
+import useModal from "@src/hooks/@shared/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { FlexColumn } from "@src/@styles/shared";

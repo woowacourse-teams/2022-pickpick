@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 
-import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
+import useWebStorage, { STORAGE_KIND } from "@src/hooks/@shared/useWebStorage";
 
 import { themeState } from "@src/@atoms";
 import { THEME_KIND } from "@src/@constants";

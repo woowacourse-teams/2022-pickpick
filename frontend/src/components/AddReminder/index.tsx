@@ -3,7 +3,7 @@ import useTimePicker from "@src/components/AddReminder/@hooks/useTimePicker";
 import DatePicker from "@src/components/AddReminder/DateTimePicker/DatePicker";
 import TimePicker from "@src/components/AddReminder/DateTimePicker/TimePicker";
 
-import useMutateReminder from "@src/hooks/query/useMutateReminder";
+import useMutateReminder from "@src/hooks/@query/useMutateReminder";
 
 import { FlexRow } from "@src/@styles/shared";
 

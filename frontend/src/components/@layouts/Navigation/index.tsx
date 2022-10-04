@@ -11,10 +11,10 @@ import ReminderIconInactive from "@src/components/@svgIcons/ReminderIconInactive
 import StarIcon from "@src/components/@svgIcons/StarIcon";
 import ChannelsDrawer from "@src/components/ChannelsDrawer";
 
-import useGetSubscribedChannels from "@src/hooks/query/useGetSubscribedChannels";
+import useGetSubscribedChannels from "@src/hooks/@query/useGetSubscribedChannels";
+import useModal from "@src/hooks/@shared/useModal";
+import useOuterClick from "@src/hooks/@shared/useOuterClick";
 import useAuthentication from "@src/hooks/useAuthentication";
-import useModal from "@src/hooks/useModal";
-import useOuterClick from "@src/hooks/useOuterClick";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 import { PATH_NAME } from "@src/@constants";

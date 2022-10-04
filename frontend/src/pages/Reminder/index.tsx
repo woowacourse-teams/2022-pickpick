@@ -8,9 +8,9 @@ import MessageCard from "@src/components/MessageCard";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 
-import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
-import useModal from "@src/hooks/useModal";
-import useScrollToTop from "@src/hooks/useScrollToTop";
+import useGetInfiniteReminders from "@src/hooks/@query/useGetInfiniteReminders";
+import useModal from "@src/hooks/@shared/useModal";
+import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { FlexColumn } from "@src/@styles/shared";
