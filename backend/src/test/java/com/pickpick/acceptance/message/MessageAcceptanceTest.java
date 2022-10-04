@@ -141,8 +141,26 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_200_확인(response);
-        int size = toMessageResponses(response).getMessages().size();
-        assertThat(size).isEqualTo(messageCount);
+        assertThat(메시지_개수(response)).isEqualTo(messageCount);
+    }
+
+    @Test
+    void 특정_채널_목록에서_조회() {
+        // given
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.NOTICE.create());
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.FREE_CHAT.create());
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+
+        long[] channelIds = new long[]{1L, 2L};
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .channelIds(channelIds);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(channelIds.length);
     }
 
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
@@ -151,6 +169,10 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 .stream()
                 .map(MessageResponse::getId)
                 .collect(Collectors.toList());
+    }
+
+    private int 메시지_개수(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response).getMessages().size();
     }
 
     private MessageResponses toMessageResponses(ExtractableResponse<Response> response) {
