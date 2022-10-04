@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus;
 public class BookmarkAcceptanceTest extends AcceptanceTest {
 
     private static final String MEMBER_SLACK_ID = "MB1234";
-    private static final String MEMBER_SLACK_ID_2 = "MB1235";
 
     @Test
     void 북마크_생성_검증() {
@@ -65,13 +64,13 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_확인(response, HttpStatus.OK);
 
-        BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
+        BookmarkResponses bookmarkResponses = toBookmarkResponses(response);
         assertThat(bookmarkResponses.hasPast()).isFalse();
         assertThat(convertToMessageIds(bookmarkResponses)).containsExactlyElementsOf(List.of(1L, 2L));
     }
 
     @Test
-    void 멤버_ID_1번이고_북마크_ID가_23번일_때_북마크_목록_조회() {
+    void 멤버_ID_1번이고_북마크_ID가_2번일_때_북마크_목록_조회() {
         // given
         회원가입(MEMBER_SLACK_ID);
         String token = jwtTokenProvider.createToken("1");
@@ -83,27 +82,14 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         북마크_목록_생성(token, messageIdsForBookmark);
 
         // when
-        ExtractableResponse<Response> response = 북마크_조회(token, null);
+        ExtractableResponse<Response> response = 북마크_조회(token, 2L);
 
         // then
         상태코드_확인(response, HttpStatus.OK);
 
-        BookmarkResponses bookmarkResponses = response.jsonPath().getObject("", BookmarkResponses.class);
+        BookmarkResponses bookmarkResponses = toBookmarkResponses(response);
         assertThat(bookmarkResponses.hasPast()).isFalse();
-        assertThat(convertToMessageIds(bookmarkResponses)).containsExactlyElementsOf(messageIdsForBookmark);
-    }
-
-    private void 북마크_목록_생성(final String token, final List<Long> messageIds) {
-        for (Long messageId : messageIds) {
-            북마크_생성(token, messageId);
-        }
-    }
-
-    private List<Long> convertToMessageIds(final BookmarkResponses response) {
-        return response.getBookmarks()
-                .stream()
-                .map(BookmarkResponse::getMessageId)
-                .collect(Collectors.toList());
+        assertThat(convertToMessageIds(bookmarkResponses)).containsExactlyElementsOf(List.of(1L));
     }
 
     @Test
@@ -127,7 +113,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     void 사용자에게_존재하지_않는_북마크_삭제() {
         // given
         회원가입(MEMBER_SLACK_ID);
-        회원가입(MEMBER_SLACK_ID_2);
+        회원가입(MEMBER_SLACK_ID + "2");
         String token1 = jwtTokenProvider.createToken("1");
         String token2 = jwtTokenProvider.createToken("2");
 
@@ -140,5 +126,22 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_확인(response, HttpStatus.BAD_REQUEST);
         에러코드_확인(response, "BOOKMARK_DELETE_FAILURE");
+    }
+
+    private BookmarkResponses toBookmarkResponses(final ExtractableResponse<Response> response) {
+        return response.jsonPath().getObject("", BookmarkResponses.class);
+    }
+
+    private void 북마크_목록_생성(final String token, final List<Long> messageIds) {
+        for (Long messageId : messageIds) {
+            북마크_생성(token, messageId);
+        }
+    }
+
+    private List<Long> convertToMessageIds(final BookmarkResponses response) {
+        return response.getBookmarks()
+                .stream()
+                .map(BookmarkResponse::getMessageId)
+                .collect(Collectors.toList());
     }
 }
