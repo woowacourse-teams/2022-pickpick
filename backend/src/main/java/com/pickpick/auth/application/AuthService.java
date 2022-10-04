@@ -7,11 +7,7 @@ import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
-import com.slack.api.methods.request.users.UsersIdentityRequest;
-import java.io.IOException;
+import com.pickpick.support.SlackClient;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,16 +17,14 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final MemberRepository members;
-    private final MethodsClient slackClient;
+    private final SlackClient slackClient;
     private final JwtTokenProvider jwtTokenProvider;
-    private final SlackProperties slackProperties;
 
-    public AuthService(final MemberRepository members, final MethodsClient slackClient,
-                       final JwtTokenProvider jwtTokenProvider, final SlackProperties slackProperties) {
+    public AuthService(final MemberRepository members, final SlackClient slackClient,
+                       final JwtTokenProvider jwtTokenProvider) {
         this.members = members;
         this.slackClient = slackClient;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.slackProperties = slackProperties;
     }
 
     public void verifyToken(final String token) {
@@ -39,11 +33,10 @@ public class AuthService {
 
     @Transactional
     public LoginResponse login(final String code) {
-        String token = requestSlackToken(code);
-        String memberSlackId = requestMemberSlackId(token);
+        String token = slackClient.callAccessToken(code);
+        String memberSlackId = slackClient.callMemberSlackId(token);
 
-        Member member = members.findBySlackId(memberSlackId)
-                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
+        Member member = members.getBySlackId(memberSlackId);
 
         boolean isFirstLogin = member.isFirstLogin();
         member.markLoggedIn();
@@ -52,36 +45,5 @@ public class AuthService {
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
                 .firstLogin(isFirstLogin)
                 .build();
-    }
-
-    private String requestSlackToken(final String code) {
-        OAuthV2AccessRequest request = OAuthV2AccessRequest.builder()
-                .clientId(slackProperties.getClientId())
-                .clientSecret(slackProperties.getClientSecret())
-                .redirectUri(slackProperties.getRedirectUrl())
-                .code(code)
-                .build();
-
-        try {
-            return slackClient.oauthV2Access(request)
-                    .getAuthedUser()
-                    .getAccessToken();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException("oauthV2Access");
-        }
-    }
-
-    private String requestMemberSlackId(final String token) {
-        UsersIdentityRequest request = UsersIdentityRequest.builder()
-                .token(token)
-                .build();
-
-        try {
-            return slackClient.usersIdentity(request)
-                    .getUser()
-                    .getId();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException("usersIdentity");
-        }
     }
 }

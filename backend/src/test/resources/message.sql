@@ -50,10 +50,10 @@ values (1, '2022-07-12 14:21:55', '2022-07-12 14:21:55', 'Sample Text', 1, 5, 'A
        (38, '2022-07-20 17:21:55', '2022-07-20 17:21:55', 'Sample Text', 1, 5, 'ABC12338'),
        (39, '2022-07-29 17:21:55', '2022-07-29 17:21:55', '', 1, 5, 'ABC12338');
 
-insert into bookmark(id, member_id, message_id)
-values (1, 1, 1),
-      (2, 1, 5),
-      (3, 1, 10);
+insert into bookmark(id, member_id, message_id, created_date)
+values (1, 1, 1, '2022-07-12 14:21:53'),
+      (2, 1, 5, '2022-07-12 14:21:54'),
+      (3, 1, 10, '2022-07-12 14:21:55');
 
 insert into reminder (id, member_id, message_id, remind_date)
 values (1, 1, 38, '2022-08-12 14:20:00');

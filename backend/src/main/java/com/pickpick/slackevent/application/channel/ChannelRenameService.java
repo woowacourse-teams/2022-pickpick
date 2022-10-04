@@ -2,7 +2,6 @@ package com.pickpick.slackevent.application.channel;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.channel.dto.ChannelRenameRequest;
@@ -25,8 +24,7 @@ public class ChannelRenameService implements SlackEventService {
     public void execute(final String requestBody) {
         SlackChannelRenameDto slackChannelRenameDto = convert(requestBody);
 
-        Channel channel = channels.findBySlackId(slackChannelRenameDto.getSlackId())
-                .orElseThrow(() -> new ChannelNotFoundException(slackChannelRenameDto.getSlackId()));
+        Channel channel = channels.getBySlackId(slackChannelRenameDto.getSlackId());
 
         channel.changeName(slackChannelRenameDto.getNewName());
     }

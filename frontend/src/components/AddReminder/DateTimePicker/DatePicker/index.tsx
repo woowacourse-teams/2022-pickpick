@@ -1,10 +1,10 @@
 import { ChangeEventHandler, RefObject } from "react";
 
+import Dropdown from "@src/components/@shared/Dropdown";
 import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
-import Dropdown from "@src/components/Dropdown";
-import { generateDateOptions } from "@src/components/ReminderModal/@utils";
-import DateTimePickerOptions from "@src/components/ReminderModal/DateTimePicker/DateTimePickerOptions";
-import DateTimePickerToggle from "@src/components/ReminderModal/DateTimePicker/DateTimePickerToggle";
+import { generateDateOptions } from "@src/components/AddReminder/@utils";
+import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
+import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
 import { FlexColumn } from "@src/@styles/shared";
 

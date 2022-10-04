@@ -1,9 +1,6 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
-import com.pickpick.exception.message.BookmarkNotFoundException;
-import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -17,9 +14,7 @@ import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,11 +38,9 @@ public class BookmarkService {
 
     @Transactional
     public void save(final Long memberId, final BookmarkRequest bookmarkRequest) {
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
-        Message message = messages.findById(bookmarkRequest.getMessageId())
-                .orElseThrow(() -> new MessageNotFoundException(bookmarkRequest.getMessageId()));
+        Message message = messages.getById(bookmarkRequest.getMessageId());
 
         Bookmark bookmark = new Bookmark(member, message);
         bookmarks.save(bookmark);
@@ -67,8 +60,8 @@ public class BookmarkService {
                 .leftJoin(QBookmark.bookmark.member)
                 .fetchJoin()
                 .where(QBookmark.bookmark.member.id.eq(memberId))
-                .where(bookmarkIdCondition(request.getBookmarkId()))
-                .orderBy(QBookmark.bookmark.message.postedDate.desc())
+                .where(bookmarkCreatedDateCondition(request.getBookmarkId()))
+                .orderBy(QBookmark.bookmark.createdDate.desc())
                 .limit(request.getCount())
                 .fetch();
     }
@@ -79,17 +72,14 @@ public class BookmarkService {
                 .collect(Collectors.toList());
     }
 
-    private BooleanExpression bookmarkIdCondition(final Long bookmarkId) {
-        if (Objects.isNull(bookmarkId)) {
+    private BooleanExpression bookmarkCreatedDateCondition(final Long bookmarkId) {
+        if (bookmarkId == null) {
             return null;
         }
 
-        Bookmark bookmark = bookmarks.findById(bookmarkId)
-                .orElseThrow(() -> new BookmarkNotFoundException(bookmarkId));
+        Bookmark bookmark = bookmarks.getById(bookmarkId);
 
-        LocalDateTime messageDate = bookmark.getMessage().getPostedDate();
-
-        return QBookmark.bookmark.message.postedDate.before(messageDate);
+        return QBookmark.bookmark.createdDate.before(bookmark.getCreatedDate());
     }
 
     private boolean hasPast(final List<Bookmark> bookmarkList, final Long memberId) {
@@ -109,10 +99,7 @@ public class BookmarkService {
 
     private BooleanExpression meetHasPastCondition(final List<Bookmark> bookmarkList) {
         Bookmark targetBookmark = bookmarkList.get(bookmarkList.size() - 1);
-
-        LocalDateTime messageDate = targetBookmark.getMessage().getPostedDate();
-
-        return QBookmark.bookmark.message.postedDate.before(messageDate);
+        return QBookmark.bookmark.createdDate.before(targetBookmark.getCreatedDate());
     }
 
     @Transactional

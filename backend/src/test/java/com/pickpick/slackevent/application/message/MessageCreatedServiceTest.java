@@ -122,6 +122,7 @@ class MessageCreatedServiceTest {
 
         ConversationsInfoResponse conversationsInfoResponse = new ConversationsInfoResponse();
         conversationsInfoResponse.setChannel(conversation);
+        conversationsInfoResponse.setOk(true);
 
         return conversationsInfoResponse;
     }

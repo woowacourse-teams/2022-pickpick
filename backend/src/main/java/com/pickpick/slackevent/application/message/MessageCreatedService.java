@@ -3,7 +3,6 @@ package com.pickpick.slackevent.application.message;
 import com.pickpick.channel.application.ChannelCreateService;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
@@ -43,8 +42,7 @@ public class MessageCreatedService implements SlackEventService {
         SlackMessageDto slackMessageDto = request.toDto();
 
         String memberSlackId = slackMessageDto.getMemberSlackId();
-        Member member = members.findBySlackId(memberSlackId)
-                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
+        Member member = members.getBySlackId(memberSlackId);
 
         String channelSlackId = slackMessageDto.getChannelSlackId();
 

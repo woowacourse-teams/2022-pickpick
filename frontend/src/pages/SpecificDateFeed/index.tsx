@@ -2,9 +2,9 @@ import * as Styled from "@src/pages/Feed/style";
 import { Fragment } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import Dimmer from "@src/components/@shared/Dimmer";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import Portal from "@src/components/@shared/Portal";
+import Modal from "@src/components/@shared/Modal";
+import AddReminder from "@src/components/AddReminder";
 import Calendar from "@src/components/Calendar";
 import DateDropdown from "@src/components/DateDropdown";
 import EmptyStatus from "@src/components/EmptyStatus";
@@ -12,14 +12,13 @@ import MessageCard from "@src/components/MessageCard";
 import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
-import ReminderModal from "@src/components/ReminderModal";
 import SearchForm from "@src/components/SearchForm";
 
-import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
+import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useModal from "@src/hooks/@shared/useModal";
+import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
-import useModal from "@src/hooks/useModal";
-import useScrollToTop from "@src/hooks/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 
@@ -53,7 +52,7 @@ function SpecificDateFeed() {
   });
 
   const {
-    isModalOpened: isCalenderOpened,
+    isModalOpened: isCalendarOpened,
     handleOpenModal: handleOpenCalendar,
     handleCloseModal: handleCloseCalendar,
   } = useModal();
@@ -157,36 +156,30 @@ function SpecificDateFeed() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isCalenderOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
-          <Calendar
-            channelId={channelId ?? ""}
-            handleCloseCalendar={handleCloseCalendar}
-          />
-        </>
-      </Portal>
+      <Modal isOpened={isCalendarOpened} handleCloseModal={handleCloseCalendar}>
+        <Calendar
+          channelId={channelId ?? "main"}
+          handleCloseCalendar={handleCloseCalendar}
+        />
+      </Modal>
 
-      <Portal isOpened={isReminderModalOpened}>
-        <>
-          <Dimmer
-            hasBackgroundColor={true}
-            onClick={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-          />
-          <ReminderModal
-            messageId={reminderTarget.id}
-            remindDate={reminderTarget.remindDate ?? ""}
-            handleCloseReminderModal={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-            refetchFeed={refetch}
-          />
-        </>
-      </Portal>
+      <Modal
+        isOpened={isReminderModalOpened}
+        handleCloseModal={() => {
+          handleInitializeReminderTarget();
+          handleCloseReminderModal();
+        }}
+      >
+        <AddReminder
+          messageId={reminderTarget.id}
+          remindDate={reminderTarget.remindDate ?? ""}
+          handleCloseReminderModal={() => {
+            handleInitializeReminderTarget();
+            handleCloseReminderModal();
+          }}
+          refetchFeed={refetch}
+        />
+      </Modal>
     </Styled.Container>
   );
 }

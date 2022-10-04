@@ -1,26 +1,22 @@
 package com.pickpick.slackevent.application.member;
 
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
 import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class MemberChangedServiceTest {
-
-    private static final String SLACK_ID = "U03MKN0UW";
 
     @Autowired
     private MemberChangedService memberChangedService;
@@ -36,53 +32,69 @@ class MemberChangedServiceTest {
         databaseCleaner.clear();
     }
 
-    @DisplayName("사용자 이름 변경")
-    @CsvSource(value = {"김진짜, 표시 이름, 표시 이름", "김진짜, '', 김진짜"})
-    @ParameterizedTest(name = "{1}이 들어오는 경우 {2}")
-    void changedUsername(final String realName, final String displayName, final String expectedName) {
+    @DisplayName("사용자 이름 변경 시 display_name이 빈 문자열이 아니면 해당 값으로 변경")
+    @Test
+    void changeUsernameByDisplayName() {
         // given
-        Member member = members.save(new Member(SLACK_ID, "사용자", "test.png"));
-
-        String request = memberChangedEvent(realName, displayName, "test.png");
+        Member summer = members.save(SUMMER.create());
 
         // when
+        String realName = "최혜원";
+        String displayName = "겨울";
+
+        String request = memberChangedEvent(summer.getSlackId(), realName, displayName, summer.getThumbnailUrl());
         memberChangedService.execute(request);
 
         // then
-        Optional<Member> actual = members.findById(member.getId());
+        Member actual = members.findById(summer.getId())
+                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
 
-        assertAll(
-                () -> assertThat(actual).isNotEmpty(),
-                () -> assertThat(actual.get().getUsername()).isEqualTo(expectedName)
-        );
+        assertThat(actual.getUsername()).isEqualTo(displayName);
+    }
+
+    @DisplayName("사용자 이름 변경 시 display_name 이 빈 문자열이라면 real_name 으로 변경")
+    @Test
+    void changeUsernameByRealNameWhenDisplayNameIsBlank() {
+        // given
+        Member summer = members.save(SUMMER.create());
+
+        // when
+        String realName = "최혜원";
+        String displayName = "";
+
+        String request = memberChangedEvent(summer.getSlackId(), realName, displayName, summer.getThumbnailUrl());
+        memberChangedService.execute(request);
+
+        // then
+        Member actual = members.findById(summer.getId())
+                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+
+        assertThat(actual.getUsername()).isEqualTo(realName);
     }
 
     @DisplayName("사용자 프로필 이미지 변경")
     @Test
     void changedThumbnailUrl() {
         // given
-        Member member = members.save(new Member(SLACK_ID, "사용자", "test.png"));
-
-        String thumbnailUrl = "new_test.png";
-        String request = memberChangedEvent("사용자", "표시 이름", thumbnailUrl);
+        Member summer = members.save(SUMMER.create());
 
         // when
+        String changedThumbnailUrl = "https://hyewon.png";
+        String request = memberChangedEvent(summer.getSlackId(), "최혜원", summer.getUsername(), changedThumbnailUrl);
         memberChangedService.execute(request);
 
         // then
-        Optional<Member> actual = members.findById(member.getId());
+        Member actual = members.findById(summer.getId())
+                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
 
-        assertAll(
-                () -> assertThat(actual).isNotEmpty(),
-                () -> assertThat(actual.get().getThumbnailUrl()).isEqualTo(thumbnailUrl)
-        );
+        assertThat(actual.getThumbnailUrl()).isEqualTo(changedThumbnailUrl);
     }
 
-    private String memberChangedEvent(final String realName, final String displayName,
-                                      final String thumbnailUrl) {
+    private String memberChangedEvent(final String slackId, final String realName,
+                                      final String displayName, final String thumbnailUrl) {
         Map<String, Object> request = Map.of("event", Map.of(
                 "user", Map.of(
-                        "id", SLACK_ID,
+                        "id", slackId,
                         "profile", Map.of(
                                 "real_name", realName,
                                 "display_name", displayName,

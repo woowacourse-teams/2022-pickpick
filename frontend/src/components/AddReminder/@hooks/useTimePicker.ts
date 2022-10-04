@@ -4,9 +4,9 @@ import {
   convertTimeToStepTenMinuteTime,
   invalidMeridiem,
   parseTime,
-} from "@src/components/ReminderModal/@utils";
+} from "@src/components/AddReminder/@utils";
 
-import useInput from "@src/hooks/useInput";
+import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
 import { getDateInformation, getMeridiemTime } from "@src/@utils";

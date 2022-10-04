@@ -1,4 +1,4 @@
-import Dropdown from "@src/components/Dropdown";
+import Dropdown from "@src/components/@shared/Dropdown";
 import useSelectChannels from "@src/components/SearchForm/@hooks/useSelectChannels";
 import useSubmitSearchForm from "@src/components/SearchForm/@hooks/useSubmitSearchForm";
 import SearchInput from "@src/components/SearchForm/SearchInput";
