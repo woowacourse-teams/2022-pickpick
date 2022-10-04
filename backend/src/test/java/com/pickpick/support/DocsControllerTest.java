@@ -47,7 +47,8 @@ import org.springframework.web.context.WebApplicationContext;
         BookmarkController.class,
         MessageController.class,
         ReminderController.class,
-        SlackEventController.class
+        SlackEventController.class,
+        ErrorCodeController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
