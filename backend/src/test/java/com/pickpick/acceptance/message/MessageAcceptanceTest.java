@@ -4,6 +4,7 @@ import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
 import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성_후_메시지_저장;
@@ -18,6 +19,7 @@ import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -248,6 +250,39 @@ class MessageAcceptanceTest extends AcceptanceTest {
         assertThat(북마크_여부(response)).isFalse();
     }
 
+    @Test
+    void 리마인드한_메시지는_isSetReminded가_true() {
+        // given
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        채널_구독_요청(token, 1L);
+        리마인더_생성(token, 1L, LocalDateTime.now().plusDays(1));
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(리마인드_여부(response)).isTrue();
+    }
+
+    @Test
+    void 리마인드하지_않은_메시지는_isSetReminded가_false() {
+        // given
+        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(리마인드_여부(response)).isFalse();
+    }
+
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
         return toMessageResponses(response)
                 .getMessages()
@@ -264,6 +299,12 @@ class MessageAcceptanceTest extends AcceptanceTest {
         return toMessageResponses(response).getMessages()
                 .get(0)
                 .isBookmarked();
+    }
+
+    private boolean 리마인드_여부(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response).getMessages()
+                .get(0)
+                .isSetReminded();
     }
 
     private MessageResponses toMessageResponses(ExtractableResponse<Response> response) {
