@@ -180,6 +180,40 @@ class MessageAcceptanceTest extends AcceptanceTest {
         assertThat(메시지_ID_목록(response)).isEqualTo(List.of(5L, 4L, 3L, 2L, 1L));
     }
 
+    @Test
+    void count_값이_없으면_기본으로_20개_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 25);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(20);
+    }
+
+    @Test
+    void count_값이_있으면_해당_값만큼_메시지_조회() {
+        // given
+        int messageCount = 5;
+        메시지_목록_생성(MEMBER_SLACK_ID, messageCount + 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageCount(messageCount);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(messageCount);
+    }
+
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
         return toMessageResponses(response)
                 .getMessages()
