@@ -1,9 +1,7 @@
 import { Fragment } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import Dimmer from "@src/components/@shared/Dimmer";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import Portal from "@src/components/@shared/Portal";
 import Calendar from "@src/components/Calendar";
 import DateDropdown from "@src/components/DateDropdown";
 import EmptyStatus from "@src/components/EmptyStatus";
@@ -13,6 +11,7 @@ import ReminderButton from "@src/components/MessageCard/MessageIconButtons/Remin
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import ReminderModal from "@src/components/ReminderModal";
 import SearchForm from "@src/components/SearchForm";
+import Modal from "@src/components/@shared/Modal";
 
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
 import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
@@ -131,36 +130,30 @@ function Feed() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isCalendarOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
-          <Calendar
-            channelId={channelId ?? "main"}
-            handleCloseCalendar={handleCloseCalendar}
-          />
-        </>
-      </Portal>
+      <Modal isOpened={isCalendarOpened} handleCloseModal={handleCloseCalendar}>
+        <Calendar
+          channelId={channelId ?? "main"}
+          handleCloseCalendar={handleCloseCalendar}
+        />
+      </Modal>
 
-      <Portal isOpened={isReminderModalOpened}>
-        <>
-          <Dimmer
-            hasBackgroundColor={true}
-            onClick={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-          />
-          <ReminderModal
-            messageId={reminderTarget.id}
-            remindDate={reminderTarget.remindDate ?? ""}
-            handleCloseReminderModal={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-            refetchFeed={refetch}
-          />
-        </>
-      </Portal>
+      <Modal
+        isOpened={isReminderModalOpened}
+        handleCloseModal={() => {
+          handleInitializeReminderTarget();
+          handleCloseReminderModal();
+        }}
+      >
+        <ReminderModal
+          messageId={reminderTarget.id}
+          remindDate={reminderTarget.remindDate ?? ""}
+          handleCloseReminderModal={() => {
+            handleInitializeReminderTarget();
+            handleCloseReminderModal();
+          }}
+          refetchFeed={refetch}
+        />
+      </Modal>
     </Styled.Container>
   );
 }
