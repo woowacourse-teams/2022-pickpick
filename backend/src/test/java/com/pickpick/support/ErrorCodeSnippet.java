@@ -28,7 +28,7 @@ public class ErrorCodeSnippet extends TemplatedSnippet {
         try {
             return Class.forName(component.getBeanClassName());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -76,8 +76,7 @@ public class ErrorCodeSnippet extends TemplatedSnippet {
             fields.add(model);
         } catch (NoSuchFieldException e) {
             throw new IllegalStateException("커스텀 예외 클래스 내부에 ErrorCode 및 ClientMessage 를 정의해야합니다.");
-        } catch (IllegalAccessException e) {
-            // ignored
+        } catch (IllegalAccessException ignored) {
         }
     }
 
