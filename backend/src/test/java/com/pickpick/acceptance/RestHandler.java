@@ -83,7 +83,13 @@ public class RestHandler {
     }
 
     public static ExtractableResponse<Response> deleteWithToken(final String uri, final String token) {
+        return deleteWithToken(uri, token, Map.of());
+    }
+
+    public static ExtractableResponse<Response> deleteWithToken(final String uri, final String token,
+                                                                final Map<String, Object> queryParams) {
         return request(given -> given
+                .queryParams(queryParams)
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .delete(uri)

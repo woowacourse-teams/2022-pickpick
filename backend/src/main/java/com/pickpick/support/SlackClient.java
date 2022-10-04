@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SlackClient {
+public class SlackClient implements ExternalClient {
 
     private static final String REMINDER_TEXT_FORMAT =
             "============================ \n " +

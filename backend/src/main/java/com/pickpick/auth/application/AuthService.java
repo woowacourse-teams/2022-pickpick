@@ -7,7 +7,7 @@ import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.support.SlackClient;
+import com.pickpick.support.ExternalClient;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final MemberRepository members;
-    private final SlackClient slackClient;
+    private final ExternalClient slackClient;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(final MemberRepository members, final SlackClient slackClient,
+    public AuthService(final MemberRepository members, final ExternalClient slackClient,
                        final JwtTokenProvider jwtTokenProvider) {
         this.members = members;
         this.slackClient = slackClient;
