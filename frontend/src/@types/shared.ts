@@ -15,13 +15,11 @@ export interface StyledDefaultProps {
 
 export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;
 
-export interface CustomError {
+export type CustomError = {
   response: {
-    data: Error;
+    data: {
+      code: keyof typeof ERROR_MESSAGE_BY_CODE;
+      message: string;
+    };
   };
-}
-
-export interface Error {
-  code: keyof typeof ERROR_MESSAGE_BY_CODE;
-  message: string;
-}
+};
