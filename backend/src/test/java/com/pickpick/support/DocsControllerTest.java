@@ -100,10 +100,7 @@ public class DocsControllerTest {
                 .alwaysDo(MockMvcResultHandlers.print())
                 .alwaysDo(restDocs)
                 .build();
-    }
 
-    @BeforeEach
-    void setup() {
         given(jwtTokenProvider.getPayload(any()))
                 .willReturn("1");
     }
