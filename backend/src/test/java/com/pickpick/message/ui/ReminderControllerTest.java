@@ -2,6 +2,7 @@ package com.pickpick.message.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -33,6 +34,9 @@ public class ReminderControllerTest extends DocsControllerTest {
     @DisplayName("리마인더를 추가한다")
     @Test
     void save() throws Exception {
+        doNothing().when(reminderService)
+                .save(anyLong(), any(ReminderSaveRequest.class));
+
         String body = objectMapper.writeValueAsString(
                 new ReminderSaveRequest(1L, LocalDateTime.now().plusDays(2))
         );
@@ -136,6 +140,9 @@ public class ReminderControllerTest extends DocsControllerTest {
     @DisplayName("리마인더를 수정한다")
     @Test
     void update() throws Exception {
+        doNothing().when(reminderService)
+                .update(anyLong(), any(ReminderSaveRequest.class));
+
         String body = objectMapper.writeValueAsString(
                 new ReminderSaveRequest(2L, LocalDateTime.now().plusDays(2))
         );
@@ -159,6 +166,9 @@ public class ReminderControllerTest extends DocsControllerTest {
     @DisplayName("리마인더를 삭제한다")
     @Test
     void delete() throws Exception {
+        doNothing().when(reminderService)
+                .delete(anyLong(), anyLong());
+
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.set("messageId", "2");
 

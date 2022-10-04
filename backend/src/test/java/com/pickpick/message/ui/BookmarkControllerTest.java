@@ -2,6 +2,7 @@ package com.pickpick.message.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -71,6 +72,9 @@ public class BookmarkControllerTest extends DocsControllerTest {
     @DisplayName("북마크를 추가한다")
     @Test
     void save() throws Exception {
+        doNothing().when(bookmarkService)
+                .save(anyLong(), any(BookmarkRequest.class));
+
         String body = objectMapper.writeValueAsString(
                 new BookmarkRequest(1L)
         );
@@ -91,6 +95,9 @@ public class BookmarkControllerTest extends DocsControllerTest {
     @DisplayName("북마크를 삭제한다")
     @Test
     void delete() throws Exception {
+        doNothing().when(bookmarkService)
+                .delete(anyLong(), anyLong());
+
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.set("messageId", "2");
 

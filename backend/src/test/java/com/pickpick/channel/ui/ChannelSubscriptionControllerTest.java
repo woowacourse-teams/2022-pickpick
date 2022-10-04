@@ -61,7 +61,7 @@ class ChannelSubscriptionControllerTest extends DocsControllerTest {
     void subscribeChannel() throws Exception {
         ChannelSubscriptionRequest subscriptionRequest = new ChannelSubscriptionRequest(1L);
         doNothing().when(channelSubscriptionService)
-                .save(any(), anyLong()); // 의견 나눌 부분 : 냅둘까 말까?
+                .save(any(), anyLong());
 
         String body = objectMapper.writeValueAsString(subscriptionRequest);
 
