@@ -33,6 +33,10 @@ public class SlackEventRestHandler {
         return post(SLACK_EVENT_API_URL, request);
     }
 
+    public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId) {
+        return 메시지_전송(memberSlackId, messageSlackId, SlackEvent.MESSAGE_CREATED.getSubtype());
+    }
+
     public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId,
                                                        final String subtype) {
         Map<String, Object> request = SlackEventRequestFactory.messageCreateEvent(memberSlackId, messageSlackId,
@@ -55,5 +59,9 @@ public class SlackEventRestHandler {
 
     public static void 채널_생성(final String memberSlackId, final Channel channel) {
         post(SLACK_EVENT_API_URL, SlackEventRequestFactory.channelCreateEvent(memberSlackId, channel));
+    }
+
+    public static void 채널_생성_후_메시지_저장(final String memberSlackId, final Channel channel) {
+        채널_생성(memberSlackId, channel);
     }
 }
