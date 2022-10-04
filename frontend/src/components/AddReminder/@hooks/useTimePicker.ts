@@ -4,7 +4,7 @@ import {
   convertTimeToStepTenMinuteTime,
   invalidMeridiem,
   parseTime,
-} from "@src/components/ReminderModal/@utils";
+} from "@src/components/AddReminder/@utils";
 
 import useInput from "@src/hooks/useInput";
 

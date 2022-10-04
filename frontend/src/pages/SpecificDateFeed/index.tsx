@@ -2,8 +2,9 @@ import * as Styled from "@src/pages/Feed/style";
 import { Fragment } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import Modal from "@src/components/@shared/Modal";
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Modal from "@src/components/@shared/Modal";
+import AddReminder from "@src/components/AddReminder";
 import Calendar from "@src/components/Calendar";
 import DateDropdown from "@src/components/DateDropdown";
 import EmptyStatus from "@src/components/EmptyStatus";
@@ -11,7 +12,6 @@ import MessageCard from "@src/components/MessageCard";
 import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
-import ReminderModal from "@src/components/ReminderModal";
 import SearchForm from "@src/components/SearchForm";
 
 import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
@@ -170,7 +170,7 @@ function SpecificDateFeed() {
           handleCloseReminderModal();
         }}
       >
-        <ReminderModal
+        <AddReminder
           messageId={reminderTarget.id}
           remindDate={reminderTarget.remindDate ?? ""}
           handleCloseReminderModal={() => {
