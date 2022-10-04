@@ -7,7 +7,8 @@ import ThemeToggler from "@src/components/ThemeToggler";
 
 import { PATH_NAME } from "@src/@constants";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
-import { SubscribedChannel, Theme } from "@src/@types/shared";
+import { SubscribedChannel } from "@src/@types/api";
+import { Theme } from "@src/@types/shared";
 
 import * as Styled from "./style";
 

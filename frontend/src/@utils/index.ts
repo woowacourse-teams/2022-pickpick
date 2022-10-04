@@ -8,7 +8,7 @@ import {
   ResponseBookmarks,
   ResponseMessages,
   ResponseReminders,
-} from "@src/@types/shared";
+} from "@src/@types/api";
 
 export const getMeridiemTime = (time: number) => {
   if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time.toString() };

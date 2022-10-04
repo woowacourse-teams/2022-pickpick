@@ -1,7 +1,8 @@
 import { UseQueryResult, useQuery } from "react-query";
 
 import { QUERY_KEY } from "@src/@constants";
-import { CustomError, ResponseChannels } from "@src/@types/shared";
+import { ResponseChannels } from "@src/@types/api";
+import { CustomError } from "@src/@types/shared";
 
 import { getChannels } from "@src/api/channels";
 

@@ -1,7 +1,8 @@
 import { UseInfiniteQueryResult, useInfiniteQuery } from "react-query";
 
 import { QUERY_KEY } from "@src/@constants";
-import { CustomError, ResponseBookmarks } from "@src/@types/shared";
+import { ResponseBookmarks } from "@src/@types/api";
+import { CustomError } from "@src/@types/shared";
 
 import { getBookmarks } from "@src/api/bookmarks";
 

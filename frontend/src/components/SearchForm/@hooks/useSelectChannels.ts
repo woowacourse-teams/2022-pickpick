@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useGetSubscribedChannels from "@src/hooks/@query/useGetSubscribedChannels";
 
-import { SubscribedChannel } from "@src/@types/shared";
+import { SubscribedChannel } from "@src/@types/api";
 
 interface Props {
   currentChannelIds: number[];

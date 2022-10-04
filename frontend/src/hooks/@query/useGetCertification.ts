@@ -1,7 +1,8 @@
 import { UseQueryResult, useQuery } from "react-query";
 
 import { QUERY_KEY } from "@src/@constants";
-import { CustomError, ResponseToken } from "@src/@types/shared";
+import { ResponseToken } from "@src/@types/api";
+import { CustomError } from "@src/@types/shared";
 
 import { slackLogin } from "@src/api/auth";
 

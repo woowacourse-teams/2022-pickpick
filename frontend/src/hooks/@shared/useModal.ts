@@ -5,7 +5,7 @@ import {
   RefetchQueryFilters,
 } from "react-query";
 
-import { ResponseSubscribedChannels } from "@src/@types/shared";
+import { ResponseSubscribedChannels } from "@src/@types/api";
 
 type Refetch = <TPageData>(
   options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
