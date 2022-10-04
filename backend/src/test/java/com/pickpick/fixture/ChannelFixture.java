@@ -30,7 +30,7 @@ public enum ChannelFixture {
         return new Channel(slackId, name);
     }
 
-    public boolean sameSlackId(final String slackId) {
+    public boolean isSameSlackId(final String slackId) {
         return this.slackId.equals(slackId);
     }
 }

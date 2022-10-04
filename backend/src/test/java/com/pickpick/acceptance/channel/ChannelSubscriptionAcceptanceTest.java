@@ -47,30 +47,30 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     void 채널_구독() {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create());
-        long channelId = 1L;
+        long noticeId = 1L;
 
         // when
-        ExtractableResponse<Response> response = 구독_요청(token, channelId);
+        ExtractableResponse<Response> response = 구독_요청(token, noticeId);
 
         // then
         상태코드_200_확인(response);
-        assertThat(구독한_채널_id_목록()).contains(channelId);
+        assertThat(구독한_채널_id_목록()).contains(noticeId);
     }
 
     @Test
     void 채널_구독_취소() {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create());
-        long channelId = 1L;
+        long noticeId = 1L;
 
-        구독_요청(token, channelId);
+        구독_요청(token, noticeId);
 
         // when
-        ExtractableResponse<Response> response = 구독_취소_요청(token, channelId);
+        ExtractableResponse<Response> response = 구독_취소_요청(token, noticeId);
 
         // then
         상태코드_200_확인(response);
-        assertThat(구독한_채널_id_목록()).doesNotContain(channelId);
+        assertThat(구독한_채널_id_목록()).doesNotContain(noticeId);
     }
 
     @Test
