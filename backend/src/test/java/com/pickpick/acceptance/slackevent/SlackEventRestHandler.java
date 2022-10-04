@@ -39,6 +39,12 @@ public class SlackEventRestHandler {
         }
     }
 
+    public static ExtractableResponse<Response> 빈_메시지_전송(final String memberSlackId) {
+        Map<String, Object> request = SlackEventRequestFactory.emptyMessageCreateEvent(memberSlackId, "MSG12345",
+                SlackEvent.MESSAGE_CREATED.getSubtype());
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
     public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId) {
         return 메시지_전송(memberSlackId, messageSlackId, SlackEvent.MESSAGE_CREATED.getSubtype());
     }
