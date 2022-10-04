@@ -2,11 +2,11 @@ import * as Styled from "@src/pages/Feed/style";
 
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
 import Modal from "@src/components/@shared/Modal";
+import AddReminder from "@src/components/AddReminder";
 import EmptyStatus from "@src/components/EmptyStatus";
 import MessageCard from "@src/components/MessageCard";
 import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
-import ReminderModal from "@src/components/ReminderModal";
 
 import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
 import useModal from "@src/hooks/useModal";
@@ -92,7 +92,7 @@ function Reminder() {
           handleCloseReminderModal();
         }}
       >
-        <ReminderModal
+        <AddReminder
           messageId={reminderTarget.id}
           remindDate={reminderTarget.remindDate ?? ""}
           handleCloseReminderModal={() => {

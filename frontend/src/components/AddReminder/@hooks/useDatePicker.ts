@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { parseDate } from "@src/components/ReminderModal/@utils";
+import { parseDate } from "@src/components/AddReminder/@utils";
 
 import useInput from "@src/hooks/useInput";
 
