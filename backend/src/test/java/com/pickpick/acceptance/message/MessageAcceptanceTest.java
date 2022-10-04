@@ -1,6 +1,7 @@
 package com.pickpick.acceptance.message;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_요청;
 import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
@@ -161,6 +162,22 @@ class MessageAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_200_확인(response);
         assertThat(메시지_개수(response)).isEqualTo(channelIds.length);
+    }
+
+    @Test
+    void 메시지_조회_시_작성_시간_기준_내림차순으로_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 5);
+        구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).isEqualTo(List.of(5L, 4L, 3L, 2L, 1L));
     }
 
     private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
