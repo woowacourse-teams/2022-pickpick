@@ -5,6 +5,7 @@ import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
+import com.pickpick.workspace.domain.Workspace;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ public class FakeClient implements ExternalClient {
     }
 
     @Override
-    public Channel callChannel(final String channelSlackId) {
+    public Channel callChannel(final String channelSlackId, final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
                 .filter(it -> it.isSameSlackId(channelSlackId))
                 .findAny()

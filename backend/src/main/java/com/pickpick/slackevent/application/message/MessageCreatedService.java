@@ -47,7 +47,7 @@ public class MessageCreatedService implements SlackEventService {
         String channelSlackId = slackMessageDto.getChannelSlackId();
 
         Channel channel = channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> channelCreateService.createChannel(channelSlackId));
+                .orElseGet(() -> channelCreateService.createChannel(channelSlackId, member.getWorkspace()));
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }

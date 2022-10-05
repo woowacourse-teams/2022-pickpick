@@ -11,6 +11,7 @@ import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
+import com.pickpick.workspace.domain.Workspace;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class MessageFileShareService implements SlackEventService {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
         Member member = findMember(slackMessageDto);
-        Channel channel = findChannel(slackMessageDto);
+        Channel channel = findChannel(slackMessageDto, member.getWorkspace());
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }
@@ -52,11 +53,11 @@ public class MessageFileShareService implements SlackEventService {
         return members.getBySlackId(memberSlackId);
     }
 
-    private Channel findChannel(final SlackMessageDto slackMessageDto) {
+    private Channel findChannel(final SlackMessageDto slackMessageDto, final Workspace workspace) {
         String channelSlackId = slackMessageDto.getChannelSlackId();
 
         return channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> channelCreateService.createChannel(channelSlackId));
+                .orElseGet(() -> channelCreateService.createChannel(channelSlackId, workspace));
     }
 
     @Override

@@ -10,6 +10,8 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
@@ -35,6 +37,9 @@ class ChannelCreateServiceTest {
     private ChannelRepository channels;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private ChannelCreateService channelCreateService;
 
     @Autowired
@@ -52,10 +57,11 @@ class ChannelCreateServiceTest {
         given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
                 .willReturn(setUpChannelMockData());
 
+        Workspace workspace = workspaces.save(new Workspace("T1234", "xoxb-1234"));
         Optional<Channel> channelBeforeExecute = channels.findBySlackId("channelSlackId");
 
         // when
-        channelCreateService.createChannel("channelSlackId");
+        channelCreateService.createChannel("channelSlackId", workspace);
 
         // then
         Optional<Channel> channelAfterExecute = channels.findBySlackId("channelSlackId");
@@ -71,9 +77,10 @@ class ChannelCreateServiceTest {
         // given
         given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
                 .willThrow(SlackApiException.class);
+        Workspace workspace = workspaces.save(new Workspace("T1234", "xoxb-1234"));
 
         // when & then
-        assertThatThrownBy(() -> channelCreateService.createChannel("channelSlackId"))
+        assertThatThrownBy(() -> channelCreateService.createChannel("channelSlackId", workspace))
                 .isInstanceOf(SlackApiCallException.class);
     }
 

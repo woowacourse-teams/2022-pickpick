@@ -5,6 +5,7 @@ import com.pickpick.config.SlackProperties;
 import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
+import com.pickpick.workspace.domain.Workspace;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.SlackApiTextResponse;
@@ -76,14 +77,14 @@ public class SlackClient implements ExternalClient {
         }
     }
 
-    public Channel callChannel(final String channelSlackId) {
+    public Channel callChannel(final String channelSlackId, final Workspace workspace) {
         try {
             ConversationsInfoResponse response = methodsClient.conversationsInfo(
                     request -> request.channel(channelSlackId));
             validateResponse("conversationsInfo", response);
 
             Conversation conversation = response.getChannel();
-            return new Channel(conversation.getId(), conversation.getName());
+            return new Channel(conversation.getId(), conversation.getName(), workspace);
 
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException("conversationsInfo");
