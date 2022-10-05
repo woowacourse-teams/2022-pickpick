@@ -1,50 +1,48 @@
 package com.pickpick.acceptance.slackevent;
 
-import static com.pickpick.acceptance.RestHandler.post;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.멤버_정보_수정;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 
 import com.pickpick.acceptance.AcceptanceTest;
-import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/member.sql"})
-@DisplayName("멤버 이벤트 기능")
+@DisplayName("멤버 관련 슬랙 이벤트 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
 class MemberEventAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_EVENT_API_URL = "/api/event";
+    private static final String MEMBER_SLACK_ID = "U00001234";
+
+    private Workspace workspace;
+
+    @BeforeEach
+    void init() {
+        workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
+    }
+
+    @Test
+    void 슬랙_워크스페이스에_신규_멤버가_참여하면_저장되어야_한다() {
+        // given & when
+        ExtractableResponse<Response> response = 회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+
+        // then
+        상태코드_200_확인(response);
+    }
 
     @Test
     void 멤버_수정_발생_시_프로필_이미지와_이름이_업데이트_된다() {
         // given
-        Map<String, Object> memberUpdatedRequest = createEventRequest("실제이름", "표시이름", "test.png");
+        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
 
         // when
-        ExtractableResponse<Response> memberChangedResponse = post(MEMBER_EVENT_API_URL,
-                memberUpdatedRequest);
+        ExtractableResponse<Response> response = 멤버_정보_수정(MEMBER_SLACK_ID, "실제이름", "표시이름", "test.png");
 
         // then
-        상태코드_200_확인(memberChangedResponse);
-    }
-
-    private Map<String, Object> createEventRequest(final String realName, final String displayName,
-                                                   final String thumbnailUrl) {
-        return Map.of("event", Map.of(
-                        "type", SlackEvent.MEMBER_CHANGED.getType(),
-                        "user", Map.of(
-                                "id", "U03MC231",
-                                "profile", Map.of(
-                                        "real_name", realName,
-                                        "display_name", displayName,
-                                        "image_48", thumbnailUrl
-                                )
-                        )
-                )
-        );
+        상태코드_200_확인(response);
     }
 }
