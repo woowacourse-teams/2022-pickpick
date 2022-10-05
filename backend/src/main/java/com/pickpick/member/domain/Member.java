@@ -2,11 +2,15 @@ package com.pickpick.member.domain;
 
 import com.pickpick.exception.member.MemberInvalidThumbnailUrlException;
 import com.pickpick.exception.member.MemberInvalidUsernameException;
+import com.pickpick.workspace.domain.Workspace;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -32,6 +36,10 @@ public class Member {
     @Column(name = "first_login", nullable = false)
     private boolean isFirstLogin = true;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
+
     protected Member() {
     }
 
@@ -39,6 +47,13 @@ public class Member {
         this.slackId = slackId;
         this.username = username;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public Member(final String slackId, final String username, final String thumbnailUrl, final Workspace workspace) {
+        this.slackId = slackId;
+        this.username = username;
+        this.thumbnailUrl = thumbnailUrl;
+        this.workspace = workspace;
     }
 
     public void markLoggedIn() {
