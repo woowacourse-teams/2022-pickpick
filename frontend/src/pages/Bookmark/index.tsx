@@ -11,7 +11,8 @@ import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseBookmarks, parseMeridiemTime } from "@src/@utils";
+import { parseMeridiemTime } from "@src/@utils";
+import { extractResponseBookmarks } from "@src/@utils/api";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =

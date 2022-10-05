@@ -16,11 +16,8 @@ import useModal from "@src/hooks/@shared/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { FlexColumn } from "@src/@styles/shared";
-import {
-  extractResponseMessages,
-  getChannelIdsParams,
-  parseMeridiemTime,
-} from "@src/@utils";
+import { parseMeridiemTime } from "@src/@utils";
+import { extractResponseMessages, getChannelIdsParams } from "@src/@utils/api";
 
 function SearchResult() {
   const keyword = useGetSearchParam({ key: "keyword" });

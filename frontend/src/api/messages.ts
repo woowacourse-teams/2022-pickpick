@@ -2,8 +2,7 @@ import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants/api";
 import { ResponseMessages } from "@src/@types/api";
-
-import { getPrivateHeaders } from "@src/api/utils";
+import { getPrivateHeaders } from "@src/@utils/api";
 
 interface PageParam {
   messageId: string;

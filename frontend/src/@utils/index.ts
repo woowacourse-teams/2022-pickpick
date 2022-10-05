@@ -1,14 +1,4 @@
-import { InfiniteData } from "react-query";
-
 import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants/date";
-import {
-  Bookmark,
-  Message,
-  Reminder,
-  ResponseBookmarks,
-  ResponseMessages,
-  ResponseReminders,
-} from "@src/@types/api";
 import { Range } from "@src/@types/utils";
 
 export type Meridiem = "오전" | "오후";
@@ -44,36 +34,6 @@ export const parseMeridiemTime: ParseMeridiemTime = (date) => {
   const { meridiem, hour: parsedHour } = getMeridiemTime(hour);
 
   return `${meridiem} ${parsedHour}:${minute.toString().padStart(2, "0")}`;
-};
-
-type ExtractResponseMessages = (
-  data?: InfiniteData<ResponseMessages>
-) => Message[];
-
-export const extractResponseMessages: ExtractResponseMessages = (data) => {
-  if (!data) return [];
-
-  return data.pages.flatMap((arr) => arr.messages);
-};
-
-type ExtractResponseBookmarks = (
-  data?: InfiniteData<ResponseBookmarks>
-) => Bookmark[];
-
-export const extractResponseBookmarks: ExtractResponseBookmarks = (data) => {
-  if (!data) return [];
-
-  return data.pages.flatMap((arr) => arr.bookmarks);
-};
-
-type ExtractResponseReminders = (
-  data?: InfiniteData<ResponseReminders>
-) => Reminder[];
-
-export const extractResponseReminders: ExtractResponseReminders = (data) => {
-  if (!data) return [];
-
-  return data.pages.flatMap((arr) => arr.reminders);
 };
 
 type SetCookie = (key: string, value: string) => void;
@@ -172,14 +132,6 @@ export const getMessagesDate: GetMessagesDate = (postedDate) => {
     return DATE.YESTERDAY;
 
   return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
-};
-
-type GetChannelIdsParams = (channelIds: string) => string;
-
-export const getChannelIdsParams: GetChannelIdsParams = (channelIds) => {
-  const channelIdList = channelIds.split(",");
-  if (channelIds.length === 1) return channelIdList[0];
-  return channelIdList.join("&channelIds=");
 };
 
 type ParsedOptionText = ({

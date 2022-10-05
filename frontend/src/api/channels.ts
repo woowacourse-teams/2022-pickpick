@@ -2,8 +2,7 @@ import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants/api";
 import { ResponseChannels, ResponseSubscribedChannels } from "@src/@types/api";
-
-import { getPrivateHeaders } from "@src/api/utils";
+import { getPrivateHeaders } from "@src/@utils/api";
 
 export const getChannels = async () => {
   const { data } = await fetcher.get<ResponseChannels>(API_ENDPOINT.CHANNEL, {

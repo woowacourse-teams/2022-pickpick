@@ -2,8 +2,7 @@ import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants/api";
 import { ResponseReminders } from "@src/@types/api";
-
-import { getPrivateHeaders } from "@src/api/utils";
+import { getPrivateHeaders } from "@src/@utils/api";
 
 interface ReminderProps {
   messageId: number;

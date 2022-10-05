@@ -2,8 +2,7 @@ import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants/api";
 import { ResponseToken } from "@src/@types/api";
-
-import { getPrivateHeaders, getPublicHeaders } from "@src/api/utils";
+import { getPrivateHeaders, getPublicHeaders } from "@src/@utils/api";
 
 export const isCertificated = async () => {
   const { data } = await fetcher.get(API_ENDPOINT.CERTIFICATION, {

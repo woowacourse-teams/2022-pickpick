@@ -21,7 +21,8 @@ import useMessageDate from "@src/hooks/useMessageDate";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseMessages, parseMeridiemTime } from "@src/@utils";
+import { parseMeridiemTime } from "@src/@utils";
+import { extractResponseMessages } from "@src/@utils/api";
 
 import * as Styled from "./style";
 
