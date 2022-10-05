@@ -175,9 +175,9 @@ class BookmarkServiceTest {
             );
         }
 
-        @DisplayName("더 조회 할 북마크가 없다면 hasPast는 False다")
+        @DisplayName("더 조회 할 북마크가 없다면 hasPast는 false다")
         @Test
-        void noMoreBookmarksToFindHasPastTrue() {
+        void noMoreBookmarksToFindHasPastFalse() {
             int totalSize = hopesBookmarks.size() + kkojaesBookmarks.size();
             BookmarkResponses response = bookmarkService.find(BookmarkFindRequestFactory.onlyCount(totalSize),
                     hope.getId());
