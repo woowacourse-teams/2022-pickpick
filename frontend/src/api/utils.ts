@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_KEY } from "@src/@constants";
+import { ACCESS_TOKEN_KEY } from "@src/@constants/api";
 import { getCookie } from "@src/@utils";
 
 export const getPublicHeaders = () => {

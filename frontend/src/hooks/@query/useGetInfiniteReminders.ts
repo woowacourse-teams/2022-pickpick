@@ -1,6 +1,6 @@
 import { UseInfiniteQueryResult, useInfiniteQuery } from "react-query";
 
-import { QUERY_KEY } from "@src/@constants";
+import { QUERY_KEY } from "@src/@constants/api";
 import { ResponseReminders } from "@src/@types/api";
 import { CustomError } from "@src/@types/shared";
 

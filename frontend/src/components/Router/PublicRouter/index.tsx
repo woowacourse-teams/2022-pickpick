@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import Loader from "@src/components/Loader";
 
-import { PATH_NAME, QUERY_KEY } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants";
+import { QUERY_KEY } from "@src/@constants/api";
 import { StrictPropsWithChildren } from "@src/@types/utils";
 
 import { isCertificated } from "@src/api/auth";

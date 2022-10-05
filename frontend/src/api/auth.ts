@@ -1,6 +1,6 @@
 import { fetcher } from "@src/api";
 
-import { API_ENDPOINT } from "@src/@constants";
+import { API_ENDPOINT } from "@src/@constants/api";
 import { ResponseToken } from "@src/@types/api";
 
 import { getPrivateHeaders, getPublicHeaders } from "@src/api/utils";
