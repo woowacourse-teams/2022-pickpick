@@ -23,7 +23,7 @@ public class AcceptanceTest {
     int port;
 
     @Autowired
-    protected ExternalClient slackClient;
+    protected ExternalClient externalClient;
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
