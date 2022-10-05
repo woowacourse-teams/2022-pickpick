@@ -21,9 +21,9 @@ public enum ChannelFixture {
         this.name = name;
     }
 
-    public static List<Channel> createAllChannels() {
+    public static List<Channel> createAllChannels(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
-                .map(ChannelFixture::create)
+                .map(channel -> channel.create(workspace))
                 .collect(Collectors.toList());
     }
 

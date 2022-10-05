@@ -27,7 +27,7 @@ public class FakeClient implements ExternalClient {
         return Arrays.stream(ChannelFixture.values())
                 .filter(it -> it.isSameSlackId(channelSlackId))
                 .findAny()
-                .map(ChannelFixture::create)
+                .map(channel -> channel.create(workspace))
                 .orElseThrow(() -> new SlackApiCallException("test-callChannel"));
     }
 

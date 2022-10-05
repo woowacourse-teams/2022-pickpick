@@ -10,6 +10,7 @@ import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -23,9 +24,10 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
     @Test
     void 유저_전체_채널_목록_조회() {
         // given
+        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
         String memberSlackId = "userSlackId";
-        회원가입(memberSlackId);
-        채널_목록_생성(memberSlackId);
+        회원가입(memberSlackId, workspace.getSlackId());
+        채널_목록_생성(memberSlackId, workspace);
         String token = jwtTokenProvider.createToken("1");
 
         // when
@@ -38,8 +40,8 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
         assertThat(channels).hasSize(ChannelFixture.values().length);
     }
 
-    private void 채널_목록_생성(final String memberSlackId) {
-        for (Channel channel : ChannelFixture.createAllChannels()) {
+    private void 채널_목록_생성(final String memberSlackId, final Workspace workspace) {
+        for (Channel channel : ChannelFixture.createAllChannels(workspace)) {
             채널_생성(memberSlackId, channel);
         }
     }

@@ -11,8 +11,9 @@ public class SlackEventRestHandler {
 
     private static final String SLACK_EVENT_API_URL = "/api/event";
 
-    public static void 회원가입(final String slackId) {
+    public static void 회원가입(final String slackId, final String workspaceSlackId) {
         Map<String, Object> request = Map.of(
+                "team_id", workspaceSlackId,
                 "event", Map.of(
                         "type", "team_join",
                         "user", Map.of(
@@ -55,6 +56,6 @@ public class SlackEventRestHandler {
                 "ts", timestamp
         );
 
-        return Map.of("type", type, "event", event);
+        return Map.of("type", type, "event", event, "team_id", channel.getWorkspace().getSlackId());
     }
 }
