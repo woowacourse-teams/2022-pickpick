@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MemberEventAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "C00001234";
+    private static final String MEMBER_SLACK_ID = "U00001234";
 
     @Test
     void 슬랙_워크스페이스에_신규_멤버가_참여하면_저장되어야_한다() {

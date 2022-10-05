@@ -13,6 +13,7 @@ import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +21,8 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageEventAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "MB12345";
-    private static final String MESSAGE_SLACK_ID = "MSG12345";
+    private static final String MEMBER_SLACK_ID = "U12345";
+    private static final String MESSAGE_SLACK_ID = UUID.randomUUID().toString();
 
     @Test
     void URL_검증_요청_시_challenge_를_응답한다() {
