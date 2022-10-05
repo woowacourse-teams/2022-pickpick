@@ -1,6 +1,9 @@
 package com.pickpick.acceptance.message;
 
-import static com.pickpick.acceptance.RestHandler.상태코드_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_201_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_204_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_삭제;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
@@ -22,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
 @DisplayName("북마크 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
@@ -41,7 +43,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 북마크_생성(token, 1L);
 
         // then
-        상태코드_확인(response, HttpStatus.CREATED);
+        상태코드_201_확인(response);
     }
 
     @Test
@@ -62,7 +64,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 북마크_조회(token, null);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
 
         BookmarkResponses bookmarkResponses = toBookmarkResponses(response);
         assertThat(bookmarkResponses.hasPast()).isFalse();
@@ -85,7 +87,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 북마크_조회(token, 2L);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
 
         BookmarkResponses bookmarkResponses = toBookmarkResponses(response);
         assertThat(bookmarkResponses.hasPast()).isFalse();
@@ -106,7 +108,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 북마크_삭제(token, messageId);
 
         // then
-        상태코드_확인(response, HttpStatus.NO_CONTENT);
+        상태코드_204_확인(response);
     }
 
     @Test
@@ -124,7 +126,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 북마크_삭제(token1, 1L);
 
         // then
-        상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        상태코드_400_확인(response);
         에러코드_확인(response, "BOOKMARK_DELETE_FAILURE");
     }
 

@@ -1,7 +1,10 @@
 package com.pickpick.acceptance.message;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.RestHandler.상태코드_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_201_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_204_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
+import static com.pickpick.acceptance.RestHandler.상태코드_404_확인;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_단건_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_목록_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_삭제;
@@ -24,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
 @DisplayName("리마인더 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
@@ -43,7 +45,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_생성(token, 1, LocalDateTime.now());
 
         // then
-        상태코드_확인(response, HttpStatus.CREATED);
+        상태코드_201_확인(response);
     }
 
     @Test
@@ -74,7 +76,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_단건_조회(token, 1L);
 
         // then
-        상태코드_확인(response, HttpStatus.NOT_FOUND);
+        상태코드_404_확인(response);
     }
 
     @Test
@@ -93,7 +95,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
@@ -121,7 +123,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_목록_조회(token, 2L, null);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertAll(
@@ -146,7 +148,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_목록_조회(token, 3L, 10);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertThat(reminderResponses.hasFuture()).isFalse();
@@ -168,7 +170,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, 10);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
 
         ReminderResponses reminderResponses = response.jsonPath().getObject("", ReminderResponses.class);
         assertThat(reminderResponses.hasFuture()).isTrue();
@@ -191,7 +193,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
         assertThat(리마인더_개수(response)).isEqualTo(20);
     }
 
@@ -214,7 +216,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, reminderCount);
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
         assertThat(리마인더_개수(response)).isEqualTo(reminderCount);
     }
 
@@ -232,7 +234,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_수정(token, messageId, LocalDateTime.now());
 
         // then
-        상태코드_확인(response, HttpStatus.OK);
+        상태코드_200_확인(response);
     }
 
     @Test
@@ -251,7 +253,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_수정(token2, 1L, LocalDateTime.now());
 
         // then
-        상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        상태코드_400_확인(response);
     }
 
     @Test
@@ -268,7 +270,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);
 
         // then
-        상태코드_확인(response, HttpStatus.NO_CONTENT);
+        상태코드_204_확인(response);
     }
 
     @Test
@@ -281,7 +283,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);
 
         // then
-        상태코드_확인(response, HttpStatus.BAD_REQUEST);
+        상태코드_400_확인(response);
     }
 
     private void 리마인더_목록_생성(final String token, final List<Long> messageIds) {
