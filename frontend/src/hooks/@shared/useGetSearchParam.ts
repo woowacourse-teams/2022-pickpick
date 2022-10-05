@@ -1,6 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
-function useGetSearchParam(key: string): string {
+interface Props {
+  key: string;
+}
+type UseGetSearchParamResult = string;
+
+function useGetSearchParam({ key }: Props): UseGetSearchParamResult {
   const [searchParams] = useSearchParams();
 
   return searchParams.get(key) ?? "";

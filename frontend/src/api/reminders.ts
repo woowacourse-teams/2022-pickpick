@@ -1,7 +1,7 @@
 import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants";
-import { ResponseReminders } from "@src/@types/shared";
+import { ResponseReminders } from "@src/@types/api";
 
 import { getPrivateHeaders } from "@src/api/utils";
 

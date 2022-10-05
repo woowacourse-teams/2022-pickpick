@@ -1,7 +1,8 @@
-import { useInfiniteQuery } from "react-query";
+import { UseInfiniteQueryResult, useInfiniteQuery } from "react-query";
 
 import { QUERY_KEY } from "@src/@constants";
-import { CustomError, ResponseMessages } from "@src/@types/shared";
+import { ResponseMessages } from "@src/@types/api";
+import { CustomError } from "@src/@types/shared";
 
 import { getMessages } from "@src/api/messages";
 
@@ -12,7 +13,12 @@ interface Props {
   keyword?: string;
 }
 
-function useGetInfiniteMessages({ channelId, date, keyword, queryKey }: Props) {
+function useGetInfiniteMessages({
+  channelId,
+  date,
+  keyword,
+  queryKey,
+}: Props): UseInfiniteQueryResult<ResponseMessages, CustomError> {
   return useInfiniteQuery<ResponseMessages, CustomError>(
     [QUERY_KEY.ALL_MESSAGES, ...queryKey],
     getMessages({

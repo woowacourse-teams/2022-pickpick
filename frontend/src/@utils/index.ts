@@ -8,63 +8,98 @@ import {
   ResponseBookmarks,
   ResponseMessages,
   ResponseReminders,
-} from "@src/@types/shared";
+} from "@src/@types/api";
+import { Range } from "@src/@types/utils";
 
-export const getMeridiemTime = (time: number) => {
-  if (time < TIME.NOON) return { meridiem: TIME.AM, hour: time.toString() };
-  if (time === TIME.NOON)
-    return { meridiem: TIME.PM, hour: TIME.NOON.toString() };
+export type Meridiem = "오전" | "오후";
 
-  return { meridiem: TIME.PM, hour: (time - TIME.NOON).toString() };
+export type Hours = Range<0, 24>;
+
+export type MeridiemHours = Range<1, 13>;
+
+export type GetMeridiemTime = (time: Hours) => {
+  meridiem: Meridiem;
+  hour: MeridiemHours;
 };
 
-export const parseMeridemTime = (date: string): string => {
+export const getMeridiemTime: GetMeridiemTime = (time) => {
+  if (time < TIME.NOON)
+    return { meridiem: TIME.AM, hour: time as MeridiemHours };
+
+  if (time === TIME.NOON)
+    return { meridiem: TIME.PM, hour: TIME.NOON as MeridiemHours };
+
+  return {
+    meridiem: TIME.PM,
+    hour: (time - TIME.NOON) as MeridiemHours,
+  };
+};
+
+type ParseMeridiemTime = (date: string) => string;
+
+export const parseMeridiemTime: ParseMeridiemTime = (date) => {
   const dateInstance = new Date(date);
-  const hour = dateInstance.getHours();
+  const hour = dateInstance.getHours() as Range<0, 24>;
   const minute = dateInstance.getMinutes();
-  const { meridiem, hour: parsedHour } = getMeridiemTime(Number(hour));
+  const { meridiem, hour: parsedHour } = getMeridiemTime(hour);
 
   return `${meridiem} ${parsedHour}:${minute.toString().padStart(2, "0")}`;
 };
 
-export const extractResponseMessages = (
+type ExtractResponseMessages = (
   data?: InfiniteData<ResponseMessages>
-): Message[] => {
+) => Message[];
+
+export const extractResponseMessages: ExtractResponseMessages = (data) => {
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.messages);
 };
 
-export const extractResponseBookmarks = (
+type ExtractResponseBookmarks = (
   data?: InfiniteData<ResponseBookmarks>
-): Bookmark[] => {
+) => Bookmark[];
+
+export const extractResponseBookmarks: ExtractResponseBookmarks = (data) => {
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.bookmarks);
 };
 
-export const extractResponseReminders = (
+type ExtractResponseReminders = (
   data?: InfiniteData<ResponseReminders>
-): Reminder[] => {
+) => Reminder[];
+
+export const extractResponseReminders: ExtractResponseReminders = (data) => {
   if (!data) return [];
 
   return data.pages.flatMap((arr) => arr.reminders);
 };
 
-export const setCookie = (key: string, value: string) => {
+type SetCookie = (key: string, value: string) => void;
+
+export const setCookie: SetCookie = (key, value) => {
   document.cookie = `${key}=${value};`;
 };
 
-export const getCookie = (key: string) => {
+type GetCookie = (key: string) => string;
+
+export const getCookie: GetCookie = (key) => {
   const regex = new RegExp(`${key}=([^;]+)`); // key(좌항)에 해당하는 우항을 가져온다. 세미콜론은 제외한다.
   const matches = document.cookie.match(regex);
 
   return matches ? matches[1] : "";
 };
 
-export const deleteCookie = (key: string) => {
+type DeleteCookie = (key: string) => void;
+
+export const deleteCookie: DeleteCookie = (key) => {
   document.cookie = key + "=; Max-Age=0";
 };
+
+/**
+ * TODO: 함수 분리
+ */
 
 export const ISOConverter = (date: string, time?: string): string => {
   const today = new Date();
@@ -96,7 +131,16 @@ export const ISOConverter = (date: string, time?: string): string => {
   )}${CONVERTER_SUFFIX}`;
 };
 
-export const getDateInformation = (givenDate: Date) => {
+type GetDateInformation = (givenDate: Date) => {
+  year: number;
+  month: number;
+  date: number;
+  day: string;
+  hour: number;
+  minute: number;
+};
+
+export const getDateInformation: GetDateInformation = (givenDate) => {
   const year = givenDate.getFullYear();
   const month = givenDate.getMonth() + 1;
   const date = givenDate.getDate();
@@ -107,15 +151,19 @@ export const getDateInformation = (givenDate: Date) => {
   return { year, month, date, day, hour, minute };
 };
 
-export const getMessagesDate = (postedDate: string): string => {
+type GetMessagesDate = (postedDate: string) => string;
+
+export const getMessagesDate: GetMessagesDate = (postedDate) => {
   const givenDate = getDateInformation(new Date(postedDate));
   const today = getDateInformation(new Date());
+
   if (
     givenDate.year === today.year &&
     givenDate.month === today.month &&
     givenDate.date === today.date
   )
     return DATE.TODAY;
+
   if (
     givenDate.year === today.year &&
     givenDate.month === today.month &&
@@ -126,18 +174,25 @@ export const getMessagesDate = (postedDate: string): string => {
   return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
 };
 
-export const getChannelIdsParams = (channelIds: string) => {
+type GetChannelIdsParams = (channelIds: string) => string;
+
+export const getChannelIdsParams: GetChannelIdsParams = (channelIds) => {
   const channelIdList = channelIds.split(",");
   if (channelIds.length === 1) return channelIdList[0];
   return channelIdList.join("&channelIds=");
 };
 
-export const parsedOptionText = ({
+type ParsedOptionText = ({
   needZeroPaddingStart,
   optionText,
 }: {
   needZeroPaddingStart: boolean;
   optionText: string;
-}): string => {
+}) => string;
+
+export const parsedOptionText: ParsedOptionText = ({
+  needZeroPaddingStart,
+  optionText,
+}) => {
   return needZeroPaddingStart ? optionText.padStart(2, "0") : optionText;
 };

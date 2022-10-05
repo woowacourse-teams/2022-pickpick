@@ -3,6 +3,8 @@ import { NavLinkProps } from "react-router-dom";
 
 import { Kind } from "@src/components/@shared/WrapperButton";
 
+import { PropsWithFunctionChildren } from "@src/@types/utils";
+
 import * as Styled from "./style";
 
 interface Props extends NavLinkProps {
@@ -10,9 +12,10 @@ interface Props extends NavLinkProps {
   children: ({ isActive }: { isActive: boolean }) => ReactNode;
 }
 
-function WrapperLink({ children, ...props }: Props) {
-  if (!children || typeof children !== "function") return null;
-
+function WrapperNavLink({
+  children,
+  ...props
+}: PropsWithFunctionChildren<Props>) {
   return (
     <Styled.Container {...props}>
       {({ isActive }) => children({ isActive })}
@@ -20,4 +23,4 @@ function WrapperLink({ children, ...props }: Props) {
   );
 }
 
-export default WrapperLink;
+export default WrapperNavLink;

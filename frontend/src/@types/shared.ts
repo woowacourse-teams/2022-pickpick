@@ -12,88 +12,14 @@ export type ThemeKind = keyof typeof THEME_KIND;
 export interface StyledDefaultProps {
   theme: Theme;
 }
-export interface Message {
-  id: number;
-  username: string;
-  postedDate: string;
-  remindDate: string;
-  text: string;
-  userThumbnail: string;
-  isBookmarked: boolean;
-  isSetReminded: boolean;
-}
-
-export interface Bookmark {
-  id: number;
-  messageId: number;
-  username: string;
-  postedDate: string;
-  remindDate: string;
-  text: string;
-  userThumbnail: string;
-}
-
-export interface Reminder {
-  id: number;
-  messageId: number;
-  username: string;
-  userThumbnail: string;
-  text: string;
-  postedDate: string;
-  remindDate: string;
-  modifyDate: string;
-}
-
-export interface ResponseReminders {
-  reminders: Reminder[];
-  hasFuture: boolean;
-}
-
-export interface ResponseBookmarks {
-  bookmarks: Bookmark[];
-  hasPast: boolean;
-}
-
-export interface ResponseMessages {
-  messages: Message[];
-  hasPast: boolean;
-  hasFuture: boolean;
-}
-
-export interface Channel {
-  id: string;
-  name: string;
-  isSubscribed: boolean;
-}
-
-export interface ResponseChannels {
-  channels: Channel[];
-}
-
-export interface SubscribedChannel {
-  id: number;
-  name: string;
-  order: number;
-}
-
-export interface ResponseSubscribedChannels {
-  channels: SubscribedChannel[];
-}
 
 export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;
 
-export interface ResponseToken {
-  token: string;
-  isFirstLogin: boolean;
-}
-
-export interface CustomError {
+export type CustomError = {
   response: {
-    data: Error;
+    data: {
+      code: keyof typeof ERROR_MESSAGE_BY_CODE;
+      message: string;
+    };
   };
-}
-
-export interface Error {
-  code: keyof typeof ERROR_MESSAGE_BY_CODE;
-  message: string;
-}
+};

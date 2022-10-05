@@ -9,7 +9,7 @@ interface Props {
 
 type Handler = (messageId: number) => () => void;
 
-interface ReturnType {
+interface UseMutateBookmarkResult {
   handleAddBookmark: Handler;
   handleRemoveBookmark: Handler;
 }
@@ -17,7 +17,7 @@ interface ReturnType {
 function useMutateBookmark({
   handleSettleAddBookmark,
   handleSettleRemoveBookmark,
-}: Props): ReturnType {
+}: Props): UseMutateBookmarkResult {
   const { mutate: addBookmark } = useMutation(postBookmark, {
     onSettled: handleSettleAddBookmark,
   });

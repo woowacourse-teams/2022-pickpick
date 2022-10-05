@@ -1,7 +1,7 @@
-import { PropsWithChildren } from "react";
-
 import Dimmer from "@src/components/@shared/Dimmer";
 import Portal from "@src/components/@shared/Portal";
+
+import { StrictPropsWithChildren } from "@src/@types/utils";
 
 interface Props {
   isOpened: boolean;
@@ -12,7 +12,7 @@ function Modal({
   isOpened,
   handleCloseModal,
   children,
-}: PropsWithChildren<Props>) {
+}: StrictPropsWithChildren<Props>) {
   return (
     <Portal isOpened={isOpened}>
       <>

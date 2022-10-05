@@ -11,7 +11,7 @@ import { PATH_NAME } from "@src/@constants";
 
 function Certification() {
   const navigate = useNavigate();
-  const slackCode = useGetSearchParam("code");
+  const slackCode = useGetSearchParam({ key: "code" });
   const { login } = useAuthentication();
   const { isSuccess, isError, data } = useGetCertification({ slackCode });
 

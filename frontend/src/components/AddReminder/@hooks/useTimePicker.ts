@@ -9,7 +9,7 @@ import {
 import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
-import { getDateInformation, getMeridiemTime } from "@src/@utils";
+import { Hours, getDateInformation, getMeridiemTime } from "@src/@utils";
 
 interface Props {
   remindDate: string;
@@ -17,9 +17,9 @@ interface Props {
 
 function useTimePicker({ remindDate }: Props) {
   const { hour, minute } = getDateInformation(new Date());
-  const { meridiem, hour: meridiemHour } = getMeridiemTime(hour);
+  const { meridiem, hour: meridiemHour } = getMeridiemTime(hour as Hours);
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
-    hour: Number(meridiemHour),
+    hour: meridiemHour,
     minute,
   });
 

@@ -1,13 +1,11 @@
 import { useEffect, useRef } from "react";
 
-interface ReturnType {
-  isRenderDate: (postedDate: string) => boolean;
-}
+type UseMessageDateResult = (postedDate: string) => boolean;
 
-function useMessageDate(): ReturnType {
+function useMessageDate(): UseMessageDateResult {
   const dateArrayRef = useRef<string[]>([]);
 
-  const isRenderDate = (postedDate: string) => {
+  const shouldRenderDate = (postedDate: string) => {
     if (dateArrayRef.current.includes(postedDate)) return false;
 
     dateArrayRef.current.push(postedDate);
@@ -18,9 +16,7 @@ function useMessageDate(): ReturnType {
     dateArrayRef.current = [];
   });
 
-  return {
-    isRenderDate,
-  };
+  return shouldRenderDate;
 }
 
 export default useMessageDate;

@@ -1,8 +1,7 @@
-import { PropsWithChildren } from "react";
-
 import ArrowIconDown from "@src/components/@svgIcons/ArrowIconDown";
 
 import { FlexRow } from "@src/@styles/shared";
+import { StrictPropsWithChildren } from "@src/@types/utils";
 
 import * as Styled from "./style";
 
@@ -15,7 +14,7 @@ function DateTimePickerToggle({
   text,
   handleToggleDropdown,
   children,
-}: PropsWithChildren<Props>) {
+}: StrictPropsWithChildren<Props>) {
   return (
     <Styled.Container onClick={handleToggleDropdown}>
       <FlexRow alignItems="center" gap="8px">

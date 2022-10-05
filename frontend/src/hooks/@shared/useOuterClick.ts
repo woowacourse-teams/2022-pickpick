@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 
 type CallbackType = () => void;
 
@@ -7,7 +7,12 @@ interface Props {
   requiredInnerRefCount: number;
 }
 
-function useOuterClick({ callback, requiredInnerRefCount = 1 }: Props) {
+type UseOuterClickResult = RefObject<HTMLDivElement>[];
+
+function useOuterClick({
+  callback,
+  requiredInnerRefCount = 1,
+}: Props): UseOuterClickResult {
   const callbackRef = useRef<CallbackType>();
   const innerRefArray = [
     ...Array(requiredInnerRefCount <= 0 ? 1 : requiredInnerRefCount),

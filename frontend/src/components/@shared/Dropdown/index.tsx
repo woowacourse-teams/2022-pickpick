@@ -1,8 +1,10 @@
-import { RefObject, useEffect } from "react";
+import { ReactNode, RefObject, useEffect } from "react";
 
 import useDropdown from "@src/components/@shared/Dropdown/@hooks/useDropdown";
 
 import useOuterClick from "@src/hooks/@shared/useOuterClick";
+
+import { PropsWithFunctionChildren } from "@src/@types/utils";
 
 interface ChildrenProps {
   innerRef: RefObject<HTMLDivElement>;
@@ -14,10 +16,13 @@ interface ChildrenProps {
 
 interface Props {
   toggleHandler?: () => void;
-  children: ({ handleToggleDropdown }: ChildrenProps) => JSX.Element;
+  children: ({ handleToggleDropdown }: ChildrenProps) => ReactNode;
 }
 
-function Dropdown({ toggleHandler, children }: Props) {
+function Dropdown({
+  toggleHandler,
+  children,
+}: PropsWithFunctionChildren<Props>) {
   const {
     isDropdownOpened,
     handleOpenDropdown,

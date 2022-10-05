@@ -4,12 +4,12 @@ import { snackbarState } from "@src/@atoms";
 
 type openHandler = (message: string) => void;
 
-interface ReturnType {
+interface UseSnackbarResult {
   openSuccessSnackbar: openHandler;
   openFailureSnackbar: openHandler;
 }
 
-function useSnackbar(): ReturnType {
+function useSnackbar(): UseSnackbarResult {
   const setState = useSetRecoilState(snackbarState);
 
   const openSuccessSnackbar = (message: string) => {

@@ -1,7 +1,7 @@
 import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants";
-import { ResponseToken } from "@src/@types/shared";
+import { ResponseToken } from "@src/@types/api";
 
 import { getPrivateHeaders, getPublicHeaders } from "@src/api/utils";
 
