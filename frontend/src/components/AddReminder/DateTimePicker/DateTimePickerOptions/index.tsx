@@ -1,6 +1,6 @@
 import { ChangeEventHandler } from "react";
 
-import { parsedOptionText } from "@src/@utils";
+import { parsedOptionText } from "@src/@utils/date";
 
 import * as Styled from "./style";
 

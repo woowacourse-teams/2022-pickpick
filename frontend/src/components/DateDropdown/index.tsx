@@ -2,7 +2,7 @@ import Dropdown from "@src/components/@shared/Dropdown";
 import DateDropdownMenu from "@src/components/DateDropdown/DateDropdownMenu";
 import DateDropdownToggle from "@src/components/DateDropdown/DateDropdownToggle";
 
-import { getMessagesDate } from "@src/@utils";
+import { getMessagesDate } from "@src/@utils/date";
 
 import * as Styled from "./style";
 

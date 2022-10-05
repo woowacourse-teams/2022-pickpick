@@ -14,8 +14,8 @@ import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { parseMeridiemTime } from "@src/@utils";
 import { extractResponseReminders } from "@src/@utils/api";
+import { parseMeridiemTime } from "@src/@utils/date";
 
 function Reminder() {
   const {

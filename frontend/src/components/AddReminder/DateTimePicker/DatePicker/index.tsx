@@ -2,11 +2,11 @@ import { ChangeEventHandler, RefObject } from "react";
 
 import Dropdown from "@src/components/@shared/Dropdown";
 import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
-import { generateDateOptions } from "@src/components/AddReminder/@utils";
 import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
 import { FlexColumn } from "@src/@styles/shared";
+import { generateDateOptions } from "@src/@utils/date";
 
 import * as Styled from "./style";
 

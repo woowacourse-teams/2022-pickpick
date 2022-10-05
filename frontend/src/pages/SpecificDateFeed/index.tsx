@@ -23,8 +23,8 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { parseMeridiemTime } from "@src/@utils";
 import { extractResponseMessages } from "@src/@utils/api";
+import { parseMeridiemTime } from "@src/@utils/date";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();

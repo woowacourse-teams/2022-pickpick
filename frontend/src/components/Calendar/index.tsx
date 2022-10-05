@@ -5,12 +5,10 @@ import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
 import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
 import useCalendar from "@src/components/Calendar/@hooks/useCalendar";
 
-import { ISOConverter } from "@src/@utils";
+import { MONTHS, WEEKDAYS } from "@src/@constants/date";
+import { ISOConverter } from "@src/@utils/date";
 
 import * as Styled from "./style";
-
-const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
-const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
 interface Props {
   channelId: string;

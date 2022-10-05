@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-import { parseDate } from "@src/components/AddReminder/@utils";
-
 import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
-import { getDateInformation } from "@src/@utils";
+import { getDateInformation, parseDate } from "@src/@utils/date";
 
 interface Props {
   remindDate: string;
