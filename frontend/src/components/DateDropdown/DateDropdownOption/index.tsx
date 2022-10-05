@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import * as Styled from "@src/components/DateDropdown/DateDropdownMenu/style";
 
-import { DATE } from "@src/@constants";
+import { DATE } from "@src/@constants/date";
 import { ISOConverter } from "@src/@utils";
 
 interface Props {

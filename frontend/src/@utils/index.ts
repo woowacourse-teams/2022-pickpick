@@ -1,6 +1,6 @@
 import { InfiniteData } from "react-query";
 
-import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants";
+import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants/date";
 import {
   Bookmark,
   Message,
