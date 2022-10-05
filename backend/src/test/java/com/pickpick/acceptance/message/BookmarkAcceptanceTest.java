@@ -66,7 +66,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
 
         BookmarkResponses bookmarkResponses = toBookmarkResponses(response);
         assertThat(bookmarkResponses.hasPast()).isFalse();
-        assertThat(convertToMessageIds(bookmarkResponses)).containsExactlyElementsOf(List.of(1L, 2L));
+        assertThat(convertToMessageIds(bookmarkResponses)).containsExactlyElementsOf(List.of(2L, 1L));
     }
 
     @Test
