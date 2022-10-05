@@ -1,6 +1,25 @@
-import { getDateInformation, getMeridiemTime } from "@src/@utils";
+import {
+  Hours,
+  Meridiem,
+  MeridiemHours,
+  getDateInformation,
+  getMeridiemTime,
+} from "@src/@utils";
 
-export const generateTimeOptions = () => {
+type GenerateTimeOptions = () => Record<
+  "meridiems" | "AMHours" | "PMHours" | "minutes",
+  string[]
+>;
+
+// {
+//   // meridiems: ["오전", "오후"];
+//   // AMHours: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+//   // PMHours: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+//   // minutes: ["00", "10", "20", "30", "40", "50"];
+
+// };
+
+export const generateTimeOptions: GenerateTimeOptions = () => {
   const meridiems = ["오전", "오후"];
   const AMHours = Array.from({ length: 12 }, (_, index) => index.toString());
   const PMHours = Array.from({ length: 12 }, (_, index) => {
@@ -20,7 +39,9 @@ export const generateTimeOptions = () => {
   };
 };
 
-export const generateDateOptions = () => {
+type GenerateDateOptions = () => Record<"years" | "months" | "dates", string[]>;
+
+export const generateDateOptions: GenerateDateOptions = () => {
   const { year, month } = getDateInformation(new Date());
   const { date: lastDate } = getDateInformation(new Date(year, month, 0));
 
@@ -39,11 +60,17 @@ export const generateDateOptions = () => {
   };
 };
 
-export const parseTime = (ISODateTime: string) => {
+type ParseTime = (ISODateTime: string) => {
+  meridiem: Meridiem;
+  meridiemHour: MeridiemHours;
+  minute: string;
+};
+
+export const parseTime: ParseTime = (ISODateTime) => {
   const [_, fullTime] = ISODateTime.split("T");
   const [hour, minute] = fullTime.split(":");
   const { meridiem: meridiem, hour: meridiemHour } = getMeridiemTime(
-    Number(hour)
+    Number(hour) as Hours
   );
 
   return {
@@ -53,7 +80,11 @@ export const parseTime = (ISODateTime: string) => {
   };
 };
 
-export const parseDate = (ISODateTime: string) => {
+type ParseDate = (
+  ISODateTime: string
+) => Record<"year" | "month" | "date", string>;
+
+export const parseDate: ParseDate = (ISODateTime) => {
   const [fullDate] = ISODateTime.split("T");
   const [year, month, date] = fullDate.split("-");
 
@@ -64,12 +95,17 @@ export const parseDate = (ISODateTime: string) => {
   };
 };
 
-export const convertTimeToStepTenMinuteTime = ({
+type ConvertTimeToStepTenMinuteTime = ({
   hour,
   minute,
 }: {
   hour: number;
   minute: number;
+}) => Record<"parsedHour" | "parsedMinute", number>;
+
+export const convertTimeToStepTenMinuteTime: ConvertTimeToStepTenMinuteTime = ({
+  hour,
+  minute,
 }) => {
   if (minute > 50) {
     return { parsedHour: hour + 1, parsedMinute: 0 };
@@ -78,6 +114,8 @@ export const convertTimeToStepTenMinuteTime = ({
   return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
 };
 
-export const invalidMeridiem = (value: string) => {
+type InvalidMeridiem = (value: Meridiem) => boolean;
+
+export const invalidMeridiem: InvalidMeridiem = (value) => {
   return value !== "오전" && value !== "오후";
 };

@@ -14,7 +14,7 @@ import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseReminders, parseMeridemTime } from "@src/@utils";
+import { extractResponseReminders, parseMeridiemTime } from "@src/@utils";
 
 function Reminder() {
   const {
@@ -61,7 +61,7 @@ function Reminder() {
                   <MessageCard
                     key={id}
                     username={username}
-                    date={`${date} ${parseMeridemTime(remindDate)}`}
+                    date={`${date} ${parseMeridiemTime(remindDate)}`}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={true}

@@ -19,7 +19,7 @@ import { FlexColumn } from "@src/@styles/shared";
 import {
   extractResponseMessages,
   getChannelIdsParams,
-  parseMeridemTime,
+  parseMeridiemTime,
 } from "@src/@utils";
 
 function SearchResult() {
@@ -83,7 +83,7 @@ function SearchResult() {
               <MessageCard
                 key={id}
                 username={username}
-                date={parseMeridemTime(postedDate)}
+                date={parseMeridiemTime(postedDate)}
                 text={text}
                 thumbnail={userThumbnail}
                 isRemindedMessage={false}
