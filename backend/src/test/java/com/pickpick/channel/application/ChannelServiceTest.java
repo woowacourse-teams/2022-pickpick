@@ -14,6 +14,8 @@ import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
@@ -35,6 +37,9 @@ class ChannelServiceTest {
     private MemberRepository members;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private ChannelSubscriptionRepository channelSubscriptions;
 
     @Autowired
@@ -49,16 +54,17 @@ class ChannelServiceTest {
     @Test
     void findAll() {
         // given
-        Member yeonLog = members.save(new Member("U00001", "연로그", "https://yeonLog.png"));
+        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234"));
+        Member yeonLog = members.save(new Member("U00001", "연로그", "https://yeonLog.png", workspace));
 
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
-        Channel qna = channels.save(QNA.create());
+        Channel notice = channels.save(NOTICE.create(workspace));
+        Channel freeChat = channels.save(FREE_CHAT.create(workspace));
+        Channel qna = channels.save(QNA.create(workspace));
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
         // when
-        List<ChannelResponse> foundChannels = channelService.findAll(yeonLog.getId()).getChannels();
+        List<ChannelResponse> foundChannels = channelService.findByWorkspace(yeonLog.getId()).getChannels();
         List<Long> subscribedChannelIds = filterSubscribedChannelIds(foundChannels);
         List<Long> unsubscribedChannelIds = filterNotSubscribedChannelIds(foundChannels);
 

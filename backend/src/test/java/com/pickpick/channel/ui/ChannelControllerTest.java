@@ -26,7 +26,7 @@ class ChannelControllerTest extends DocsControllerTest {
     @Test
     void findAll() throws Exception {
         ChannelResponses channels = createChannelResponses();
-        when(channelService.findAll(anyLong()))
+        when(channelService.findByWorkspace(anyLong()))
                 .thenReturn(channels);
 
         ResultActions result = mockMvc.perform(get(CHANNEL_API_URL))

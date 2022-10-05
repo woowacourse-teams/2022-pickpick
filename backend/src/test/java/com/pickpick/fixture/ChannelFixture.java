@@ -1,6 +1,7 @@
 package com.pickpick.fixture;
 
 import com.pickpick.channel.domain.Channel;
+import com.pickpick.workspace.domain.Workspace;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,10 @@ public enum ChannelFixture {
 
     public Channel create() {
         return new Channel(slackId, name);
+    }
+
+    public Channel create(final Workspace workspace) {
+        return new Channel(slackId, name, workspace);
     }
 
     public boolean isSameSlackId(final String slackId) {
