@@ -87,7 +87,7 @@ export const getFullDateInformation: GetFullDateInformation = (givenDate) => {
 
 type GetMessagesDate = (postedDate: string) => string;
 
-// 메시지의 작성일자르 받아서 Dropdown 에 표시 될, MessageDate 를 반환한다.
+// 메시지의 작성일자르 받아서 Dropdown 에 표시 될, MessageDate 를 반환한다. (어제,오늘 혹은 날짜)
 export const getMessagesDate: GetMessagesDate = (postedDate) => {
   const givenDate = getFullDateInformation(new Date(postedDate));
   const today = getFullDateInformation(new Date());
