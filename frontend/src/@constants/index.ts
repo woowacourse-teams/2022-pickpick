@@ -13,6 +13,9 @@ export const MESSAGE = {
   LOGIN_SUCCESS: "로그인 되었습니다!",
   INVALID_SEARCH_CHANNELS: "채널을 하나 이상 선택 후 검색 버튼을 눌러주세요.",
   INVALID_SEARCH_KEYWORD: "검색할 키워드를 입력하신 후 검색 버튼을 눌러주세요.",
+  INVALID_REMINDER_TIME:
+    "리마인더 시간은 현재 시간보다 미래로 설정해주셔야 합니다.",
+  CONFIRM_REMINDER_REMOVE: "해당하는 메시지 리마인더를 정말 삭제하시겠습니까?",
 } as const;
 
 export const SNACKBAR_STATUS = {

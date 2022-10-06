@@ -2,6 +2,7 @@ import { useMutation } from "react-query";
 
 import useSnackbar from "@src/hooks/useSnackbar";
 
+import { MESSAGE } from "@src/@constants";
 import {
   ISOConverter,
   Meridiem,
@@ -100,9 +101,7 @@ function useMutateReminder({
         minute,
       })
     ) {
-      openFailureSnackbar(
-        "리마인더 시간은 현재 시간보다 미래로 설정해주셔야 합니다."
-      );
+      openFailureSnackbar(MESSAGE.INVALID_REMINDER_TIME);
 
       return;
     }
@@ -145,9 +144,7 @@ function useMutateReminder({
         minute,
       })
     ) {
-      openFailureSnackbar(
-        "리마인더 시간은 현재 시간보다 미래로 설정해주셔야 합니다."
-      );
+      openFailureSnackbar(MESSAGE.INVALID_REMINDER_TIME);
 
       return;
     }
@@ -164,7 +161,7 @@ function useMutateReminder({
   };
 
   const handleRemoveReminder = async (messageId: number) => {
-    if (window.confirm("해당하는 메시지 리마인더를 정말 삭제하시겠습니까?")) {
+    if (window.confirm(MESSAGE.CONFIRM_REMINDER_REMOVE)) {
       removeReminder(messageId);
     }
   };
