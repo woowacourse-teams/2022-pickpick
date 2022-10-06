@@ -240,7 +240,7 @@ interface IsInvalidateDateTimeProps {
   minute: number;
 }
 
-export const isInvalidateDateTime = ({
+export const isValidReminderTime = ({
   checkedYear,
   checkedMonth,
   checkedDate,

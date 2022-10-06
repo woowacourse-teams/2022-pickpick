@@ -8,7 +8,7 @@ import {
   Meridiem,
   getFullDateInformation,
   getFullHourFromMeridiemHour,
-  isInvalidateDateTime,
+  isValidReminderTime,
 } from "@src/@utils/date";
 
 import { deleteReminder, postReminder, putReminder } from "@src/api/reminders";
@@ -88,7 +88,7 @@ function useMutateReminder({
       checkedMeridiem
     );
     if (
-      isInvalidateDateTime({
+      !isValidReminderTime({
         checkedYear,
         checkedMonth,
         checkedDate,
@@ -131,7 +131,7 @@ function useMutateReminder({
       checkedMeridiem
     );
     if (
-      isInvalidateDateTime({
+      !isValidReminderTime({
         checkedYear,
         checkedMonth,
         checkedDate,
@@ -160,7 +160,7 @@ function useMutateReminder({
     });
   };
 
-  const handleRemoveReminder = async (messageId: number) => {
+  const handleRemoveReminder = (messageId: number) => {
     if (window.confirm(MESSAGE.CONFIRM_REMINDER_REMOVE)) {
       removeReminder(messageId);
     }
