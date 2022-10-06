@@ -57,7 +57,6 @@ function DatePicker({
               <Styled.TextOptionContainer>
                 <Styled.TextOptionsWrapper ref={yearRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={false}
                     optionTexts={years}
                     unit="년"
                     checkedText={checkedYear}
@@ -67,7 +66,6 @@ function DatePicker({
 
                 <Styled.TextOptionsWrapper ref={monthRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={true}
                     optionTexts={months}
                     unit="월"
                     checkedText={checkedMonth}
@@ -77,7 +75,6 @@ function DatePicker({
 
                 <Styled.TextOptionsWrapper ref={dateRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={true}
                     optionTexts={dates}
                     unit="일"
                     checkedText={checkedDate}

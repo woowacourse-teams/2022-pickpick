@@ -58,7 +58,6 @@ function TimePicker({
               <Styled.TextOptionContainer>
                 <Styled.TextOptionsWrapper ref={meridiemRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={false}
                     optionTexts={[MERIDIEM.AM, MERIDIEM.PM]}
                     checkedText={checkedMeridiem}
                     handleChangeText={handleChangeMeridiem}
@@ -68,7 +67,6 @@ function TimePicker({
                 {checkedMeridiem === MERIDIEM.AM && (
                   <Styled.TextOptionsWrapper ref={AMHourRef}>
                     <DateTimePickerOptions
-                      needZeroPaddingStart={true}
                       optionTexts={AMHours}
                       unit="시"
                       checkedText={checkedHour}
@@ -80,7 +78,6 @@ function TimePicker({
                 {checkedMeridiem === MERIDIEM.PM && (
                   <Styled.TextOptionsWrapper ref={PMHourRef}>
                     <DateTimePickerOptions
-                      needZeroPaddingStart={true}
                       optionTexts={PMHours}
                       unit="시"
                       checkedText={checkedHour}
@@ -91,7 +88,6 @@ function TimePicker({
 
                 <Styled.TextOptionsWrapper ref={minuteRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={true}
                     optionTexts={minutes}
                     unit="분"
                     checkedText={checkedMinute}
