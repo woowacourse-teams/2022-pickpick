@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 import useSnackbar from "@src/hooks/useSnackbar";
 
-import { MESSAGES, PATH_NAME } from "@src/@constants";
+import { MESSAGE, PATH_NAME } from "@src/@constants";
 import { ACCESS_TOKEN_KEY, QUERY_KEY } from "@src/@constants/api";
 import { deleteCookie, setCookie } from "@src/@utils";
 
@@ -22,7 +22,7 @@ function useAuthentication(): UseAuthenticationResult {
   const login = (token: string, isFirstLogin: boolean) => {
     setCookie(ACCESS_TOKEN_KEY, token);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
-    openSuccessSnackbar(MESSAGES.LOGIN_SUCCESS);
+    openSuccessSnackbar(MESSAGE.LOGIN_SUCCESS);
     if (isFirstLogin) {
       navigate(PATH_NAME.ADD_CHANNEL);
       return;
