@@ -4,16 +4,11 @@ import {
   DAY,
   MERIDIEM,
   NOON,
+  TIME_UNIT,
 } from "@src/@constants/date";
-import { Range, ValueOf } from "@src/@types/utils";
+import { Meridiem, MeridiemHours, StandardHours } from "@src/@types/date";
 
-export type Meridiem = ValueOf<typeof MERIDIEM>;
-
-export type Hours = Range<0, 24>;
-
-export type MeridiemHours = Range<1, 13>;
-
-export type GetTimeWithMeridiem = (time: Hours) => {
+export type GetTimeWithMeridiem = (time: StandardHours) => {
   meridiem: Meridiem;
   hour: MeridiemHours;
 };
@@ -35,7 +30,7 @@ type ParseMeridiemTime = (date: string) => string;
 
 export const parseMeridiemTime: ParseMeridiemTime = (date) => {
   const dateInstance = new Date(date);
-  const hour = dateInstance.getHours() as Range<0, 24>;
+  const hour = dateInstance.getHours() as StandardHours;
   const minute = dateInstance.getMinutes();
   const { meridiem, hour: parsedHour } = getTimeWithMeridiem(hour);
 
@@ -76,22 +71,22 @@ export const ISOConverter = (date: string, time?: string): string => {
   )}${CONVERTER_SUFFIX}`;
 };
 
-type getFullDateInformation = (givenDate: Date) => {
+type GetFullDateInformation = (givenDate: Date) => {
   year: number;
   month: number;
   date: number;
   day: string;
-  hour: number;
+  hour: StandardHours;
   minute: number;
 };
 
 // date 객체를 받아서, 해당 date 객체의 전체 시간 정보를 반환한다.
-export const getFullDateInformation: getFullDateInformation = (givenDate) => {
+export const getFullDateInformation: GetFullDateInformation = (givenDate) => {
   const year = givenDate.getFullYear();
   const month = givenDate.getMonth() + 1;
   const date = givenDate.getDate();
   const day = "월요일";
-  const hour = givenDate.getHours();
+  const hour = givenDate.getHours() as StandardHours;
   const minute = givenDate.getMinutes();
 
   return { year, month, date, day, hour, minute };
@@ -117,20 +112,12 @@ export const getMessagesDate: GetMessagesDate = (postedDate) => {
   )
     return DATE.YESTERDAY;
 
-  return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
+  return `${givenDate.month}${TIME_UNIT.MONTH} ${givenDate.date}${TIME_UNIT.DATE} ${givenDate.day}`;
 };
 
-type getTimeOption = () => Record<"AMHours" | "PMHours" | "minutes", number[]>;
+type GetTimeOption = () => Record<"AMHours" | "PMHours" | "minutes", number[]>;
 
-// {
-//   // meridiems: ["오전", "오후"];
-//   // AMHours: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-//   // PMHours: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-//   // minutes: ["00", "10", "20", "30", "40", "50"];
-
-// };
-
-export const getTimeOption: getTimeOption = () => {
+export const getTimeOption: GetTimeOption = () => {
   const AMHours = Array.from({ length: 12 }, (_, index) => index);
   const PMHours = Array.from({ length: 12 }, (_, index) => {
     if (index === 0) return 12;
@@ -146,10 +133,10 @@ export const getTimeOption: getTimeOption = () => {
   };
 };
 
-type getFutureDateOption = () => Record<"years" | "months" | "dates", number[]>;
+type GetFutureDateOption = () => Record<"years" | "months" | "dates", number[]>;
 
 // 오늘 기준으로 미래의 날짜 옵션 years, months, dates 를 반환한다.
-export const getFutureDateOption = () => {
+export const getFutureDateOption: GetFutureDateOption = () => {
   const { year, month } = getFullDateInformation(new Date());
   const { date: lastDate } = getFullDateInformation(new Date(year, month, 0));
 
@@ -164,18 +151,18 @@ export const getFutureDateOption = () => {
   };
 };
 
-type getMeridiemTimeFromISO = (ISODateTime: string) => {
+type GetMeridiemTimeFromISO = (ISODateTime: string) => {
   meridiem: Meridiem;
   meridiemHour: MeridiemHours;
   minute: number;
 };
 
 // ISO 시간을 받아서 MeridiemTime 을 반환한다.
-export const getMeridiemTimeFromISO: getMeridiemTimeFromISO = (ISODateTime) => {
+export const getMeridiemTimeFromISO: GetMeridiemTimeFromISO = (ISODateTime) => {
   const [_, fullTime] = ISODateTime.split("T");
   const [hour, minute] = fullTime.split(":");
   const { meridiem: meridiem, hour: meridiemHour } = getTimeWithMeridiem(
-    Number(hour) as Hours
+    Number(hour) as StandardHours
   );
 
   return {
@@ -185,11 +172,11 @@ export const getMeridiemTimeFromISO: getMeridiemTimeFromISO = (ISODateTime) => {
   };
 };
 
-type getDateFromISO = (
+type GetDateFromISO = (
   ISODateTime: string
 ) => Record<"year" | "month" | "date", number>;
 
-export const getDateFromISO: getDateFromISO = (ISODateTime) => {
+export const getDateFromISO: GetDateFromISO = (ISODateTime) => {
   const [fullDate] = ISODateTime.split("T");
   const [year, month, date] = fullDate.split("-");
 
@@ -200,7 +187,7 @@ export const getDateFromISO: getDateFromISO = (ISODateTime) => {
   };
 };
 
-type getTimeWithTenMinuteIntervals = ({
+type GetTimeWithTenMinuteIntervals = ({
   hour,
   minute,
 }: {
@@ -209,7 +196,7 @@ type getTimeWithTenMinuteIntervals = ({
 }) => Record<"parsedHour" | "parsedMinute", number>;
 
 // hour 와 minute (Meridiem 기준) 을 받아서 10분 단위 간격으로 반환해준다.
-export const getTimeWithTenMinuteIntervals: getTimeWithTenMinuteIntervals = ({
+export const getTimeWithTenMinuteIntervals: GetTimeWithTenMinuteIntervals = ({
   hour,
   minute,
 }) => {
@@ -220,13 +207,13 @@ export const getTimeWithTenMinuteIntervals: getTimeWithTenMinuteIntervals = ({
   return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
 };
 
-type isValidMeridiem = (value: string) => boolean;
+type IsValidMeridiem = (value: string) => boolean;
 
-export const isValidMeridiem: isValidMeridiem = (value) => {
+export const isValidMeridiem: IsValidMeridiem = (value) => {
   return value === MERIDIEM.AM || value === MERIDIEM.PM;
 };
 
-interface IsInvalidateDateTimeProps {
+interface IsValidReminderTime {
   checkedYear: number;
   checkedMonth: number;
   checkedDate: number;
@@ -250,7 +237,7 @@ export const isValidReminderTime = ({
   date,
   hour,
   minute,
-}: IsInvalidateDateTimeProps) => {
+}: IsValidReminderTime) => {
   if (checkedYear < year) return true;
   if (checkedYear <= year && checkedMonth < month) return true;
   if (checkedYear <= year && checkedMonth <= month && checkedDate < date)
@@ -276,10 +263,15 @@ export const isValidReminderTime = ({
   return false;
 };
 
-export const getFullHourFromMeridiemHour = (
+type GetFullHourFormMeridiemHour = (
   meridiemHour: number,
   meridiem: Meridiem
-): number => {
+) => number;
+
+export const getFullHourFromMeridiemHour: GetFullHourFormMeridiemHour = (
+  meridiemHour,
+  meridiem
+) => {
   if (meridiem === MERIDIEM.PM) {
     return meridiemHour === 12 ? 12 : meridiemHour + 12;
   }

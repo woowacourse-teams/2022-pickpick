@@ -10,9 +10,8 @@ import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
 import { MERIDIEM, NOON } from "@src/@constants/date";
+import { Meridiem } from "@src/@types/date";
 import {
-  Hours,
-  Meridiem,
   getFullDateInformation,
   getMeridiemTimeFromISO,
   getTimeWithMeridiem,
@@ -40,7 +39,7 @@ interface UseTimePickerResult {
 
 function useTimePicker({ remindDate }: Props): UseTimePickerResult {
   const { hour, minute } = getFullDateInformation(new Date());
-  const { meridiem, hour: meridiemHour } = getTimeWithMeridiem(hour as Hours);
+  const { meridiem, hour: meridiemHour } = getTimeWithMeridiem(hour);
 
   const { parsedHour, parsedMinute } = getTimeWithTenMinuteIntervals({
     hour: meridiemHour,

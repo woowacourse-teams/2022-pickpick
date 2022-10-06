@@ -8,7 +8,8 @@ import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/Dat
 
 import { MERIDIEM, TIME_UNIT } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
-import { Meridiem, getTimeOption } from "@src/@utils/date";
+import { Meridiem } from "@src/@types/date";
+import { getTimeOption } from "@src/@utils/date";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;
