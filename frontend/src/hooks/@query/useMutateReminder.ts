@@ -4,8 +4,9 @@ import useSnackbar from "@src/hooks/useSnackbar";
 
 import {
   ISOConverter,
+  Meridiem,
   getFullDateInformation,
-  getReplaceDateTime,
+  getFullHourFromMeridiemHour,
   isInvalidateDateTime,
 } from "@src/@utils/date";
 
@@ -13,12 +14,12 @@ import { deleteReminder, postReminder, putReminder } from "@src/api/reminders";
 
 interface HandlerProps {
   messageId: number;
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
+  checkedYear: number;
+  checkedMonth: number;
+  checkedDate: number;
+  checkedMeridiem: Meridiem;
+  checkedHour: number;
+  checkedMinute: number;
 }
 
 interface Props {
@@ -81,28 +82,17 @@ function useMutateReminder({
     checkedHour,
     checkedMinute,
   }: HandlerProps) => {
-    const {
-      replaceCheckedYear,
-      replaceCheckedMonth,
-      replaceCheckedDate,
-      replaceCheckedHour,
-      replaceCheckedMinute,
-    } = getReplaceDateTime({
-      checkedYear,
-      checkedMonth,
-      checkedDate,
-      checkedMeridiem,
+    const parsedHour = getFullHourFromMeridiemHour(
       checkedHour,
-      checkedMinute,
-    });
-
+      checkedMeridiem
+    );
     if (
       isInvalidateDateTime({
-        checkedYear: replaceCheckedYear,
-        checkedMonth: replaceCheckedMonth,
-        checkedDate: replaceCheckedDate,
-        checkedHour: replaceCheckedHour,
-        checkedMinute: replaceCheckedMinute,
+        checkedYear,
+        checkedMonth,
+        checkedDate,
+        checkedHour: parsedHour,
+        checkedMinute,
         year,
         month,
         date,
@@ -118,8 +108,8 @@ function useMutateReminder({
     }
 
     const reminderISODateTime = ISOConverter(
-      `${replaceCheckedYear}-${replaceCheckedMonth}-${replaceCheckedDate}`,
-      `${replaceCheckedHour}:${replaceCheckedMinute}`
+      `${checkedYear}-${checkedMonth}-${checkedDate}`,
+      `${parsedHour}:${checkedMinute}`
     );
 
     addReminder({
@@ -137,28 +127,17 @@ function useMutateReminder({
     checkedHour,
     checkedMinute,
   }: HandlerProps) => {
-    const {
-      replaceCheckedYear,
-      replaceCheckedMonth,
-      replaceCheckedDate,
-      replaceCheckedHour,
-      replaceCheckedMinute,
-    } = getReplaceDateTime({
-      checkedYear,
-      checkedMonth,
-      checkedDate,
-      checkedMeridiem,
+    const parsedHour = getFullHourFromMeridiemHour(
       checkedHour,
-      checkedMinute,
-    });
-
+      checkedMeridiem
+    );
     if (
       isInvalidateDateTime({
-        checkedYear: replaceCheckedYear,
-        checkedMonth: replaceCheckedMonth,
-        checkedDate: replaceCheckedDate,
-        checkedHour: replaceCheckedHour,
-        checkedMinute: replaceCheckedMinute,
+        checkedYear,
+        checkedMonth,
+        checkedDate,
+        checkedHour: parsedHour,
+        checkedMinute,
         year,
         month,
         date,
@@ -174,8 +153,8 @@ function useMutateReminder({
     }
 
     const reminderISODateTime = ISOConverter(
-      `${replaceCheckedYear}-${replaceCheckedMonth}-${replaceCheckedDate}`,
-      `${replaceCheckedHour}:${replaceCheckedMinute}`
+      `${checkedYear}-${checkedMonth}-${checkedDate}`,
+      `${parsedHour}:${checkedMinute}`
     );
 
     modifyReminder({

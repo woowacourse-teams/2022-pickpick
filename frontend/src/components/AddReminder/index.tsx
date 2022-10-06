@@ -60,7 +60,7 @@ function AddReminder({
     <Styled.Container>
       <Styled.Title>리마인더 생성</Styled.Title>
 
-      {/* <DatePicker
+      <DatePicker
         yearRef={yearRef}
         monthRef={monthRef}
         dateRef={dateRef}
@@ -71,7 +71,7 @@ function AddReminder({
         handleChangeMonth={handleChangeMonth}
         handleChangeDate={handleChangeDate}
         handleResetDatePickerPosition={handleResetDatePickerPosition}
-      /> */}
+      />
 
       <TimePicker
         meridiemRef={meridiemRef}
@@ -95,7 +95,7 @@ function AddReminder({
         >
           {REMINDER_BUTTON_TEXT.CANCEL}
         </Styled.Button>
-        {/* 
+
         {!remindDate && (
           <Styled.Button
             text={REMINDER_BUTTON_TEXT.CREATE}
@@ -142,9 +142,9 @@ function AddReminder({
               })
             }
           >
-            {REMINDER_BUTTON_TEXT.MODIFY} */}
-        {/* </Styled.Button> */}
-        {/* )} */}
+            {REMINDER_BUTTON_TEXT.MODIFY}
+          </Styled.Button>
+        )}
       </FlexRow>
     </Styled.Container>
   );

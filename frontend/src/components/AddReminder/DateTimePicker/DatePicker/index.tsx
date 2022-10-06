@@ -6,7 +6,7 @@ import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/Da
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { generateDateOptions } from "@src/@utils/date";
+import { getFutureDateOption } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
@@ -14,9 +14,9 @@ interface Props {
   yearRef: RefObject<HTMLDivElement>;
   monthRef: RefObject<HTMLDivElement>;
   dateRef: RefObject<HTMLDivElement>;
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
+  checkedYear: number;
+  checkedMonth: number;
+  checkedDate: number;
   handleChangeYear: ChangeEventHandler<HTMLInputElement>;
   handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
   handleChangeDate: ChangeEventHandler<HTMLInputElement>;
@@ -38,16 +38,16 @@ function DatePicker({
   return (
     <Dropdown toggleHandler={handleResetDatePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
-        const { years, months, dates } = generateDateOptions();
+        const { years, months, dates } = getFutureDateOption();
+
         return (
           <FlexColumn marginBottom="10px" ref={innerRef}>
-            {/* <Styled.Subtitle>언제</Styled.Subtitle>
+            <Styled.Subtitle>언제</Styled.Subtitle>
 
             <DateTimePickerToggle
-              text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate.padStart(
-                2,
-                "0"
-              )}일`}
+              text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate
+                .toString()
+                .padStart(2, "0")}일`}
               handleToggleDropdown={handleToggleDropdown}
             >
               <CalendarIcon width="16px" height="16px" fill="#8B8B8B" />
@@ -85,7 +85,7 @@ function DatePicker({
                   />
                 </Styled.TextOptionsWrapper>
               </Styled.TextOptionContainer>
-            )} */}
+            )}
           </FlexColumn>
         );
       }}

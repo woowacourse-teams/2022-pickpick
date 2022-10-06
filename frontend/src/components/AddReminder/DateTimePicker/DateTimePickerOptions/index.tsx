@@ -1,12 +1,31 @@
 import { ChangeEventHandler } from "react";
 
-import { Meridiem, parsedOptionText } from "@src/@utils/date";
+import { Meridiem } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
+const parsePickerOptionText = ({
+  needZeroPaddingStart,
+  option,
+  unit,
+}: {
+  needZeroPaddingStart: boolean;
+  option: number | string;
+  unit?: string;
+}) => {
+  const unitPostfix = unit ? unit : "";
+  if (typeof option === "string") {
+    return `${option}${unitPostfix}`;
+  }
+  const optionText = option.toString();
+  return needZeroPaddingStart
+    ? `${optionText.padStart(2, "0")}${unitPostfix}`
+    : `${optionText}${unitPostfix}`;
+};
+
 interface Props {
   needZeroPaddingStart: boolean;
-  optionTexts: string[];
+  optionTexts: string[] | number[];
   unit?: "년" | "월" | "일" | "시" | "분";
   checkedText: Meridiem | number;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
@@ -30,13 +49,11 @@ function DateTimePickerOptions({
             checked={checkedText === optionText}
           />
           <Styled.TextOption>
-            {unit &&
-              `${parsedOptionText({
-                needZeroPaddingStart,
-                optionText,
-              })}${unit}`}
-
-            {!unit && parsedOptionText({ needZeroPaddingStart, optionText })}
+            {parsePickerOptionText({
+              needZeroPaddingStart,
+              option: optionText,
+              unit,
+            })}
           </Styled.TextOption>
         </Styled.Container>
       ))}

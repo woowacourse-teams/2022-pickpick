@@ -1,7 +1,5 @@
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
 
-// import { Hours } from "@src/@utils";
-
 interface Props<T> {
   initialValue: T;
   validation?: (value: any) => boolean;

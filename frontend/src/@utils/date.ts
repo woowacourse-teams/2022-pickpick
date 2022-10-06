@@ -121,25 +121,7 @@ export const getMessagesDate: GetMessagesDate = (postedDate) => {
   return `${givenDate.month}월 ${givenDate.date}일 ${givenDate.day}`;
 };
 
-type ParsedOptionText = ({
-  needZeroPaddingStart,
-  optionText,
-}: {
-  needZeroPaddingStart: boolean;
-  optionText: string;
-}) => string;
-
-export const parsedOptionText: ParsedOptionText = ({
-  needZeroPaddingStart,
-  optionText,
-}) => {
-  return needZeroPaddingStart ? optionText.padStart(2, "0") : optionText;
-};
-
-type GenerateTimeOptions = () => Record<
-  "meridiems" | "AMHours" | "PMHours" | "minutes",
-  string[]
->;
+type getTimeOption = () => Record<"AMHours" | "PMHours" | "minutes", number[]>;
 
 // {
 //   // meridiems: ["오전", "오후"];
@@ -149,39 +131,32 @@ type GenerateTimeOptions = () => Record<
 
 // };
 
-export const generateTimeOptions: GenerateTimeOptions = () => {
-  const meridiems = ["오전", "오후"];
-  const AMHours = Array.from({ length: 12 }, (_, index) => index.toString());
+export const getTimeOption: getTimeOption = () => {
+  const AMHours = Array.from({ length: 12 }, (_, index) => index);
   const PMHours = Array.from({ length: 12 }, (_, index) => {
-    if (index === 0) return "12";
+    if (index === 0) return 12;
 
-    return index.toString();
+    return index;
   });
-  const minutes = Array.from({ length: 6 }, (_, index) =>
-    (index * 10).toString()
-  );
+  const minutes = Array.from({ length: 6 }, (_, index) => index * 10);
 
   return {
-    meridiems,
     AMHours,
     PMHours,
     minutes,
   };
 };
 
-type GenerateDateOptions = () => Record<"years" | "months" | "dates", string[]>;
+type getFutureDateOption = () => Record<"years" | "months" | "dates", number[]>;
 
-export const generateDateOptions: GenerateDateOptions = () => {
+// 오늘 기준으로 미래의 날짜 옵션 years, months, dates 를 반환한다.
+export const getFutureDateOption = () => {
   const { year, month } = getFullDateInformation(new Date());
   const { date: lastDate } = getFullDateInformation(new Date(year, month, 0));
 
-  const years = [year, year + 1, year + 2].map((year) => year.toString());
-  const months = Array.from({ length: 12 }, (_, index) =>
-    (index + 1).toString()
-  );
-  const dates = Array.from({ length: lastDate }, (_, index) =>
-    (index + 1).toString()
-  );
+  const years = [year, year + 1, year + 2];
+  const months = Array.from({ length: 12 }, (_, index) => index + 1);
+  const dates = Array.from({ length: lastDate }, (_, index) => index + 1);
 
   return {
     years,
@@ -211,18 +186,18 @@ export const getMeridiemTimeFormISO: getMeridiemTimeFormISO = (ISODateTime) => {
   };
 };
 
-type ParseDate = (
+type getDateFromISO = (
   ISODateTime: string
-) => Record<"year" | "month" | "date", string>;
+) => Record<"year" | "month" | "date", number>;
 
-export const parseDate: ParseDate = (ISODateTime) => {
+export const getDateFromISO: getDateFromISO = (ISODateTime) => {
   const [fullDate] = ISODateTime.split("T");
   const [year, month, date] = fullDate.split("-");
 
   return {
-    year,
-    month,
-    date,
+    year: Number(year),
+    month: Number(month),
+    date: Number(date),
   };
 };
 
@@ -302,49 +277,13 @@ export const isInvalidateDateTime = ({
   return false;
 };
 
-export const convertMeridiemHourToStandardHour = (
-  meridiem: string,
-  meridiemHour: number
+export const getFullHourFromMeridiemHour = (
+  meridiemHour: number,
+  meridiem: Meridiem
 ): number => {
-  if (meridiem === "오후") {
+  if (meridiem === MERIDIEM.PM) {
     return meridiemHour === 12 ? 12 : meridiemHour + 12;
   }
 
   return meridiemHour;
-};
-
-interface GetReplaceDateTimeProps {
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
-}
-
-export const getReplaceDateTime = ({
-  checkedYear,
-  checkedMonth,
-  checkedDate,
-  checkedMeridiem,
-  checkedHour,
-  checkedMinute,
-}: GetReplaceDateTimeProps) => {
-  const replaceCheckedYear = Number(checkedYear.replace("년", ""));
-  const replaceCheckedMonth = Number(checkedMonth.replace("월", ""));
-  const replaceCheckedDate = Number(checkedDate.replace("일", ""));
-
-  const replaceCheckedHour = convertMeridiemHourToStandardHour(
-    checkedMeridiem,
-    Number(checkedHour.replace("시", ""))
-  );
-  const replaceCheckedMinute = Number(checkedMinute.replace("분", ""));
-
-  return {
-    replaceCheckedYear,
-    replaceCheckedMonth,
-    replaceCheckedDate,
-    replaceCheckedHour,
-    replaceCheckedMinute,
-  };
 };

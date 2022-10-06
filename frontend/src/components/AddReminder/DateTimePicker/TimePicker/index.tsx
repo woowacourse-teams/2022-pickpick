@@ -8,7 +8,7 @@ import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/Dat
 
 import { MERIDIEM } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
-import { Meridiem, generateTimeOptions } from "@src/@utils/date";
+import { Meridiem, getTimeOption } from "@src/@utils/date";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;
@@ -40,7 +40,7 @@ function TimePicker({
   return (
     <Dropdown toggleHandler={handleResetTimePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
-        const { meridiems, AMHours, PMHours, minutes } = generateTimeOptions();
+        const { AMHours, PMHours, minutes } = getTimeOption();
 
         return (
           <FlexColumn ref={innerRef}>
@@ -59,7 +59,7 @@ function TimePicker({
                 <Styled.TextOptionsWrapper ref={meridiemRef}>
                   <DateTimePickerOptions
                     needZeroPaddingStart={false}
-                    optionTexts={meridiems}
+                    optionTexts={[MERIDIEM.AM, MERIDIEM.PM]}
                     checkedText={checkedMeridiem}
                     handleChangeText={handleChangeMeridiem}
                   />
