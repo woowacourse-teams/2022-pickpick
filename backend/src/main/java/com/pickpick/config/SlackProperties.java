@@ -11,9 +11,6 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 public class SlackProperties {
 
     @NotBlank
-    private final String botToken;
-
-    @NotBlank
     private final String clientId;
 
     @NotBlank
@@ -22,9 +19,7 @@ public class SlackProperties {
     @NotBlank
     private final String redirectUrl;
 
-    public SlackProperties(final String botToken, final String clientId, final String clientSecret,
-                           final String redirectUrl) {
-        this.botToken = botToken;
+    public SlackProperties(final String clientId, final String clientSecret, final String redirectUrl) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUrl = redirectUrl;
