@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import useSnackbar from "@src/hooks/useSnackbar";
 
 import { PATH_NAME } from "@src/@constants";
+import { SEARCH_PARAMS } from "@src/@constants/api";
 
 interface Props {
   keyword: string;
@@ -50,9 +51,11 @@ function useSubmitSearchForm({ keyword }: Props): ReturnType {
       }
 
       navigate(
-        `${
-          PATH_NAME.SEARCH_RESULT
-        }?keyword=${searchKeyword}&channelIds=${selectedChannelIds.join(",")}`
+        `${PATH_NAME.SEARCH_RESULT}?${
+          SEARCH_PARAMS.SEARCH_KEYWORD
+        }=${searchKeyword}&${
+          SEARCH_PARAMS.SEARCH_CHANNEL_IDS
+        }=${selectedChannelIds.join(",")}`
       );
     };
 

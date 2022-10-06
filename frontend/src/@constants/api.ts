@@ -23,3 +23,8 @@ export const API_ENDPOINT = {
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";
 
 export const SLACK_LOGIN_URL = `https://slack.com/oauth/v2/authorize?scope=users:read&user_scope=identity.basic&redirect_uri=${process.env.SLACK_REDIRECT_URL}&client_id=${process.env.SLACK_CLIENT_ID}`;
+
+export const SEARCH_PARAMS = {
+  SEARCH_KEYWORD: "keyword",
+  SEARCH_CHANNEL_IDS: "channelIds",
+};
