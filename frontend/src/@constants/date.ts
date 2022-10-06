@@ -13,10 +13,12 @@ export const MERIDIEM = {
 
 export const NOON = 12;
 
-export const TIME = {
-  AM: "오전",
-  PM: "오후",
-  NOON: 12,
+export const TIME_UNIT = {
+  YEAR: "년",
+  MONTH: "월",
+  DATE: "일",
+  HOUR: "시",
+  MINUTE: "분",
 } as const;
 
 export const CONVERTER_SUFFIX = "T23:59:59";

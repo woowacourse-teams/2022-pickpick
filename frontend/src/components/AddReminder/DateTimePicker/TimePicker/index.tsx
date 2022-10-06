@@ -6,7 +6,7 @@ import * as Styled from "@src/components/AddReminder/DateTimePicker/DatePicker/s
 import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
-import { MERIDIEM } from "@src/@constants/date";
+import { MERIDIEM, TIME_UNIT } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
 import { Meridiem, getTimeOption } from "@src/@utils/date";
 
@@ -48,7 +48,7 @@ function TimePicker({
             <DateTimePickerToggle
               text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute
                 .toString()
-                .padStart(2, "0")}분`}
+                .padStart(2, "0")}${TIME_UNIT.MINUTE}`}
               handleToggleDropdown={handleToggleDropdown}
             >
               <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />
@@ -68,7 +68,7 @@ function TimePicker({
                   <Styled.TextOptionsWrapper ref={AMHourRef}>
                     <DateTimePickerOptions
                       optionTexts={AMHours}
-                      unit="시"
+                      unit={TIME_UNIT.HOUR}
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
                     />
@@ -79,7 +79,7 @@ function TimePicker({
                   <Styled.TextOptionsWrapper ref={PMHourRef}>
                     <DateTimePickerOptions
                       optionTexts={PMHours}
-                      unit="시"
+                      unit={TIME_UNIT.HOUR}
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
                     />
@@ -89,7 +89,7 @@ function TimePicker({
                 <Styled.TextOptionsWrapper ref={minuteRef}>
                   <DateTimePickerOptions
                     optionTexts={minutes}
-                    unit="분"
+                    unit={TIME_UNIT.MINUTE}
                     checkedText={checkedMinute}
                     handleChangeText={handleChangeMinute}
                   />

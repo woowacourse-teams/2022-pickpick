@@ -1,5 +1,7 @@
 import { ChangeEventHandler } from "react";
 
+import { TIME_UNIT } from "@src/@constants/date";
+import { ValueOf } from "@src/@types/utils";
 import { Meridiem } from "@src/@utils/date";
 
 import * as Styled from "./style";
@@ -19,9 +21,10 @@ const parsePickerOptionText = ({
   return `${optionText.toString().padStart(2, "0")}${unitPostfix}`;
 };
 
+type TimeUnit = ValueOf<typeof TIME_UNIT>;
 interface Props {
   optionTexts: string[] | number[];
-  unit?: "년" | "월" | "일" | "시" | "분";
+  unit?: TimeUnit;
   checkedText: Meridiem | number;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }

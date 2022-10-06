@@ -4,7 +4,6 @@ import {
   DAY,
   MERIDIEM,
   NOON,
-  TIME,
 } from "@src/@constants/date";
 import { Range, ValueOf } from "@src/@types/utils";
 
@@ -21,13 +20,13 @@ export type GetTimeWithMeridiem = (time: Hours) => {
 
 // 일반 시간을 받아서 오전,오후 시간으로 바꾸어준다.
 export const getTimeWithMeridiem: GetTimeWithMeridiem = (time) => {
-  if (time < TIME.NOON)
+  if (time < NOON)
     return { meridiem: MERIDIEM.AM, hour: time as MeridiemHours };
 
-  if (time === TIME.NOON)
-    return { meridiem: MERIDIEM.PM, hour: TIME.NOON as MeridiemHours };
+  if (time === NOON)
+    return { meridiem: MERIDIEM.PM, hour: NOON as MeridiemHours };
   return {
-    meridiem: TIME.PM,
+    meridiem: MERIDIEM.PM,
     hour: (time - NOON) as MeridiemHours,
   };
 };

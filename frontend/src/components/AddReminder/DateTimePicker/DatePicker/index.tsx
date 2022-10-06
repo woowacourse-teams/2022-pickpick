@@ -5,6 +5,7 @@ import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
 import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
+import { TIME_UNIT } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
 import { getFutureDateOption } from "@src/@utils/date";
 
@@ -45,9 +46,9 @@ function DatePicker({
             <Styled.Subtitle>언제</Styled.Subtitle>
 
             <DateTimePickerToggle
-              text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate
-                .toString()
-                .padStart(2, "0")}일`}
+              text={`${checkedYear}${TIME_UNIT.YEAR} ${checkedMonth}${
+                TIME_UNIT.MONTH
+              } ${checkedDate.toString().padStart(2, "0")}${TIME_UNIT.DATE}`}
               handleToggleDropdown={handleToggleDropdown}
             >
               <CalendarIcon width="16px" height="16px" fill="#8B8B8B" />
@@ -58,7 +59,7 @@ function DatePicker({
                 <Styled.TextOptionsWrapper ref={yearRef}>
                   <DateTimePickerOptions
                     optionTexts={years}
-                    unit="년"
+                    unit={TIME_UNIT.YEAR}
                     checkedText={checkedYear}
                     handleChangeText={handleChangeYear}
                   />
@@ -67,7 +68,7 @@ function DatePicker({
                 <Styled.TextOptionsWrapper ref={monthRef}>
                   <DateTimePickerOptions
                     optionTexts={months}
-                    unit="월"
+                    unit={TIME_UNIT.MONTH}
                     checkedText={checkedMonth}
                     handleChangeText={handleChangeMonth}
                   />
@@ -76,7 +77,7 @@ function DatePicker({
                 <Styled.TextOptionsWrapper ref={dateRef}>
                   <DateTimePickerOptions
                     optionTexts={dates}
-                    unit="일"
+                    unit={TIME_UNIT.DATE}
                     checkedText={checkedDate}
                     handleChangeText={handleChangeDate}
                   />
