@@ -11,24 +11,6 @@ import { Range } from "@src/@types/utils";
 
 import { isString } from ".";
 
-export type GetTimeWithMeridiem = (time: StandardHours) => {
-  meridiem: Meridiem;
-  hour: MeridiemHours;
-};
-
-// 일반 시간(Standard) 을 받아서 오전,오후 시간(Meridiem) 을 반환한다.
-export const getTimeWithMeridiem: GetTimeWithMeridiem = (time) => {
-  if (time < NOON)
-    return { meridiem: MERIDIEM.AM, hour: time as MeridiemHours };
-
-  if (time === NOON)
-    return { meridiem: MERIDIEM.PM, hour: NOON as MeridiemHours };
-  return {
-    meridiem: MERIDIEM.PM,
-    hour: (time - NOON) as MeridiemHours,
-  };
-};
-
 /**
  * TODO: 함수 분리
  */
@@ -85,9 +67,25 @@ export const getFullDateInformation: GetFullDateInformation = (givenDate) => {
   return { year, month, date, day, hour, minute };
 };
 
+type GetDateFromISO = (
+  ISODateTime: string
+) => Record<"year" | "month" | "date", number>;
+
+// ISO 형식으로 받은 date 정보로 Date 날짜를 반환한다. (year, month, date)
+export const getDateFromISO: GetDateFromISO = (ISODateTime) => {
+  const [fullDate] = ISODateTime.split("T");
+  const [year, month, date] = fullDate.split("-");
+
+  return {
+    year: Number(year),
+    month: Number(month),
+    date: Number(date),
+  };
+};
+
 type GetMessagesDate = (postedDate: string) => string;
 
-// 메시지의 작성일자르 받아서 Dropdown 에 표시 될, MessageDate 를 반환한다. (어제,오늘 혹은 날짜)
+// 메시지의 작성일자를 받아서 Dropdown 에 표시 될, MessageDate 를 반환한다. (어제,오늘 혹은 날짜)
 export const getMessagesDate: GetMessagesDate = (postedDate) => {
   const givenDate = getFullDateInformation(new Date(postedDate));
   const today = getFullDateInformation(new Date());
@@ -127,6 +125,25 @@ export const getFutureDateOption: GetFutureDateOption = () => {
   };
 };
 
+export type getMeridiemHourFromStandardHour = (time: StandardHours) => {
+  meridiem: Meridiem;
+  hour: MeridiemHours;
+};
+
+// 일반 시간(Standard) 을 받아서 오전,오후 시간(Meridiem) 을 반환한다.
+export const getMeridiemHourFromStandardHour: getMeridiemHourFromStandardHour =
+  (time) => {
+    if (time < NOON)
+      return { meridiem: MERIDIEM.AM, hour: time as MeridiemHours };
+
+    if (time === NOON)
+      return { meridiem: MERIDIEM.PM, hour: NOON as MeridiemHours };
+    return {
+      meridiem: MERIDIEM.PM,
+      hour: (time - NOON) as MeridiemHours,
+    };
+  };
+
 type GetMeridiemTimeFromISO = (ISODateTime: string) => {
   meridiem: Meridiem;
   meridiemHour: MeridiemHours;
@@ -137,29 +154,13 @@ type GetMeridiemTimeFromISO = (ISODateTime: string) => {
 export const getMeridiemTimeFromISO: GetMeridiemTimeFromISO = (ISODateTime) => {
   const [_, fullTime] = ISODateTime.split("T");
   const [hour, minute] = fullTime.split(":");
-  const { meridiem: meridiem, hour: meridiemHour } = getTimeWithMeridiem(
-    Number(hour) as StandardHours
-  );
+  const { meridiem: meridiem, hour: meridiemHour } =
+    getMeridiemHourFromStandardHour(Number(hour) as StandardHours);
 
   return {
     meridiem,
     meridiemHour,
     minute: Number(minute),
-  };
-};
-
-type GetDateFromISO = (
-  ISODateTime: string
-) => Record<"year" | "month" | "date", number>;
-
-export const getDateFromISO: GetDateFromISO = (ISODateTime) => {
-  const [fullDate] = ISODateTime.split("T");
-  const [year, month, date] = fullDate.split("-");
-
-  return {
-    year: Number(year),
-    month: Number(month),
-    date: Number(date),
   };
 };
 
@@ -171,7 +172,7 @@ type GetTimeWithTenMinuteIntervals = ({
   minute: number;
 }) => Record<"parsedHour" | "parsedMinute", number>;
 
-// hour 와 minute (Meridiem 기준) 을 받아서 10분 단위 간격으로 반환해준다.
+// hour 와 minute (Meridiem 기준) 을 받아서 10분 단위 간격으로 반환한다.
 export const getTimeWithTenMinuteIntervals: GetTimeWithTenMinuteIntervals = ({
   hour,
   minute,

@@ -13,8 +13,8 @@ import { MERIDIEM, NOON } from "@src/@constants/date";
 import { Meridiem } from "@src/@types/date";
 import {
   getFullDateInformation,
+  getMeridiemHourFromStandardHour,
   getMeridiemTimeFromISO,
-  getTimeWithMeridiem,
   getTimeWithTenMinuteIntervals,
   isValidMeridiem,
 } from "@src/@utils/date";
@@ -39,7 +39,8 @@ interface UseTimePickerResult {
 
 function useTimePicker({ remindDate }: Props): UseTimePickerResult {
   const { hour, minute } = getFullDateInformation(new Date());
-  const { meridiem, hour: meridiemHour } = getTimeWithMeridiem(hour);
+  const { meridiem, hour: meridiemHour } =
+    getMeridiemHourFromStandardHour(hour);
 
   const { parsedHour, parsedMinute } = getTimeWithTenMinuteIntervals({
     hour: meridiemHour,
