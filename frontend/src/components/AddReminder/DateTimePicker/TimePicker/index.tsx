@@ -10,6 +10,7 @@ import { MERIDIEM, TIME_UNIT } from "@src/@constants/date";
 import { AM_HOURS, MINUTES, PM_HOURS } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
 import { Meridiem } from "@src/@types/date";
+import { parsePickerOptionText } from "@src/@utils/date";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;
@@ -45,9 +46,17 @@ function TimePicker({
           <FlexColumn ref={innerRef}>
             <Styled.Subtitle>시간</Styled.Subtitle>
             <DateTimePickerToggle
-              text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute
-                .toString()
-                .padStart(2, "0")}${TIME_UNIT.MINUTE}`}
+              text={`
+              ${checkedMeridiem}
+              ${parsePickerOptionText({
+                optionText: checkedHour,
+                unit: TIME_UNIT.HOUR,
+              })}
+              ${parsePickerOptionText({
+                optionText: checkedMinute,
+                unit: TIME_UNIT.MINUTE,
+              })}
+              `}
               handleToggleDropdown={handleToggleDropdown}
             >
               <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />

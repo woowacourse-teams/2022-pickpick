@@ -9,6 +9,8 @@ import {
 import { Meridiem, MeridiemHours, StandardHours } from "@src/@types/date";
 import { Range } from "@src/@types/utils";
 
+import { isString } from ".";
+
 export type GetTimeWithMeridiem = (time: StandardHours) => {
   meridiem: Meridiem;
   hour: MeridiemHours;
@@ -202,6 +204,21 @@ export const parseMessageDateFromISO: ParseMessageDateFromISO = (date) => {
   const { meridiem, meridiemHour, minute } = getMeridiemTimeFromISO(date);
 
   return `${meridiem} ${meridiemHour}:${minute.toString().padStart(2, "0")}`;
+};
+
+export const parsePickerOptionText = ({
+  optionText,
+  unit,
+}: {
+  optionText: number | string;
+  unit?: string;
+}) => {
+  const unitPostfix = unit ? unit : "";
+  if (isString(optionText)) {
+    return `${optionText}${unitPostfix}`;
+  }
+
+  return `${optionText.toString().padStart(2, "0")}${unitPostfix}`;
 };
 
 type IsValidMeridiem = (value: string) => boolean;

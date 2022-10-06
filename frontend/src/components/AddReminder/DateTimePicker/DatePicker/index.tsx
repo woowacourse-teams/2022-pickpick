@@ -7,7 +7,7 @@ import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/Dat
 
 import { TIME_UNIT } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
-import { getFutureDateOption } from "@src/@utils/date";
+import { getFutureDateOption, parsePickerOptionText } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
@@ -46,9 +46,19 @@ function DatePicker({
             <Styled.Subtitle>언제</Styled.Subtitle>
 
             <DateTimePickerToggle
-              text={`${checkedYear}${TIME_UNIT.YEAR} ${checkedMonth}${
-                TIME_UNIT.MONTH
-              } ${checkedDate.toString().padStart(2, "0")}${TIME_UNIT.DATE}`}
+              text={`
+              ${parsePickerOptionText({
+                optionText: checkedYear,
+                unit: TIME_UNIT.YEAR,
+              })} 
+              ${parsePickerOptionText({
+                optionText: checkedMonth,
+                unit: TIME_UNIT.MONTH,
+              })}
+           ${parsePickerOptionText({
+             optionText: checkedDate,
+             unit: TIME_UNIT.DATE,
+           })}`}
               handleToggleDropdown={handleToggleDropdown}
             >
               <CalendarIcon width="16px" height="16px" fill="#8B8B8B" />
