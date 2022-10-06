@@ -1,5 +1,6 @@
 import styled, { CSSProp, css } from "styled-components";
 
+import { REMINDER_BUTTON_TEXT } from "@src/@constants";
 import { StyledDefaultProps, Theme } from "@src/@types/shared";
 
 import { ButtonText } from ".";
@@ -31,28 +32,28 @@ export const Title = styled.h1`
 `;
 
 const textTable: Record<ButtonText, CSSProp<Theme>> = {
-  생성: css`
+  [REMINDER_BUTTON_TEXT.CREATE]: css`
     ${({ theme }: StyledDefaultProps) => css`
       color: ${theme.COLOR.TEXT.WHITE};
       background-color: ${theme.COLOR.PRIMARY.DEFAULT};
     `}
   `,
 
-  수정: css`
+  [REMINDER_BUTTON_TEXT.MODIFY]: css`
     ${({ theme }: StyledDefaultProps) => css`
       color: ${theme.COLOR.TEXT.WHITE};
       background-color: ${theme.COLOR.PRIMARY.DEFAULT};
     `}
   `,
 
-  취소: css`
+  [REMINDER_BUTTON_TEXT.CANCEL]: css`
     ${({ theme }: StyledDefaultProps) => css`
       color: ${theme.COLOR.TEXT.DEFAULT};
       border: 1px solid ${theme.COLOR.BORDER};
     `}
   `,
 
-  삭제: css`
+  [REMINDER_BUTTON_TEXT.REMOVE]: css`
     ${({ theme }: StyledDefaultProps) => css`
       color: ${theme.COLOR.TEXT.WHITE};
       background-color: ${theme.COLOR.CONTAINER.LIGHT_RED};
