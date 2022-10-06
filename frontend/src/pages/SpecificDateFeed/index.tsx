@@ -24,7 +24,7 @@ import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 
 import { FlexColumn } from "@src/@styles/shared";
 import { extractResponseMessages } from "@src/@utils/api";
-import { parseMeridiemTime } from "@src/@utils/date";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -125,7 +125,7 @@ function SpecificDateFeed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={parseMeridiemTime(postedDate)}
+                    date={parseMessageDateFromISO(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}

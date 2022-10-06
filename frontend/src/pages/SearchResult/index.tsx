@@ -18,7 +18,7 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 import { SEARCH_PARAMS } from "@src/@constants/api";
 import { FlexColumn } from "@src/@styles/shared";
 import { extractResponseMessages, getChannelIdsParams } from "@src/@utils/api";
-import { parseMeridiemTime } from "@src/@utils/date";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function SearchResult() {
   const keyword = useGetSearchParam({ key: SEARCH_PARAMS.SEARCH_KEYWORD });
@@ -83,7 +83,7 @@ function SearchResult() {
               <MessageCard
                 key={id}
                 username={username}
-                date={parseMeridiemTime(postedDate)}
+                date={parseMessageDateFromISO(postedDate)}
                 text={text}
                 thumbnail={userThumbnail}
                 isRemindedMessage={false}

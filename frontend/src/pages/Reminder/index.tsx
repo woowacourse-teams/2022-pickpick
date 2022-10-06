@@ -15,7 +15,7 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 
 import { FlexColumn } from "@src/@styles/shared";
 import { extractResponseReminders } from "@src/@utils/api";
-import { parseMeridiemTime } from "@src/@utils/date";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function Reminder() {
   const {
@@ -62,7 +62,7 @@ function Reminder() {
                   <MessageCard
                     key={id}
                     username={username}
-                    date={`${date} ${parseMeridiemTime(remindDate)}`}
+                    date={`${date} ${parseMessageDateFromISO(remindDate)}`}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={true}

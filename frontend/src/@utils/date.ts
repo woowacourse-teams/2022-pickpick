@@ -26,17 +26,6 @@ export const getTimeWithMeridiem: GetTimeWithMeridiem = (time) => {
   };
 };
 
-type ParseMeridiemTime = (date: string) => string;
-
-export const parseMeridiemTime: ParseMeridiemTime = (date) => {
-  const dateInstance = new Date(date);
-  const hour = dateInstance.getHours() as StandardHours;
-  const minute = dateInstance.getMinutes();
-  const { meridiem, hour: parsedHour } = getTimeWithMeridiem(hour);
-
-  return `${meridiem} ${parsedHour}:${minute.toString().padStart(2, "0")}`;
-};
-
 /**
  * TODO: 함수 분리
  */
@@ -207,6 +196,30 @@ export const getTimeWithTenMinuteIntervals: GetTimeWithTenMinuteIntervals = ({
   return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
 };
 
+type GetFullHourFormMeridiemHour = (
+  meridiemHour: number,
+  meridiem: Meridiem
+) => number;
+
+export const getFullHourFromMeridiemHour: GetFullHourFormMeridiemHour = (
+  meridiemHour,
+  meridiem
+) => {
+  if (meridiem === MERIDIEM.PM) {
+    return meridiemHour === NOON ? NOON : meridiemHour + NOON;
+  }
+
+  return meridiemHour;
+};
+
+type ParseMessageDateFromISO = (date: string) => string;
+
+export const parseMessageDateFromISO: ParseMessageDateFromISO = (date) => {
+  const { meridiem, meridiemHour, minute } = getMeridiemTimeFromISO(date);
+
+  return `${meridiem} ${meridiemHour}:${minute.toString().padStart(2, "0")}`;
+};
+
 type IsValidMeridiem = (value: string) => boolean;
 
 export const isValidMeridiem: IsValidMeridiem = (value) => {
@@ -238,43 +251,27 @@ export const isValidReminderTime = ({
   hour,
   minute,
 }: IsValidReminderTime) => {
-  if (checkedYear < year) return true;
-  if (checkedYear <= year && checkedMonth < month) return true;
-  if (checkedYear <= year && checkedMonth <= month && checkedDate < date)
-    return true;
+  if (checkedYear < year) return false;
+  if (checkedYear === year && checkedMonth < month) return false;
+  if (checkedYear === year && checkedMonth === month && checkedDate < date)
+    return false;
 
   if (
-    checkedYear <= year &&
-    checkedMonth <= month &&
-    checkedDate <= date &&
+    checkedYear === year &&
+    checkedMonth === month &&
+    checkedDate === date &&
     checkedHour < hour
   )
-    return true;
+    return false;
 
   if (
-    checkedYear <= year &&
-    checkedMonth <= month &&
-    checkedDate <= date &&
-    checkedHour <= hour &&
+    checkedYear === year &&
+    checkedMonth === month &&
+    checkedDate === date &&
+    checkedHour === hour &&
     checkedMinute <= minute
   )
-    return true;
+    return false;
 
-  return false;
-};
-
-type GetFullHourFormMeridiemHour = (
-  meridiemHour: number,
-  meridiem: Meridiem
-) => number;
-
-export const getFullHourFromMeridiemHour: GetFullHourFormMeridiemHour = (
-  meridiemHour,
-  meridiem
-) => {
-  if (meridiem === MERIDIEM.PM) {
-    return meridiemHour === 12 ? 12 : meridiemHour + 12;
-  }
-
-  return meridiemHour;
+  return true;
 };

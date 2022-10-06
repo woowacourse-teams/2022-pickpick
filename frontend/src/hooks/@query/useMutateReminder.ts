@@ -3,9 +3,9 @@ import { useMutation } from "react-query";
 import useSnackbar from "@src/hooks/useSnackbar";
 
 import { MESSAGE } from "@src/@constants";
+import { Meridiem } from "@src/@types/date";
 import {
   ISOConverter,
-  Meridiem,
   getFullDateInformation,
   getFullHourFromMeridiemHour,
   isValidReminderTime,

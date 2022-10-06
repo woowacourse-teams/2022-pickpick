@@ -22,7 +22,7 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 
 import { FlexColumn } from "@src/@styles/shared";
 import { extractResponseMessages } from "@src/@utils/api";
-import { parseMeridiemTime } from "@src/@utils/date";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
@@ -99,7 +99,7 @@ function Feed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={parseMeridiemTime(postedDate)}
+                    date={parseMessageDateFromISO(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}
