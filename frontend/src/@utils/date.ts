@@ -16,7 +16,7 @@ export type GetTimeWithMeridiem = (time: StandardHours) => {
   hour: MeridiemHours;
 };
 
-// 일반 시간을 받아서 오전,오후 시간으로 바꾸어준다.
+// 일반 시간(Standard) 을 받아서 오전,오후 시간(Meridiem) 을 반환한다.
 export const getTimeWithMeridiem: GetTimeWithMeridiem = (time) => {
   if (time < NOON)
     return { meridiem: MERIDIEM.AM, hour: time as MeridiemHours };
@@ -87,6 +87,7 @@ export const getFullDateInformation: GetFullDateInformation = (givenDate) => {
 
 type GetMessagesDate = (postedDate: string) => string;
 
+// 메시지의 작성일자르 받아서 Dropdown 에 표시 될, MessageDate 를 반환한다.
 export const getMessagesDate: GetMessagesDate = (postedDate) => {
   const givenDate = getFullDateInformation(new Date(postedDate));
   const today = getFullDateInformation(new Date());
@@ -187,6 +188,7 @@ type GetStandardHourFormMeridiemHour = (
   meridiem: Meridiem
 ) => number;
 
+// MeridiemHour 정보를 받아서 StandardHour을 반환한다.
 export const getStandardHourFormMeridiemHour: GetStandardHourFormMeridiemHour =
   (meridiemHour, meridiem) => {
     if (meridiem === MERIDIEM.PM) {
@@ -198,12 +200,14 @@ export const getStandardHourFormMeridiemHour: GetStandardHourFormMeridiemHour =
 
 type ParseMessageDateFromISO = (date: string) => string;
 
+// ISO 형식으로 받은 date 정보를 MessageDate 형식으로 파싱하여 반환한다.
 export const parseMessageDateFromISO: ParseMessageDateFromISO = (date) => {
   const { meridiem, meridiemHour, minute } = getMeridiemTimeFromISO(date);
 
   return `${meridiem} ${meridiemHour}:${minute.toString().padStart(2, "0")}`;
 };
 
+// optionText 와 unit 을 받아서 PickerOption Text 로 파싱하여 반환한다.
 export const parsePickerOptionText = ({
   optionText,
   unit,
@@ -221,6 +225,7 @@ export const parsePickerOptionText = ({
 
 type IsValidMeridiem = (value: string) => boolean;
 
+// 올바른 Meridiem 인지 확인한다. (오전, 오후)
 export const isValidMeridiem: IsValidMeridiem = (value) => {
   return value === MERIDIEM.AM || value === MERIDIEM.PM;
 };
@@ -238,6 +243,7 @@ interface IsValidReminderTime {
   minute: number;
 }
 
+// 올바른 Reminder 생성 시간인지 확인한다. (현재보다 과거가 아닌지 확인한다.)
 export const isValidReminderTime = ({
   checkedYear,
   checkedMonth,
