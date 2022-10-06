@@ -18,3 +18,9 @@ type DeleteCookie = (key: string) => void;
 export const deleteCookie: DeleteCookie = (key) => {
   document.cookie = key + "=; Max-Age=0";
 };
+
+type IsEqualArray = (arr1: unknown[], arr2: unknown[]) => boolean;
+
+export const isEqualArray: IsEqualArray = (arr1, arr2) => {
+  return JSON.stringify(arr1) === JSON.stringify(arr2);
+};

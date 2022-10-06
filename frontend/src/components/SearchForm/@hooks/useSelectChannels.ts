@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useGetSubscribedChannels from "@src/hooks/@query/useGetSubscribedChannels";
 
 import { SubscribedChannel } from "@src/@types/api";
+import { isEqualArray } from "@src/@utils";
 
 interface Props {
   currentChannelIds: number[];
@@ -74,10 +75,7 @@ function useSelectChannels({
   }, [allChannels, visitingChannelIds]);
 
   useEffect(() => {
-    if (
-      JSON.stringify(currentChannelIds) === JSON.stringify(visitingChannelIds)
-    )
-      return;
+    if (isEqualArray(currentChannelIds, visitingChannelIds)) return;
 
     setVisitingChannelIds(currentChannelIds);
   }, [currentChannelIds]);
