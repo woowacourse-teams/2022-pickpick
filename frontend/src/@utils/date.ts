@@ -104,24 +104,6 @@ export const getMessagesDate: GetMessagesDate = (postedDate) => {
   return `${givenDate.month}${TIME_UNIT.MONTH} ${givenDate.date}${TIME_UNIT.DATE} ${givenDate.day}`;
 };
 
-type GetTimeOption = () => Record<"AMHours" | "PMHours" | "minutes", number[]>;
-
-export const getTimeOption: GetTimeOption = () => {
-  const AMHours = Array.from({ length: 12 }, (_, index) => index);
-  const PMHours = Array.from({ length: 12 }, (_, index) => {
-    if (index === 0) return 12;
-
-    return index;
-  });
-  const minutes = Array.from({ length: 6 }, (_, index) => index * 10);
-
-  return {
-    AMHours,
-    PMHours,
-    minutes,
-  };
-};
-
 type GetFutureDateOption = () => Record<"years" | "months" | "dates", number[]>;
 
 // 오늘 기준으로 미래의 날짜 옵션 years, months, dates 를 반환한다.
