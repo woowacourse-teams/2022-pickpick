@@ -182,21 +182,19 @@ export const getTimeWithTenMinuteIntervals: GetTimeWithTenMinuteIntervals = ({
   return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
 };
 
-type GetFullHourFormMeridiemHour = (
+type GetStandardHourFormMeridiemHour = (
   meridiemHour: number,
   meridiem: Meridiem
 ) => number;
 
-export const getFullHourFromMeridiemHour: GetFullHourFormMeridiemHour = (
-  meridiemHour,
-  meridiem
-) => {
-  if (meridiem === MERIDIEM.PM) {
-    return meridiemHour === NOON ? NOON : meridiemHour + NOON;
-  }
+export const getStandardHourFormMeridiemHour: GetStandardHourFormMeridiemHour =
+  (meridiemHour, meridiem) => {
+    if (meridiem === MERIDIEM.PM) {
+      return meridiemHour === NOON ? NOON : meridiemHour + NOON;
+    }
 
-  return meridiemHour;
-};
+    return meridiemHour;
+  };
 
 type ParseMessageDateFromISO = (date: string) => string;
 
