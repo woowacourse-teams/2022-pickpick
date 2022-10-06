@@ -1,3 +1,6 @@
+// DATE 관련 TS 정제하기
+// 불필요한거 지우기
+
 export const DATE = {
   TODAY: "오늘",
   YESTERDAY: "어제",

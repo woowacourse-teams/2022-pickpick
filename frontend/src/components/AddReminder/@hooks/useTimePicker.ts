@@ -14,7 +14,7 @@ import {
   Hours,
   Meridiem,
   getFullDateInformation,
-  getMeridiemTimeFormISO,
+  getMeridiemTimeFromISO,
   getTimeWithMeridiem,
   getTimeWithTenMinuteIntervals,
   isValidMeridiem,
@@ -84,7 +84,7 @@ function useTimePicker({ remindDate }: Props): UseTimePickerResult {
   useEffect(() => {
     if (!remindDate) return;
     const { meridiem, meridiemHour, minute } =
-      getMeridiemTimeFormISO(remindDate);
+      getMeridiemTimeFromISO(remindDate);
     changeMeridiem(meridiem);
     changeHour(meridiemHour);
     changeMinute(minute);

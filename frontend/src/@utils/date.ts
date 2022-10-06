@@ -165,14 +165,14 @@ export const getFutureDateOption = () => {
   };
 };
 
-type getMeridiemTimeFormISO = (ISODateTime: string) => {
+type getMeridiemTimeFromISO = (ISODateTime: string) => {
   meridiem: Meridiem;
   meridiemHour: MeridiemHours;
   minute: number;
 };
 
 // ISO 시간을 받아서 MeridiemTime 을 반환한다.
-export const getMeridiemTimeFormISO: getMeridiemTimeFormISO = (ISODateTime) => {
+export const getMeridiemTimeFromISO: getMeridiemTimeFromISO = (ISODateTime) => {
   const [_, fullTime] = ISODateTime.split("T");
   const [hour, minute] = fullTime.split(":");
   const { meridiem: meridiem, hour: meridiemHour } = getTimeWithMeridiem(
