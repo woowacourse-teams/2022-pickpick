@@ -45,7 +45,8 @@ public class SlackClient implements ExternalClient {
         OAuthV2AccessRequest request = generateOAuthRequest(code);
 
         try {
-            OAuthV2AccessResponse response = methodsClient.oauthV2Access(request);
+            OAuthV2AccessResponse response = methodsClient
+                    .oauthV2Access(request);
             validateResponse("oauthV2Access", response);
             return response.getAuthedUser().getAccessToken();
 
@@ -80,7 +81,9 @@ public class SlackClient implements ExternalClient {
     public Channel callChannel(final String channelSlackId, final Workspace workspace) {
         try {
             ConversationsInfoResponse response = methodsClient.conversationsInfo(
-                    request -> request.channel(channelSlackId));
+                    request -> request.channel(channelSlackId)
+                            .token(workspace.getBotToken())
+            );
             validateResponse("conversationsInfo", response);
 
             Conversation conversation = response.getChannel();
@@ -91,6 +94,7 @@ public class SlackClient implements ExternalClient {
         }
     }
 
+    // TODO - MemberInitializer 삭제 예정
     public List<Member> findAllWorkspaceMembers() {
         try {
             UsersListResponse response = methodsClient.usersList(request -> request);
@@ -117,9 +121,11 @@ public class SlackClient implements ExternalClient {
     }
 
     public void sendMessage(final Reminder reminder) {
+        Member member = reminder.getMember();
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
-                .channel(reminder.getMember().getSlackId())
+                .channel(member.getSlackId())
                 .text(String.format(REMINDER_TEXT_FORMAT, reminder.getMessage().getText()))
+                .token(member.getWorkspace().getBotToken())
                 .build();
 
         try {
