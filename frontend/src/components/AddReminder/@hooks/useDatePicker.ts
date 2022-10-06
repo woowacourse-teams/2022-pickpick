@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  ChangeEventHandler,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import useInput from "@src/hooks/@shared/useInput";
 
@@ -9,7 +15,20 @@ interface Props {
   remindDate: string;
 }
 
-function useDatePicker({ remindDate }: Props) {
+interface UseDatePickerResult {
+  yearRef: RefObject<HTMLDivElement>;
+  monthRef: RefObject<HTMLDivElement>;
+  dateRef: RefObject<HTMLDivElement>;
+  checkedYear: string;
+  checkedMonth: string;
+  checkedDate: string;
+  handleChangeYear: ChangeEventHandler<HTMLInputElement>;
+  handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
+  handleChangeDate: ChangeEventHandler<HTMLInputElement>;
+  handleResetDatePickerPosition: () => void;
+}
+
+function useDatePicker({ remindDate }: Props): UseDatePickerResult {
   const { year, month, date } = getDateInformation(new Date());
   const yearRef = useRef<HTMLDivElement>(null);
   const monthRef = useRef<HTMLDivElement>(null);

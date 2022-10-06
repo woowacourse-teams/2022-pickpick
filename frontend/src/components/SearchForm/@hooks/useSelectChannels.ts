@@ -8,7 +8,7 @@ interface Props {
   currentChannelIds: number[];
 }
 
-interface ReturnType {
+interface UseSelectChannelsResult {
   allChannels: SubscribedChannel[];
   selectedChannelIds: number[];
   getCurrentChannels: SubscribedChannel[];
@@ -17,7 +17,9 @@ interface ReturnType {
   handleToggleAllChannels: () => void;
 }
 
-function useSelectChannels({ currentChannelIds }: Props): ReturnType {
+function useSelectChannels({
+  currentChannelIds,
+}: Props): UseSelectChannelsResult {
   const [visitingChannelIds, setVisitingChannelIds] =
     useState<number[]>(currentChannelIds);
   const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);

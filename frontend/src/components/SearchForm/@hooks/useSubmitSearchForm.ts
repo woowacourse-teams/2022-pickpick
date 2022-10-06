@@ -15,13 +15,13 @@ import { SEARCH_PARAMS } from "@src/@constants/api";
 interface Props {
   keyword: string;
 }
-interface ReturnType {
+interface UseSubmitSearchFormResult {
   searchKeyword: string;
   handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement>;
   handleSubmitSearchKeyword: (selectedChannelIds: number[]) => FormEventHandler;
 }
 
-function useSubmitSearchForm({ keyword }: Props): ReturnType {
+function useSubmitSearchForm({ keyword }: Props): UseSubmitSearchFormResult {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
   const [searchKeyword, setSearchKeyword] = useState(keyword);

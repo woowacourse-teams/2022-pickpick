@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  ChangeEventHandler,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import useInput from "@src/hooks/@shared/useInput";
 
@@ -16,7 +22,21 @@ interface Props {
   remindDate: string;
 }
 
-function useTimePicker({ remindDate }: Props) {
+interface UseTimePickerResult {
+  meridiemRef: RefObject<HTMLDivElement>;
+  AMHourRef: RefObject<HTMLDivElement>;
+  PMHourRef: RefObject<HTMLDivElement>;
+  minuteRef: RefObject<HTMLDivElement>;
+  checkedMeridiem: string;
+  checkedHour: string;
+  checkedMinute: string;
+  handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
+  handleChangeHour: ChangeEventHandler<HTMLInputElement>;
+  handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
+  handleResetTimePickerPosition: () => void;
+}
+
+function useTimePicker({ remindDate }: Props): UseTimePickerResult {
   const { hour, minute } = getDateInformation(new Date());
   const { meridiem, hour: meridiemHour } = getMeridiemTime(hour as Hours);
   const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
