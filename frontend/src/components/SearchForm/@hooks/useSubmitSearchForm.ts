@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 import useSnackbar from "@src/hooks/useSnackbar";
 
-import { PATH_NAME } from "@src/@constants";
+import { MESSAGE, PATH_NAME } from "@src/@constants";
 import { SEARCH_PARAMS } from "@src/@constants/api";
 
 interface Props {
@@ -37,15 +37,13 @@ function useSubmitSearchForm({ keyword }: Props): ReturnType {
       event.preventDefault();
 
       if (!selectedChannelIds.length) {
-        openFailureSnackbar("채널을 하나 이상 선택 후 검색 버튼을 눌러주세요.");
+        openFailureSnackbar(MESSAGE.INVALID_SEARCH_CHANNELS);
 
         return;
       }
 
       if (!searchKeyword.trim().length) {
-        openFailureSnackbar(
-          "검색할 키워드를 입력하신 후 검색 버튼을 눌러주세요."
-        );
+        openFailureSnackbar(MESSAGE.INVALID_SEARCH_KEYWORD);
 
         return;
       }

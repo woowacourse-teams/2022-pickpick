@@ -11,6 +11,8 @@ export const PATH_NAME = {
 export const MESSAGE = {
   DEFAULT_SERVER_ERROR: "서버에 오류가 있습니다. 잠시 후에 다시 시도해주세요.",
   LOGIN_SUCCESS: "로그인 되었습니다!",
+  INVALID_SEARCH_CHANNELS: "채널을 하나 이상 선택 후 검색 버튼을 눌러주세요.",
+  INVALID_SEARCH_KEYWORD: "검색할 키워드를 입력하신 후 검색 버튼을 눌러주세요.",
 } as const;
 
 export const SNACKBAR_STATUS = {
