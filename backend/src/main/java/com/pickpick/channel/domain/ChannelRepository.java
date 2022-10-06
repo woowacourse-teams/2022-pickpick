@@ -10,6 +10,8 @@ public interface ChannelRepository extends Repository<Channel, Long> {
 
     Channel save(Channel channel);
 
+    void saveAll(Iterable<Channel> channels);
+
     List<Channel> findAll();
 
     List<Channel> findAllByWorkspaceOrderByName(Workspace workspace);

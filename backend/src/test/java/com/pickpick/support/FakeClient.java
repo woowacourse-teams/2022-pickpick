@@ -1,5 +1,6 @@
 package com.pickpick.support;
 
+import com.pickpick.auth.application.dto.BotInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.fixture.ChannelFixture;
@@ -13,8 +14,13 @@ import java.util.List;
 public class FakeClient implements ExternalClient {
 
     @Override
-    public String callAccessToken(final String code) {
+    public String callUserToken(final String code) {
         return code;
+    }
+
+    @Override
+    public BotInfoDto callBotInfo(final String code) {
+        return null;
     }
 
     @Override
@@ -32,12 +38,17 @@ public class FakeClient implements ExternalClient {
     }
 
     @Override
-    public List<Member> findAllWorkspaceMembers() {
+    public List<Member> findAllWorkspaceMembers(final Workspace workspace) {
         return new ArrayList<>();
     }
 
     @Override
     public void sendMessage(final Reminder reminder) {
 
+    }
+
+    @Override
+    public List<Channel> findAllWorkspaceChannels(final Workspace workspace) {
+        return new ArrayList<>();
     }
 }
