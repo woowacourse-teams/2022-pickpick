@@ -24,3 +24,7 @@ type IsEqualArray = (arr1: unknown[], arr2: unknown[]) => boolean;
 export const isEqualArray: IsEqualArray = (arr1, arr2) => {
   return JSON.stringify(arr1) === JSON.stringify(arr2);
 };
+
+export const isString = (value: unknown): value is string => {
+  return typeof value === "string";
+};

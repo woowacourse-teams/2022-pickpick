@@ -1,6 +1,7 @@
 import { ChangeEventHandler } from "react";
 
 import { Meridiem, TimeUnit } from "@src/@types/date";
+import { isString } from "@src/@utils";
 
 import * as Styled from "./style";
 
@@ -12,7 +13,7 @@ const parsePickerOptionText = ({
   unit?: string;
 }) => {
   const unitPostfix = unit ? unit : "";
-  if (typeof optionText === "string") {
+  if (isString(optionText)) {
     return `${optionText}${unitPostfix}`;
   }
 
