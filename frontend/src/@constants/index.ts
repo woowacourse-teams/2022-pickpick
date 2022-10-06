@@ -49,7 +49,6 @@ export const ERROR_MESSAGE_BY_CODE = {
     "죄송합니다. 현재 메시지를 가져올 수 없습니다.",
   [ERROR_CODE.MESSAGE_NOT_FOUND]:
     "죄송합니다. 현재 메시지를 가져올 수 없습니다.",
-  DEFAULT_MESSAGE: MESSAGE.DEFAULT_SERVER_ERROR,
 } as const;
 
 export const THEME_KIND = {
