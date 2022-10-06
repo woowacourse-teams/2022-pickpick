@@ -1,27 +1,34 @@
-import { CONVERTER_SUFFIX, DATE, DAY, TIME } from "@src/@constants/date";
-import { Range } from "@src/@types/utils";
+import {
+  CONVERTER_SUFFIX,
+  DATE,
+  DAY,
+  MERIDIEM,
+  NOON,
+  TIME,
+} from "@src/@constants/date";
+import { Range, ValueOf } from "@src/@types/utils";
 
-export type Meridiem = "오전" | "오후";
+export type Meridiem = ValueOf<typeof MERIDIEM>;
 
 export type Hours = Range<0, 24>;
 
 export type MeridiemHours = Range<1, 13>;
 
-export type GetMeridiemTime = (time: Hours) => {
+export type GetTimeWithMeridiem = (time: Hours) => {
   meridiem: Meridiem;
   hour: MeridiemHours;
 };
 
-export const getMeridiemTime: GetMeridiemTime = (time) => {
+// 일반 시간을 받아서 오전,오후 시간으로 바꾸어준다.
+export const getTimeWithMeridiem: GetTimeWithMeridiem = (time) => {
   if (time < TIME.NOON)
-    return { meridiem: TIME.AM, hour: time as MeridiemHours };
+    return { meridiem: MERIDIEM.AM, hour: time as MeridiemHours };
 
   if (time === TIME.NOON)
-    return { meridiem: TIME.PM, hour: TIME.NOON as MeridiemHours };
-
+    return { meridiem: MERIDIEM.PM, hour: TIME.NOON as MeridiemHours };
   return {
     meridiem: TIME.PM,
-    hour: (time - TIME.NOON) as MeridiemHours,
+    hour: (time - NOON) as MeridiemHours,
   };
 };
 
@@ -31,7 +38,7 @@ export const parseMeridiemTime: ParseMeridiemTime = (date) => {
   const dateInstance = new Date(date);
   const hour = dateInstance.getHours() as Range<0, 24>;
   const minute = dateInstance.getMinutes();
-  const { meridiem, hour: parsedHour } = getMeridiemTime(hour);
+  const { meridiem, hour: parsedHour } = getTimeWithMeridiem(hour);
 
   return `${meridiem} ${parsedHour}:${minute.toString().padStart(2, "0")}`;
 };
@@ -70,7 +77,7 @@ export const ISOConverter = (date: string, time?: string): string => {
   )}${CONVERTER_SUFFIX}`;
 };
 
-type GetDateInformation = (givenDate: Date) => {
+type getFullDateInformation = (givenDate: Date) => {
   year: number;
   month: number;
   date: number;
@@ -79,11 +86,12 @@ type GetDateInformation = (givenDate: Date) => {
   minute: number;
 };
 
-export const getDateInformation: GetDateInformation = (givenDate) => {
+// date 객체를 받아서, 해당 date 객체의 전체 시간 정보를 반환한다.
+export const getFullDateInformation: getFullDateInformation = (givenDate) => {
   const year = givenDate.getFullYear();
   const month = givenDate.getMonth() + 1;
   const date = givenDate.getDate();
-  const day = DAY[givenDate.getDay()];
+  const day = "월요일";
   const hour = givenDate.getHours();
   const minute = givenDate.getMinutes();
 
@@ -93,8 +101,8 @@ export const getDateInformation: GetDateInformation = (givenDate) => {
 type GetMessagesDate = (postedDate: string) => string;
 
 export const getMessagesDate: GetMessagesDate = (postedDate) => {
-  const givenDate = getDateInformation(new Date(postedDate));
-  const today = getDateInformation(new Date());
+  const givenDate = getFullDateInformation(new Date(postedDate));
+  const today = getFullDateInformation(new Date());
 
   if (
     givenDate.year === today.year &&
@@ -164,8 +172,8 @@ export const generateTimeOptions: GenerateTimeOptions = () => {
 type GenerateDateOptions = () => Record<"years" | "months" | "dates", string[]>;
 
 export const generateDateOptions: GenerateDateOptions = () => {
-  const { year, month } = getDateInformation(new Date());
-  const { date: lastDate } = getDateInformation(new Date(year, month, 0));
+  const { year, month } = getFullDateInformation(new Date());
+  const { date: lastDate } = getFullDateInformation(new Date(year, month, 0));
 
   const years = [year, year + 1, year + 2].map((year) => year.toString());
   const months = Array.from({ length: 12 }, (_, index) =>
@@ -182,23 +190,24 @@ export const generateDateOptions: GenerateDateOptions = () => {
   };
 };
 
-type ParseTime = (ISODateTime: string) => {
+type getMeridiemTimeFormISO = (ISODateTime: string) => {
   meridiem: Meridiem;
   meridiemHour: MeridiemHours;
-  minute: string;
+  minute: number;
 };
 
-export const parseTime: ParseTime = (ISODateTime) => {
+// ISO 시간을 받아서 MeridiemTime 을 반환한다.
+export const getMeridiemTimeFormISO: getMeridiemTimeFormISO = (ISODateTime) => {
   const [_, fullTime] = ISODateTime.split("T");
   const [hour, minute] = fullTime.split(":");
-  const { meridiem: meridiem, hour: meridiemHour } = getMeridiemTime(
+  const { meridiem: meridiem, hour: meridiemHour } = getTimeWithMeridiem(
     Number(hour) as Hours
   );
 
   return {
     meridiem,
     meridiemHour,
-    minute,
+    minute: Number(minute),
   };
 };
 
@@ -217,7 +226,7 @@ export const parseDate: ParseDate = (ISODateTime) => {
   };
 };
 
-type ConvertTimeToStepTenMinuteTime = ({
+type getTimeWithTenMinuteIntervals = ({
   hour,
   minute,
 }: {
@@ -225,7 +234,8 @@ type ConvertTimeToStepTenMinuteTime = ({
   minute: number;
 }) => Record<"parsedHour" | "parsedMinute", number>;
 
-export const convertTimeToStepTenMinuteTime: ConvertTimeToStepTenMinuteTime = ({
+// hour 와 minute (Meridiem 기준) 을 받아서 10분 단위 간격으로 반환해준다.
+export const getTimeWithTenMinuteIntervals: getTimeWithTenMinuteIntervals = ({
   hour,
   minute,
 }) => {
@@ -236,10 +246,10 @@ export const convertTimeToStepTenMinuteTime: ConvertTimeToStepTenMinuteTime = ({
   return { parsedHour: hour, parsedMinute: Math.ceil(minute / 10) * 10 };
 };
 
-type InvalidMeridiem = (value: Meridiem) => boolean;
+type isValidMeridiem = (value: string) => boolean;
 
-export const invalidMeridiem: InvalidMeridiem = (value) => {
-  return value !== "오전" && value !== "오후";
+export const isValidMeridiem: isValidMeridiem = (value) => {
+  return value === MERIDIEM.AM || value === MERIDIEM.PM;
 };
 
 interface IsInvalidateDateTimeProps {

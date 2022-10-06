@@ -9,13 +9,15 @@ import {
 import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
+import { MERIDIEM, NOON } from "@src/@constants/date";
 import {
   Hours,
-  convertTimeToStepTenMinuteTime,
-  getDateInformation,
-  getMeridiemTime,
-  invalidMeridiem,
-  parseTime,
+  Meridiem,
+  getFullDateInformation,
+  getMeridiemTimeFormISO,
+  getTimeWithMeridiem,
+  getTimeWithTenMinuteIntervals,
+  isValidMeridiem,
 } from "@src/@utils/date";
 
 interface Props {
@@ -27,9 +29,9 @@ interface UseTimePickerResult {
   AMHourRef: RefObject<HTMLDivElement>;
   PMHourRef: RefObject<HTMLDivElement>;
   minuteRef: RefObject<HTMLDivElement>;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
+  checkedMeridiem: Meridiem;
+  checkedHour: number;
+  checkedMinute: number;
   handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
   handleChangeHour: ChangeEventHandler<HTMLInputElement>;
   handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
@@ -37,9 +39,10 @@ interface UseTimePickerResult {
 }
 
 function useTimePicker({ remindDate }: Props): UseTimePickerResult {
-  const { hour, minute } = getDateInformation(new Date());
-  const { meridiem, hour: meridiemHour } = getMeridiemTime(hour as Hours);
-  const { parsedHour, parsedMinute } = convertTimeToStepTenMinuteTime({
+  const { hour, minute } = getFullDateInformation(new Date());
+  const { meridiem, hour: meridiemHour } = getTimeWithMeridiem(hour as Hours);
+
+  const { parsedHour, parsedMinute } = getTimeWithTenMinuteIntervals({
     hour: meridiemHour,
     minute,
   });
@@ -55,46 +58,49 @@ function useTimePicker({ remindDate }: Props): UseTimePickerResult {
     value: checkedMeridiem,
     handleChangeValue: handleChangeMeridiem,
     changeValue: changeMeridiem,
-  } = useInput({ initialValue: meridiem, invalidation: invalidMeridiem });
+  } = useInput<Meridiem>({
+    initialValue: meridiem,
+    validation: isValidMeridiem,
+  });
 
   const {
     value: checkedHour,
     handleChangeValue: handleChangeHour,
     changeValue: changeHour,
-  } = useInput({
-    initialValue: parsedHour.toString(),
+  } = useInput<number>({
+    initialValue: parsedHour,
   });
 
   const {
     value: checkedMinute,
     handleChangeValue: handleChangeMinute,
     changeValue: changeMinute,
-  } = useInput({ initialValue: parsedMinute.toString() });
+  } = useInput<number>({ initialValue: parsedMinute });
 
   const handleResetTimePickerPosition = () => {
     setTimeDropdownFlag((prev) => !prev);
   };
 
   useEffect(() => {
-    if (remindDate) {
-      const { meridiem, meridiemHour, minute } = parseTime(remindDate);
-      changeMeridiem(meridiem);
-      changeHour(meridiemHour);
-      changeMinute(minute);
-    }
+    if (!remindDate) return;
+    const { meridiem, meridiemHour, minute } =
+      getMeridiemTimeFormISO(remindDate);
+    changeMeridiem(meridiem);
+    changeHour(meridiemHour);
+    changeMinute(minute);
   }, [remindDate]);
 
   useEffect(() => {
     if (meridiemRef.current) {
       meridiemRef.current.scrollTo({
-        top: checkedMeridiem === "오전" ? 0 : PICKER_OPTION_SCROLL.HEIGHT,
+        top: checkedMeridiem === MERIDIEM.AM ? 0 : PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
 
     if (AMHourRef.current) {
       AMHourRef.current.scrollTo({
-        top: Number(checkedHour) * PICKER_OPTION_SCROLL.HEIGHT,
+        top: checkedHour * PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
@@ -102,7 +108,7 @@ function useTimePicker({ remindDate }: Props): UseTimePickerResult {
     if (PMHourRef.current) {
       PMHourRef.current.scrollTo({
         top:
-          (Number(checkedHour) === 12 ? 0 : Number(checkedHour)) *
+          (checkedHour === NOON ? 0 : checkedHour) *
           PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
@@ -110,7 +116,7 @@ function useTimePicker({ remindDate }: Props): UseTimePickerResult {
 
     if (minuteRef.current) {
       minuteRef.current.scrollTo({
-        top: (Number(checkedMinute) / 10) * PICKER_OPTION_SCROLL.HEIGHT,
+        top: (checkedMinute / 10) * PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }

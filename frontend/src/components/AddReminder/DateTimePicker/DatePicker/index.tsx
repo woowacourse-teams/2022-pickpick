@@ -41,7 +41,7 @@ function DatePicker({
         const { years, months, dates } = generateDateOptions();
         return (
           <FlexColumn marginBottom="10px" ref={innerRef}>
-            <Styled.Subtitle>언제</Styled.Subtitle>
+            {/* <Styled.Subtitle>언제</Styled.Subtitle>
 
             <DateTimePickerToggle
               text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate.padStart(
@@ -85,7 +85,7 @@ function DatePicker({
                   />
                 </Styled.TextOptionsWrapper>
               </Styled.TextOptionContainer>
-            )}
+            )} */}
           </FlexColumn>
         );
       }}

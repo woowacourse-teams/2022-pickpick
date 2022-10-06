@@ -4,7 +4,7 @@ import useSnackbar from "@src/hooks/useSnackbar";
 
 import {
   ISOConverter,
-  getDateInformation,
+  getFullDateInformation,
   getReplaceDateTime,
   isInvalidateDateTime,
 } from "@src/@utils/date";
@@ -68,7 +68,9 @@ function useMutateReminder({
     },
   });
 
-  const { year, month, date, hour, minute } = getDateInformation(new Date());
+  const { year, month, date, hour, minute } = getFullDateInformation(
+    new Date()
+  );
 
   const handleCreateReminder = ({
     messageId,

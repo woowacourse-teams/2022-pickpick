@@ -6,17 +6,18 @@ import * as Styled from "@src/components/AddReminder/DateTimePicker/DatePicker/s
 import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
+import { MERIDIEM } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
-import { generateTimeOptions } from "@src/@utils/date";
+import { Meridiem, generateTimeOptions } from "@src/@utils/date";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;
   AMHourRef: RefObject<HTMLDivElement>;
   PMHourRef: RefObject<HTMLDivElement>;
   minuteRef: RefObject<HTMLDivElement>;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
+  checkedMeridiem: Meridiem;
+  checkedHour: number;
+  checkedMinute: number;
   handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
   handleChangeHour: ChangeEventHandler<HTMLInputElement>;
   handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
@@ -40,14 +41,14 @@ function TimePicker({
     <Dropdown toggleHandler={handleResetTimePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
         const { meridiems, AMHours, PMHours, minutes } = generateTimeOptions();
+
         return (
           <FlexColumn ref={innerRef}>
             <Styled.Subtitle>시간</Styled.Subtitle>
             <DateTimePickerToggle
-              text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute.padStart(
-                2,
-                "0"
-              )}분`}
+              text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute
+                .toString()
+                .padStart(2, "0")}분`}
               handleToggleDropdown={handleToggleDropdown}
             >
               <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />
@@ -64,7 +65,7 @@ function TimePicker({
                   />
                 </Styled.TextOptionsWrapper>
 
-                {checkedMeridiem === "오전" && (
+                {checkedMeridiem === MERIDIEM.AM && (
                   <Styled.TextOptionsWrapper ref={AMHourRef}>
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}
@@ -76,7 +77,7 @@ function TimePicker({
                   </Styled.TextOptionsWrapper>
                 )}
 
-                {checkedMeridiem === "오후" && (
+                {checkedMeridiem === MERIDIEM.PM && (
                   <Styled.TextOptionsWrapper ref={PMHourRef}>
                     <DateTimePickerOptions
                       needZeroPaddingStart={true}

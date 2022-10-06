@@ -1,6 +1,6 @@
 import { ChangeEventHandler } from "react";
 
-import { parsedOptionText } from "@src/@utils/date";
+import { Meridiem, parsedOptionText } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
@@ -8,7 +8,7 @@ interface Props {
   needZeroPaddingStart: boolean;
   optionTexts: string[];
   unit?: "년" | "월" | "일" | "시" | "분";
-  checkedText: string;
+  checkedText: Meridiem | number;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }
 

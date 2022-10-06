@@ -9,7 +9,7 @@ import {
 import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
-import { getDateInformation, parseDate } from "@src/@utils/date";
+import { getFullDateInformation, parseDate } from "@src/@utils/date";
 
 interface Props {
   remindDate: string;
@@ -29,7 +29,7 @@ interface UseDatePickerResult {
 }
 
 function useDatePicker({ remindDate }: Props): UseDatePickerResult {
-  const { year, month, date } = getDateInformation(new Date());
+  const { year, month, date } = getFullDateInformation(new Date());
   const yearRef = useRef<HTMLDivElement>(null);
   const monthRef = useRef<HTMLDivElement>(null);
   const dateRef = useRef<HTMLDivElement>(null);

@@ -3,6 +3,13 @@ export const DATE = {
   YESTERDAY: "어제",
 } as const;
 
+export const MERIDIEM = {
+  AM: "오전",
+  PM: "오후",
+} as const;
+
+export const NOON = 12;
+
 export const TIME = {
   AM: "오전",
   PM: "오후",

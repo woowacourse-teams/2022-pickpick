@@ -1,29 +1,31 @@
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
 
-import { Hours } from "@src/@utils";
+// import { Hours } from "@src/@utils";
 
-interface Props {
-  initialValue: string;
-  invalidation?: (value: Hours) => boolean;
+interface Props<T> {
+  initialValue: T;
+  validation?: (value: any) => boolean;
 }
 
-interface UseInputResult {
-  value: string;
+interface UseInputResult<T> {
+  value: T;
   handleChangeValue: ChangeEventHandler<HTMLInputElement>;
-  changeValue: (value: string) => void;
+  changeValue: (value: T) => void;
 }
 
-function useInput({ initialValue, invalidation }: Props): UseInputResult {
+function useInput<T>({
+  initialValue,
+  validation,
+}: Props<T>): UseInputResult<T> {
   const [value, setValue] = useState(initialValue);
 
   const handleChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
-    if (invalidation && invalidation(Number(event.target.value) as Hours))
-      return;
+    if (validation && !validation(event.target.value)) return;
 
-    setValue(event.target.value);
+    setValue(event.target.value as unknown as T);
   };
 
-  const changeValue = (value: string) => {
+  const changeValue = (value: T) => {
     setValue(value);
   };
 
