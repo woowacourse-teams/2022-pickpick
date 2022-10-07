@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.message.ReminderRestHandler.ReminderFindRequest;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
@@ -91,8 +92,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         List<Long> messageIdsForReminder = List.of(1L, 3L, 5L, 7L);
         리마인더_목록_생성(token, messageIdsForReminder);
 
+        ReminderFindRequest request = new ReminderFindRequest();
+
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -119,8 +122,11 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         List<Long> expectedMessageIds = List.of(3L, 4L, 5L);
 
+        ReminderFindRequest request = new ReminderFindRequest()
+                .reminderId(2L);
+
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(token, 2L, null);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -144,8 +150,12 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
         리마인더_목록_생성(token, messageIdsForReminder);
 
+        ReminderFindRequest request = new ReminderFindRequest()
+                .reminderId(3L)
+                .count(10);
+
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(token, 3L, 10);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -166,8 +176,11 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
         리마인더_목록_생성(token, messageIdsForReminder);
 
+        ReminderFindRequest request = new ReminderFindRequest()
+                .count(10);
+
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, 10);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -189,8 +202,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
                 16L, 17L, 18L, 19L, 20L);
         리마인더_목록_생성(token, messageIdsForReminder);
 
+        ReminderFindRequest request = new ReminderFindRequest();
+
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, null);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -212,8 +227,11 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
 
         int reminderCount = 10;
 
+        ReminderFindRequest request = new ReminderFindRequest()
+                .count(reminderCount);
+
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(token, null, reminderCount);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);

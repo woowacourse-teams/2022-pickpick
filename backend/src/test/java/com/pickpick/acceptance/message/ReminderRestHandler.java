@@ -26,16 +26,27 @@ public class ReminderRestHandler {
         return getWithToken(REMINDER_API_URL, token, Map.of("messageId", messageId));
     }
 
-    public static ExtractableResponse<Response> 리마인더_목록_조회(final String token, final Long reminderId,
-                                                           final Integer count) {
-        Map<String, Object> request = new HashMap<>();
-        if (reminderId != null) {
-            request.put("reminderId", reminderId);
+    public static ExtractableResponse<Response> 리마인더_목록_조회(final String token, final ReminderFindRequest request) {
+        return getWithToken(REMINDER_API_URL, token, request.getParams());
+    }
+
+    public static class ReminderFindRequest {
+
+        private final HashMap<String, Object> params = new HashMap<>();
+
+        public ReminderFindRequest reminderId(final long reminderId) {
+            params.put("reminderId", reminderId);
+            return this;
         }
-        if (count != null) {
-            request.put("count", count);
+
+        public ReminderFindRequest count(final int count) {
+            params.put("count", count);
+            return this;
         }
-        return getWithToken(REMINDER_API_URL, token, request);
+
+        public HashMap<String, Object> getParams() {
+            return params;
+        }
     }
 
     public static ExtractableResponse<Response> 리마인더_수정(final String token, final long messageId,
