@@ -9,7 +9,7 @@ import {
 import { Meridiem, MeridiemHours, StandardHours } from "@src/@types/date";
 import { Range } from "@src/@types/utils";
 
-import { isString } from ".";
+import { getNumberWithZeroPadding, isString } from ".";
 
 /**
  * TODO: 함수 분리
@@ -33,15 +33,15 @@ export const ISOConverter = (date: string, time?: string): string => {
   if (time) {
     const [hour, minute] = time.split(":");
 
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(
-      2,
-      "0"
-    )}${`T${hour.padStart(2, "0")}:${minute.padStart(2, "0")}:00`}`;
+    return `${year}-${getNumberWithZeroPadding(
+      month
+    )}-${getNumberWithZeroPadding(day)}${`T${getNumberWithZeroPadding(
+      hour
+    )}:${getNumberWithZeroPadding(minute)}:00`}`;
   }
 
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(
-    2,
-    "0"
+  return `${year}-${getNumberWithZeroPadding(month)}-${getNumberWithZeroPadding(
+    day
   )}${CONVERTER_SUFFIX}`;
 };
 
@@ -205,7 +205,7 @@ type ParseMessageDateFromISO = (date: string) => string;
 export const parseMessageDateFromISO: ParseMessageDateFromISO = (date) => {
   const { meridiem, meridiemHour, minute } = getMeridiemTimeFromISO(date);
 
-  return `${meridiem} ${meridiemHour}:${minute.toString().padStart(2, "0")}`;
+  return `${meridiem} ${meridiemHour}:${getNumberWithZeroPadding(minute)}`;
 };
 
 // optionText 와 unit 을 받아서 PickerOption Text 로 파싱하여 반환한다.
@@ -221,7 +221,7 @@ export const parsePickerOptionText = ({
     return `${optionText}${unitPostfix}`;
   }
 
-  return `${optionText.toString().padStart(2, "0")}${unitPostfix}`;
+  return `${getNumberWithZeroPadding(optionText)}${unitPostfix}`;
 };
 
 type IsValidMeridiem = (value: string) => boolean;
