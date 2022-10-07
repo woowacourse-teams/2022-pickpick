@@ -5,8 +5,8 @@ import static com.pickpick.acceptance.RestHandler.getWithToken;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,9 +33,9 @@ public class MessageRestHandler {
             return this;
         }
 
-        public MessageRequestBuilder channelIds(final long... channelIds) {
-            String string = Arrays.stream(channelIds)
-                    .mapToObj(String::valueOf)
+        public MessageRequestBuilder channelIds(final List<Long> channelIds) {
+            String string = channelIds.stream()
+                    .map(String::valueOf)
                     .collect(Collectors.joining(","));
 
             params.put("channelIds", string);

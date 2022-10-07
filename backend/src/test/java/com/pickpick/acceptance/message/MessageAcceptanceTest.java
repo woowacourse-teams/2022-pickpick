@@ -156,7 +156,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.FREE_CHAT.create());
         채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
 
-        long[] channelIds = new long[]{1L, 2L};
+        List<Long> channelIds = List.of(1L, 2L);
         MessageRequestBuilder request = new MessageRequestBuilder()
                 .channelIds(channelIds);
 
@@ -165,7 +165,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
         // then
         상태코드_200_확인(response);
-        assertThat(메시지_개수(response)).isEqualTo(channelIds.length);
+        assertThat(메시지_개수(response)).isEqualTo(channelIds.size());
     }
 
     @Test
