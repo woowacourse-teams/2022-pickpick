@@ -136,6 +136,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
 
         int messageCount = 5;
         키워드를_포함한_메시지_목록_생성(MEMBER_SLACK_ID, messageCount, keyword);
+        메시지_목록_생성(MEMBER_SLACK_ID, 3);
 
         MessageRequestBuilder request = new MessageRequestBuilder()
                 .keyword(keyword);
