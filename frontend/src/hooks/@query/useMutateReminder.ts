@@ -7,7 +7,7 @@ import { Meridiem } from "@src/@types/date";
 import {
   ISOConverter,
   getFullDateInformation,
-  getFullHourFromMeridiemHour,
+  getStandardHourFormMeridiemHour,
   isValidReminderTime,
 } from "@src/@utils/date";
 
@@ -83,7 +83,7 @@ function useMutateReminder({
     checkedHour,
     checkedMinute,
   }: HandlerProps) => {
-    const parsedHour = getFullHourFromMeridiemHour(
+    const parsedHour = getStandardHourFormMeridiemHour(
       checkedHour,
       checkedMeridiem
     );
@@ -126,7 +126,7 @@ function useMutateReminder({
     checkedHour,
     checkedMinute,
   }: HandlerProps) => {
-    const parsedHour = getFullHourFromMeridiemHour(
+    const parsedHour = getStandardHourFormMeridiemHour(
       checkedHour,
       checkedMeridiem
     );
