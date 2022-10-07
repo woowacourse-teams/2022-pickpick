@@ -320,7 +320,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
         assertThat(메시지_ID_목록(response)).isEqualTo(List.of(2L, 1L));
     }
 
-    private List<Long> 메시지_ID_목록(ExtractableResponse<Response> response) {
+    private List<Long> 메시지_ID_목록(final ExtractableResponse<Response> response) {
         return toMessageResponses(response)
                 .getMessages()
                 .stream()
@@ -344,7 +344,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
                 .isSetReminded();
     }
 
-    private MessageResponses toMessageResponses(ExtractableResponse<Response> response) {
+    private MessageResponses toMessageResponses(final ExtractableResponse<Response> response) {
         return response.jsonPath().getObject("", MessageResponses.class);
     }
 }
