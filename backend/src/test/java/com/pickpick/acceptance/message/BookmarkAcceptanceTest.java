@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class BookmarkAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "MB1234";
+    private static final String MEMBER_SLACK_ID = "U00001234";
 
     @Test
     void 북마크_생성_검증() {
@@ -47,15 +47,15 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 멤버_ID_1번으로_북마크_조회() {
+    void 특정_멤버가_북마크한_메시지_목록_조회() {
         // given
         회원가입(MEMBER_SLACK_ID);
         String token = jwtTokenProvider.createToken("1");
 
         채널_생성(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
-        메시지_전송(MEMBER_SLACK_ID, "M1");
-        메시지_전송(MEMBER_SLACK_ID, "M2");
-        메시지_전송(MEMBER_SLACK_ID, "M3");
+        메시지_전송(MEMBER_SLACK_ID, "message_slack_id_1");
+        메시지_전송(MEMBER_SLACK_ID, "message_slack_id_2");
+        메시지_전송(MEMBER_SLACK_ID, "message_slack_id_3");
 
         북마크_생성(token, 1L);
         북마크_생성(token, 2L);
@@ -72,7 +72,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 멤버_ID_1번이고_북마크_ID가_2번일_때_북마크_목록_조회() {
+    void 북마크_id로_조회할_경우_더_과거의_북마크들_아이디만_조회() {
         // given
         회원가입(MEMBER_SLACK_ID);
         String token = jwtTokenProvider.createToken("1");
@@ -112,7 +112,7 @@ public class BookmarkAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 사용자에게_존재하지_않는_북마크_삭제() {
+    void 사용자에게_존재하지_않는_북마크_삭제_시_400_응답() {
         // given
         회원가입(MEMBER_SLACK_ID);
         회원가입(MEMBER_SLACK_ID + "2");

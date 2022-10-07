@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "MEM1000";
+    private static final String MEMBER_SLACK_ID = "U00001234";
 
     private String token;
 
@@ -302,7 +302,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 메시지_ID_3번이고_needPastMessage가_true인_경우_해당_메시지보다_미래_메시지를_조회() {
+    void 메시지_ID_3번이고_needPastMessage가_true인_경우_해당_메시지보다_과거_메시지를_조회() {
         // given
         메시지_목록_생성(MEMBER_SLACK_ID, 5);
         채널_구독_요청(token, 1L);

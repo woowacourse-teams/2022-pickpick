@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class ReminderAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "MEM0001";
+    private static final String MEMBER_SLACK_ID = "U00001234";
 
     @Test
     void 리마인더_생성_검증() {
@@ -80,7 +80,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 멤버_ID_1번으로_리마인더_목록_조회() {
+    void 특정_멤버가_리마인더_등록한_메시지_목록_조회() {
         // given
         회원가입(MEMBER_SLACK_ID);
         String token = jwtTokenProvider.createToken("1");
@@ -106,7 +106,7 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 멤버_ID_1번이고_리마인더_ID_2번일_때_리마인더_목록_조회() {
+    void 특정_리마인더보다_미래시간에_등록된_리마인더_목록_조회() {
         // given
         회원가입(MEMBER_SLACK_ID);
         String token = jwtTokenProvider.createToken("1");
