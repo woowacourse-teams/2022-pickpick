@@ -33,5 +33,6 @@ type GetNumberWithZeroPadding = (value: number | string) => string;
 
 export const getNumberWithZeroPadding: GetNumberWithZeroPadding = (value) => {
   if (isString(value)) return value.padStart(2, "0");
+
   return value.toString().padStart(2, "0");
 };
