@@ -27,4 +27,4 @@ export const SLACK_LOGIN_URL = `https://slack.com/oauth/v2/authorize?scope=users
 export const SEARCH_PARAMS = {
   SEARCH_KEYWORD: "keyword",
   SEARCH_CHANNEL_IDS: "channelIds",
-};
+} as const;

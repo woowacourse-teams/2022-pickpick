@@ -6,7 +6,7 @@ import { parsePickerOptionText } from "@src/@utils/date";
 import * as Styled from "./style";
 
 interface Props {
-  optionTexts: string[] | number[];
+  optionTexts: readonly string[] | readonly number[];
   unit?: TimeUnit;
   checkedText: Meridiem | number;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
