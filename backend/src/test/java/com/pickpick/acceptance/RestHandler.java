@@ -112,14 +112,26 @@ public class RestHandler {
     }
 
     public static void 상태코드_200_확인(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        상태코드_확인(response, HttpStatus.OK);
+    }
+
+    public static void 상태코드_201_확인(final ExtractableResponse<Response> response) {
+        상태코드_확인(response, HttpStatus.CREATED);
+    }
+
+    public static void 상태코드_204_확인(final ExtractableResponse<Response> response) {
+        상태코드_확인(response, HttpStatus.NO_CONTENT);
     }
 
     public static void 상태코드_400_확인(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        상태코드_확인(response, HttpStatus.BAD_REQUEST);
     }
 
-    public static void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
+    public static void 상태코드_404_확인(final ExtractableResponse<Response> response) {
+        상태코드_확인(response, HttpStatus.NOT_FOUND);
+    }
+
+    private static void 상태코드_확인(final ExtractableResponse<Response> response, final HttpStatus httpStatus) {
         assertThat(response.statusCode()).isEqualTo(httpStatus.value());
     }
 

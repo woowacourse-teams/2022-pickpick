@@ -40,12 +40,21 @@ public class SlackEventRequestFactory {
         );
     }
 
+    public static Map<String, Object> emptyMessageCreateEvent(final String memberSlackId, final String messageSlackId,
+                                                              final String subtype) {
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "");
+    }
+
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
                                                          final String subtype) {
-        String timestamp = "1234567890.123456";
-        String text = "메시지 전송!";
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "text");
+    }
 
+    public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
+                                                         final String subtype, final String timestamp,
+                                                         final String text) {
         String type = "event_callback";
+
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", subtype,
