@@ -1,6 +1,7 @@
 package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.URL_검증;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_삭제;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_수정;
@@ -10,6 +11,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
@@ -23,14 +25,15 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageEventAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "U12345";
+    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
     private static final String MESSAGE_SLACK_ID = UUID.randomUUID().toString();
 
     private Workspace workspace;
 
     @BeforeEach
     void init() {
-        workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
+        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
+        workspace = externalClient.callBotInfo(MEMBER_SLACK_ID).toEntity();
     }
 
     @Test

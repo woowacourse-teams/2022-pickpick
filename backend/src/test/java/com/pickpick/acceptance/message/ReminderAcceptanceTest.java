@@ -5,28 +5,28 @@ import static com.pickpick.acceptance.RestHandler.상태코드_201_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_204_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_404_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_단건_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_목록_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_삭제;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_생성;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성_후_메시지_저장;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.acceptance.message.ReminderRestHandler.ReminderFindRequest;
-import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,15 +34,18 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class ReminderAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "U00001234";
+    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
+
+    @BeforeEach
+    void init() {
+        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
+    }
 
     @Test
     void 리마인더_생성_검증() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
 
         // when
         ExtractableResponse<Response> response = 리마인더_생성(token, 1, LocalDateTime.now());
@@ -54,10 +57,8 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_단건_조회_정상_응답() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         리마인더_생성(token, 1, LocalDateTime.now());
 
         // when
@@ -72,10 +73,8 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 존재하지_않는_리마인더_조회시_404_응답() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
 
         // when
         ExtractableResponse<Response> response = 리마인더_단건_조회(token, 1L);
@@ -87,8 +86,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 특정_멤버가_리마인더_등록한_메시지_목록_조회() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 10;
@@ -116,8 +113,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 특정_리마인더보다_미래시간에_등록된_리마인더_목록_조회() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 5;
@@ -147,8 +142,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_조회_시_가장_최신인_리마인더가_포함된다면_hasFuture가_False다() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 11;
@@ -174,8 +167,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_조회_시_가장_최신인_리마인더가_포함되지_않는다면_hasFuture가_True다() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 11;
@@ -200,8 +191,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_조회_시_count_값이_없으면_20개가_조회된다() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 20;
@@ -224,8 +213,6 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_조회_시_count_값이_있다면_count_개수_만큼_조회된다() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
 
         int messageCount = 20;
@@ -251,10 +238,8 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_정상_수정() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
 
         long messageId = 1L;
         리마인더_생성(token, messageId, LocalDateTime.now().plusDays(1));
@@ -269,14 +254,10 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 사용자에게_존재하지_않는_리마인더_수정() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token1 = jwtTokenProvider.createToken("1");
-
-        회원가입(MEMBER_SLACK_ID + "2", workspace.getSlackId());
         String token2 = jwtTokenProvider.createToken("2");
 
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         리마인더_생성(token1, 1, LocalDateTime.now().plusDays(1));
 
         // when
@@ -289,10 +270,8 @@ public class ReminderAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인더_정상_삭제() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
         String token = jwtTokenProvider.createToken("1");
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
 
         long messageId = 1L;
         리마인더_생성(token, messageId, LocalDateTime.now());

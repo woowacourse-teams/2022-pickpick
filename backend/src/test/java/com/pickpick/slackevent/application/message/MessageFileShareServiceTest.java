@@ -4,24 +4,17 @@ import static com.pickpick.slackevent.application.SlackEvent.MESSAGE_FILE_SHARE;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.utils.TimeUtils;
-import com.slack.api.RequestConfigurator;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsInfoRequest.ConversationsInfoRequestBuilder;
-import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
-import com.slack.api.model.Conversation;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -31,13 +24,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MessageFileShareServiceTest {
 
-    private static final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
-    private static final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
+    private static final Member SAMPLE_MEMBER = MemberFixture.BOM.create();
+    private static final Channel SAMPLE_CHANNEL = ChannelFixture.QNA.create();
     private static final Message SAMPLE_MESSAGE = new Message(
             "db8a1f84-8acf-46ab-b93d-85177cee3e97",
             "메시지 전송!",
@@ -58,47 +50,16 @@ class MessageFileShareServiceTest {
 
     @Autowired
     private ChannelRepository channels;
+
     @Autowired
     private DatabaseCleaner databaseCleaner;
-
-    @MockBean
-    private MethodsClient slackClient;
 
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
     }
 
-    @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있지 않으면 채널 신규 저장 후 메시지를 저장한다")
-    @ValueSource(strings = {"", " ", "파일과 함께 전송한 메시지 text"})
-    @ParameterizedTest
-    void fileShareMessage(final String expectedText) throws SlackApiException, IOException {
-        // given
-        members.save(SAMPLE_MEMBER);
-        Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
-
-        ConversationsInfoResponse conversationsInfoResponse = setUpChannelMockData();
-
-        given(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
-                .willReturn(conversationsInfoResponse);
-
-        // when
-        messageFileShareService.execute(fileShareRequest(expectedText));
-        Optional<Channel> channelAfterSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageAfterSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
-
-        // then
-        assertAll(
-                () -> assertThat(channelBeforeSave).isEmpty(),
-                () -> assertThat(messageBeforeSave).isEmpty(),
-                () -> assertThat(channelAfterSave).isPresent(),
-                () -> assertThat(messageAfterSave).isPresent(),
-                () -> assertThat(messageAfterSave.get().getText()).isEqualTo(expectedText)
-        );
-    }
-
-    @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
+    @DisplayName("파일 공유 이벤트 전달 시 채널이 저장되어 있으면 메시지를 저장한다")
     @ValueSource(strings = {"", " ", "파일과 함께 전송한 메시지 text"})
     @ParameterizedTest
     void saveMessageWhenFileShareEventPassed(final String expectedText) {
@@ -121,18 +82,6 @@ class MessageFileShareServiceTest {
                 () -> assertThat(messageAfterSave).isPresent(),
                 () -> assertThat(messageAfterSave.get().getText()).isEqualTo(expectedText)
         );
-    }
-
-    private ConversationsInfoResponse setUpChannelMockData() {
-        Conversation conversation = new Conversation();
-        conversation.setId(SAMPLE_CHANNEL.getSlackId());
-        conversation.setName(SAMPLE_CHANNEL.getName());
-
-        ConversationsInfoResponse conversationsInfoResponse = new ConversationsInfoResponse();
-        conversationsInfoResponse.setChannel(conversation);
-        conversationsInfoResponse.setOk(true);
-
-        return conversationsInfoResponse;
     }
 
     private String fileShareRequest(final String text) {

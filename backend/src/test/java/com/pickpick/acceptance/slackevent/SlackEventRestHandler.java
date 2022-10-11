@@ -2,13 +2,14 @@ package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.post;
 
-import com.pickpick.channel.domain.Channel;
+import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class SlackEventRestHandler {
@@ -49,7 +50,8 @@ public class SlackEventRestHandler {
                     String.format("MSG_SLACK_ID_%d", i),
                     SlackEvent.MESSAGE_CREATED.getSubtype(),
                     timestamp,
-                    String.format("%s %d", keyword, i)
+                    String.format("%s %d", keyword, i),
+                    ChannelFixture.NOTICE.getSlackId()
             );
             post(SLACK_EVENT_API_URL, request);
         }
@@ -57,18 +59,29 @@ public class SlackEventRestHandler {
 
     public static ExtractableResponse<Response> 빈_메시지_전송(final String memberSlackId) {
         Map<String, Object> request = SlackEventRequestFactory.emptyMessageCreateEvent(memberSlackId, "MSG12345",
-                SlackEvent.MESSAGE_CREATED.getSubtype());
+                SlackEvent.MESSAGE_CREATED.getSubtype(), ChannelFixture.NOTICE.getSlackId());
         return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId) {
+        return 메시지_전송(memberSlackId, UUID.randomUUID().toString());
     }
 
     public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId) {
         return 메시지_전송(memberSlackId, messageSlackId, SlackEvent.MESSAGE_CREATED.getSubtype());
     }
 
+    public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId,
+                                                       final ChannelFixture channelFixture) {
+        Map<String, Object> request = SlackEventRequestFactory.messageCreateEvent(memberSlackId,
+                UUID.randomUUID().toString(), SlackEvent.MESSAGE_CREATED.getSubtype(), channelFixture.getSlackId());
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
     public static ExtractableResponse<Response> 메시지_전송(final String memberSlackId, final String messageSlackId,
                                                        final String subtype) {
         Map<String, Object> request = SlackEventRequestFactory.messageCreateEvent(memberSlackId, messageSlackId,
-                subtype);
+                subtype, ChannelFixture.NOTICE.getSlackId());
         return post(SLACK_EVENT_API_URL, request);
     }
 
@@ -83,13 +96,5 @@ public class SlackEventRestHandler {
     public static ExtractableResponse<Response> 브로드캐스트_메시지_전송(final String memberSlackId) {
         Map<String, Object> request = SlackEventRequestFactory.threadBroadcastCreateEvent(memberSlackId);
         return post(SLACK_EVENT_API_URL, request);
-    }
-
-    public static void 채널_생성(final String memberSlackId, final Channel channel) {
-        post(SLACK_EVENT_API_URL, SlackEventRequestFactory.channelCreateEvent(memberSlackId, channel));
-    }
-
-    public static void 채널_생성_후_메시지_저장(final String memberSlackId, final Channel channel) {
-        채널_생성(memberSlackId, channel);
     }
 }

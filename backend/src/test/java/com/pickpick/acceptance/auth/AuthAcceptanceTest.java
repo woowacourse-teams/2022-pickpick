@@ -3,18 +3,13 @@ package com.pickpick.acceptance.auth;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.로그인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.workspace.domain.Workspace;
-import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
-import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
-import com.slack.api.methods.response.users.UsersIdentityResponse;
-import com.slack.api.methods.response.users.UsersIdentityResponse.User;
+import com.pickpick.fixture.MemberFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -28,18 +23,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
-    private static final Workspace workspace = new Workspace("T12345",
-            "xoxb-token-1234"); // TODO workspace 등록 API 생기면 제거 필요
-
     @Test
     void 정상_로그인() {
         // given
-        String memberSlackId = "U03MC231";
-        워크스페이스_등록(workspace);
-        회원가입(memberSlackId, workspace.getSlackId());
+        String memberSlackId = MemberFixture.BOM.getSlackId();
 
         // when
-        ExtractableResponse<Response> response = 로그인(memberSlackId);
+        ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberSlackId);
 
         // then
         상태코드_200_확인(response);
@@ -96,24 +86,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_400_확인(response);
         에러코드_확인(response, "INVALID_TOKEN");
-    }
-
-    private OAuthV2AccessResponse generateOAuthV2AccessResponse() {
-        OAuthV2AccessResponse response = new OAuthV2AccessResponse();
-        AuthedUser authedUser = new AuthedUser();
-        authedUser.setAccessToken("token");
-        response.setAuthedUser(authedUser);
-        response.setOk(true);
-        return response;
-    }
-
-    private UsersIdentityResponse generateUsersIdentityResponse(final String slackId) {
-        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
-        User user = new User();
-        user.setId(slackId);
-        usersIdentityResponse.setUser(user);
-        usersIdentityResponse.setOk(true);
-        return usersIdentityResponse;
     }
 
     private void 응답_바디에_토큰_존재(final ExtractableResponse<Response> response) {

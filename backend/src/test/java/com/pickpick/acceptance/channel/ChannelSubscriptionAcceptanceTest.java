@@ -3,15 +3,12 @@ package com.pickpick.acceptance.channel;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.구독한_채널_순서_변경_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저가_구독한_채널_목록_조회_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_취소_요청;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
-import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
-import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -19,7 +16,7 @@ import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
-import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.fixture.MemberFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -34,22 +31,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "slackId123";
+    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
 
     private String token;
-    private Workspace workspace;
 
     @BeforeEach
     void 가입_후_로그인() {
-        workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
         token = jwtTokenProvider.createToken("1");
     }
 
     @Test
     void 채널_구독() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
 
         // when
@@ -63,7 +57,6 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 채널_구독_취소() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
 
         채널_구독_요청(token, noticeId);
@@ -79,11 +72,9 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 채널_구독_조회() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
         채널_구독_요청(token, noticeId);
 
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
         채널_구독_요청(token, freeChatId);
 
@@ -98,11 +89,9 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
         채널_구독_요청(token, noticeId);
 
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
         채널_구독_요청(token, freeChatId);
 
@@ -120,11 +109,9 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @ValueSource(ints = {0, -1})
     void 구독_채널_순서_변경_시_1보다_작은_순서가_들어올_경우_예외_발생(int invalidViewOrder) {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
         채널_구독_요청(token, noticeId);
 
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
         채널_구독_요청(token, freeChatId);
 
@@ -144,11 +131,9 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_중복된_순서가_들어올_경우_예외_발생() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
         채널_구독_요청(token, noticeId);
 
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
         채널_구독_요청(token, freeChatId);
 
@@ -168,10 +153,8 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_해당_멤버가_구독한_적_없는_채널_ID가_포함된_경우_예외_발생() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
 
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
         채널_구독_요청(token, freeChatId);
 
@@ -191,11 +174,9 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_채널_순서_변경_시_해당_멤버의_모든_구독_채널이_요청에_포함되지_않을_경우_예외_발생() {
         // given
-        채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
         채널_구독_요청(token, noticeId);
 
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
         채널_구독_요청(token, freeChatId);
 
@@ -214,7 +195,6 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독_중인_채널_다시_구독_요청() {
         // given
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 1L;
         채널_구독_요청(token, freeChatId);
 
@@ -229,7 +209,6 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
     @Test
     void 구독하지_않은_채널_구독_취소() {
         // given
-        채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 1L;
 
         // when

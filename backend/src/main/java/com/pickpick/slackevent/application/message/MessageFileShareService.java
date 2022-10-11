@@ -1,6 +1,5 @@
 package com.pickpick.slackevent.application.message;
 
-import com.pickpick.channel.application.ChannelCreateService;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.member.domain.Member;
@@ -11,7 +10,6 @@ import com.pickpick.slackevent.application.SlackEventService;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
-import com.pickpick.workspace.domain.Workspace;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +20,12 @@ public class MessageFileShareService implements SlackEventService {
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
-    private final ChannelCreateService channelCreateService;
 
     public MessageFileShareService(final MessageRepository messages, final MemberRepository members,
-                                   final ChannelRepository channels, final ChannelCreateService channelCreateService) {
+                                   final ChannelRepository channels) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
-        this.channelCreateService = channelCreateService;
     }
 
     @Override
@@ -37,7 +33,7 @@ public class MessageFileShareService implements SlackEventService {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
         Member member = findMember(slackMessageDto);
-        Channel channel = findChannel(slackMessageDto, member.getWorkspace());
+        Channel channel = findChannel(slackMessageDto);
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }
@@ -53,11 +49,9 @@ public class MessageFileShareService implements SlackEventService {
         return members.getBySlackId(memberSlackId);
     }
 
-    private Channel findChannel(final SlackMessageDto slackMessageDto, final Workspace workspace) {
+    private Channel findChannel(final SlackMessageDto slackMessageDto) {
         String channelSlackId = slackMessageDto.getChannelSlackId();
-
-        return channels.findBySlackId(channelSlackId)
-                .orElseGet(() -> channelCreateService.createChannel(channelSlackId, workspace));
+        return channels.getBySlackId(channelSlackId);
     }
 
     @Override

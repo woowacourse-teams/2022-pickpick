@@ -1,16 +1,14 @@
 package com.pickpick.acceptance.channel;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTest;
-import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.fixture.MemberFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -21,13 +19,12 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class ChannelAcceptanceTest extends AcceptanceTest {
 
+    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
+
     @Test
     void 유저_전체_채널_목록_조회() {
         // given
-        Workspace workspace = 워크스페이스_등록(new Workspace("T12345", "xoxb-token-1234"));
-        String memberSlackId = "userSlackId";
-        회원가입(memberSlackId, workspace.getSlackId());
-        채널_목록_생성(memberSlackId, workspace);
+        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
         String token = jwtTokenProvider.createToken("1");
 
         // when
@@ -38,11 +35,5 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
 
         상태코드_200_확인(response);
         assertThat(channels).hasSize(ChannelFixture.values().length);
-    }
-
-    private void 채널_목록_생성(final String memberSlackId, final Workspace workspace) {
-        for (Channel channel : ChannelFixture.createAllChannels(workspace)) {
-            채널_생성(memberSlackId, channel);
-        }
     }
 }

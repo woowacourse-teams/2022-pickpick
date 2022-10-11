@@ -46,24 +46,24 @@ public class SlackEventRequestFactory {
     }
 
     public static Map<String, Object> emptyMessageCreateEvent(final String memberSlackId, final String messageSlackId,
-                                                              final String subtype) {
-        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "");
+                                                              final String subtype, final String channelSlackId) {
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "", channelSlackId);
     }
 
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
-                                                         final String subtype) {
-        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "text");
+                                                         final String subtype, final String channelSlackId) {
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "text", channelSlackId);
     }
 
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
                                                          final String subtype, final String timestamp,
-                                                         final String text) {
+                                                         final String text, final String channelSlackId) {
         String type = "event_callback";
 
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", subtype,
-                "channel", ChannelFixture.QNA.getSlackId(),
+                "channel", channelSlackId,
                 "previous_message", Map.of("client_msg_id", messageSlackId),
                 "message", Map.of(
                         "user", memberSlackId,
