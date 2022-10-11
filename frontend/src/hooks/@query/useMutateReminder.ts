@@ -8,7 +8,7 @@ import {
   ISOConverter,
   getFullDateInformation,
   getStandardHourFormMeridiemHour,
-  isValidReminderTime,
+  isInvalidReminderTime,
 } from "@src/@utils/date";
 
 import { deleteReminder, postReminder, putReminder } from "@src/api/reminders";
@@ -88,7 +88,7 @@ function useMutateReminder({
       checkedMeridiem
     );
     if (
-      !isValidReminderTime({
+      isInvalidReminderTime({
         checkedYear,
         checkedMonth,
         checkedDate,
@@ -131,7 +131,7 @@ function useMutateReminder({
       checkedMeridiem
     );
     if (
-      !isValidReminderTime({
+      isInvalidReminderTime({
         checkedYear,
         checkedMonth,
         checkedDate,

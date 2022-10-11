@@ -227,8 +227,8 @@ export const parsePickerOptionText = ({
 type IsValidMeridiem = (value: string) => boolean;
 
 // 올바른 Meridiem 인지 확인한다. (오전, 오후)
-export const isValidMeridiem: IsValidMeridiem = (value) => {
-  return value === MERIDIEM.AM || value === MERIDIEM.PM;
+export const isInvalidMeridiem: IsValidMeridiem = (value) => {
+  return value !== MERIDIEM.AM && value !== MERIDIEM.PM;
 };
 
 interface IsValidReminderTime {
@@ -245,7 +245,7 @@ interface IsValidReminderTime {
 }
 
 // 올바른 Reminder 생성 시간인지 확인한다. (현재보다 과거가 아닌지 확인한다.)
-export const isValidReminderTime = ({
+export const isInvalidReminderTime = ({
   checkedYear,
   checkedMonth,
   checkedDate,
@@ -257,10 +257,10 @@ export const isValidReminderTime = ({
   hour,
   minute,
 }: IsValidReminderTime) => {
-  if (checkedYear < year) return false;
-  if (checkedYear === year && checkedMonth < month) return false;
+  if (checkedYear < year) return true;
+  if (checkedYear === year && checkedMonth < month) return true;
   if (checkedYear === year && checkedMonth === month && checkedDate < date)
-    return false;
+    return true;
 
   if (
     checkedYear === year &&
@@ -268,7 +268,7 @@ export const isValidReminderTime = ({
     checkedDate === date &&
     checkedHour < hour
   )
-    return false;
+    return true;
 
   if (
     checkedYear === year &&
@@ -277,7 +277,7 @@ export const isValidReminderTime = ({
     checkedHour === hour &&
     checkedMinute <= minute
   )
-    return false;
+    return true;
 
-  return true;
+  return false;
 };

@@ -16,7 +16,7 @@ import {
   getMeridiemHourFromStandardHour,
   getMeridiemTimeFromISO,
   getTimeWithTenMinuteIntervals,
-  isValidMeridiem,
+  isInvalidMeridiem,
 } from "@src/@utils/date";
 
 interface Props {
@@ -60,7 +60,7 @@ function useTimePicker({ remindDate }: Props): UseTimePickerResult {
     changeValue: changeMeridiem,
   } = useInput<Meridiem>({
     initialValue: meridiem,
-    validation: isValidMeridiem,
+    isInvalid: isInvalidMeridiem,
   });
 
   const {
