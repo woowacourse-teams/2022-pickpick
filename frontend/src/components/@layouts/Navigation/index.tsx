@@ -18,13 +18,12 @@ import useAuthentication from "@src/hooks/useAuthentication";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 import { PATH_NAME } from "@src/@constants/path";
-import { Theme } from "@src/@types/shared";
 
 import * as Styled from "./style";
 
 function Navigation() {
   const { logout } = useAuthentication();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const { getRecentFeedPath } = useRecentFeedPath();
   const { data, refetch } = useGetSubscribedChannels();
 
