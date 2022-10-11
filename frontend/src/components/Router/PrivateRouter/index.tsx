@@ -5,8 +5,8 @@ import { Outlet } from "react-router-dom";
 
 import Loader from "@src/components/Loader";
 
-import { PATH_NAME } from "@src/@constants";
 import { QUERY_KEY } from "@src/@constants/api";
+import { PATH_NAME } from "@src/@constants/path";
 
 import { isCertificated } from "@src/api/auth";
 

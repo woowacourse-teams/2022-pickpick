@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 import useSnackbar from "@src/hooks/useSnackbar";
 
-import { MESSAGE, PATH_NAME } from "@src/@constants";
 import { ACCESS_TOKEN_KEY, QUERY_KEY } from "@src/@constants/api";
+import { MESSAGE } from "@src/@constants/message";
+import { PATH_NAME } from "@src/@constants/path";
 import { deleteCookie, setCookie } from "@src/@utils";
 
 interface UseAuthenticationResult {

@@ -5,7 +5,7 @@ import WrapperLink from "@src/components/@shared/WrapperNavLink";
 import PlusIcon from "@src/components/@svgIcons/PlusIcon";
 import ThemeToggler from "@src/components/ThemeToggler";
 
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants/path";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import { SubscribedChannel } from "@src/@types/api";
 import { Theme } from "@src/@types/shared";

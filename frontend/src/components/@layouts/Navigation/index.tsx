@@ -17,7 +17,7 @@ import useOuterClick from "@src/hooks/@shared/useOuterClick";
 import useAuthentication from "@src/hooks/useAuthentication";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants/path";
 import { Theme } from "@src/@types/shared";
 
 import * as Styled from "./style";

@@ -9,8 +9,9 @@ import { useNavigate } from "react-router-dom";
 
 import useSnackbar from "@src/hooks/useSnackbar";
 
-import { MESSAGE, PATH_NAME } from "@src/@constants";
 import { SEARCH_PARAMS } from "@src/@constants/api";
+import { MESSAGE } from "@src/@constants/message";
+import { PATH_NAME } from "@src/@constants/path";
 
 interface Props {
   keyword: string;

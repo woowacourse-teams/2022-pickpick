@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 
 import useSnackbar from "@src/hooks/useSnackbar";
 
-import { MESSAGE } from "@src/@constants";
+import { MESSAGE } from "@src/@constants/message";
 import { Meridiem } from "@src/@types/date";
 import {
   ISOConverter,

@@ -2,12 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 import useSnackbar from "@src/hooks/useSnackbar";
 
-import {
-  ERROR_CODE,
-  ERROR_MESSAGE_BY_CODE,
-  MESSAGE,
-  PATH_NAME,
-} from "@src/@constants";
+import { ERROR_CODE } from "@src/@constants/api";
+import { API_ERROR_MESSAGE, MESSAGE } from "@src/@constants/message";
+import { PATH_NAME } from "@src/@constants/path";
 import { CustomError } from "@src/@types/shared";
 
 interface UseApiErrorResult {
@@ -24,7 +21,7 @@ function useApiError(): UseApiErrorResult {
     if (errorCode === ERROR_CODE.INVALID_TOKEN) return;
 
     const errorMessage =
-      ERROR_MESSAGE_BY_CODE[errorCode] ?? MESSAGE.DEFAULT_SERVER_ERROR;
+      API_ERROR_MESSAGE[errorCode] ?? MESSAGE.DEFAULT_SERVER_ERROR;
 
     openFailureSnackbar(errorMessage);
 
