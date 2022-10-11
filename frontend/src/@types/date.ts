@@ -7,4 +7,6 @@ export type StandardHours = Range<0, 24>;
 
 export type MeridiemHours = Range<1, 13>;
 
+export type Days = Range<0, 7>;
+
 export type TimeUnit = ValueOf<typeof TIME_UNIT>;

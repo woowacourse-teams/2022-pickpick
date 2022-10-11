@@ -6,8 +6,7 @@ import {
   NOON,
   TIME_UNIT,
 } from "@src/@constants/date";
-import { Meridiem, MeridiemHours, StandardHours } from "@src/@types/date";
-import { Range } from "@src/@types/utils";
+import { Days, Meridiem, MeridiemHours, StandardHours } from "@src/@types/date";
 
 import { getNumberWithZeroPadding, isString } from ".";
 
@@ -59,7 +58,7 @@ export const getFullDateInformation: GetFullDateInformation = (givenDate) => {
   const year = givenDate.getFullYear();
   const month = givenDate.getMonth() + 1;
   const date = givenDate.getDate();
-  const dayIndex = givenDate.getDay() as Range<0, 7>;
+  const dayIndex = givenDate.getDay() as Days;
   const day = DAY[dayIndex];
   const hour = givenDate.getHours() as StandardHours;
   const minute = givenDate.getMinutes();
