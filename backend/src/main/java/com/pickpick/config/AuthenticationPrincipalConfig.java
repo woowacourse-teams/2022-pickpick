@@ -27,6 +27,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor(jwtTokenProvider))
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/event", "/api/slack-login", "/api/certification");
+                .excludePathPatterns("/api/event", "/api/slack-login", "/api/certification", "/api/slack-workspace");
     }
 }
