@@ -15,7 +15,7 @@ interface UseSelectChannelsResult {
   getCurrentChannels: SubscribedChannel[];
   getRemainingChannels: SubscribedChannel[];
   handleToggleChannel: (id: number) => void;
-  handleToggleAllChannels: () => void;
+  handleToggleAllChannels: VoidFunction;
 }
 
 function useSelectChannels({
