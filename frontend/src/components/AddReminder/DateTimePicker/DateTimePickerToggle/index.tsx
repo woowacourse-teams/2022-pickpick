@@ -1,3 +1,5 @@
+import { useTheme } from "styled-components";
+
 import ArrowIconDown from "@src/components/@svgIcons/ArrowIconDown";
 
 import { FlexRow } from "@src/@styles/shared";
@@ -15,6 +17,8 @@ function DateTimePickerToggle({
   handleToggleDropdown,
   children,
 }: StrictPropsWithChildren<Props>) {
+  const theme = useTheme();
+
   return (
     <Styled.Container onClick={handleToggleDropdown}>
       <FlexRow alignItems="center" gap="8px">
@@ -22,7 +26,11 @@ function DateTimePickerToggle({
         <Styled.Text>{text}</Styled.Text>
       </FlexRow>
 
-      <ArrowIconDown width="24px" height="24px" fill="#8B8B8B" />
+      <ArrowIconDown
+        width="24px"
+        height="24px"
+        fill={theme.COLOR.SECONDARY.DEFAULT}
+      />
     </Styled.Container>
   );
 }

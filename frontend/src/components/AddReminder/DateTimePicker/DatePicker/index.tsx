@@ -1,4 +1,5 @@
 import { ChangeEventHandler, RefObject } from "react";
+import { useTheme } from "styled-components";
 
 import Dropdown from "@src/components/@shared/Dropdown";
 import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
@@ -36,6 +37,8 @@ function DatePicker({
   handleChangeDate,
   handleResetDatePickerPosition,
 }: Props) {
+  const theme = useTheme();
+
   return (
     <Dropdown toggleHandler={handleResetDatePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
@@ -61,7 +64,11 @@ function DatePicker({
            })}`}
               handleToggleDropdown={handleToggleDropdown}
             >
-              <CalendarIcon width="16px" height="16px" fill="#8B8B8B" />
+              <CalendarIcon
+                width="16px"
+                height="16px"
+                fill={theme.COLOR.SECONDARY.DEFAULT}
+              />
             </DateTimePickerToggle>
 
             {isDropdownOpened && (

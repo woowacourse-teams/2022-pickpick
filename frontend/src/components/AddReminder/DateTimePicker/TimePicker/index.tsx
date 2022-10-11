@@ -1,4 +1,5 @@
 import { ChangeEventHandler, RefObject } from "react";
+import { useTheme } from "styled-components";
 
 import Dropdown from "@src/components/@shared/Dropdown";
 import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
@@ -39,6 +40,8 @@ function TimePicker({
   handleChangeMinute,
   handleResetTimePickerPosition,
 }: Props) {
+  const theme = useTheme();
+
   return (
     <Dropdown toggleHandler={handleResetTimePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
@@ -59,7 +62,11 @@ function TimePicker({
               `}
               handleToggleDropdown={handleToggleDropdown}
             >
-              <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />
+              <ReminderIconActive
+                width="16px"
+                height="16px"
+                fill={theme.COLOR.SECONDARY.DEFAULT}
+              />
             </DateTimePickerToggle>
 
             {isDropdownOpened && (
