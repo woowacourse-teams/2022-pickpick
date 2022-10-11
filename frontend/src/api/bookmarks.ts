@@ -4,12 +4,14 @@ import { API_ENDPOINT } from "@src/@constants/api";
 import { ResponseBookmarks } from "@src/@types/api";
 import { getPrivateHeaders } from "@src/@utils/api";
 
-interface GetBookmarkParam {
+type GetBookmarks = ({
+  pageParam,
+}: {
   pageParam?: string;
-}
+}) => Promise<ResponseBookmarks>;
 
-export const getBookmarks = async (
-  { pageParam }: GetBookmarkParam = { pageParam: "" }
+export const getBookmarks: GetBookmarks = async (
+  { pageParam } = { pageParam: "" }
 ) => {
   const { data } = await fetcher.get<ResponseBookmarks>(
     API_ENDPOINT.BOOKMARKS,
@@ -23,7 +25,9 @@ export const getBookmarks = async (
   return data;
 };
 
-export const postBookmark = async (messageId: number) => {
+type PostBookmark = (messageId: number) => Promise<void>;
+
+export const postBookmark: PostBookmark = async (messageId) => {
   await fetcher.post(
     API_ENDPOINT.BOOKMARKS,
     { messageId },
@@ -33,7 +37,9 @@ export const postBookmark = async (messageId: number) => {
   );
 };
 
-export const deleteBookmark = async (messageId: number) => {
+type DeleteBookmark = (messageId: number) => Promise<void>;
+
+export const deleteBookmark: DeleteBookmark = async (messageId) => {
   await fetcher.delete(API_ENDPOINT.BOOKMARKS, {
     headers: { ...getPrivateHeaders() },
     params: {

@@ -42,3 +42,5 @@ export const ERROR_CODE = {
   BOOKMARK_NOT_FOUND: "BOOKMARK_NOT_FOUND",
   MESSAGE_NOT_FOUND: "MESSAGE_NOT_FOUND",
 } as const;
+
+export const DEFAULT_CHANNEL_ID = "main";

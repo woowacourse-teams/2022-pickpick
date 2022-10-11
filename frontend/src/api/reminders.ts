@@ -1,19 +1,14 @@
 import { fetcher } from "@src/api";
 
 import { API_ENDPOINT } from "@src/@constants/api";
-import { ResponseReminders } from "@src/@types/api";
+import { GetReminderPageParam, ResponseReminders } from "@src/@types/api";
 import { getPrivateHeaders } from "@src/@utils/api";
 
-interface ReminderProps {
-  messageId: number;
-  reminderDate: string;
-}
+type GetReminders = ({
+  pageParam,
+}: GetReminderPageParam) => Promise<ResponseReminders>;
 
-interface GetReminderParam {
-  pageParam?: string;
-}
-
-export const getReminders = async ({ pageParam }: GetReminderParam) => {
+export const getReminders: GetReminders = async ({ pageParam }) => {
   const { data } = await fetcher.get<ResponseReminders>(
     API_ENDPOINT.REMINDERS,
     {
@@ -27,13 +22,20 @@ export const getReminders = async ({ pageParam }: GetReminderParam) => {
   return data;
 };
 
-export const postReminder = async (postData: ReminderProps) => {
+type PoseReminder = (postData: {
+  messageId: number;
+  reminderDate: string;
+}) => Promise<void>;
+
+export const postReminder: PoseReminder = async (postData) => {
   await fetcher.post(API_ENDPOINT.REMINDERS, postData, {
     headers: { ...getPrivateHeaders() },
   });
 };
 
-export const deleteReminder = async (messageId: number) => {
+type DeleteReminder = (messageId: number) => Promise<void>;
+
+export const deleteReminder: DeleteReminder = async (messageId) => {
   await fetcher.delete(API_ENDPOINT.REMINDERS, {
     headers: { ...getPrivateHeaders() },
     params: {
@@ -42,7 +44,12 @@ export const deleteReminder = async (messageId: number) => {
   });
 };
 
-export const putReminder = async (modifyData: ReminderProps) => {
+type PutReminder = (modifyDate: {
+  messageId: number;
+  reminderDate: string;
+}) => Promise<void>;
+
+export const putReminder: PutReminder = async (modifyData) => {
   await fetcher.put(
     API_ENDPOINT.REMINDERS,
     { ...modifyData },
