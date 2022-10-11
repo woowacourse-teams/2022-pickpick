@@ -60,7 +60,7 @@ public class ChannelService {
                                                 final Map<String, Boolean> participatingChannelIds) {
         return channels.findAllByWorkspaceOrderByName(workspace)
                 .stream()
-                .filter(it -> participatingChannelIds.get(it.getSlackId()))
+                .filter(it -> participatingChannelIds.getOrDefault(it.getSlackId(), false))
                 .collect(Collectors.toList());
     }
 
