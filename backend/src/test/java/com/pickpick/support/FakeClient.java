@@ -55,7 +55,8 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public Map<String, Boolean> findParticipation(final String userToken) {
-        return Map.of();
+        return Arrays.stream(ChannelFixture.values())
+                .collect(Collectors.toMap(ChannelFixture::getSlackId, it -> true));
     }
 
     @Override

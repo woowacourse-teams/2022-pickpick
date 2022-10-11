@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class ChannelAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
+    private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
 
     @Test
     void 유저_전체_채널_목록_조회() {

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class BookmarkAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
+    private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
 
     @BeforeEach
     void init() {
