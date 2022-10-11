@@ -11,13 +11,13 @@ export const QUERY_KEY = {
 } as const;
 
 export const API_ENDPOINT = {
-  MESSAGES: "/api/messages",
-  CHANNEL: "/api/channels",
-  CHANNEL_SUBSCRIPTION: "/api/channel-subscription",
-  BOOKMARKS: "/api/bookmarks",
-  REMINDERS: "/api/reminders",
-  CERTIFICATION: "/api/certification",
-  SLACK_LOGIN: "/api/slack-login",
+  MESSAGES: "/messages",
+  CHANNEL: "/channels",
+  CHANNEL_SUBSCRIPTION: "/channel-subscription",
+  BOOKMARKS: "/bookmarks",
+  REMINDERS: "/reminders",
+  CERTIFICATION: "/certification",
+  SLACK_LOGIN: "/slack-login",
 } as const;
 
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";
