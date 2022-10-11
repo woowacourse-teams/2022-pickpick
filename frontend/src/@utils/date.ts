@@ -7,8 +7,7 @@ import {
   TIME_UNIT,
 } from "@src/@constants/date";
 import { Days, Meridiem, MeridiemHours, StandardHours } from "@src/@types/date";
-
-import { getNumberWithZeroPadding, isString } from ".";
+import { getNumberWithZeroPadding, isString } from "@src/@utils";
 
 /**
  * TODO: 함수 분리
