@@ -87,6 +87,20 @@ function useMutateReminder({
       checkedHour,
       checkedMeridiem
     );
+    console.log(
+      isInvalidReminderTime({
+        checkedYear,
+        checkedMonth,
+        checkedDate,
+        checkedHour: parsedHour,
+        checkedMinute,
+        year,
+        month,
+        date,
+        hour,
+        minute,
+      })
+    );
     if (
       isInvalidReminderTime({
         checkedYear,

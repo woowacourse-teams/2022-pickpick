@@ -224,14 +224,14 @@ export const parsePickerOptionText = ({
   return `${getNumberWithZeroPadding(optionText)}${unitPostfix}`;
 };
 
-type IsValidMeridiem = (value: string) => boolean;
+type IsInvalidMeridiem = (value: string) => boolean;
 
 // 올바른 Meridiem 인지 확인한다. (오전, 오후)
-export const isInvalidMeridiem: IsValidMeridiem = (value) => {
+export const isInvalidMeridiem: IsInvalidMeridiem = (value) => {
   return value !== MERIDIEM.AM && value !== MERIDIEM.PM;
 };
 
-interface IsValidReminderTime {
+interface IsInvalidReminderTime {
   checkedYear: number;
   checkedMonth: number;
   checkedDate: number;
@@ -256,25 +256,25 @@ export const isInvalidReminderTime = ({
   date,
   hour,
   minute,
-}: IsValidReminderTime) => {
+}: IsInvalidReminderTime) => {
   if (checkedYear < year) return true;
-  if (checkedYear === year && checkedMonth < month) return true;
-  if (checkedYear === year && checkedMonth === month && checkedDate < date)
+  if (checkedYear <= year && checkedMonth < month) return true;
+  if (checkedYear <= year && checkedMonth <= month && checkedDate < date)
     return true;
 
   if (
-    checkedYear === year &&
-    checkedMonth === month &&
-    checkedDate === date &&
+    checkedYear <= year &&
+    checkedMonth <= month &&
+    checkedDate <= date &&
     checkedHour < hour
   )
     return true;
 
   if (
-    checkedYear === year &&
-    checkedMonth === month &&
-    checkedDate === date &&
-    checkedHour === hour &&
+    checkedYear <= year &&
+    checkedMonth <= month &&
+    checkedDate <= date &&
+    checkedHour <= hour &&
     checkedMinute <= minute
   )
     return true;
