@@ -21,7 +21,7 @@ interface Props {
   handleChangeYear: ChangeEventHandler<HTMLInputElement>;
   handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
   handleChangeDate: ChangeEventHandler<HTMLInputElement>;
-  handleResetDatePickerPosition: () => void;
+  handleResetDatePickerPosition: VoidFunction;
 }
 
 function DatePicker({

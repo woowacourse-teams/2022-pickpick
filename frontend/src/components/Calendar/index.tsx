@@ -12,7 +12,7 @@ import * as Styled from "./style";
 
 interface Props {
   channelId: string;
-  handleCloseCalendar: () => void;
+  handleCloseCalendar: VoidFunction;
 }
 
 function Calendar({ channelId, handleCloseCalendar }: Props) {

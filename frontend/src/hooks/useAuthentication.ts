@@ -11,7 +11,7 @@ import { deleteCookie, setCookie } from "@src/@utils";
 
 interface UseAuthenticationResult {
   login: (token: string, isFirstLogin: boolean) => void;
-  logout: () => void;
+  logout: VoidFunction;
 }
 
 function useAuthentication(): UseAuthenticationResult {

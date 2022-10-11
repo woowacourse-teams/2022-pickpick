@@ -24,8 +24,8 @@ interface HandlerProps {
 }
 
 interface Props {
-  handleCloseReminderModal: () => void;
-  refetchFeed: () => void;
+  handleCloseReminderModal: VoidFunction;
+  refetchFeed: VoidFunction;
 }
 
 type Handler = ({

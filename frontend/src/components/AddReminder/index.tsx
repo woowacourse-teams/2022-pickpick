@@ -16,8 +16,8 @@ export type ButtonText = ValueOf<typeof REMINDER_BUTTON_TEXT>;
 interface Props {
   messageId: number;
   remindDate: string;
-  handleCloseReminderModal: () => void;
-  refetchFeed: () => void;
+  handleCloseReminderModal: VoidFunction;
+  refetchFeed: VoidFunction;
 }
 
 function AddReminder({

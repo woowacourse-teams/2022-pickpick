@@ -2,9 +2,9 @@ import { useState } from "react";
 
 interface ReturnType {
   isDropdownOpened: boolean;
-  handleOpenDropdown: () => void;
-  handleCloseDropdown: () => void;
-  handleToggleDropdown: () => void;
+  handleOpenDropdown: VoidFunction;
+  handleCloseDropdown: VoidFunction;
+  handleToggleDropdown: VoidFunction;
 }
 
 function useDropdown(): ReturnType {

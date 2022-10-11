@@ -23,7 +23,7 @@ interface Props {
   handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
   handleChangeHour: ChangeEventHandler<HTMLInputElement>;
   handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
-  handleResetTimePickerPosition: () => void;
+  handleResetTimePickerPosition: VoidFunction;
 }
 
 function TimePicker({

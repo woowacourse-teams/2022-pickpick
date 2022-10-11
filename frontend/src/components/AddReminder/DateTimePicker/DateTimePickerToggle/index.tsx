@@ -7,7 +7,7 @@ import * as Styled from "./style";
 
 interface Props {
   text: string;
-  handleToggleDropdown: () => void;
+  handleToggleDropdown: VoidFunction;
 }
 
 function DateTimePickerToggle({

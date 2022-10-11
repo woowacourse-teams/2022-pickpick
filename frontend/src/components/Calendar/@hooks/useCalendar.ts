@@ -7,8 +7,8 @@ interface UseCalendarResult {
   firstOfMonthDate: Date;
   isFutureMonth: () => boolean;
   isCurrentMonth: () => boolean;
-  handleDecrementMonth: () => void;
-  handleIncrementMonth: () => void;
+  handleDecrementMonth: VoidFunction;
+  handleIncrementMonth: VoidFunction;
   getCurrentDays: () => CurrentDays;
 }
 

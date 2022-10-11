@@ -9,7 +9,7 @@ import * as Styled from "./style";
 interface Props {
   postedDate: string;
   channelId: string;
-  handleOpenCalendar: () => void;
+  handleOpenCalendar: VoidFunction;
 }
 
 function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {

@@ -14,7 +14,7 @@ import * as Styled from "./style";
 
 interface Props {
   channels?: SubscribedChannel[];
-  handleCloseDrawer: () => void;
+  handleCloseDrawer: VoidFunction;
 }
 
 function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {

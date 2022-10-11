@@ -9,13 +9,13 @@ import { PropsWithFunctionChildren } from "@src/@types/utils";
 interface ChildrenProps {
   innerRef: RefObject<HTMLDivElement>;
   isDropdownOpened: boolean;
-  handleOpenDropdown: () => void;
-  handleCloseDropdown: () => void;
-  handleToggleDropdown: () => void;
+  handleOpenDropdown: VoidFunction;
+  handleCloseDropdown: VoidFunction;
+  handleToggleDropdown: VoidFunction;
 }
 
 interface Props {
-  toggleHandler?: () => void;
+  toggleHandler?: VoidFunction;
   children: ({ handleToggleDropdown }: ChildrenProps) => ReactNode;
 }
 
