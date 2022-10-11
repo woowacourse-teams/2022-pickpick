@@ -3,11 +3,11 @@ package com.pickpick.acceptance.channel;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
-import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_요청;
-import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_채널_순서_변경_요청;
-import static com.pickpick.acceptance.channel.ChannelRestHandler.구독_취소_요청;
-import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_구독_채널_목록_조회_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.구독한_채널_순서_변경_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.유저가_구독한_채널_목록_조회_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_취소_요청;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
@@ -53,7 +53,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         long noticeId = 1L;
 
         // when
-        ExtractableResponse<Response> response = 구독_요청(token, noticeId);
+        ExtractableResponse<Response> response = 채널_구독_요청(token, noticeId);
 
         // then
         상태코드_200_확인(response);
@@ -66,10 +66,10 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
 
-        구독_요청(token, noticeId);
+        채널_구독_요청(token, noticeId);
 
         // when
-        ExtractableResponse<Response> response = 구독_취소_요청(token, noticeId);
+        ExtractableResponse<Response> response = 채널_구독_취소_요청(token, noticeId);
 
         // then
         상태코드_200_확인(response);
@@ -81,14 +81,14 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
-        구독_요청(token, noticeId);
+        채널_구독_요청(token, noticeId);
 
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         // when
-        ExtractableResponse<Response> response = 유저_구독_채널_목록_조회_요청(token);
+        ExtractableResponse<Response> response = 유저가_구독한_채널_목록_조회_요청(token);
 
         // then
         상태코드_200_확인(response);
@@ -100,11 +100,11 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
-        구독_요청(token, noticeId);
+        채널_구독_요청(token, noticeId);
 
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         // when
         ExtractableResponse<Response> subscriptionOrderChangeResponse = 올바른_구독_채널_순서_변경_요청(token, noticeId, freeChatId);
@@ -112,7 +112,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // then
         상태코드_200_확인(subscriptionOrderChangeResponse);
 
-        ExtractableResponse<Response> subscriptionsResponse = 유저_구독_채널_목록_조회_요청(token);
+        ExtractableResponse<Response> subscriptionsResponse = 유저가_구독한_채널_목록_조회_요청(token);
         구독이_올바른_순서로_조회됨(subscriptionsResponse, freeChatId, noticeId);
     }
 
@@ -122,11 +122,11 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
-        구독_요청(token, noticeId);
+        채널_구독_요청(token, noticeId);
 
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(noticeId, invalidViewOrder),
@@ -134,7 +134,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
+        ExtractableResponse<Response> response = 구독한_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -146,11 +146,11 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
-        구독_요청(token, noticeId);
+        채널_구독_요청(token, noticeId);
 
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(noticeId, 1),
@@ -158,7 +158,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
+        ExtractableResponse<Response> response = 구독한_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -173,7 +173,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
 
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(noticeId, 1),
@@ -181,7 +181,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
+        ExtractableResponse<Response> response = 구독한_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -193,18 +193,18 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성(MEMBER_SLACK_ID, NOTICE.create(workspace));
         long noticeId = 1L;
-        구독_요청(token, noticeId);
+        채널_구독_요청(token, noticeId);
 
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 2L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         List<ChannelOrderRequest> request = List.of(
                 new ChannelOrderRequest(freeChatId, 1)
         );
 
         // when
-        ExtractableResponse<Response> response = 구독_채널_순서_변경_요청(token, request);
+        ExtractableResponse<Response> response = 구독한_채널_순서_변경_요청(token, request);
 
         // then
         상태코드_400_확인(response);
@@ -216,10 +216,10 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         // given
         채널_생성(MEMBER_SLACK_ID, FREE_CHAT.create(workspace));
         long freeChatId = 1L;
-        구독_요청(token, freeChatId);
+        채널_구독_요청(token, freeChatId);
 
         // when
-        ExtractableResponse<Response> response = 구독_요청(token, freeChatId);
+        ExtractableResponse<Response> response = 채널_구독_요청(token, freeChatId);
 
         // then
         상태코드_400_확인(response);
@@ -233,7 +233,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
         long freeChatId = 1L;
 
         // when
-        ExtractableResponse<Response> response = 구독_취소_요청(token, freeChatId);
+        ExtractableResponse<Response> response = 채널_구독_취소_요청(token, freeChatId);
 
         // then
         상태코드_400_확인(response);
@@ -274,6 +274,6 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
                 new ChannelOrderRequest(channelIdToSubscribe1, 2)
         );
 
-        return 구독_채널_순서_변경_요청(token, request);
+        return 구독한_채널_순서_변경_요청(token, request);
     }
 }

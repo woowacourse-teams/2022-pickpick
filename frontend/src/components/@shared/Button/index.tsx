@@ -1,4 +1,6 @@
-import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import { ButtonHTMLAttributes } from "react";
+
+import { StrictPropsWithChildren } from "@src/@types/utils";
 
 import * as Styled from "./style";
 
@@ -9,7 +11,7 @@ export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   isActive: boolean;
 }
 
-function Button({ children, ...props }: PropsWithChildren<Props>) {
+function Button({ children, ...props }: StrictPropsWithChildren<Props>) {
   return <Styled.Container {...props}>{children}</Styled.Container>;
 }
 

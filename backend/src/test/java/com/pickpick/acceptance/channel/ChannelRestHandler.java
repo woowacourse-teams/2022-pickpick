@@ -22,21 +22,21 @@ public class ChannelRestHandler {
         return getWithToken(CHANNEL_API_URL, token);
     }
 
-    public static ExtractableResponse<Response> 구독_요청(final String token, final Long channelId) {
+    public static ExtractableResponse<Response> 채널_구독_요청(final String token, final Long channelId) {
         ChannelSubscriptionRequest channelSubscriptionRequest = new ChannelSubscriptionRequest(channelId);
         return postWithToken(CHANNEL_SUBSCRIPTION_API_URL, channelSubscriptionRequest, token);
     }
 
-    public static ExtractableResponse<Response> 유저_구독_채널_목록_조회_요청(final String token) {
+    public static ExtractableResponse<Response> 유저가_구독한_채널_목록_조회_요청(final String token) {
         return getWithToken(CHANNEL_SUBSCRIPTION_API_URL, token);
     }
 
-    public static ExtractableResponse<Response> 구독_채널_순서_변경_요청(final String token,
-                                                               final List<ChannelOrderRequest> request) {
+    public static ExtractableResponse<Response> 구독한_채널_순서_변경_요청(final String token,
+                                                                final List<ChannelOrderRequest> request) {
         return putWithToken(CHANNEL_SUBSCRIPTION_API_URL, request, token);
     }
 
-    public static ExtractableResponse<Response> 구독_취소_요청(final String token, final long channelId) {
+    public static ExtractableResponse<Response> 채널_구독_취소_요청(final String token, final long channelId) {
         return deleteWithToken(CHANNEL_SUBSCRIPTION_API_URL, token, Map.of("channelId", channelId));
     }
 }

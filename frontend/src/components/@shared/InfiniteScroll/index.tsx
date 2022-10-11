@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
-
 import useIntersectionObserver from "@src/components/@shared/InfiniteScroll/@hooks/useIntersectionObserver";
+
+import { StrictPropsWithChildren } from "@src/@types/utils";
 
 export interface Props {
   callback: () => void;
@@ -8,7 +8,10 @@ export interface Props {
   endPoint: boolean;
 }
 
-function InfiniteScroll({ children, ...props }: PropsWithChildren<Props>) {
+function InfiniteScroll({
+  children,
+  ...props
+}: StrictPropsWithChildren<Props>) {
   const { targetRef: nextRef } = useIntersectionObserver(props);
 
   return (

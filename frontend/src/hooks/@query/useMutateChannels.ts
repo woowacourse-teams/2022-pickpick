@@ -7,10 +7,17 @@ interface Props {
   handleSettleUnsubscribeChannel?: () => void;
 }
 
+type Handler = (id: string) => void;
+
+interface UseMutateChannelsResult {
+  handleSubscribeChannel: Handler;
+  handleUnSubscribeChannel: Handler;
+}
+
 function useMutateChannels({
   handleSettleSubscribeChannel,
   handleSettleUnsubscribeChannel,
-}: Props) {
+}: Props): UseMutateChannelsResult {
   const { mutate: subscribe } = useMutation(subscribeChannel, {
     onSettled: handleSettleSubscribeChannel,
   });

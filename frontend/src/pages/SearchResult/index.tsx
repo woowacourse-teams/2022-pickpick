@@ -19,12 +19,12 @@ import { FlexColumn } from "@src/@styles/shared";
 import {
   extractResponseMessages,
   getChannelIdsParams,
-  parseMeridemTime,
+  parseMeridiemTime,
 } from "@src/@utils";
 
 function SearchResult() {
-  const keyword = useGetSearchParam("keyword");
-  const channelIds = useGetSearchParam("channelIds");
+  const keyword = useGetSearchParam({ key: "keyword" });
+  const channelIds = useGetSearchParam({ key: "channelIds" });
 
   const {
     reminderTarget,
@@ -83,7 +83,7 @@ function SearchResult() {
               <MessageCard
                 key={id}
                 username={username}
-                date={parseMeridemTime(postedDate)}
+                date={parseMeridiemTime(postedDate)}
                 text={text}
                 thumbnail={userThumbnail}
                 isRemindedMessage={false}

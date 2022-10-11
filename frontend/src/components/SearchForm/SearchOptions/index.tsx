@@ -2,7 +2,7 @@ import { memo } from "react";
 
 import Button from "@src/components/@shared/Button";
 
-import { SubscribedChannel } from "@src/@types/shared";
+import { SubscribedChannel } from "@src/@types/api";
 
 import * as Styled from "./style";
 

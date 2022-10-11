@@ -3,7 +3,7 @@ import { useTheme } from "styled-components";
 import Button from "@src/components/@shared/Button";
 import Modal from "@src/components/@shared/Modal";
 import WrapperButton from "@src/components/@shared/WrapperButton";
-import WrapperLink from "@src/components/@shared/WrapperLink";
+import WrapperLink from "@src/components/@shared/WrapperNavLink";
 import HomeIcon from "@src/components/@svgIcons/HomeIcon";
 import InfoIcon from "@src/components/@svgIcons/InfoIcon";
 import MenuIcon from "@src/components/@svgIcons/MenuIcon";

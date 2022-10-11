@@ -3,7 +3,12 @@ import { useLocation } from "react-router-dom";
 
 import useWebStorage, { STORAGE_KIND } from "@src/hooks/@shared/useWebStorage";
 
-function useRecentFeedPath() {
+interface UseRecentFeedPathResult {
+  setRecentFeedPath: (item: string) => void;
+  getRecentFeedPath: () => string;
+}
+
+function useRecentFeedPath(): UseRecentFeedPathResult {
   const { key, pathname } = useLocation();
   const { setItem: setRecentFeedPath, getItem: getRecentFeedPath } =
     useWebStorage<string>({

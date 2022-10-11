@@ -23,12 +23,12 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseMessages, parseMeridemTime } from "@src/@utils";
+import { extractResponseMessages, parseMeridiemTime } from "@src/@utils";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
-  const { isRenderDate } = useMessageDate();
+  const shouldRenderDate = useMessageDate();
 
   const {
     reminderTarget,
@@ -115,7 +115,7 @@ function SpecificDateFeed() {
 
               return (
                 <Fragment key={id}>
-                  {isRenderDate(parsedDate) && (
+                  {shouldRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
                       channelId={channelId ?? ""}
@@ -124,7 +124,7 @@ function SpecificDateFeed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={parseMeridemTime(postedDate)}
+                    date={parseMeridiemTime(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}

@@ -5,11 +5,11 @@ import useSnackbar from "@src/hooks/useSnackbar";
 import { ERROR_MESSAGE_BY_CODE, PATH_NAME } from "@src/@constants";
 import { CustomError } from "@src/@types/shared";
 
-interface ReturnType {
+interface UseApiErrorResult {
   handleError: (error: any) => void;
 }
 
-function useApiError(): ReturnType {
+function useApiError(): UseApiErrorResult {
   const navigate = useNavigate();
   const { openFailureSnackbar } = useSnackbar();
 

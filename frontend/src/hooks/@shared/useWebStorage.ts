@@ -10,12 +10,12 @@ interface Props {
   kind: Storage;
 }
 
-interface ReturnType<T> {
+interface UseWebStorageResult<T> {
   getItem: () => T;
   setItem: (item: T) => void;
 }
 
-function useWebStorage<T>({ key, kind }: Props): ReturnType<T> {
+function useWebStorage<T>({ key, kind }: Props): UseWebStorageResult<T> {
   const storage = kind === STORAGE_KIND.LOCAL ? localStorage : sessionStorage;
 
   const getItem = (): T => {
