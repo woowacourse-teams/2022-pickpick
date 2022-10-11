@@ -48,7 +48,7 @@ public class AuthService {
         Member member = members.getBySlackId(memberSlackId);
 
         boolean isFirstLogin = member.isFirstLogin();
-        member.markLoggedIn();
+        member.markLoggedIn(userToken);
 
         return LoginResponse.builder()
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
@@ -64,7 +64,7 @@ public class AuthService {
         List<Member> allWorkspaceMembers = slackClient.findAllWorkspaceMembers(workspace);
         members.saveAll(allWorkspaceMembers);
 
-        List<Channel> allWorkspaceChannels = slackClient.findAllWorkspaceChannels(workspace);
+        List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
 
         return login(code);
