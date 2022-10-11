@@ -4,7 +4,7 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.SlackEventService;
-import com.pickpick.slackevent.application.channel.dto.ChannelRenameRequest;
+import com.pickpick.slackevent.application.channel.dto.ChannelRequest;
 import com.pickpick.slackevent.application.channel.dto.SlackChannelRenameDto;
 import com.pickpick.utils.JsonUtils;
 import javax.transaction.Transactional;
@@ -30,7 +30,7 @@ public class ChannelRenameService implements SlackEventService {
     }
 
     private SlackChannelRenameDto convert(final String requestBody) {
-        ChannelRenameRequest request = JsonUtils.convert(requestBody, ChannelRenameRequest.class);
+        ChannelRequest request = JsonUtils.convert(requestBody, ChannelRequest.class);
         return request.toDto();
     }
 
