@@ -94,15 +94,17 @@ export const getMessagesDate: GetMessagesDate = (postedDate) => {
     givenDate.year === today.year &&
     givenDate.month === today.month &&
     givenDate.date === today.date
-  )
+  ) {
     return DATE.TODAY;
+  }
 
   if (
     givenDate.year === today.year &&
     givenDate.month === today.month &&
     givenDate.date === today.date - 1
-  )
+  ) {
     return DATE.YESTERDAY;
+  }
 
   return `${givenDate.month}${TIME_UNIT.MONTH} ${givenDate.date}${TIME_UNIT.DATE} ${givenDate.day}`;
 };
@@ -138,6 +140,7 @@ export const getMeridiemHourFromStandardHour: getMeridiemHourFromStandardHour =
 
     if (time === NOON)
       return { meridiem: MERIDIEM.PM, hour: NOON as MeridiemHours };
+
     return {
       meridiem: MERIDIEM.PM,
       hour: (time - NOON) as MeridiemHours,
@@ -259,16 +262,18 @@ export const isInvalidReminderTime = ({
 }: IsInvalidReminderTime) => {
   if (checkedYear < year) return true;
   if (checkedYear <= year && checkedMonth < month) return true;
-  if (checkedYear <= year && checkedMonth <= month && checkedDate < date)
+  if (checkedYear <= year && checkedMonth <= month && checkedDate < date) {
     return true;
+  }
 
   if (
     checkedYear <= year &&
     checkedMonth <= month &&
     checkedDate <= date &&
     checkedHour < hour
-  )
+  ) {
     return true;
+  }
 
   if (
     checkedYear <= year &&
@@ -276,8 +281,9 @@ export const isInvalidReminderTime = ({
     checkedDate <= date &&
     checkedHour <= hour &&
     checkedMinute <= minute
-  )
+  ) {
     return true;
+  }
 
   return false;
 };
