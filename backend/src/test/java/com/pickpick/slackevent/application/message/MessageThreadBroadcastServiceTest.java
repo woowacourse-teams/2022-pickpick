@@ -3,11 +3,11 @@ package com.pickpick.slackevent.application.message;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -16,13 +16,6 @@ import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.utils.TimeUtils;
-import com.slack.api.RequestConfigurator;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsInfoRequest.ConversationsInfoRequestBuilder;
-import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
-import com.slack.api.model.Conversation;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
@@ -30,14 +23,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
 
-    private static final int FIRST_INDEX = 0;
-    private final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
-    private final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
+    private final Member SAMPLE_MEMBER = MemberFixture.BOM.create();
+    private final Channel SAMPLE_CHANNEL = ChannelFixture.NOTICE.create();
     private final Message SAMPLE_MESSAGE = new Message(
             "db8a1f84-8acf-46ab-b93d-85177cee3e96",
             "메시지 전송!",
@@ -73,55 +64,12 @@ class MessageThreadBroadcastServiceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    @MockBean
-    private MethodsClient slackClient;
-
-
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
     }
 
-    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 채널이 없으면 채널 생성 후 메시지를 저장한다")
-    @Test
-    void saveChannelAndMessageDynamicallyWhenDoesNotExist() throws SlackApiException, IOException {
-        // given
-        members.save(SAMPLE_MEMBER);
-        Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
-
-        ConversationsInfoResponse conversationsInfoResponse = setupMockData();
-
-        when(slackClient.conversationsInfo((RequestConfigurator<ConversationsInfoRequestBuilder>) any()))
-                .thenReturn(conversationsInfoResponse);
-
-        // when
-        messageThreadBroadcastService.execute(MESSAGE_THREAD_BROADCAST_REQUEST);
-        Optional<Channel> channelAfterSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageAfterSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
-
-        // then
-        assertAll(
-                () -> assertThat(channelBeforeSave).isEmpty(),
-                () -> assertThat(messageBeforeSave).isEmpty(),
-                () -> assertThat(channelAfterSave).isPresent(),
-                () -> assertThat(messageAfterSave).isPresent()
-        );
-    }
-
-    private ConversationsInfoResponse setupMockData() {
-        Conversation conversation = new Conversation();
-        conversation.setId(SAMPLE_CHANNEL.getSlackId());
-        conversation.setName(SAMPLE_CHANNEL.getName());
-
-        ConversationsInfoResponse conversationsInfoResponse = new ConversationsInfoResponse();
-        conversationsInfoResponse.setChannel(conversation);
-        conversationsInfoResponse.setOk(true);
-
-        return conversationsInfoResponse;
-    }
-
-    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 채널이 저장되어 있으면 채널 신규 저장 없이 메시지를 저장한다")
+    @DisplayName("스레드 메시지 채널로 전송 이벤트 전달 시 메시지를 저장한다")
     @Test
     void saveMessageWhenMessageCreatedEventPassed() {
         // given

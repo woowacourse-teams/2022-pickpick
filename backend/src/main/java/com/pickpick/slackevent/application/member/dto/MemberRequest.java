@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 @Getter
 public class MemberRequest {
 
+    private String teamId;
     private MemberEventDto event;
 
     private MemberRequest() {
@@ -32,6 +33,7 @@ public class MemberRequest {
                 .slackId(event.getUser().getId())
                 .username(extractUsername(profile))
                 .thumbnailUrl(profile.getImage48())
+                .workspaceSlackId(teamId)
                 .build();
     }
 

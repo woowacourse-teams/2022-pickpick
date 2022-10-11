@@ -1,20 +1,21 @@
 package com.pickpick.acceptance.message;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
 import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성_후_메시지_저장;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.키워드를_포함한_메시지_목록_생성;
-import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.acceptance.message.MessageRestHandler.MessageRequestBuilder;
 import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
@@ -30,20 +31,19 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = "U00001234";
+    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
 
     private String token;
 
     @BeforeEach
     void init() {
-        회원가입(MEMBER_SLACK_ID);
+        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
         token = jwtTokenProvider.createToken("1");
     }
 
     @Test
     void 텍스트가_비었으면_메시지_조회_시_필터링_됨() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 10);
         빈_메시지_전송(MEMBER_SLACK_ID);
         채널_구독_요청(token, 1L);
@@ -61,7 +61,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 조회할_과거_메시지가_있으면_hasPast가_true() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 21);
         채널_구독_요청(token, 1L);
 
@@ -78,7 +77,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 조회할_과거_메시지가_없으면_hasPast가_false() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 2);
         채널_구독_요청(token, 1L);
 
@@ -95,7 +93,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 조회할_미래_메시지가_있으면_hasFuture가_true() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 21);
         채널_구독_요청(token, 1L);
 
@@ -113,7 +110,6 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 조회할_미래_메시지가_없으면_hasFuture가_false() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
         메시지_목록_생성(MEMBER_SLACK_ID, 11);
         채널_구독_요청(token, 1L);
 
@@ -131,7 +127,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     void 키워드_검색() {
         // given
         String keyword = "줍줍";
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         채널_구독_요청(token, 1L);
 
         int messageCount = 5;
@@ -152,9 +148,8 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 특정_채널_목록에서_조회() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.NOTICE.create());
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.FREE_CHAT.create());
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID, ChannelFixture.NOTICE);
+        메시지_전송(MEMBER_SLACK_ID, ChannelFixture.FREE_CHAT);
 
         List<Long> channelIds = List.of(1L, 2L);
         MessageRequestBuilder request = new MessageRequestBuilder()
@@ -221,7 +216,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 북마크한_메시지는_isBookmarked가_true() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         채널_구독_요청(token, 1L);
         북마크_생성(token, 1L);
 
@@ -238,7 +233,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 북마크하지_않은_메시지는_isBookmarked가_false() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         채널_구독_요청(token, 1L);
 
         MessageRequestBuilder request = new MessageRequestBuilder();
@@ -254,7 +249,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인드한_메시지는_isSetReminded가_true() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         채널_구독_요청(token, 1L);
         리마인더_생성(token, 1L, LocalDateTime.now().plusDays(1));
 
@@ -271,7 +266,7 @@ class MessageAcceptanceTest extends AcceptanceTest {
     @Test
     void 리마인드하지_않은_메시지는_isSetReminded가_false() {
         // given
-        채널_생성_후_메시지_저장(MEMBER_SLACK_ID, ChannelFixture.QNA.create());
+        메시지_전송(MEMBER_SLACK_ID);
         채널_구독_요청(token, 1L);
 
         MessageRequestBuilder request = new MessageRequestBuilder();

@@ -9,9 +9,12 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,7 +32,17 @@ class MemberJoinServiceTest {
     private MemberRepository members;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
+
+    private Workspace workspace;
+
+    @BeforeEach
+    void init() {
+        workspace = workspaces.save(new Workspace("T12345", "xoxb-token-1234"));
+    }
 
     @AfterEach
     void tearDown() {
@@ -66,7 +79,7 @@ class MemberJoinServiceTest {
         Optional<Member> memberBeforeJoin = members.findBySlackId(slackId);
 
         // when
-        String request = createTeamJoinEvent(slackId, "최혜원", "써머");
+        String request = createTeamJoinEvent(slackId, workspace.getSlackId(), "최혜원", "써머");
         memberJoinService.execute(request);
 
         // then
@@ -87,7 +100,7 @@ class MemberJoinServiceTest {
         String displayName = "써머";
 
         // when
-        String request = createTeamJoinEvent(slackId, realName, displayName);
+        String request = createTeamJoinEvent(slackId, workspace.getSlackId(), realName, displayName);
         memberJoinService.execute(request);
 
         // then
@@ -106,7 +119,7 @@ class MemberJoinServiceTest {
         String displayName = "";
 
         // when
-        String request = createTeamJoinEvent(slackId, realName, displayName);
+        String request = createTeamJoinEvent(slackId, workspace.getSlackId(), realName, displayName);
         memberJoinService.execute(request);
 
         // then
@@ -116,9 +129,11 @@ class MemberJoinServiceTest {
         assertThat(memberAfterJoin.getUsername()).isEqualTo(realName);
     }
 
-    private String createTeamJoinEvent(final String slackId, final String realName, final String displayName) {
+    private String createTeamJoinEvent(final String slackId, final String workspaceSlackId, final String realName,
+                                       final String displayName) {
         return toJson(
                 Map.of(
+                        "team_id", workspaceSlackId,
                         "event", Map.of(
                                 "type", "team_join",
                                 "user", Map.of(

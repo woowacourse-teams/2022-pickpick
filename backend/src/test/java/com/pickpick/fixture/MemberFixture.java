@@ -1,6 +1,7 @@
 package com.pickpick.fixture;
 
 import com.pickpick.member.domain.Member;
+import com.pickpick.workspace.domain.Workspace;
 
 public enum MemberFixture {
 
@@ -23,5 +24,13 @@ public enum MemberFixture {
 
     public Member create() {
         return new Member(slackId, username, thumbnailUrl);
+    }
+
+    public Member create(final Workspace workspace) {
+        return new Member(slackId, username, thumbnailUrl, workspace);
+    }
+
+    public String getSlackId() {
+        return slackId;
     }
 }

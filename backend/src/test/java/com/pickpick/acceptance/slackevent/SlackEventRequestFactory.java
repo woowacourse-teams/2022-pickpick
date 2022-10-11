@@ -15,18 +15,23 @@ public class SlackEventRequestFactory {
         return Map.of("token", token, "type", type, "challenge", challenge);
     }
 
-    public static Map<String, Object> memberJoinEvent(final String slackId) {
-        return memberEvent(SlackEvent.MEMBER_JOIN.getType(), slackId, "realName", "displayName", "thumbnailUrl");
+    public static Map<String, Object> memberJoinEvent(final String slackId, final String workspaceSlackId) {
+        return memberEvent(SlackEvent.MEMBER_JOIN.getType(), slackId, workspaceSlackId, "realName", "displayName",
+                "thumbnailUrl");
     }
 
     public static Map<String, Object> memberUpdateEvent(final String slackId, final String realName,
                                                         final String displayName, final String thumbnailUrl) {
-        return memberEvent(SlackEvent.MEMBER_CHANGED.getType(), slackId, realName, displayName, thumbnailUrl);
+        return memberEvent(SlackEvent.MEMBER_CHANGED.getType(), slackId, "", realName, displayName, thumbnailUrl);
     }
 
-    private static Map<String, Object> memberEvent(final String subtype, final String slackId, final String realName,
-                                                   final String displayName, final String thumbnailUrl) {
-        return Map.of("event", Map.of(
+    private static Map<String, Object> memberEvent(final String subtype, final String slackId,
+                                                   final String workspaceSlackId,
+                                                   final String realName, final String displayName,
+                                                   final String thumbnailUrl) {
+        return Map.of(
+                "team_id", workspaceSlackId,
+                "event", Map.of(
                         "type", subtype,
                         "user", Map.of(
                                 "id", slackId,
@@ -41,24 +46,24 @@ public class SlackEventRequestFactory {
     }
 
     public static Map<String, Object> emptyMessageCreateEvent(final String memberSlackId, final String messageSlackId,
-                                                              final String subtype) {
-        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "");
+                                                              final String subtype, final String channelSlackId) {
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "", channelSlackId);
     }
 
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
-                                                         final String subtype) {
-        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "text");
+                                                         final String subtype, final String channelSlackId) {
+        return messageCreateEvent(memberSlackId, messageSlackId, subtype, "1234567890.123456", "text", channelSlackId);
     }
 
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
                                                          final String subtype, final String timestamp,
-                                                         final String text) {
+                                                         final String text, final String channelSlackId) {
         String type = "event_callback";
 
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", subtype,
-                "channel", ChannelFixture.QNA.getSlackId(),
+                "channel", channelSlackId,
                 "previous_message", Map.of("client_msg_id", messageSlackId),
                 "message", Map.of(
                         "user", memberSlackId,
