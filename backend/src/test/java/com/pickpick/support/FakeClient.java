@@ -10,6 +10,7 @@ import com.pickpick.message.domain.Reminder;
 import com.pickpick.workspace.domain.Workspace;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FakeClient implements ExternalClient {
@@ -46,10 +47,15 @@ public class FakeClient implements ExternalClient {
     }
 
     @Override
-    public List<Channel> findAllWorkspaceChannels(final Workspace workspace) {
+    public List<Channel> findChannelsByWorkspace(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
                 .map(channel -> channel.create(workspace))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Boolean> findParticipation(final String userToken) {
+        return Map.of();
     }
 
     @Override

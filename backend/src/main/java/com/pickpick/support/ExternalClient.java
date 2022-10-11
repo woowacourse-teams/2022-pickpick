@@ -6,6 +6,7 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.workspace.domain.Workspace;
 import java.util.List;
+import java.util.Map;
 
 public interface ExternalClient {
 
@@ -19,7 +20,9 @@ public interface ExternalClient {
 
     List<Member> findAllWorkspaceMembers(Workspace workspace);
 
-    List<Channel> findAllWorkspaceChannels(Workspace workspace);
+    List<Channel> findChannelsByWorkspace(Workspace workspace);
+
+    Map<String, Boolean> findParticipation(String userToken);
 
     void sendMessage(Reminder reminder);
 }
