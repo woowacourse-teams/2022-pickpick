@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("리마인더 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-public class ReminderAcceptanceTest extends AcceptanceTest {
+class ReminderAcceptanceTest extends AcceptanceTest {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
 

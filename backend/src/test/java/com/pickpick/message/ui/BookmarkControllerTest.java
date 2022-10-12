@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-public class BookmarkControllerTest extends DocsControllerTest {
+class BookmarkControllerTest extends DocsControllerTest {
 
     private static final String BOOKMARK_API_URL = "/api/bookmarks";
 

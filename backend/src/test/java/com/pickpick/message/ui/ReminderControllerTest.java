@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-public class ReminderControllerTest extends DocsControllerTest {
+class ReminderControllerTest extends DocsControllerTest {
 
     private static final String REMINDER_API_URL = "/api/reminders";
 

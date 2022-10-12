@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("인증 & 인가 인수 테스트")
-public class AuthAcceptanceTest extends AcceptanceTest {
+class AuthAcceptanceTest extends AcceptanceTest {
 
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;

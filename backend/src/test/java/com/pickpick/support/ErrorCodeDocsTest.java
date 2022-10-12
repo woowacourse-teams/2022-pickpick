@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-public class ErrorCodeDocsTest extends DocsControllerTest {
+class ErrorCodeDocsTest extends DocsControllerTest {
 
     @DisplayName("Rest Docs에 에러코드를 생성합니다.")
     @Test

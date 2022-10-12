@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("북마크 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-public class BookmarkAcceptanceTest extends AcceptanceTest {
+class BookmarkAcceptanceTest extends AcceptanceTest {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
 

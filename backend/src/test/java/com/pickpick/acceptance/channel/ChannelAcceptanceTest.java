@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("채널 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-public class ChannelAcceptanceTest extends AcceptanceTest {
+class ChannelAcceptanceTest extends AcceptanceTest {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
 
