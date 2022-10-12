@@ -173,7 +173,7 @@ class ReminderServiceTest {
             @Test
             void twentyRemindersFromNow() {
                 List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
-                List<Long> expectedIds = extractOrderedByRemindDateIds(bomReminders, 20);
+                List<Long> expectedIds = extractOrderedByRemindDateIdsDefaultLimit(bomReminders);
 
                 assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
             }
@@ -231,37 +231,6 @@ class ReminderServiceTest {
             }
         }
 
-        private List<Long> extractIds(final List<Reminder> reminders) {
-            return reminders.stream()
-                    .map(Reminder::getId)
-                    .collect(Collectors.toList());
-        }
-
-        private List<Long> extractOrderedByRemindDateIds(final List<Reminder> reminders) {
-            return reminders.stream()
-                    .sorted(Comparator.comparing(Reminder::getRemindDate))
-                    .map(Reminder::getId)
-                    .collect(Collectors.toList());
-        }
-
-        private List<Long> extractOrderedByRemindDateIds(final List<Reminder> reminders, final int limit) {
-            return reminders.stream()
-                    .sorted(Comparator.comparing(Reminder::getRemindDate))
-                    .map(Reminder::getId)
-                    .limit(limit)
-                    .collect(Collectors.toList());
-        }
-
-        private List<Long> extractFutureFromTargetOrderedByRemindDateIds(final List<Reminder> reminders,
-                                                                         final Reminder target, final int limit) {
-            return reminders.stream()
-                    .filter(reminder -> reminder.getRemindDate().isAfter(target.getRemindDate()))
-                    .sorted(Comparator.comparing(Reminder::getRemindDate))
-                    .map(Reminder::getId)
-                    .limit(limit)
-                    .collect(Collectors.toList());
-        }
-
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
             List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
@@ -293,6 +262,37 @@ class ReminderServiceTest {
                     LocalDateTime.now(), LocalDateTime.now());
             return messages.save(message);
         }
+
+        private List<Long> extractIds(final List<Reminder> reminders) {
+            return reminders.stream()
+                    .map(Reminder::getId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractOrderedByRemindDateIds(final List<Reminder> reminders) {
+            return reminders.stream()
+                    .sorted(Comparator.comparing(Reminder::getRemindDate))
+                    .map(Reminder::getId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractOrderedByRemindDateIdsDefaultLimit(final List<Reminder> reminders) {
+            return reminders.stream()
+                    .sorted(Comparator.comparing(Reminder::getRemindDate))
+                    .map(Reminder::getId)
+                    .limit(20)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractFutureFromTargetOrderedByRemindDateIds(final List<Reminder> reminders,
+                                                                         final Reminder target, final int limit) {
+            return reminders.stream()
+                    .filter(reminder -> reminder.getRemindDate().isAfter(target.getRemindDate()))
+                    .sorted(Comparator.comparing(Reminder::getRemindDate))
+                    .map(Reminder::getId)
+                    .limit(limit)
+                    .collect(Collectors.toList());
+        }
     }
 
     @DisplayName("리마인더 저장/삭제/수정/단건 조회 시")
@@ -304,7 +304,7 @@ class ReminderServiceTest {
             databaseCleaner.clear();
         }
 
-        @DisplayName("리마인더 생성")
+        @DisplayName("새로운 리마인더를 저장한다")
         @Test
         void save() {
             // given
@@ -323,7 +323,7 @@ class ReminderServiceTest {
             assertThat(beforeSize + 1).isEqualTo(afterSize);
         }
 
-        @DisplayName("리마인더 단건 조회")
+        @DisplayName("리마인더를 단건 조회한다")
         @Test
         void findOne() {
             // given
@@ -340,7 +340,7 @@ class ReminderServiceTest {
             assertThat(response.getId()).isEqualTo(saved.getId());
         }
 
-        @DisplayName("단건 조회 시 member, message 외래키가 둘 다 일치하는 리마인더가 없다면 예외발생")
+        @DisplayName("단건 조회 시 member, message 외래키가 둘 다 일치하는 리마인더가 없다면 예외가 발생한다")
         @Test
         void findOneDoesNotExistThrowsException() {
             // given
@@ -376,7 +376,7 @@ class ReminderServiceTest {
             assertThat(actual.getRemindDate()).isEqualTo(updateTime);
         }
 
-        @DisplayName("수정 시 member, message 외래키가 둘 다 일치하는 리마인더가 없다면 예외발생")
+        @DisplayName("수정 시 member, message 외래키가 둘 다 일치하는 리마인더가 없다면 예외가 발생한다")
         @Test
         void updateReminderDoesNotExistThrowsException() {
             // given
@@ -393,7 +393,7 @@ class ReminderServiceTest {
                     .isInstanceOf(ReminderUpdateFailureException.class);
         }
 
-        @DisplayName("리마인더 단건 삭제")
+        @DisplayName("리마인더를 단건 삭제한다")
         @Test
         void delete() {
             // given
@@ -411,7 +411,7 @@ class ReminderServiceTest {
             assertThat(afterDeleted).isEmpty();
         }
 
-        @DisplayName("삭제 시 member, message 외래키가 둘 다 일치하는 리마인더가 없다면 예외발생")
+        @DisplayName("삭제 시 member, message 외래키가 둘 다 일치하는 리마인더가 없다면 예외기 발생한다")
         @Test
         void deleteReminderDoesNotExistThrowsException() {
             // given
