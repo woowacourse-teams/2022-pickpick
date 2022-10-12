@@ -1,5 +1,6 @@
 package com.pickpick.auth.support;
 
+import com.pickpick.exception.auth.InvalidTokenException;
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +29,6 @@ public class AuthorizationExtractor {
             }
         }
 
-        throw new RuntimeException("잘못된 토큰 정보입니다.");
+        throw new InvalidTokenException("EXTRACT_FAILED");
     }
 }
