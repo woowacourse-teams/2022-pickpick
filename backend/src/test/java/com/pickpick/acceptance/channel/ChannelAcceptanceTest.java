@@ -34,6 +34,6 @@ public class ChannelAcceptanceTest extends AcceptanceTest {
         List<ChannelResponse> channels = response.jsonPath().getList("channels.", ChannelResponse.class);
 
         상태코드_200_확인(response);
-        assertThat(channels).hasSize(ChannelFixture.values().length);
+        assertThat(channels).hasSize(ChannelFixture.getDefaultSize());
     }
 }

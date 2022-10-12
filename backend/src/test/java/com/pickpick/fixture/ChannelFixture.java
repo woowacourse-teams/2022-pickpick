@@ -2,6 +2,7 @@ package com.pickpick.fixture;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.workspace.domain.Workspace;
+import java.util.Arrays;
 
 public enum ChannelFixture {
 
@@ -20,6 +21,12 @@ public enum ChannelFixture {
         this.slackId = slackId;
         this.name = name;
         this.defaultChannel = defaultChannel;
+    }
+
+    public static int getDefaultSize() {
+        return (int) Arrays.stream(ChannelFixture.values())
+                .filter(ChannelFixture::isDefaultChannel)
+                .count();
     }
 
     public Channel create() {
