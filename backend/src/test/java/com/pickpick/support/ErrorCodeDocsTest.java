@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class ErrorCodeDocsTest extends DocsControllerTestBase {
@@ -14,7 +13,7 @@ class ErrorCodeDocsTest extends DocsControllerTestBase {
     void errorCodes() throws Exception {
         ErrorCodeSnippet errorCodeSnippet = new ErrorCodeSnippet("error-code", "error-code-template");
 
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                         .get("/test/error-code"))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(errorCodeSnippet));
