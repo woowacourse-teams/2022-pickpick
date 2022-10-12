@@ -1,6 +1,7 @@
 package com.pickpick.acceptance.slackevent;
 
 import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import java.util.Map;
 import java.util.UUID;
@@ -28,20 +29,19 @@ public class SlackEventRequestFactory {
                                                    final String workspaceSlackId,
                                                    final String realName, final String displayName,
                                                    final String thumbnailUrl) {
-        return Map.of(
-                "team_id", workspaceSlackId,
-                "event", Map.of(
-                        "type", subtype,
-                        "user", Map.of(
-                                "id", slackId,
-                                "profile", Map.of(
-                                        "real_name", realName,
-                                        "display_name", displayName,
-                                        "image_48", thumbnailUrl
-                                )
+        Map<String, Object> event = Map.of(
+                "type", subtype,
+                "user", Map.of(
+                        "id", slackId,
+                        "profile", Map.of(
+                                "real_name", realName,
+                                "display_name", displayName,
+                                "image_48", thumbnailUrl
                         )
                 )
         );
+
+        return defaultRequestTemplate(event, workspaceSlackId);
     }
 
     public static Map<String, Object> emptyMessageCreateEvent(final String memberSlackId, final String messageSlackId,
@@ -57,8 +57,6 @@ public class SlackEventRequestFactory {
     public static Map<String, Object> messageCreateEvent(final String memberSlackId, final String messageSlackId,
                                                          final String subtype, final String timestamp,
                                                          final String text, final String channelSlackId) {
-        String type = "event_callback";
-
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", subtype,
@@ -76,7 +74,7 @@ public class SlackEventRequestFactory {
                 "ts", timestamp
         );
 
-        return Map.of("type", type, "event", event);
+        return defaultRequestTemplate(event);
     }
 
     public static Map<String, Object> threadBroadcastCreateEvent(final String memberSlackId) {
@@ -84,7 +82,6 @@ public class SlackEventRequestFactory {
         String text = "메시지 전송!";
         String slackMessageId = UUID.randomUUID().toString();
 
-        String type = "event_callback";
         Map<String, Object> event = Map.of(
                 "type", "message",
                 "subtype", "message_changed",
@@ -103,7 +100,7 @@ public class SlackEventRequestFactory {
                 "ts", timestamp
         );
 
-        return Map.of("type", type, "event", event);
+        return defaultRequestTemplate(event);
     }
 
     public static Map<String, Object> channelCreatedEvent(final String workspaceSlackId, final String channelSlackId,
@@ -127,9 +124,18 @@ public class SlackEventRequestFactory {
                 )
         );
 
+        return defaultRequestTemplate(event, workspaceSlackId);
+    }
+
+    private static Map<String, Object> defaultRequestTemplate(final Map<String, Object> request) {
+        return defaultRequestTemplate(request, WorkspaceFixture.JUPJUP.getSlackId());
+    }
+
+    private static Map<String, Object> defaultRequestTemplate(final Map<String, Object> request,
+                                                              final String workspaceSlackId) {
         return Map.of(
                 "type", "event_callback",
-                "event", event,
+                "event", request,
                 "team_id", workspaceSlackId
         );
     }
