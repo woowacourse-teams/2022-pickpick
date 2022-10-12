@@ -132,7 +132,10 @@ class ReminderServiceTest {
             List<ReminderResponse> foundReminders = reminderService.find(
                     ReminderFindRequestFactory.onlyCount(overTotalSize), bom.getId()).getReminders();
 
-            assertThat(foundReminders).extracting("id").doesNotContain(pastReminder.getId());
+            assertAll(
+                    () -> assertThat(foundReminders).isNotEmpty(),
+                    () -> assertThat(foundReminders).extracting("id").doesNotContain(pastReminder.getId())
+            );
         }
 
         @DisplayName("정렬 기준은 알람시간 기준 오름차순이다")
