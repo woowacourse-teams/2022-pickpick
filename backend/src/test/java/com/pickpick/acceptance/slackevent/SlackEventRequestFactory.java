@@ -106,10 +106,20 @@ public class SlackEventRequestFactory {
         return Map.of("type", type, "event", event);
     }
 
-    public static Map<String, Object> channelEvent(final String workspaceSlackId, final String channelSlackId,
-                                                   final String channelName) {
+    public static Map<String, Object> channelCreatedEvent(final String workspaceSlackId, final String channelSlackId,
+                                                          final String channelName) {
+        return channelEvent(workspaceSlackId, channelSlackId, channelName, SlackEvent.CHANNEL_CREATED);
+    }
+
+    public static Map<String, Object> channelRenameEvent(final String workspaceSlackId, final String channelSlackId,
+                                                         final String channelName) {
+        return channelEvent(workspaceSlackId, channelSlackId, channelName, SlackEvent.CHANNEL_RENAME);
+    }
+
+    private static Map<String, Object> channelEvent(final String workspaceSlackId, final String channelSlackId,
+                                                    final String channelName, final SlackEvent slackEvent) {
         Map<String, Object> event = Map.of(
-                "type", "channel_created",
+                "type", slackEvent.getType(),
                 "subtype", "",
                 "channel", Map.of(
                         "id", channelSlackId,

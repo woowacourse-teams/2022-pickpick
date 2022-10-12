@@ -2,6 +2,7 @@ package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_이름_변경;
 
 import com.pickpick.acceptance.AcceptanceTest;
 import com.pickpick.channel.domain.Channel;
@@ -25,6 +26,20 @@ public class ChannelEventAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = 채널_생성(workspace, channel);
+
+        // then
+        상태코드_200_확인(response);
+    }
+
+    @Test
+    void 채널_이름_변경_확인() {
+        // given
+        Workspace workspace = saveWorkspace(WorkspaceFixture.JUPJUP.create());
+        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        채널_생성(workspace, channel);
+
+        // when
+        ExtractableResponse<Response> response = 채널_이름_변경(workspace, channel, "채널 새 이름");
 
         // then
         상태코드_200_확인(response);

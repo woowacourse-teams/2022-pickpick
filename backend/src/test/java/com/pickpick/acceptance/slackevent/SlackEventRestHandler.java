@@ -39,8 +39,15 @@ public class SlackEventRestHandler {
     }
 
     public static ExtractableResponse<Response> 채널_생성(final Workspace workspace, final Channel channel) {
-        Map<String, Object> request = SlackEventRequestFactory.channelEvent(workspace.getSlackId(),
+        Map<String, Object> request = SlackEventRequestFactory.channelCreatedEvent(workspace.getSlackId(),
                 channel.getSlackId(), channel.getName());
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 채널_이름_변경(final Workspace workspace, final Channel channel,
+                                                         final String channelNewName) {
+        Map<String, Object> request = SlackEventRequestFactory.channelRenameEvent(workspace.getSlackId(),
+                channel.getSlackId(), channelNewName);
         return post(SLACK_EVENT_API_URL, request);
     }
 
