@@ -51,6 +51,11 @@ public class SlackEventRestHandler {
         return post(SLACK_EVENT_API_URL, request);
     }
 
+    public static ExtractableResponse<Response> 채널_삭제(final Channel channel) {
+        Map<String, Object> request = SlackEventRequestFactory.channelDeletedEvent(channel.getSlackId());
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
     public static void 메시지_목록_생성(final String memberSlackId, final int count) {
         키워드를_포함한_메시지_목록_생성(memberSlackId, count, "");
     }

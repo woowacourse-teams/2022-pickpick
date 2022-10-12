@@ -127,6 +127,16 @@ public class SlackEventRequestFactory {
         return defaultRequestTemplate(event, workspaceSlackId);
     }
 
+    public static Map<String, Object> channelDeletedEvent(final String channelSlackId) {
+        Map<String, Object> event = Map.of(
+                "type", SlackEvent.CHANNEL_DELETED.getType(),
+                "subtype", "",
+                "channel", channelSlackId
+        );
+
+        return defaultRequestTemplate(event);
+    }
+
     private static Map<String, Object> defaultRequestTemplate(final Map<String, Object> request) {
         return defaultRequestTemplate(request, WorkspaceFixture.JUPJUP.getSlackId());
     }
