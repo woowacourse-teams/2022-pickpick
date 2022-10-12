@@ -120,6 +120,7 @@ class ChannelServiceTest {
                 .collect(Collectors.toList());
 
         // then
+        assertThat(channelNames).isNotEmpty();
         assertThat(channelNames).doesNotContain(freeChat.getName(), qna.getName());
     }
 
