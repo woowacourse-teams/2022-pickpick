@@ -10,7 +10,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.브로드
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.fixture.MemberFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.workspace.domain.Workspace;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("메시지 관련 슬랙 이벤트 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class MessageEventAcceptanceTest extends AcceptanceTest {
+class MessageEventAcceptanceTest extends AcceptanceTestBase {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
     private static final String MESSAGE_SLACK_ID = UUID.randomUUID().toString();

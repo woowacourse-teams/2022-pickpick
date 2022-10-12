@@ -37,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class DocsControllerTest {
+public class DocsControllerTestBase {
 
     private static final String BEARER_JWT_TOKEN = "Bearer provided.jwt.token";
 

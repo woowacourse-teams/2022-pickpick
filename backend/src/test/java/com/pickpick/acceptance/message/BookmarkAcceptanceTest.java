@@ -13,7 +13,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.fixture.MemberFixture;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("북마크 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class BookmarkAcceptanceTest extends AcceptanceTest {
+class BookmarkAcceptanceTest extends AcceptanceTestBase {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
 

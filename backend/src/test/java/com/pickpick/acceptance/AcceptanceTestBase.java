@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
 @Import(value = TestConfig.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AcceptanceTest {
+public class AcceptanceTestBase {
 
     @LocalServerPort
     int port;

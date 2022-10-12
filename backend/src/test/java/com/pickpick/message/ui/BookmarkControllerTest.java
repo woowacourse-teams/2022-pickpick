@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
-import com.pickpick.support.DocsControllerTest;
+import com.pickpick.support.DocsControllerTestBase;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.http.HttpHeaders;
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-class BookmarkControllerTest extends DocsControllerTest {
+class BookmarkControllerTest extends DocsControllerTestBase {
 
     private static final String BOOKMARK_API_URL = "/api/bookmarks";
 
