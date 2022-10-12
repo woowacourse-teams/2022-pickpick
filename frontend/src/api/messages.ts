@@ -1,33 +1,30 @@
 import { fetcher } from "@src/api";
 
-import { API_ENDPOINT } from "@src/@constants";
-import { ResponseMessages } from "@src/@types/api";
+import { API_ENDPOINT, DEFAULT_CHANNEL_ID } from "@src/@constants/api";
+import { GetMessagePageParam, ResponseMessages } from "@src/@types/api";
+import { getPrivateHeaders } from "@src/@utils/api";
 
-import { getPrivateHeaders } from "@src/api/utils";
-
-interface PageParam {
-  messageId: string;
-  needPastMessage: boolean;
-  date: string;
-}
-
-interface HighOrderParam {
+type GetMessages = ({
+  date,
+  channelId,
+  keyword,
+}: {
   date?: string;
   channelId?: string;
   keyword?: string;
-}
+}) => ({
+  pageParam,
+}: {
+  pageParam?: GetMessagePageParam;
+}) => Promise<ResponseMessages>;
 
-interface ReturnFunctionParam {
-  pageParam?: PageParam;
-}
-
-export const getMessages =
-  ({ date = "", channelId = "", keyword = "" }: HighOrderParam) =>
-  async ({ pageParam }: ReturnFunctionParam) => {
+export const getMessages: GetMessages =
+  ({ date = "", channelId = "", keyword = "" }) =>
+  async ({ pageParam }) => {
     if (!pageParam) {
       const { data } = await fetcher.get<ResponseMessages>(
         `${API_ENDPOINT.MESSAGES}?channelIds=${
-          !channelId || channelId === "main" ? "" : channelId
+          !channelId || channelId === DEFAULT_CHANNEL_ID ? "" : channelId
         }`,
         {
           headers: { ...getPrivateHeaders() },
@@ -51,7 +48,7 @@ export const getMessages =
 
     const { data } = await fetcher.get<ResponseMessages>(
       `${API_ENDPOINT.MESSAGES}?channelIds=${
-        !channelId || channelId === "main" ? "" : channelId
+        !channelId || channelId === DEFAULT_CHANNEL_ID ? "" : channelId
       }`,
       {
         headers: { ...getPrivateHeaders() },

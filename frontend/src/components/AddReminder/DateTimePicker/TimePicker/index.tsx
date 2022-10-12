@@ -1,26 +1,30 @@
 import { ChangeEventHandler, RefObject } from "react";
+import { useTheme } from "styled-components";
 
 import Dropdown from "@src/components/@shared/Dropdown";
 import ReminderIconActive from "@src/components/@svgIcons/ReminderIconActive";
-import { generateTimeOptions } from "@src/components/AddReminder/@utils";
 import * as Styled from "@src/components/AddReminder/DateTimePicker/DatePicker/style";
 import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
+import { MERIDIEM, TIME_UNIT } from "@src/@constants/date";
+import { AM_HOURS, MINUTES, PM_HOURS } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
+import { Meridiem } from "@src/@types/date";
+import { parsePickerOptionText } from "@src/@utils/date";
 
 interface Props {
   meridiemRef: RefObject<HTMLDivElement>;
   AMHourRef: RefObject<HTMLDivElement>;
   PMHourRef: RefObject<HTMLDivElement>;
   minuteRef: RefObject<HTMLDivElement>;
-  checkedMeridiem: string;
-  checkedHour: string;
-  checkedMinute: string;
+  checkedMeridiem: Meridiem;
+  checkedHour: number;
+  checkedMinute: number;
   handleChangeMeridiem: ChangeEventHandler<HTMLInputElement>;
   handleChangeHour: ChangeEventHandler<HTMLInputElement>;
   handleChangeMinute: ChangeEventHandler<HTMLInputElement>;
-  handleResetTimePickerPosition: () => void;
+  handleResetTimePickerPosition: VoidFunction;
 }
 
 function TimePicker({
@@ -36,52 +40,61 @@ function TimePicker({
   handleChangeMinute,
   handleResetTimePickerPosition,
 }: Props) {
+  const theme = useTheme();
+
   return (
     <Dropdown toggleHandler={handleResetTimePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
-        const { meridiems, AMHours, PMHours, minutes } = generateTimeOptions();
         return (
           <FlexColumn ref={innerRef}>
             <Styled.Subtitle>시간</Styled.Subtitle>
             <DateTimePickerToggle
-              text={`${checkedMeridiem} ${checkedHour}시 ${checkedMinute.padStart(
-                2,
-                "0"
-              )}분`}
+              text={`
+              ${checkedMeridiem}
+              ${parsePickerOptionText({
+                optionText: checkedHour,
+                unit: TIME_UNIT.HOUR,
+              })}
+              ${parsePickerOptionText({
+                optionText: checkedMinute,
+                unit: TIME_UNIT.MINUTE,
+              })}
+              `}
               handleToggleDropdown={handleToggleDropdown}
             >
-              <ReminderIconActive width="16px" height="16px" fill="#8B8B8B" />
+              <ReminderIconActive
+                width="16px"
+                height="16px"
+                fill={theme.COLOR.SECONDARY.DEFAULT}
+              />
             </DateTimePickerToggle>
 
             {isDropdownOpened && (
               <Styled.TextOptionContainer>
                 <Styled.TextOptionsWrapper ref={meridiemRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={false}
-                    optionTexts={meridiems}
+                    optionTexts={[MERIDIEM.AM, MERIDIEM.PM]}
                     checkedText={checkedMeridiem}
                     handleChangeText={handleChangeMeridiem}
                   />
                 </Styled.TextOptionsWrapper>
 
-                {checkedMeridiem === "오전" && (
+                {checkedMeridiem === MERIDIEM.AM && (
                   <Styled.TextOptionsWrapper ref={AMHourRef}>
                     <DateTimePickerOptions
-                      needZeroPaddingStart={true}
-                      optionTexts={AMHours}
-                      unit="시"
+                      optionTexts={AM_HOURS}
+                      unit={TIME_UNIT.HOUR}
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
                     />
                   </Styled.TextOptionsWrapper>
                 )}
 
-                {checkedMeridiem === "오후" && (
+                {checkedMeridiem === MERIDIEM.PM && (
                   <Styled.TextOptionsWrapper ref={PMHourRef}>
                     <DateTimePickerOptions
-                      needZeroPaddingStart={true}
-                      optionTexts={PMHours}
-                      unit="시"
+                      optionTexts={PM_HOURS}
+                      unit={TIME_UNIT.HOUR}
                       checkedText={checkedHour}
                       handleChangeText={handleChangeHour}
                     />
@@ -90,9 +103,8 @@ function TimePicker({
 
                 <Styled.TextOptionsWrapper ref={minuteRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={true}
-                    optionTexts={minutes}
-                    unit="분"
+                    optionTexts={MINUTES}
+                    unit={TIME_UNIT.MINUTE}
                     checkedText={checkedMinute}
                     handleChangeText={handleChangeMinute}
                   />

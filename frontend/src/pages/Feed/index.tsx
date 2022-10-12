@@ -20,8 +20,10 @@ import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
+import { DEFAULT_CHANNEL_ID } from "@src/@constants/api";
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseMessages, parseMeridiemTime } from "@src/@utils";
+import { extractResponseMessages } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
@@ -92,13 +94,13 @@ function Feed() {
                   {shouldRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
-                      channelId={channelId ?? "main"}
+                      channelId={channelId ?? DEFAULT_CHANNEL_ID}
                       handleOpenCalendar={handleOpenCalendar}
                     />
                   )}
                   <MessageCard
                     username={username}
-                    date={parseMeridiemTime(postedDate)}
+                    date={parseMessageDateFromISO(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}
@@ -132,7 +134,7 @@ function Feed() {
 
       <Modal isOpened={isCalendarOpened} handleCloseModal={handleCloseCalendar}>
         <Calendar
-          channelId={channelId ?? "main"}
+          channelId={channelId ?? DEFAULT_CHANNEL_ID}
           handleCloseCalendar={handleCloseCalendar}
         />
       </Modal>
