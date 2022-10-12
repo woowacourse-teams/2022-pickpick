@@ -1,6 +1,5 @@
 package com.pickpick.acceptance.slackevent;
 
-import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import java.util.Map;
@@ -107,29 +106,21 @@ public class SlackEventRequestFactory {
         return Map.of("type", type, "event", event);
     }
 
-    public static Map<String, Object> channelCreateEvent(final String memberSlackId, final Channel channel) {
-        String timestamp = "1234567890.123456";
-        String text = "메시지 전송!";
-        String slackMessageId = UUID.randomUUID().toString();
-
-        String type = "event_callback";
+    public static Map<String, Object> channelEvent(final String workspaceSlackId, final String channelSlackId,
+                                                   final String channelName) {
         Map<String, Object> event = Map.of(
-                "type", "message",
+                "type", "channel_created",
                 "subtype", "",
-                "channel", channel.getSlackId(),
-                "previous_message", Map.of("client_msg_id", slackMessageId),
-                "message", Map.of(
-                        "user", memberSlackId,
-                        "ts", timestamp,
-                        "text", text,
-                        "client_msg_id", slackMessageId
-                ),
-                "client_msg_id", slackMessageId,
-                "text", text,
-                "user", memberSlackId,
-                "ts", timestamp
+                "channel", Map.of(
+                        "id", channelSlackId,
+                        "name", channelName
+                )
         );
 
-        return Map.of("type", type, "event", event);
+        return Map.of(
+                "type", "event_callback",
+                "event", event,
+                "team_id", workspaceSlackId
+        );
     }
 }
