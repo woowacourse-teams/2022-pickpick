@@ -23,7 +23,7 @@ public enum MemberFixture {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public static Member findFirst() {
+    public static Member createFirst() {
         return Arrays.stream(MemberFixture.values())
                 .findFirst()
                 .orElse(SUMMER)

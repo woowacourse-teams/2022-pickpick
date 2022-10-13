@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 public class ReminderAcceptanceTest extends AcceptanceTest {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
+    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 
     @BeforeEach
     void init() {
