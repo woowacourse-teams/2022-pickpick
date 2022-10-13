@@ -98,7 +98,6 @@ class ChannelServiceTest {
 
     @DisplayName("전체 채널을 조회하면 사용자가 입장한 채널만 조회된다")
     @Test
-    @Transactional
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
         Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
@@ -121,8 +120,8 @@ class ChannelServiceTest {
                 .collect(Collectors.toList());
 
         // then
-        assertThat(channelNames).isNotEmpty();
-        assertThat(channelNames).doesNotContain(freeChat.getName(), qna.getName());
+        assertThat(channelNames).isNotEmpty()
+                .doesNotContain(freeChat.getName(), qna.getName());
     }
 
     private Member saveMember(final Workspace workspace) {
