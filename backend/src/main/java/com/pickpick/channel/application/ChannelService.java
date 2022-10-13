@@ -6,7 +6,7 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelResponses;
-import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.exception.member.MemberTokenNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.ExternalClient;
@@ -51,7 +51,7 @@ public class ChannelService {
     private Map<String, Boolean> findParticipation(final Member member) {
         String token = member.getToken();
         if (StringUtils.isNullOrEmpty(token)) {
-            throw new MemberNotFoundException(member.getId(), token);
+            throw new MemberTokenNotFoundException(member.getId(), token);
         }
         return externalClient.findParticipation(token);
     }
