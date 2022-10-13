@@ -7,7 +7,7 @@ import useGetCertification from "@src/hooks/@query/useGetCertification";
 import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
 import useAuthentication from "@src/hooks/useAuthentication";
 
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants/path";
 
 function Certification() {
   const navigate = useNavigate();

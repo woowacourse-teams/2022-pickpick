@@ -2,7 +2,7 @@ import Header from "@src/components/@layouts/Header";
 import * as LayoutStyled from "@src/components/@layouts/LayoutContainer/style";
 import Button from "@src/components/@shared/Button";
 
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants/path";
 import { FlexColumn } from "@src/@styles/shared";
 
 import * as Styled from "./style";

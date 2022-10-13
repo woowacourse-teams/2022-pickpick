@@ -5,7 +5,7 @@ import * as Styled from "./style";
 interface Props {
   date: string;
   channelId: string;
-  handleOpenCalendar: () => void;
+  handleOpenCalendar: VoidFunction;
 }
 
 function DateDropdownMenu({ date, channelId, handleOpenCalendar }: Props) {

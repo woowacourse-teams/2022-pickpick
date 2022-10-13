@@ -3,7 +3,7 @@ import useIntersectionObserver from "@src/components/@shared/InfiniteScroll/@hoo
 import { StrictPropsWithChildren } from "@src/@types/utils";
 
 export interface Props {
-  callback: () => void;
+  callback: VoidFunction;
   threshold: number;
   endPoint: boolean;
 }

@@ -2,17 +2,17 @@ import { useRef, useState } from "react";
 
 type CurrentDays = (string | number)[];
 
-interface ReturnType {
+interface UseCalendarResult {
   todayDate: Date;
   firstOfMonthDate: Date;
   isFutureMonth: () => boolean;
   isCurrentMonth: () => boolean;
-  handleDecrementMonth: () => void;
-  handleIncrementMonth: () => void;
+  handleDecrementMonth: VoidFunction;
+  handleIncrementMonth: VoidFunction;
   getCurrentDays: () => CurrentDays;
 }
 
-function useCalendar(): ReturnType {
+function useCalendar(): UseCalendarResult {
   const firstOfMonthDate = useRef(new Date());
   const todayDate = useRef(new Date());
   const [_, setRerender] = useState(false);

@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelResponses;
-import com.pickpick.support.DocsControllerTest;
+import com.pickpick.support.DocsControllerTestBase;
 import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-class ChannelControllerTest extends DocsControllerTest {
+class ChannelControllerTest extends DocsControllerTestBase {
 
     private static final String CHANNEL_API_URL = "/api/channels";
 

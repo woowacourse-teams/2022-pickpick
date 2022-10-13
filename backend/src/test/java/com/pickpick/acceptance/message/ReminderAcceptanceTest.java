@@ -16,7 +16,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.acceptance.message.ReminderRestHandler.ReminderFindRequest;
 import com.pickpick.fixture.MemberFixture;
 import com.pickpick.message.ui.dto.ReminderResponse;
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("리마인더 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-public class ReminderAcceptanceTest extends AcceptanceTest {
+class ReminderAcceptanceTest extends AcceptanceTestBase {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
 

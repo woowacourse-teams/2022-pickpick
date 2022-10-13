@@ -12,7 +12,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메�
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.키워드를_포함한_메시지_목록_생성;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.acceptance.message.MessageRestHandler.MessageRequestBuilder;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("메시지 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class MessageAcceptanceTest extends AcceptanceTest {
+class MessageAcceptanceTest extends AcceptanceTestBase {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
 

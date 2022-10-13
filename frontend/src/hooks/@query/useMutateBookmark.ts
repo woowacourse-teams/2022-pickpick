@@ -3,11 +3,11 @@ import { useMutation } from "react-query";
 import { deleteBookmark, postBookmark } from "@src/api/bookmarks";
 
 interface Props {
-  handleSettleAddBookmark?: () => void;
-  handleSettleRemoveBookmark?: () => void;
+  handleSettleAddBookmark?: VoidFunction;
+  handleSettleRemoveBookmark?: VoidFunction;
 }
 
-type Handler = (messageId: number) => () => void;
+type Handler = (messageId: number) => VoidFunction;
 
 interface UseMutateBookmarkResult {
   handleAddBookmark: Handler;

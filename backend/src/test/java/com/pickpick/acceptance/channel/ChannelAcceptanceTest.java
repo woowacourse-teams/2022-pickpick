@@ -5,7 +5,7 @@ import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_�
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("채널 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-public class ChannelAcceptanceTest extends AcceptanceTest {
+class ChannelAcceptanceTest extends AcceptanceTestBase {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
 

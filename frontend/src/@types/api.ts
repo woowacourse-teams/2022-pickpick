@@ -42,6 +42,16 @@ export type SubscribedChannel = {
   order: number;
 };
 
+export type GetMessagePageParam = {
+  messageId: string;
+  needPastMessage: boolean;
+  date: string;
+};
+
+export type GetReminderPageParam = {
+  pageParam?: string;
+};
+
 export type ResponseReminders = {
   reminders: Reminder[];
   hasFuture: boolean;

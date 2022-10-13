@@ -2,7 +2,7 @@ import * as Styled from "./style";
 
 export interface Props {
   hasBackgroundColor: boolean;
-  onClick: () => void;
+  onClick: VoidFunction;
 }
 
 function Dimmer(props: Props) {
