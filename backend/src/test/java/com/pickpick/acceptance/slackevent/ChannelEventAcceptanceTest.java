@@ -5,7 +5,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_�
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_이름_변경;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.WorkspaceFixture;
@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("채널 관련 슬랙 이벤트 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-public class ChannelEventAcceptanceTest extends AcceptanceTest {
+class ChannelEventAcceptanceTest extends AcceptanceTestBase {
 
     @Test
-    void 채널_생성_확인() {
+    void 새로운_채널_생성_시_저장() {
         // given
         Workspace workspace = saveWorkspace(WorkspaceFixture.JUPJUP.create());
         Channel channel = ChannelFixture.NEW_CHANNEL.create();
@@ -33,7 +33,7 @@ public class ChannelEventAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 채널_이름_변경_확인() {
+    void 기존_채널_이름_변경_시_반영() {
         // given
         Workspace workspace = saveWorkspace(WorkspaceFixture.JUPJUP.create());
         Channel channel = ChannelFixture.NEW_CHANNEL.create();
