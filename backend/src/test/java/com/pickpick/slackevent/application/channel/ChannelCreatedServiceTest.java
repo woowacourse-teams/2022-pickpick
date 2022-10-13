@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
@@ -41,7 +42,7 @@ class ChannelCreatedServiceTest {
     @Test
     void channelCreate() {
         // given
-        Workspace workspace = workspaces.save(new Workspace("T000111", "xoxb-1234"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Channel channel = ChannelFixture.QNA.create();
         String request = toJson(
                 Map.of(

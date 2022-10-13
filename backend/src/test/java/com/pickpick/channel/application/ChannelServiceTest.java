@@ -13,6 +13,7 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -70,7 +71,7 @@ class ChannelServiceTest {
     @Transactional
     void findAll() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Member yeonLog = saveMember(workspace);
 
         Channel notice = channels.save(NOTICE.create(workspace));
@@ -100,7 +101,7 @@ class ChannelServiceTest {
     @Transactional
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Member yeonLog = saveMember(workspace);
 
         Channel notice = channels.save(NOTICE.create(workspace));
