@@ -2,7 +2,6 @@ package com.pickpick.support;
 
 import com.pickpick.auth.application.dto.BotInfoDto;
 import com.pickpick.channel.domain.Channel;
-import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
@@ -29,15 +28,6 @@ public class FakeClient implements ExternalClient {
     @Override
     public String callMemberSlackId(final String accessToken) {
         return accessToken;
-    }
-
-    @Override
-    public Channel callChannel(final String channelSlackId, final Workspace workspace) {
-        return Arrays.stream(ChannelFixture.values())
-                .filter(it -> it.isSameSlackId(channelSlackId))
-                .findAny()
-                .map(channel -> channel.create(workspace))
-                .orElseThrow(() -> new SlackApiCallException("test-callChannel"));
     }
 
     @Override

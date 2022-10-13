@@ -16,8 +16,6 @@ public interface ExternalClient {
 
     String callMemberSlackId(String accessToken);
 
-    Channel callChannel(String channelSlackId, Workspace workspace);
-
     List<Member> findAllWorkspaceMembers(Workspace workspace);
 
     List<Channel> findChannelsByWorkspace(Workspace workspace);

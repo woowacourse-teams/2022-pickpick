@@ -15,7 +15,6 @@ import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
-import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.users.UsersIdentityResponse;
@@ -34,7 +33,6 @@ public class SlackClient implements ExternalClient {
 
     private static final String OAUTH_ACCESS_METHOD_NAME = "oauthV2Access";
     private static final String USERS_IDENTITY_METHOD_NAME = "usersIdentity";
-    private static final String CHANNEL_INFO_METHOD_NAME = "conversationsInfo";
     private static final String USER_LIST_METHOD_NAME = "usersList";
     private static final String CHANNEL_LIST_METHOD_NAME = "conversationsList";
     private static final String CHAT_POST_METHOD_NAME = "chatPostMessage";
@@ -99,23 +97,6 @@ public class SlackClient implements ExternalClient {
             return response.getUser().getId();
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(USERS_IDENTITY_METHOD_NAME);
-        }
-    }
-
-    @Override
-    public Channel callChannel(final String channelSlackId, final Workspace workspace) {
-        try {
-            ConversationsInfoResponse response = methodsClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
-                            .token(workspace.getBotToken())
-            );
-            validateResponse(CHANNEL_INFO_METHOD_NAME, response);
-
-            Conversation conversation = response.getChannel();
-            return new Channel(conversation.getId(), conversation.getName(), workspace);
-
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(CHANNEL_INFO_METHOD_NAME);
         }
     }
 
