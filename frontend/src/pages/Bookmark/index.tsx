@@ -11,7 +11,8 @@ import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseBookmarks, parseMeridiemTime } from "@src/@utils";
+import { extractResponseBookmarks } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
@@ -48,7 +49,7 @@ function Bookmark() {
                   key={id}
                   username={username}
                   isRemindedMessage={false}
-                  date={parseMeridiemTime(postedDate)}
+                  date={parseMessageDateFromISO(postedDate)}
                   text={text}
                   thumbnail={userThumbnail}
                 >

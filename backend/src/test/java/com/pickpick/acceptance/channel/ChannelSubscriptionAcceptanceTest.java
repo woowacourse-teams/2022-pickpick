@@ -12,7 +12,7 @@ import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_�
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
@@ -29,7 +29,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("채널 구독 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class ChannelSubscriptionAcceptanceTest extends AcceptanceTest {
+class ChannelSubscriptionAcceptanceTest extends AcceptanceTestBase {
 
     private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 

@@ -1,8 +1,5 @@
-import {
-  ERROR_MESSAGE_BY_CODE,
-  SNACKBAR_STATUS,
-  THEME_KIND,
-} from "@src/@constants";
+import { SNACKBAR_STATUS, THEME_KIND } from "@src/@constants";
+import { API_ERROR_MESSAGE } from "@src/@constants/message";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export type Theme = typeof LIGHT_MODE_THEME;
@@ -18,7 +15,7 @@ export type SnackbarStatus = keyof typeof SNACKBAR_STATUS;
 export type CustomError = {
   response: {
     data: {
-      code: keyof typeof ERROR_MESSAGE_BY_CODE;
+      code: keyof typeof API_ERROR_MESSAGE;
       message: string;
     };
   };

@@ -18,7 +18,7 @@ import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
-import com.pickpick.support.DocsControllerTest;
+import com.pickpick.support.DocsControllerTestBase;
 import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-class ChannelSubscriptionControllerTest extends DocsControllerTest {
+class ChannelSubscriptionControllerTest extends DocsControllerTestBase {
 
     private static final String API_CHANNEL_SUBSCRIPTION = "/api/channel-subscription";
 

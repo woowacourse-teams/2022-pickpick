@@ -1,19 +1,18 @@
 import { ChangeEventHandler } from "react";
 
-import { parsedOptionText } from "@src/@utils";
+import { Meridiem, TimeUnit } from "@src/@types/date";
+import { parsePickerOptionText } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
 interface Props {
-  needZeroPaddingStart: boolean;
-  optionTexts: string[];
-  unit?: "년" | "월" | "일" | "시" | "분";
-  checkedText: string;
+  optionTexts: readonly string[] | readonly number[];
+  unit?: TimeUnit;
+  checkedText: Meridiem | number;
   handleChangeText: ChangeEventHandler<HTMLInputElement>;
 }
 
 function DateTimePickerOptions({
-  needZeroPaddingStart,
   optionTexts,
   unit,
   checkedText,
@@ -30,13 +29,10 @@ function DateTimePickerOptions({
             checked={checkedText === optionText}
           />
           <Styled.TextOption>
-            {unit &&
-              `${parsedOptionText({
-                needZeroPaddingStart,
-                optionText,
-              })}${unit}`}
-
-            {!unit && parsedOptionText({ needZeroPaddingStart, optionText })}
+            {parsePickerOptionText({
+              optionText,
+              unit,
+            })}
           </Styled.TextOption>
         </Styled.Container>
       ))}

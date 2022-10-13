@@ -7,7 +7,7 @@ import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_�
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.fixture.MemberFixture;
 import io.restassured.response.ExtractableResponse;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("인증 & 인가 인수 테스트")
-public class AuthAcceptanceTest extends AcceptanceTest {
+class AuthAcceptanceTest extends AcceptanceTestBase {
 
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;

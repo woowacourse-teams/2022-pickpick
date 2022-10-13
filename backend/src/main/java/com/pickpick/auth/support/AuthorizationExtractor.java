@@ -1,5 +1,6 @@
 package com.pickpick.auth.support;
 
+import com.pickpick.exception.auth.ExtractTokenFailException;
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,6 +10,9 @@ public class AuthorizationExtractor {
     private static final String BEARER_TYPE = "Bearer";
     private static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
     private static final char COMMA = ',';
+
+    private AuthorizationExtractor() {
+    }
 
     public static String extract(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
@@ -25,6 +29,6 @@ public class AuthorizationExtractor {
             }
         }
 
-        throw new RuntimeException("잘못된 토큰 정보입니다.");
+        throw new ExtractTokenFailException();
     }
 }

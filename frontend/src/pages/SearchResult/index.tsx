@@ -15,16 +15,16 @@ import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
 import useModal from "@src/hooks/@shared/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
+import { SEARCH_PARAMS } from "@src/@constants/api";
 import { FlexColumn } from "@src/@styles/shared";
-import {
-  extractResponseMessages,
-  getChannelIdsParams,
-  parseMeridiemTime,
-} from "@src/@utils";
+import { extractResponseMessages, getChannelIdsParams } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function SearchResult() {
-  const keyword = useGetSearchParam({ key: "keyword" });
-  const channelIds = useGetSearchParam({ key: "channelIds" });
+  const keyword = useGetSearchParam({ key: SEARCH_PARAMS.SEARCH_KEYWORD });
+  const channelIds = useGetSearchParam({
+    key: SEARCH_PARAMS.SEARCH_CHANNEL_IDS,
+  });
 
   const {
     reminderTarget,
@@ -83,7 +83,7 @@ function SearchResult() {
               <MessageCard
                 key={id}
                 username={username}
-                date={parseMeridiemTime(postedDate)}
+                date={parseMessageDateFromISO(postedDate)}
                 text={text}
                 thumbnail={userThumbnail}
                 isRemindedMessage={false}

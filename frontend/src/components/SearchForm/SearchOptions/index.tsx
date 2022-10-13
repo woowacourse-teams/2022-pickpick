@@ -12,7 +12,7 @@ interface Props {
   remainingChannels: SubscribedChannel[];
   selectedChannelIds: number[];
   handleToggleChannel: (id: number) => void;
-  handleToggleAllChannels: () => void;
+  handleToggleAllChannels: VoidFunction;
 }
 
 function SearchOptions({

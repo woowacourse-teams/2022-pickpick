@@ -5,17 +5,19 @@ import TimePicker from "@src/components/AddReminder/DateTimePicker/TimePicker";
 
 import useMutateReminder from "@src/hooks/@query/useMutateReminder";
 
+import { REMINDER_BUTTON_TEXT } from "@src/@constants";
 import { FlexRow } from "@src/@styles/shared";
+import { ValueOf } from "@src/@types/utils";
 
 import * as Styled from "./style";
 
-export type ButtonText = "생성" | "수정" | "취소" | "삭제";
+export type ButtonText = ValueOf<typeof REMINDER_BUTTON_TEXT>;
 
 interface Props {
   messageId: number;
   remindDate: string;
-  handleCloseReminderModal: () => void;
-  refetchFeed: () => void;
+  handleCloseReminderModal: VoidFunction;
+  refetchFeed: VoidFunction;
 }
 
 function AddReminder({
@@ -87,16 +89,16 @@ function AddReminder({
 
       <FlexRow justifyContent="flex-end" gap="8px" marginTop="18px">
         <Styled.Button
-          text="취소"
+          text={REMINDER_BUTTON_TEXT.CANCEL}
           type="button"
           onClick={handleCloseReminderModal}
         >
-          취소
+          {REMINDER_BUTTON_TEXT.CANCEL}
         </Styled.Button>
 
         {!remindDate && (
           <Styled.Button
-            text="생성"
+            text={REMINDER_BUTTON_TEXT.CREATE}
             type="button"
             onClick={() =>
               handleCreateReminder({
@@ -110,23 +112,23 @@ function AddReminder({
               })
             }
           >
-            생성
+            {REMINDER_BUTTON_TEXT.CREATE}
           </Styled.Button>
         )}
 
         {remindDate && (
           <Styled.Button
-            text="삭제"
+            text={REMINDER_BUTTON_TEXT.REMOVE}
             type="button"
             onClick={() => handleRemoveReminder(messageId)}
           >
-            삭제
+            {REMINDER_BUTTON_TEXT.REMOVE}
           </Styled.Button>
         )}
 
         {remindDate && (
           <Styled.Button
-            text="수정"
+            text={REMINDER_BUTTON_TEXT.MODIFY}
             type="button"
             onClick={() =>
               handleModifyReminder({
@@ -140,7 +142,7 @@ function AddReminder({
               })
             }
           >
-            수정
+            {REMINDER_BUTTON_TEXT.MODIFY}
           </Styled.Button>
         )}
       </FlexRow>

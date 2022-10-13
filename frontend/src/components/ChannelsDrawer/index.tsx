@@ -5,7 +5,8 @@ import WrapperLink from "@src/components/@shared/WrapperNavLink";
 import PlusIcon from "@src/components/@svgIcons/PlusIcon";
 import ThemeToggler from "@src/components/ThemeToggler";
 
-import { PATH_NAME } from "@src/@constants";
+import { DEFAULT_CHANNEL_ID } from "@src/@constants/api";
+import { PATH_NAME } from "@src/@constants/path";
 import { FlexColumn, FlexRow } from "@src/@styles/shared";
 import { SubscribedChannel } from "@src/@types/api";
 import { Theme } from "@src/@types/shared";
@@ -14,7 +15,7 @@ import * as Styled from "./style";
 
 interface Props {
   channels?: SubscribedChannel[];
-  handleCloseDrawer: () => void;
+  handleCloseDrawer: VoidFunction;
 }
 
 function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
@@ -50,7 +51,8 @@ function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
               <Styled.ChannelName
                 isActive={
                   isActive ||
-                  (index === 0 && (!channelId || channelId === "main"))
+                  (index === 0 &&
+                    (!channelId || channelId === DEFAULT_CHANNEL_ID))
                 }
                 onClick={handleCloseDrawer}
               >

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Header from "@src/components/@layouts/Header";
 import Navigation from "@src/components/@layouts/Navigation";
 
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants/path";
 import { StrictPropsWithChildren } from "@src/@types/utils";
 
 import * as Styled from "./style";

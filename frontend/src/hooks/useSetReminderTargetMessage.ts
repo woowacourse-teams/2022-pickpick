@@ -8,7 +8,7 @@ interface ReminderTarget {
 interface UseSetReminderTargetMessageResult {
   reminderTarget: ReminderTarget;
   handleUpdateReminderTarget: (reminderTarget: ReminderTarget) => void;
-  handleInitializeReminderTarget: () => void;
+  handleInitializeReminderTarget: VoidFunction;
 }
 
 function useSetReminderTargetMessage(): UseSetReminderTargetMessageResult {

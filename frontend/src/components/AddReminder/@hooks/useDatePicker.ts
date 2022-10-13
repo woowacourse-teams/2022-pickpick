@@ -1,18 +1,35 @@
-import { useEffect, useRef, useState } from "react";
-
-import { parseDate } from "@src/components/AddReminder/@utils";
+import {
+  ChangeEventHandler,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import useInput from "@src/hooks/@shared/useInput";
 
 import { PICKER_OPTION_SCROLL } from "@src/@constants";
-import { getDateInformation } from "@src/@utils";
+import { getDateFromISO, getFullDateInformation } from "@src/@utils/date";
 
 interface Props {
   remindDate: string;
 }
 
-function useDatePicker({ remindDate }: Props) {
-  const { year, month, date } = getDateInformation(new Date());
+interface UseDatePickerResult {
+  yearRef: RefObject<HTMLDivElement>;
+  monthRef: RefObject<HTMLDivElement>;
+  dateRef: RefObject<HTMLDivElement>;
+  checkedYear: number;
+  checkedMonth: number;
+  checkedDate: number;
+  handleChangeYear: ChangeEventHandler<HTMLInputElement>;
+  handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
+  handleChangeDate: ChangeEventHandler<HTMLInputElement>;
+  handleResetDatePickerPosition: () => void;
+}
+
+function useDatePicker({ remindDate }: Props): UseDatePickerResult {
+  const { year, month, date } = getFullDateInformation(new Date());
   const yearRef = useRef<HTMLDivElement>(null);
   const monthRef = useRef<HTMLDivElement>(null);
   const dateRef = useRef<HTMLDivElement>(null);
@@ -23,22 +40,22 @@ function useDatePicker({ remindDate }: Props) {
     value: checkedYear,
     handleChangeValue: handleChangeYear,
     changeValue: changeYear,
-  } = useInput({
-    initialValue: year.toString(),
+  } = useInput<number>({
+    initialValue: year,
   });
 
   const {
     value: checkedMonth,
     handleChangeValue: handleChangeMonth,
     changeValue: changeMonth,
-  } = useInput({ initialValue: month.toString() });
+  } = useInput<number>({ initialValue: month });
 
   const {
     value: checkedDate,
     handleChangeValue: handleChangeDate,
     changeValue: changeDate,
-  } = useInput({
-    initialValue: date.toString(),
+  } = useInput<number>({
+    initialValue: date,
   });
 
   const handleResetDatePickerPosition = () => {
@@ -48,21 +65,21 @@ function useDatePicker({ remindDate }: Props) {
   useEffect(() => {
     if (yearRef.current) {
       yearRef.current.scrollTo({
-        top: (Number(checkedYear) - year) * PICKER_OPTION_SCROLL.HEIGHT,
+        top: (checkedYear - year) * PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
 
     if (monthRef.current) {
       monthRef.current.scrollTo({
-        top: (Number(checkedMonth) - 1) * PICKER_OPTION_SCROLL.HEIGHT,
+        top: (checkedMonth - 1) * PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
 
     if (dateRef.current) {
       dateRef.current.scrollTo({
-        top: (Number(checkedDate) - 1) * PICKER_OPTION_SCROLL.HEIGHT,
+        top: (checkedDate - 1) * PICKER_OPTION_SCROLL.HEIGHT,
         behavior: PICKER_OPTION_SCROLL.BEHAVIOR,
       });
     }
@@ -70,7 +87,7 @@ function useDatePicker({ remindDate }: Props) {
 
   useEffect(() => {
     if (remindDate) {
-      const { year, month, date } = parseDate(remindDate);
+      const { year, month, date } = getDateFromISO(remindDate);
 
       changeYear(year);
       changeMonth(month);

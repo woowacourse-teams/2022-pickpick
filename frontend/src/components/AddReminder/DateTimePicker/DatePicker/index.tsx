@@ -1,12 +1,14 @@
 import { ChangeEventHandler, RefObject } from "react";
+import { useTheme } from "styled-components";
 
 import Dropdown from "@src/components/@shared/Dropdown";
 import CalendarIcon from "@src/components/@svgIcons/CalendarIcon";
-import { generateDateOptions } from "@src/components/AddReminder/@utils";
 import DateTimePickerOptions from "@src/components/AddReminder/DateTimePicker/DateTimePickerOptions";
 import DateTimePickerToggle from "@src/components/AddReminder/DateTimePicker/DateTimePickerToggle";
 
+import { TIME_UNIT } from "@src/@constants/date";
 import { FlexColumn } from "@src/@styles/shared";
+import { getFutureDateOption, parsePickerOptionText } from "@src/@utils/date";
 
 import * as Styled from "./style";
 
@@ -14,13 +16,13 @@ interface Props {
   yearRef: RefObject<HTMLDivElement>;
   monthRef: RefObject<HTMLDivElement>;
   dateRef: RefObject<HTMLDivElement>;
-  checkedYear: string;
-  checkedMonth: string;
-  checkedDate: string;
+  checkedYear: number;
+  checkedMonth: number;
+  checkedDate: number;
   handleChangeYear: ChangeEventHandler<HTMLInputElement>;
   handleChangeMonth: ChangeEventHandler<HTMLInputElement>;
   handleChangeDate: ChangeEventHandler<HTMLInputElement>;
-  handleResetDatePickerPosition: () => void;
+  handleResetDatePickerPosition: VoidFunction;
 }
 
 function DatePicker({
@@ -35,31 +37,46 @@ function DatePicker({
   handleChangeDate,
   handleResetDatePickerPosition,
 }: Props) {
+  const theme = useTheme();
+
   return (
     <Dropdown toggleHandler={handleResetDatePickerPosition}>
       {({ innerRef, isDropdownOpened, handleToggleDropdown }) => {
-        const { years, months, dates } = generateDateOptions();
+        const { years, months, dates } = getFutureDateOption();
+
         return (
           <FlexColumn marginBottom="10px" ref={innerRef}>
             <Styled.Subtitle>언제</Styled.Subtitle>
 
             <DateTimePickerToggle
-              text={`${checkedYear}년 ${checkedMonth}월 ${checkedDate.padStart(
-                2,
-                "0"
-              )}일`}
+              text={`
+              ${parsePickerOptionText({
+                optionText: checkedYear,
+                unit: TIME_UNIT.YEAR,
+              })} 
+              ${parsePickerOptionText({
+                optionText: checkedMonth,
+                unit: TIME_UNIT.MONTH,
+              })}
+           ${parsePickerOptionText({
+             optionText: checkedDate,
+             unit: TIME_UNIT.DATE,
+           })}`}
               handleToggleDropdown={handleToggleDropdown}
             >
-              <CalendarIcon width="16px" height="16px" fill="#8B8B8B" />
+              <CalendarIcon
+                width="16px"
+                height="16px"
+                fill={theme.COLOR.SECONDARY.DEFAULT}
+              />
             </DateTimePickerToggle>
 
             {isDropdownOpened && (
               <Styled.TextOptionContainer>
                 <Styled.TextOptionsWrapper ref={yearRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={false}
                     optionTexts={years}
-                    unit="년"
+                    unit={TIME_UNIT.YEAR}
                     checkedText={checkedYear}
                     handleChangeText={handleChangeYear}
                   />
@@ -67,9 +84,8 @@ function DatePicker({
 
                 <Styled.TextOptionsWrapper ref={monthRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={true}
                     optionTexts={months}
-                    unit="월"
+                    unit={TIME_UNIT.MONTH}
                     checkedText={checkedMonth}
                     handleChangeText={handleChangeMonth}
                   />
@@ -77,9 +93,8 @@ function DatePicker({
 
                 <Styled.TextOptionsWrapper ref={dateRef}>
                   <DateTimePickerOptions
-                    needZeroPaddingStart={true}
                     optionTexts={dates}
-                    unit="일"
+                    unit={TIME_UNIT.DATE}
                     checkedText={checkedDate}
                     handleChangeText={handleChangeDate}
                   />

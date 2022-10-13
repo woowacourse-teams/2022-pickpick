@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
-import com.pickpick.support.DocsControllerTest;
+import com.pickpick.support.DocsControllerTestBase;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.http.HttpHeaders;
@@ -25,7 +25,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 
-class MessageControllerTest extends DocsControllerTest {
+class MessageControllerTest extends DocsControllerTestBase {
 
     private static final String MESSAGES_API_URL = "/api/messages";
 
