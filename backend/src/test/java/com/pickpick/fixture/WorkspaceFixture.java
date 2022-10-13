@@ -7,7 +7,6 @@ public enum WorkspaceFixture {
     JUPJUP("T0001", "xoxb-token-0001"),
     ;
 
-
     private final String slackId;
     private final String botToken;
 
