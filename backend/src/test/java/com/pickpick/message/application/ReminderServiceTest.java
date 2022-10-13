@@ -67,7 +67,7 @@ class ReminderServiceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    @DisplayName("복수의 리마인더 조회 시")
+    @DisplayName("리마인더 조회 시")
     @TestInstance(Lifecycle.PER_CLASS)
     @Nested
     class find {
@@ -91,7 +91,8 @@ class ReminderServiceTest {
         @Test
         void membersOwnReminders() {
             ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
-            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
+            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                    .getReminders();
 
             List<Long> bomReminderIds = extractIds(bomReminders);
             List<Long> yeonlogReminderIds = extractIds(yeonlogReminders);
@@ -105,8 +106,8 @@ class ReminderServiceTest {
         @DisplayName("더 조회 할 리마인더가 없다면 hasFuture는 false다")
         @Test
         void noMoreRemindersToFindHasFutureFalse() {
-            ReminderResponses response = reminderService.find(ReminderFindRequestFactory.onlyCount(overTotalSize),
-                    bom.getId());
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
+            ReminderResponses response = reminderService.find(request, bom.getId());
 
             assertThat(response.hasFuture()).isFalse();
         }
@@ -115,8 +116,8 @@ class ReminderServiceTest {
         @Test
         void moreRemindersToFindHasFutureTrue() {
             int lessThenTotal = bomReminders.size() - 1;
-            ReminderResponses response = reminderService.find(ReminderFindRequestFactory.onlyCount(lessThenTotal),
-                    bom.getId());
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(lessThenTotal);
+            ReminderResponses response = reminderService.find(request, bom.getId());
 
             assertThat(response.hasFuture()).isTrue();
         }
@@ -129,8 +130,9 @@ class ReminderServiceTest {
 
             Reminder pastReminder = reminders.save(new Reminder(bom, message, pastDateTime));
 
-            List<ReminderResponse> foundReminders = reminderService.find(
-                    ReminderFindRequestFactory.onlyCount(overTotalSize), bom.getId()).getReminders();
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
+            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                    .getReminders();
 
             assertAll(
                     () -> assertThat(foundReminders).isNotEmpty(),
@@ -142,9 +144,10 @@ class ReminderServiceTest {
         @Test
         void orderByRemindDateAsc() {
             ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
-            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
+            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                    .getReminders();
 
-            List<Long> expectedIds = extractOrderedByRemindDateIds(bomReminders);
+            List<Long> expectedIds = extractIdsOrderedByRemindDate(bomReminders);
 
             assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
         }
@@ -161,7 +164,8 @@ class ReminderServiceTest {
             reminders.save(new Reminder(hope, secondMessage, remindDate));
 
             ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
-            List<ReminderResponse> foundReminders = reminderService.find(request, hope.getId()).getReminders();
+            List<ReminderResponse> foundReminders = reminderService.find(request, hope.getId())
+                    .getReminders();
 
             assertThat(foundReminders.get(0).getId()).isLessThan(foundReminders.get(1).getId());
         }
@@ -175,8 +179,9 @@ class ReminderServiceTest {
             @DisplayName("현재 시간에 가까운 리마인더부터 20개를 조회한다")
             @Test
             void twentyRemindersFromNow() {
-                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
-                List<Long> expectedIds = extractOrderedByRemindDateIdsDefaultLimit(bomReminders);
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+                List<Long> expectedIds = extractIdsOrderedByRemindDateDefaultLimit(bomReminders);
 
                 assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
             }
@@ -192,7 +197,8 @@ class ReminderServiceTest {
             @DisplayName("해당 개수만큼 조회한다")
             @Test
             void limitCount() {
-                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
 
                 assertThat(foundReminders).hasSize(count);
             }
@@ -208,8 +214,9 @@ class ReminderServiceTest {
             @DisplayName("해당 리마인더보다 미래 시간의 리마인더를 기본 20개까지 조회한다")
             @Test
             void findFutureReminders() {
-                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
-                List<Long> expectedIds = extractFutureFromTargetOrderedByRemindDateIds(bomReminders, target, 20);
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+                List<Long> expectedIds = extractIdsFutureFromTargetOrderedByRemindDate(bomReminders, target, 20);
 
                 assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
             }
@@ -227,8 +234,9 @@ class ReminderServiceTest {
             @DisplayName("해당 리마인더보다 미래 시간의 리마인더를 count개 조회한다")
             @Test
             void findCountRemindersSetRemindedAfterTarget() {
-                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId()).getReminders();
-                List<Long> expectedIds = extractFutureFromTargetOrderedByRemindDateIds(bomReminders, target, count);
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+                List<Long> expectedIds = extractIdsFutureFromTargetOrderedByRemindDate(bomReminders, target, count);
 
                 assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
             }
@@ -292,14 +300,14 @@ class ReminderServiceTest {
                     .collect(Collectors.toList());
         }
 
-        private List<Long> extractOrderedByRemindDateIds(final List<Reminder> reminders) {
+        private List<Long> extractIdsOrderedByRemindDate(final List<Reminder> reminders) {
             return reminders.stream()
                     .sorted(Comparator.comparing(Reminder::getRemindDate))
                     .map(Reminder::getId)
                     .collect(Collectors.toList());
         }
 
-        private List<Long> extractOrderedByRemindDateIdsDefaultLimit(final List<Reminder> reminders) {
+        private List<Long> extractIdsOrderedByRemindDateDefaultLimit(final List<Reminder> reminders) {
             return reminders.stream()
                     .sorted(Comparator.comparing(Reminder::getRemindDate))
                     .map(Reminder::getId)
@@ -307,7 +315,7 @@ class ReminderServiceTest {
                     .collect(Collectors.toList());
         }
 
-        private List<Long> extractFutureFromTargetOrderedByRemindDateIds(final List<Reminder> reminders,
+        private List<Long> extractIdsFutureFromTargetOrderedByRemindDate(final List<Reminder> reminders,
                                                                          final Reminder target, final int limit) {
             return reminders.stream()
                     .filter(reminder -> reminder.getRemindDate().isAfter(target.getRemindDate()))
@@ -320,14 +328,14 @@ class ReminderServiceTest {
 
     @DisplayName("리마인더 저장/수정/삭제 시")
     @Nested
-    class other {
+    class saveUpdateDelete {
 
         @AfterEach
         void tearDown() {
             databaseCleaner.clear();
         }
 
-        @DisplayName("리마인더 저장 시 새로운 리마인더를 저장한다")
+        @DisplayName("리마인더를 저장한다")
         @Test
         void save() {
             // given
