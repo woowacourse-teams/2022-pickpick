@@ -7,6 +7,7 @@ import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
+import com.pickpick.slackevent.domain.Participation;
 import com.pickpick.workspace.domain.Workspace;
 import java.util.Arrays;
 import java.util.List;
@@ -54,9 +55,11 @@ public class FakeClient implements ExternalClient {
     }
 
     @Override
-    public Map<String, Boolean> findParticipation(final String userToken) {
-        return Arrays.stream(ChannelFixture.values())
+    public Participation findParticipation(final String userToken) {
+        Map<String, Boolean> participation = Arrays.stream(ChannelFixture.values())
                 .collect(Collectors.toMap(ChannelFixture::getSlackId, it -> true));
+        
+        return new Participation(participation);
     }
 
     @Override

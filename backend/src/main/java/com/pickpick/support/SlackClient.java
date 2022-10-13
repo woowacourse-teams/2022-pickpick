@@ -6,6 +6,7 @@ import com.pickpick.config.SlackProperties;
 import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
+import com.pickpick.slackevent.domain.Participation;
 import com.pickpick.workspace.domain.Workspace;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
@@ -167,15 +168,17 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public Map<String, Boolean> findParticipation(final String userToken) {
+    public Participation findParticipation(final String userToken) {
         try {
             ConversationsListResponse response = methodsClient.conversationsList(
                     request -> request.token(userToken));
             validateResponse(CHANNEL_LIST_METHOD_NAME, response);
 
-            return response.getChannels()
+            Map<String, Boolean> participation = response.getChannels()
                     .stream()
                     .collect(Collectors.toMap(Conversation::getId, Conversation::isMember));
+
+            return new Participation(participation);
 
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(CHANNEL_LIST_METHOD_NAME);
