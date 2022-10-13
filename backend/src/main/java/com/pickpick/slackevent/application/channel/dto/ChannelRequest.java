@@ -18,10 +18,10 @@ public class ChannelRequest {
         this.teamId = teamId;
     }
 
-    public SlackChannelRenameDto toDto() {
+    public ChannelRenameDto toDto() {
         ChannelDto channel = event.getChannel();
 
-        return new SlackChannelRenameDto(
+        return new ChannelRenameDto(
                 channel.getId(),
                 channel.getName()
         );
