@@ -1,6 +1,6 @@
 package com.pickpick.auth.support;
 
-import com.pickpick.exception.auth.InvalidTokenException;
+import com.pickpick.exception.auth.ExtractTokenFailException;
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +29,6 @@ public class AuthorizationExtractor {
             }
         }
 
-        throw new InvalidTokenException("EXTRACT_FAILED");
+        throw new ExtractTokenFailException();
     }
 }
