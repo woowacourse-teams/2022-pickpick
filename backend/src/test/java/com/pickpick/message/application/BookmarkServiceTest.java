@@ -13,6 +13,7 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
 import com.pickpick.fixture.BookmarkFindRequestFactory;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.fixture.MessageFixtures;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -143,12 +144,12 @@ class BookmarkServiceTest {
     @Nested
     class find {
 
-        Member hope = members.save(HOPE.create());
-        Member kkojae = members.save(KKOJAE.create());
+        Member hope = saveMember(HOPE);
+        Member kkojae = saveMember(KKOJAE);
 
         Channel notice = channels.save(NOTICE.create());
-        List<Message> savedMessages = createAndSaveMessages(notice, kkojae);
 
+        List<Message> savedMessages = createAndSaveMessages(notice, kkojae);
         List<Bookmark> hopesBookmarks = saveBookmarksAtDifferentTimes(hope, savedMessages);
         List<Bookmark> kkojaesBookmarks = saveBookmarksAtDifferentTimes(kkojae, savedMessages);
 
@@ -280,6 +281,12 @@ class BookmarkServiceTest {
                         () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
                 );
             }
+        }
+
+        private Member saveMember(final MemberFixture memberFixture) {
+            Member member = memberFixture.create();
+            member.firstLogin("xoxp-" + member.getSlackId());
+            return members.save(member);
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {

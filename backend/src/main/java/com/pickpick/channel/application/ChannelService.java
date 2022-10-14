@@ -6,9 +6,13 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelResponses;
+import com.pickpick.exception.member.MemberTokenNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.slackevent.domain.Participation;
+import com.pickpick.support.ExternalClient;
 import com.pickpick.workspace.domain.Workspace;
+import com.querydsl.core.util.StringUtils;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,12 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChannelService {
 
+    private final ExternalClient externalClient;
     private final MemberRepository members;
     private final ChannelRepository channels;
     private final ChannelSubscriptionRepository channelSubscriptions;
 
-    public ChannelService(final MemberRepository members, final ChannelRepository channels,
-                          final ChannelSubscriptionRepository channelSubscriptions) {
+    public ChannelService(final ExternalClient externalClient, final MemberRepository members,
+                          final ChannelRepository channels, final ChannelSubscriptionRepository channelSubscriptions) {
+        this.externalClient = externalClient;
         this.members = members;
         this.channels = channels;
         this.channelSubscriptions = channelSubscriptions;
@@ -32,13 +38,31 @@ public class ChannelService {
 
     public ChannelResponses findByWorkspace(final Long memberId) {
         Member member = members.getById(memberId);
-        Workspace workspace = member.getWorkspace();
+        validateToken(member);
 
-        List<Channel> allChannels = channels.findAllByWorkspaceOrderByName(workspace);
+        List<Channel> participatingChannels = findParticipatingChannels(member);
         Set<Channel> subscribedChannels = findSubscribedChannels(memberId);
 
-        List<ChannelResponse> channelResponses = generateChannelResponses(allChannels, subscribedChannels);
+        List<ChannelResponse> channelResponses = generateChannelResponses(participatingChannels, subscribedChannels);
         return new ChannelResponses(channelResponses);
+    }
+
+    private void validateToken(final Member member) {
+        String token = member.getToken();
+        if (StringUtils.isNullOrEmpty(token)) {
+            throw new MemberTokenNotFoundException(member.getId(), token);
+        }
+    }
+
+    private List<Channel> findParticipatingChannels(final Member member) {
+        String token = member.getToken();
+        Participation participation = externalClient.findParticipation(token);
+
+        Workspace workspace = member.getWorkspace();
+        return channels.findAllByWorkspaceOrderByName(workspace)
+                .stream()
+                .filter(it -> participation.isParticipant(it.getSlackId()))
+                .collect(Collectors.toList());
     }
 
     private Set<Channel> findSubscribedChannels(final Long memberId) {

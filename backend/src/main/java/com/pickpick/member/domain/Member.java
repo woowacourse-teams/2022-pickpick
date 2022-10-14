@@ -59,8 +59,9 @@ public class Member {
         this.workspace = workspace;
     }
 
-    public void markLoggedIn() {
+    public void firstLogin(final String token) {
         this.isFirstLogin = false;
+        this.token = token;
     }
 
     public void update(final String username, final String thumbnailUrl) {

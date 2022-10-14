@@ -6,6 +6,7 @@ import com.pickpick.config.SlackProperties;
 import com.pickpick.exception.SlackApiCallException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
+import com.pickpick.slackevent.domain.Participation;
 import com.pickpick.workspace.domain.Workspace;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
@@ -26,6 +27,7 @@ import com.slack.api.model.User;
 import com.slack.api.model.User.Profile;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -54,29 +56,25 @@ public class SlackClient implements ExternalClient {
 
     @Override
     public String callUserToken(final String code) {
-        OAuthV2AccessRequest request = generateOAuthRequest(code);
-
-        try {
-            OAuthV2AccessResponse response = methodsClient
-                    .oauthV2Access(request);
-            validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
-            return response.getAuthedUser().getAccessToken();
-
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(OAUTH_ACCESS_METHOD_NAME);
-        }
+        OAuthV2AccessResponse response = callOAuth2(code);
+        validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
+        return response.getAuthedUser().getAccessToken();
     }
 
     @Override
     public BotInfoDto callBotInfo(final String code) {
+        OAuthV2AccessResponse response = callOAuth2(code);
+        return new BotInfoDto(response.getTeam().getId(), response.getAccessToken());
+    }
+
+    private OAuthV2AccessResponse callOAuth2(final String code) {
         OAuthV2AccessRequest request = generateOAuthRequest(code);
 
         try {
             OAuthV2AccessResponse response = methodsClient
                     .oauthV2Access(request);
             validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
-
-            return new BotInfoDto(response.getTeam().getId(), response.getAccessToken());
+            return response;
 
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(OAUTH_ACCESS_METHOD_NAME);
@@ -108,23 +106,6 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public Channel callChannel(final String channelSlackId, final Workspace workspace) {
-        try {
-            ConversationsInfoResponse response = methodsClient.conversationsInfo(
-                    request -> request.channel(channelSlackId)
-                            .token(workspace.getBotToken())
-            );
-            validateResponse(CHANNEL_INFO_METHOD_NAME, response);
-
-            Conversation conversation = response.getChannel();
-            return new Channel(conversation.getId(), conversation.getName(), workspace);
-
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(CHANNEL_INFO_METHOD_NAME);
-        }
-    }
-
-    @Override
     public List<Member> findAllWorkspaceMembers(final Workspace workspace) {
         try {
             UsersListResponse response = methodsClient.usersList(request -> request.token(workspace.getBotToken()));
@@ -151,7 +132,7 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public List<Channel> findAllWorkspaceChannels(final Workspace workspace) {
+    public List<Channel> findChannelsByWorkspace(final Workspace workspace) {
         try {
             ConversationsListResponse response = methodsClient.conversationsList(
                     request -> request.token(workspace.getBotToken()));
@@ -170,6 +151,24 @@ public class SlackClient implements ExternalClient {
 
     private Channel toChannel(final Conversation channel, final Workspace workspace) {
         return new Channel(channel.getId(), channel.getName(), workspace);
+    }
+
+    @Override
+    public Participation findParticipation(final String userToken) {
+        try {
+            ConversationsListResponse response = methodsClient.conversationsList(
+                    request -> request.token(userToken));
+            validateResponse(CHANNEL_LIST_METHOD_NAME, response);
+
+            Map<String, Boolean> participation = response.getChannels()
+                    .stream()
+                    .collect(Collectors.toMap(Conversation::getId, Conversation::isMember));
+
+            return new Participation(participation);
+
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException(CHANNEL_LIST_METHOD_NAME);
+        }
     }
 
     @Override

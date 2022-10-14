@@ -21,6 +21,13 @@ public enum ChannelFixture {
         this.name = name;
     }
 
+    public static Channel findFirst() {
+        return Arrays.stream(ChannelFixture.values())
+                .findFirst()
+                .orElse(NOTICE)
+                .create();
+    }
+
     public static List<Channel> createAllChannels(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
                 .map(channel -> channel.create(workspace))
