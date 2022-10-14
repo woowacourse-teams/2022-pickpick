@@ -13,6 +13,7 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -125,7 +126,7 @@ class ChannelServiceTest {
     }
 
     private Member saveMember(final Workspace workspace) {
-        Member member = new Member("U00001", "연로그", "https://yeonLog.png", workspace);
+        Member member = MemberFixture.YEONLOG.create(workspace);
         member.firstLogin("xoxp-token");
         return members.save(member);
     }
@@ -135,9 +136,10 @@ class ChannelServiceTest {
         conversationsListResponse.setOk(true);
         List<Conversation> conversations = new ArrayList<>();
         for (Channel channel : channels) {
-            Conversation conversation = new Conversation();
-            conversation.setId(channel.getSlackId());
-            conversation.setMember(true);
+            Conversation conversation = Conversation.builder()
+                    .id(channel.getSlackId())
+                    .isMember(true)
+                    .build();
             conversations.add(conversation);
         }
         conversationsListResponse.setChannels(conversations);
