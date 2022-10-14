@@ -6,6 +6,8 @@ import static com.pickpick.fixture.ChannelFixture.QNA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -18,16 +20,27 @@ import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
+import com.pickpick.fixture.MemberFixture;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
+import com.slack.api.methods.MethodsClient;
+import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.request.conversations.ConversationsInviteRequest;
+import com.slack.api.methods.response.conversations.ConversationsInviteResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class ChannelSubscriptionServiceTest {
@@ -47,11 +60,26 @@ class ChannelSubscriptionServiceTest {
     private MemberRepository members;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
+
+    @MockBean
+    private MethodsClient methodsClient;
 
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
+    }
+
+    @BeforeEach
+    void setUp() throws SlackApiException, IOException {
+        ConversationsInviteResponse response = new ConversationsInviteResponse();
+        response.setOk(true);
+
+        given(methodsClient.conversationsInvite((ConversationsInviteRequest) any()))
+                .willReturn(response);
     }
 
     @DisplayName("채널 구독을 단건 저장")
@@ -288,7 +316,10 @@ class ChannelSubscriptionServiceTest {
     }
 
     private Member bom() {
-        return new Member("U00003", "봄", "https://bom.png");
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
+        Member member = MemberFixture.BOM.create(workspace);
+        member.firstLogin("xoxp-token");
+        return members.save(member);
     }
 
     private void subscribeChannel(final Member member, final Channel channel) {

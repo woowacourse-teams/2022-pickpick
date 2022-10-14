@@ -207,7 +207,7 @@ public class SlackClient implements ExternalClient {
     }
 
     private boolean isBotAlreadyInChannel(final ConversationsInviteResponse response) {
-        return "already_in_channel".equals(response.getError());
+        return !response.isOk() && "already_in_channel".equals(response.getError());
     }
 
     private <T extends SlackApiTextResponse> void validateResponse(final String methodName, final T response) {
