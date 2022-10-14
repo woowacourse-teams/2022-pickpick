@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
 import { useRecoilState } from "recoil";
+
+import Portal from "@src/components/@shared/Portal";
 
 import { snackbarState } from "@src/@atoms";
 import { SNACKBAR_STATUS } from "@src/@constants";
@@ -17,7 +18,6 @@ function Snackbar() {
   const [{ isOpened, message, status }, setState] =
     useRecoilState(snackbarState);
 
-  const element = document.querySelector("#portal-root");
   const snackbarRef = useRef<HTMLDivElement>(null); // 애니메이션 제어 시 사용한다.
   const timerRef = useRef<TimerRef>({
     timeout: null,
@@ -38,14 +38,13 @@ function Snackbar() {
     }, SNACKBAR_TIME);
   }, [isOpened]);
 
-  return isOpened && element
-    ? ReactDOM.createPortal(
-        <Styled.Container status={status} ref={snackbarRef}>
-          {message}
-        </Styled.Container>,
-        element
-      )
-    : null;
+  return (
+    <Portal isOpened={isOpened}>
+      <Styled.Container status={status} ref={snackbarRef}>
+        {message}
+      </Styled.Container>
+    </Portal>
+  );
 }
 
 export default Snackbar;
