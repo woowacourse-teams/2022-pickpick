@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.findFirst().getSlackId();
+    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 
     private String token;
 

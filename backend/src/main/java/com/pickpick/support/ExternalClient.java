@@ -4,9 +4,9 @@ import com.pickpick.auth.application.dto.BotInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
+import com.pickpick.slackevent.domain.Participation;
 import com.pickpick.workspace.domain.Workspace;
 import java.util.List;
-import java.util.Map;
 
 public interface ExternalClient {
 
@@ -16,13 +16,11 @@ public interface ExternalClient {
 
     String callMemberSlackId(String accessToken);
 
-    Channel callChannel(String channelSlackId, Workspace workspace);
-
-    List<Member> findAllWorkspaceMembers(Workspace workspace);
+    List<Member> findMembersByWorkspace(Workspace workspace);
 
     List<Channel> findChannelsByWorkspace(Workspace workspace);
 
-    Map<String, Boolean> findParticipation(String userToken);
+    Participation findChannelParticipation(String userToken);
 
     void sendMessage(Reminder reminder);
 }
