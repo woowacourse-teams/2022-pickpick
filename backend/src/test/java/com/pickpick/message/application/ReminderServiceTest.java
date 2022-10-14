@@ -1,15 +1,22 @@
 package com.pickpick.message.application;
 
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.MemberFixture.HOPE;
+import static com.pickpick.fixture.MemberFixture.KKOJAE;
+import static com.pickpick.fixture.MemberFixture.YEONLOG;
+import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
+import com.pickpick.fixture.MessageFixtures;
+import com.pickpick.fixture.ReminderFindRequestFactory;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -21,25 +28,24 @@ import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.support.DatabaseCleaner;
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/reminder.sql"})
 @SpringBootTest
 class ReminderServiceTest {
 
@@ -61,293 +67,369 @@ class ReminderServiceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    @SpyBean
-    private Clock clock;
+    @DisplayName("리마인더 조회 시")
+    @TestInstance(Lifecycle.PER_CLASS)
+    @Nested
+    class find {
 
-    private static Stream<Arguments> parameterProvider() {
-        return Stream.of(
-                Arguments.arguments("멤버 ID 2번으로 리마인더를 조회한다", null, 2L, List.of(1L), false),
-                Arguments.arguments("멤버 ID가 1번이고 리마인더 id 10번일 때 리마인더 목록을 조회한다", 10L, 1L,
-                        List.of(11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L), false),
-                Arguments.arguments("리마인더 조회 시 가장 최신인 리마인더가 포함된다면 hasFuture가 false이다", null, 2L, List.of(1L), false),
-                Arguments.arguments("리마인더 조회 시 가장 최신인 리마인더가 포함되지 않는다면 hasFuture가 true이다", 2L, 1L,
-                        List.of(3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L,
-                                22L), true)
-        );
+        Member bom = members.save(BOM.create());
+        Member yeonlog = members.save(YEONLOG.create());
+
+        Channel notice = channels.save(NOTICE.create());
+        List<Message> noticeMessages = createAndSaveMessages(notice, yeonlog);
+
+        List<Reminder> bomReminders = saveRemindersAtDifferentTimes(bom, noticeMessages);
+        List<Reminder> yeonlogReminders = saveRemindersAtDifferentTimes(yeonlog, noticeMessages);
+        int overTotalSize = bomReminders.size() + yeonlogReminders.size() + 5;
+
+        @AfterAll
+        void tearDown() {
+            databaseCleaner.clear();
+        }
+
+        @DisplayName("해당 멤버의 리마인더만 조회된다")
+        @Test
+        void membersOwnReminders() {
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
+            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                    .getReminders();
+
+            List<Long> bomReminderIds = extractIds(bomReminders);
+            List<Long> yeonlogReminderIds = extractIds(yeonlogReminders);
+
+            assertAll(
+                    () -> assertThat(foundReminders).extracting("id").containsAll(bomReminderIds),
+                    () -> assertThat(foundReminders).extracting("id").doesNotContainAnyElementsOf(yeonlogReminderIds)
+            );
+        }
+
+        @DisplayName("더 조회 할 리마인더가 없다면 hasFuture는 false다")
+        @Test
+        void noMoreRemindersToFindHasFutureFalse() {
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
+            ReminderResponses response = reminderService.find(request, bom.getId());
+
+            assertThat(response.hasFuture()).isFalse();
+        }
+
+        @DisplayName("조회 할 리마인더가 남아있다면 hasFuture는 true다")
+        @Test
+        void moreRemindersToFindHasFutureTrue() {
+            int lessThenTotal = bomReminders.size() - 1;
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(lessThenTotal);
+            ReminderResponses response = reminderService.find(request, bom.getId());
+
+            assertThat(response.hasFuture()).isTrue();
+        }
+
+        @DisplayName("현재 시간보다 과거의 리마인더는 조회되지 않는다")
+        @Test
+        void excludePastReminders() {
+            Message message = saveDummyMessage(bom, notice);
+            LocalDateTime pastDateTime = LocalDateTime.now().minusMinutes(10);
+
+            Reminder pastReminder = reminders.save(new Reminder(bom, message, pastDateTime));
+
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
+            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                    .getReminders();
+
+            assertAll(
+                    () -> assertThat(foundReminders).isNotEmpty(),
+                    () -> assertThat(foundReminders).extracting("id").doesNotContain(pastReminder.getId())
+            );
+        }
+
+        @DisplayName("정렬 기준은 리마인드 시간 기준 오름차순이다")
+        @Test
+        void orderByRemindDateAsc() {
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
+            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                    .getReminders();
+
+            List<Long> expectedIds = extractIdsOrderedByRemindDate(bomReminders);
+
+            assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
+        }
+
+        @DisplayName("정렬 시 리마인드 시간이 같다면 id 오름차순 정렬된다")
+        @Test
+        void orderByIdWhenRemindDateIsSame() {
+            Member hope = members.save(HOPE.create());
+            Message firstMessage = saveDummyMessage(hope, notice);
+            Message secondMessage = saveDummyMessage(hope, notice);
+
+            LocalDateTime remindDate = LocalDateTime.now().plusHours(1);
+            reminders.save(new Reminder(hope, firstMessage, remindDate));
+            reminders.save(new Reminder(hope, secondMessage, remindDate));
+
+            ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+            List<ReminderResponse> foundReminders = reminderService.find(request, hope.getId())
+                    .getReminders();
+
+            assertThat(foundReminders.get(0).getId()).isLessThan(foundReminders.get(1).getId());
+        }
+
+        @DisplayName("요청 파라미터가 전부 없다면")
+        @Nested
+        class emptyParams {
+
+            ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+
+            @DisplayName("현재 시간에 가까운 리마인더부터 20개를 조회한다")
+            @Test
+            void twentyRemindersFromNow() {
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+                List<Long> expectedIds = extractIdsOrderedByRemindDateDefaultLimit(bomReminders);
+
+                assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
+            }
+        }
+
+        @DisplayName("요청 파라미터에 개수만 있다면")
+        @Nested
+        class onlyCountInParmas {
+
+            int count = 3;
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(count);
+
+            @DisplayName("해당 개수만큼 조회한다")
+            @Test
+            void limitCount() {
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+
+                assertThat(foundReminders).hasSize(count);
+            }
+        }
+
+        @DisplayName("요청 파라미터에 리마인더 id만 있다면")
+        @Nested
+        class onlyReminderIdInParams {
+
+            Reminder target = bomReminders.get(5);
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyReminderId(target.getId());
+
+            @DisplayName("해당 리마인더보다 미래 시간의 리마인더를 기본 20개까지 조회한다")
+            @Test
+            void findFutureReminders() {
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+                List<Long> expectedIds = extractIdsFutureFromTargetOrderedByRemindDate(bomReminders, target, 20);
+
+                assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
+            }
+        }
+
+        @DisplayName("요청 파라미터에 리마인더 id와 count가 있다면")
+        @Nested
+        class reminderIdAndCountInParams {
+
+            Reminder target = bomReminders.get(5);
+            int count = 3;
+
+            ReminderFindRequest request = ReminderFindRequestFactory.reminderIdAndCount(target.getId(), count);
+
+            @DisplayName("해당 리마인더보다 미래 시간의 리마인더를 count개 조회한다")
+            @Test
+            void findCountRemindersSetRemindedAfterTarget() {
+                List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
+                        .getReminders();
+                List<Long> expectedIds = extractIdsFutureFromTargetOrderedByRemindDate(bomReminders, target, count);
+
+                assertThat(foundReminders).extracting("id").containsExactlyElementsOf(expectedIds);
+            }
+        }
+
+        @DisplayName("messageId와 memberId로 단건 조회한다")
+        @Test
+        void findOne() {
+            Reminder target = bomReminders.get(5);
+            ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
+                    target.getMember().getId());
+
+            assertThat(target.getId()).isEqualTo(response.getId());
+        }
+
+        @DisplayName("messageId와 memberId가 일치하는 리마인더가 없다면 예외가 발생한다")
+        @Test
+        void findOneThrowsException() {
+            Member kkojae = members.save(KKOJAE.create());
+            Message target = noticeMessages.get(0);
+
+            assertThatThrownBy(() -> reminderService.findOne(target.getId(), kkojae.getId()))
+                    .isInstanceOf(ReminderNotFoundException.class);
+        }
+
+        private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
+            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+                    .map(messageFixture -> messageFixture.create(channel, member))
+                    .collect(Collectors.toList());
+
+            for (Message fixture : messagesInChannel) {
+                messages.save(fixture);
+            }
+
+            return messagesInChannel;
+        }
+
+        private List<Reminder> saveRemindersAtDifferentTimes(final Member member, final List<Message> messages) {
+            List<Reminder> savedReminders = new ArrayList<>();
+            int totalSize = messages.size();
+
+            for (int i = 0; i < totalSize; i++) {
+                LocalDateTime remindDateTime = LocalDateTime.now().plusHours(i + 1);
+                Reminder reminder = reminders.save(
+                        new Reminder(member, messages.get(totalSize - i - 1), remindDateTime));
+                savedReminders.add(reminder);
+            }
+
+            return savedReminders;
+        }
+
+        private Message saveDummyMessage(final Member member, final Channel channel) {
+            Message message = new Message(UUID.randomUUID().toString(), "리마인더 설정 용 메시지", member, channel,
+                    LocalDateTime.now(), LocalDateTime.now());
+            return messages.save(message);
+        }
+
+        private List<Long> extractIds(final List<Reminder> reminders) {
+            return reminders.stream()
+                    .map(Reminder::getId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractIdsOrderedByRemindDate(final List<Reminder> reminders) {
+            return reminders.stream()
+                    .sorted(Comparator.comparing(Reminder::getRemindDate))
+                    .map(Reminder::getId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractIdsOrderedByRemindDateDefaultLimit(final List<Reminder> reminders) {
+            return reminders.stream()
+                    .sorted(Comparator.comparing(Reminder::getRemindDate))
+                    .map(Reminder::getId)
+                    .limit(20)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> extractIdsFutureFromTargetOrderedByRemindDate(final List<Reminder> reminders,
+                                                                         final Reminder target, final int limit) {
+            return reminders.stream()
+                    .filter(reminder -> reminder.getRemindDate().isAfter(target.getRemindDate()))
+                    .sorted(Comparator.comparing(Reminder::getRemindDate))
+                    .map(Reminder::getId)
+                    .limit(limit)
+                    .collect(Collectors.toList());
+        }
     }
 
-    @AfterEach
-    void tearDown() {
-        databaseCleaner.clear();
-    }
+    @DisplayName("리마인더 저장/수정/삭제 시")
+    @Nested
+    class saveUpdateDelete {
 
-    @DisplayName("리마인더를 생성한다")
-    @Test
-    void save() {
-        // given
-        Member member = members.save(new Member("U1234", "사용자", "user.png"));
-        Channel channel = channels.save(new Channel("C1234", "기본채널"));
-        Message message = messages.save(
-                new Message("M1234", "메시지", member, channel, LocalDateTime.now(), LocalDateTime.now()));
+        @AfterEach
+        void tearDown() {
+            databaseCleaner.clear();
+        }
 
-        ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusDays(1));
-        int beforeSize = findReminderSize(member);
+        @DisplayName("리마인더를 저장한다")
+        @Test
+        void save() {
+            // given
+            Member yeonlog = members.save(YEONLOG.create());
+            Channel notice = channels.save(NOTICE.create());
+            Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
-        // when
-        reminderService.save(member.getId(), request);
+            int beforeSize = findReminderSize(yeonlog);
 
-        // then
-        int afterSize = findReminderSize(member);
-        assertThat(beforeSize + 1).isEqualTo(afterSize);
-    }
+            // when
+            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(1));
+            reminderService.save(yeonlog.getId(), request);
 
-    private int findReminderSize(final Member member) {
-        return reminderService.find(new ReminderFindRequest(null, null), member.getId()).getReminders().size();
-    }
+            // then
+            int afterSize = findReminderSize(yeonlog);
+            assertThat(beforeSize + 1).isEqualTo(afterSize);
+        }
 
-    @DisplayName("리마인더 단건 조회")
-    @Test
-    void findOneReminder() {
-        // given
-        Long memberId = 2L;
-        Long messageId = 1L;
+        @DisplayName("리마인더 수정 시 알람 시각이 변경된다")
+        @Test
+        void update() {
+            // given
+            Member yeonlog = members.save(YEONLOG.create());
+            Channel notice = channels.save(NOTICE.create());
+            Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
-        // when
-        ReminderResponse reminder = reminderService.findOne(messageId, memberId);
+            LocalDateTime originTime = LocalDateTime.now().plusHours(1);
+            reminders.save(new Reminder(yeonlog, message, originTime));
 
-        // then
-        assertAll(
-                () -> assertThat(reminder.getId()).isEqualTo(1L),
-                () -> assertThat(reminder.getRemindDate()).isEqualTo(LocalDateTime.of(2022, 8, 12, 14, 20))
-        );
-    }
+            // when
+            LocalDateTime updateTime = LocalDateTime.now().plusDays(1);
+            reminderService.update(yeonlog.getId(), new ReminderSaveRequest(message.getId(), updateTime));
 
-    @DisplayName("리마인더가 존재하지 않는 메시지를 단건 조회할 경우 예외 발생")
-    @Test
-    void findNotExistOneThenThrowException() {
-        // given
-        Long memberId = 2L;
-        Long messageId = 20L;
+            // then
+            Reminder actual = reminders.getByMessageIdAndMemberId(message.getId(), yeonlog.getId());
+            assertThat(actual.getRemindDate()).isEqualTo(updateTime);
+        }
 
-        // when & then
-        assertThatThrownBy(() -> reminderService.findOne(messageId, memberId))
-                .isInstanceOf(ReminderNotFoundException.class);
-    }
+        @DisplayName("수정 시 memberId, messageId가 둘 다 일치하는 리마인더가 없다면 예외가 발생한다")
+        @Test
+        void updateReminderDoesNotExistThrowsException() {
+            // given
+            Member yeonlog = members.save(YEONLOG.create());
+            Member other = members.save(BOM.create());
+            Channel notice = channels.save(NOTICE.create());
+            Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
-    @DisplayName("리마인더 목록 조회")
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("parameterProvider")
-    void findReminders(final String subscription, final Long reminderId, final Long memberId,
-                       final List<Long> expectedIds, final boolean expectedHasFuture) {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+            reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
 
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(reminderId, null), memberId);
+            // when & then
+            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(2));
+            assertThatThrownBy(() -> reminderService.update(other.getId(), request))
+                    .isInstanceOf(ReminderUpdateFailureException.class);
+        }
 
-        // then
-        List<Long> ids = convertToIds(response);
-        assertAll(
-                () -> assertThat(ids).containsExactlyElementsOf(expectedIds),
-                () -> assertThat(response.hasFuture()).isEqualTo(expectedHasFuture)
-        );
-    }
+        @DisplayName("리마인더를 단건 삭제한다")
+        @Test
+        void delete() {
+            // given
+            Member yeonlog = members.save(YEONLOG.create());
+            Channel notice = channels.save(NOTICE.create());
+            Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
-    private List<Long> convertToIds(final ReminderResponses response) {
-        return response.getReminders()
-                .stream()
-                .map(ReminderResponse::getId)
-                .collect(Collectors.toList());
-    }
+            Reminder saved = reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
 
-    @DisplayName("리마인더 조회 시 count가 없으면 default 값을 20으로 세팅")
-    @Test
-    void findRemindersByDefaultCount() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
+            // when
+            reminderService.delete(message.getId(), yeonlog.getId());
 
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, null), 1L);
+            // then
+            Optional<Reminder> afterDeleted = reminders.findById(saved.getId());
+            assertThat(afterDeleted).isEmpty();
+        }
 
-        // then
-        int size = response.getReminders().size();
-        assertThat(size).isEqualTo(20);
-    }
+        @DisplayName("삭제 시 memberId, messageId가 둘 다 일치하는 리마인더가 없다면 예외기 발생한다")
+        @Test
+        void deleteReminderDoesNotExistThrowsException() {
+            // given
+            Member yeonlog = members.save(YEONLOG.create());
+            Member other = members.save(BOM.create());
+            Channel notice = channels.save(NOTICE.create());
+            Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
-    @DisplayName("리마인더 조회 시 count 값이 10이면 10개 조회")
-    @Test
-    void findRemindersByCount() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
-        int count = 10;
+            reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
 
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 1L);
+            // when & then
+            assertThatThrownBy(() -> reminderService.delete(message.getId(), other.getId()))
+                    .isInstanceOf(ReminderDeleteFailureException.class);
+        }
 
-        // then
-        int size = response.getReminders().size();
-        assertThat(size).isEqualTo(count);
-    }
-
-    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하면 hasFuture가 true 이다.")
-    @Test
-    void findSameDayReminder() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2023-07-07T15:20:00Z"));
-        int count = 2;
-
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 3L);
-
-        // then
-        int size = response.getReminders().size();
-        assertAll(
-                () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.hasFuture()).isTrue(),
-                () -> assertThat(response.getReminders()).extracting("id")
-                        .containsExactly(29L, 30L)
-        );
-    }
-
-    @DisplayName("리마인더 조회 해당 날의 reminder의 개수보다 적은 COUNT로 조회할 경우 hasFuture가 true이다.")
-    @Test
-    void findSameDayReminderByCount() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2023-08-07T15:20:00Z"));
-        int count = 2;
-
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 3L);
-
-        // then
-        int size = response.getReminders().size();
-        assertAll(
-                () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.hasFuture()).isTrue(),
-                () -> assertThat(response.getReminders()).extracting("id")
-                        .containsExactly(25L, 26L)
-        );
-    }
-
-    @DisplayName("리마인더 조회 해당 날의 reminder개수와 count가 동일한 경우 미래의 리마인더가 존재하지 않으면 hasFuture가 false 이다.")
-    @Test
-    void findSameDayReminderByCountAndReminderId() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2023-08-07T15:20:00Z"));
-        int count = 2;
-
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(26L, count), 3L);
-
-        // then
-        int size = response.getReminders().size();
-        assertAll(
-                () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.hasFuture()).isFalse(),
-                () -> assertThat(response.getReminders()).extracting("id")
-                        .containsExactly(27L, 28L)
-        );
-    }
-
-    @DisplayName("리마인더가 날짜 + ID 순으로 올바르게 조회되는지 확인한다")
-    @Test
-    void findRemindersOrderByDateAndId() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2023-06-07T15:20:00Z"));
-        int count = 7;
-
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, count), 3L);
-
-        // then
-        int size = response.getReminders().size();
-        assertAll(
-                () -> assertThat(size).isEqualTo(count),
-                () -> assertThat(response.hasFuture()).isFalse(),
-                () -> assertThat(response.getReminders()).extracting("id")
-                        .containsExactly(31L, 29L, 30L, 25L, 26L, 27L, 28L)
-        );
-    }
-
-
-    @DisplayName("오늘 날짜보다 더 오래된 날짜에 리마인드한 내역은 조회되지 않는다.")
-    @Test
-    void findWithoutOldRemindDate() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
-
-        // when
-        ReminderResponses response = reminderService.find(new ReminderFindRequest(null, null), 1L);
-
-        // then
-        List<Long> ids = convertToIds(response);
-        assertAll(
-                () -> assertThat(ids).doesNotContainAnyElementsOf(List.of(24L)),
-                () -> assertThat(response.hasFuture()).isTrue()
-        );
-    }
-
-    @DisplayName("리마인더 수정")
-    @Test
-    void update() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
-
-        LocalDateTime updateTime = LocalDateTime.now(clock).plusDays(1);
-        long memberId = 1L;
-        long messageId = 2L;
-
-        // when
-        reminderService.update(memberId, new ReminderSaveRequest(messageId, updateTime));
-
-        // then
-        Optional<Reminder> expected = reminders.findByMessageIdAndMemberId(messageId, memberId);
-
-        assertAll(
-                () -> assertThat(expected).isPresent(),
-                () -> assertThat(expected.get().getRemindDate()).isEqualTo(updateTime)
-        );
-    }
-
-    @DisplayName("다른 사용자의 리마인더 수정시 예외")
-    @Test
-    void updateOtherMembers() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
-
-        ReminderSaveRequest request = new ReminderSaveRequest(1L, LocalDateTime.now(clock).plusDays(1));
-
-        // when & then
-        assertThatThrownBy(() -> reminderService.update(1L, request))
-                .isInstanceOf(ReminderUpdateFailureException.class);
-    }
-
-    @DisplayName("리마인더 삭제")
-    @Test
-    void delete() {
-        // given & when
-        reminderService.delete(1L, 2L);
-
-        // then
-        Optional<Reminder> actual = reminders.findById(1L);
-        assertThat(actual).isEmpty();
-    }
-
-    @DisplayName("다른 사용자의 리마인더 삭제시 예외")
-    @Test
-    void deleteOtherMembers() {
-        // given & when & then
-        assertThatThrownBy(() -> reminderService.delete(1L, 1L))
-                .isInstanceOf(ReminderDeleteFailureException.class);
+        private int findReminderSize(final Member member) {
+            ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+            return reminderService.find(request, member.getId())
+                    .getReminders()
+                    .size();
+        }
     }
 }
