@@ -40,7 +40,7 @@ public class ChannelService {
         Member member = members.getById(memberId);
         validateToken(member);
 
-        List<Channel> participatingChannels = participatingChannels(member);
+        List<Channel> participatingChannels = findParticipatingChannels(member);
         Set<Channel> subscribedChannels = findSubscribedChannels(memberId);
 
         List<ChannelResponse> channelResponses = generateChannelResponses(participatingChannels, subscribedChannels);
@@ -54,7 +54,7 @@ public class ChannelService {
         }
     }
 
-    private List<Channel> participatingChannels(final Member member) {
+    private List<Channel> findParticipatingChannels(final Member member) {
         String token = member.getToken();
         Participation participation = externalClient.findParticipation(token);
 
