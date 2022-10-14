@@ -1,7 +1,8 @@
 import { COLORS } from "@src/@styles/colors";
 import { FONT_SIZE } from "@src/@styles/fontSize";
+import { Theme } from "@src/@types/shared";
 
-export const LIGHT_MODE_THEME = {
+export const LIGHT_MODE_THEME: Theme = {
   COLOR: {
     PRIMARY: { DEFAULT: COLORS.ORANGE[90] },
     SECONDARY: { DEFAULT: COLORS.GREY[80] },
@@ -48,7 +49,7 @@ export const LIGHT_MODE_THEME = {
   },
 } as const;
 
-export const DARK_MODE_THEME = {
+export const DARK_MODE_THEME: Theme = {
   COLOR: {
     PRIMARY: { DEFAULT: COLORS.ORANGE[90] },
     SECONDARY: { DEFAULT: COLORS.GREY[75] },
@@ -56,6 +57,7 @@ export const DARK_MODE_THEME = {
       DEFAULT: COLORS.WHITE,
       DISABLED: COLORS.GREY[60],
       PLACEHOLDER: COLORS.GREY[80],
+      LIGHT_BLUE: COLORS.BLUE[50],
       WHITE: COLORS.WHITE,
     },
     BACKGROUND: {
