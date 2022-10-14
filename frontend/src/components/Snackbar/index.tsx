@@ -18,7 +18,7 @@ function Snackbar() {
     useRecoilState(snackbarState);
 
   const element = document.querySelector("#portal-root");
-  const snackbarRef = useRef<HTMLDivElement>(null);
+  const snackbarRef = useRef<HTMLDivElement>(null); // 애니메이션 제어 시 사용한다.
   const timerRef = useRef<TimerRef>({
     timeout: null,
   });
