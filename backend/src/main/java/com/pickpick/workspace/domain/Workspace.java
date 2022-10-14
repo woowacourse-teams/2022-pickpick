@@ -20,14 +20,18 @@ public class Workspace {
     @Column(name = "slack_id", length = 15, nullable = false, unique = true, updatable = false)
     private String slackId;
 
-    @Column(name = "bot_token", length = 64, nullable = false, unique = true, updatable = false)
+    @Column(name = "bot_token", length = 256, nullable = false, unique = true, updatable = false)
     private String botToken;
+
+    @Column(name = "bot_slack_id", length = 15, nullable = false, unique = true, updatable = false)
+    private String botSlackId;
 
     protected Workspace() {
     }
 
-    public Workspace(final String slackId, final String botToken) {
+    public Workspace(final String slackId, final String botToken, final String botSlackId) {
         this.slackId = slackId;
         this.botToken = botToken;
+        this.botSlackId = botSlackId;
     }
 }

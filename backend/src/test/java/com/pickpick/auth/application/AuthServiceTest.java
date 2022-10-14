@@ -75,7 +75,7 @@ class AuthServiceTest {
     @Test
     void login() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("slackId", "botToken"));
+        Workspace workspace = workspaces.save(new Workspace("slackId", "botToken", "botSlackId"));
         Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
@@ -94,7 +94,7 @@ class AuthServiceTest {
     @Test
     void firstLogin() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("slackId", "botToken"));
+        Workspace workspace = workspaces.save(new Workspace("slackId", "botToken", "botSlackId"));
         Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
@@ -152,6 +152,7 @@ class AuthServiceTest {
         response.setAuthedUser(authedUser);
         response.setTeam(team);
         response.setAccessToken("botToken");
+        response.setBotUserId("botSlackId");
 
         return response;
     }

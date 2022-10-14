@@ -41,7 +41,7 @@ class MemberJoinServiceTest {
 
     @BeforeEach
     void init() {
-        workspace = workspaces.save(new Workspace("T12345", "xoxb-token-1234"));
+        workspace = workspaces.save(new Workspace("T12345", "xoxb-token-1234", "UB000001"));
     }
 
     @AfterEach

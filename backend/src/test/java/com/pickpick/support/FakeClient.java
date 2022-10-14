@@ -22,7 +22,7 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public BotInfoDto callBotInfo(final String code) {
-        return new BotInfoDto(code, code);
+        return new BotInfoDto(code, code, code);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FakeClient implements ExternalClient {
     public Participation findParticipation(final String userToken) {
         Map<String, Boolean> participation = Arrays.stream(ChannelFixture.values())
                 .collect(Collectors.toMap(ChannelFixture::getSlackId, it -> true));
-        
+
         return new Participation(participation);
     }
 

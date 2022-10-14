@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class SlackClient implements ExternalClient {
 
@@ -63,7 +65,7 @@ public class SlackClient implements ExternalClient {
     @Override
     public BotInfoDto callBotInfo(final String code) {
         OAuthV2AccessResponse response = callOAuth2(code);
-        return new BotInfoDto(response.getTeam().getId(), response.getAccessToken());
+        return new BotInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId());
     }
 
     private OAuthV2AccessResponse callOAuth2(final String code) {
@@ -72,6 +74,7 @@ public class SlackClient implements ExternalClient {
         try {
             OAuthV2AccessResponse response = methodsClient
                     .oauthV2Access(request);
+            log.info("bot user Id:: " + response.getBotUserId());
             validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
             return response;
 

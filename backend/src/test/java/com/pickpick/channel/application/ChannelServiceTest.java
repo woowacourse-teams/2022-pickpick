@@ -71,7 +71,7 @@ class ChannelServiceTest {
     @Transactional
     void findAll() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234"));
+        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234", "UB000001"));
         Member yeonLog = saveMember(workspace);
 
         Channel notice = channels.save(NOTICE.create(workspace));
@@ -101,7 +101,7 @@ class ChannelServiceTest {
     @Transactional
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234"));
+        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234", "UB000001"));
         Member yeonLog = saveMember(workspace);
 
         Channel notice = channels.save(NOTICE.create(workspace));
