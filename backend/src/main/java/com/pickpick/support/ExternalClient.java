@@ -16,11 +16,11 @@ public interface ExternalClient {
 
     String callMemberSlackId(String accessToken);
 
-    List<Member> findAllWorkspaceMembers(Workspace workspace);
+    List<Member> findMembersByWorkspace(Workspace workspace);
 
     List<Channel> findChannelsByWorkspace(Workspace workspace);
 
-    Participation findParticipation(String userToken);
+    Participation findChannelParticipation(String userToken);
 
     void sendMessage(Reminder reminder);
 

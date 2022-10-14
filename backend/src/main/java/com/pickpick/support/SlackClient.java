@@ -105,7 +105,7 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public List<Member> findAllWorkspaceMembers(final Workspace workspace) {
+    public List<Member> findMembersByWorkspace(final Workspace workspace) {
         try {
             UsersListResponse response = methodsClient.usersList(request -> request.token(workspace.getBotToken()));
             validateResponse(USER_LIST_METHOD_NAME, response);
@@ -153,7 +153,7 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public Participation findParticipation(final String userToken) {
+    public Participation findChannelParticipation(final String userToken) {
         try {
             ConversationsListResponse response = methodsClient.conversationsList(
                     request -> request.token(userToken));

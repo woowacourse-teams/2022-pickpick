@@ -24,5 +24,4 @@ public enum WorkspaceFixture {
     public String getSlackId() {
         return slackId;
     }
-
 }

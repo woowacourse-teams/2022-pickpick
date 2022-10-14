@@ -14,6 +14,7 @@ import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.fixture.MemberFixture;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -35,7 +36,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class ChannelServiceTest {
@@ -68,10 +68,9 @@ class ChannelServiceTest {
 
     @DisplayName("전체 채널을 조회하면 모든 채널 목록과 각각의 구독 여부가 나온다")
     @Test
-    @Transactional
     void findAll() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234", "UB000001"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Member yeonLog = saveMember(workspace);
 
         Channel notice = channels.save(NOTICE.create(workspace));
@@ -98,10 +97,9 @@ class ChannelServiceTest {
 
     @DisplayName("전체 채널을 조회하면 사용자가 입장한 채널만 조회된다")
     @Test
-    @Transactional
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("t12345", "xoxb-token-1234", "UB000001"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Member yeonLog = saveMember(workspace);
 
         Channel notice = channels.save(NOTICE.create(workspace));

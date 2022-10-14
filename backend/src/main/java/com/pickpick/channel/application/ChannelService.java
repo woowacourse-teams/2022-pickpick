@@ -56,7 +56,7 @@ public class ChannelService {
 
     private List<Channel> findParticipatingChannels(final Member member) {
         String token = member.getToken();
-        Participation participation = externalClient.findParticipation(token);
+        Participation participation = externalClient.findChannelParticipation(token);
 
         Workspace workspace = member.getWorkspace();
         return channels.findAllByWorkspaceOrderByName(workspace)

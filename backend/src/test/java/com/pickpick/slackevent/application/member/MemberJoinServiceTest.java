@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -41,7 +42,7 @@ class MemberJoinServiceTest {
 
     @BeforeEach
     void init() {
-        workspace = workspaces.save(new Workspace("T12345", "xoxb-token-1234", "UB000001"));
+        workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
     }
 
     @AfterEach
