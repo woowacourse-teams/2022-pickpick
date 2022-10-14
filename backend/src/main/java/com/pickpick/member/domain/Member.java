@@ -59,7 +59,7 @@ public class Member {
         this.workspace = workspace;
     }
 
-    public void markLoggedIn(final String token) {
+    public void firstLogin(final String token) {
         this.isFirstLogin = false;
         this.token = token;
     }

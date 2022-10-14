@@ -120,13 +120,13 @@ class ChannelServiceTest {
                 .collect(Collectors.toList());
 
         // then
-        assertThat(channelNames).isNotEmpty();
-        assertThat(channelNames).doesNotContain(freeChat.getName(), qna.getName());
+        assertThat(channelNames).isNotEmpty()
+                .doesNotContain(freeChat.getName(), qna.getName());
     }
 
     private Member saveMember(final Workspace workspace) {
         Member member = new Member("U00001", "연로그", "https://yeonLog.png", workspace);
-        member.markLoggedIn("xoxp-token");
+        member.firstLogin("xoxp-token");
         return members.save(member);
     }
 

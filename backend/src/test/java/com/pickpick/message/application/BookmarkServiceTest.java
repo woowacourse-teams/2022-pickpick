@@ -285,7 +285,7 @@ class BookmarkServiceTest {
 
         private Member saveMember(final MemberFixture memberFixture) {
             Member member = memberFixture.create();
-            member.markLoggedIn("xoxp-" + member.getSlackId());
+            member.firstLogin("xoxp-" + member.getSlackId());
             return members.save(member);
         }
 

@@ -48,7 +48,7 @@ public class AuthService {
         Member member = members.getBySlackId(memberSlackId);
 
         boolean isFirstLogin = member.isFirstLogin();
-        member.markLoggedIn(userToken);
+        member.firstLogin(userToken);
 
         return LoginResponse.builder()
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
