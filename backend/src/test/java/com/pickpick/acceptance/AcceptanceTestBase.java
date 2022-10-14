@@ -4,8 +4,6 @@ import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.support.ExternalClient;
 import com.pickpick.support.TestConfig;
-import com.pickpick.workspace.domain.Workspace;
-import com.pickpick.workspace.domain.WorkspaceRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +31,6 @@ public class AcceptanceTestBase {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    @Autowired
-    private WorkspaceRepository workspaces;
-
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
@@ -44,9 +39,5 @@ public class AcceptanceTestBase {
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
-    }
-
-    protected Workspace saveWorkspace(final Workspace workspace) {
-        return workspaces.save(workspace);
     }
 }
