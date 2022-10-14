@@ -195,7 +195,7 @@ public class SlackClient implements ExternalClient {
         ConversationsInviteRequest request = ConversationsInviteRequest.builder()
                 .channel(channel.getSlackId())
                 .token(member.getToken())
-                .users(List.of(member.getWorkspace().getBotToken()))
+                .users(List.of(member.getWorkspace().getBotSlackId()))
                 .build();
 
         try {
