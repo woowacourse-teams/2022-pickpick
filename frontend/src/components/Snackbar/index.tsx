@@ -7,6 +7,8 @@ import { SNACKBAR_STATUS } from "@src/@constants";
 
 import * as Styled from "./style";
 
+const SNACKBAR_TIME = 3000;
+
 function Snackbar() {
   const [{ isOpened, message, status }, setState] =
     useRecoilState(snackbarState);
@@ -18,24 +20,19 @@ function Snackbar() {
   });
 
   useEffect(() => {
-    if (isOpened) {
-      if (ref.current.timeout) {
-        const [showAnimation] = ref.current.element.getAnimations();
-
-        showAnimation?.cancel();
-        showAnimation?.play();
-        clearTimeout(ref.current.timeout);
-      }
-
-      ref.current.timeout = setTimeout(() => {
-        setState({
-          isOpened: false,
-          message: "",
-          status: SNACKBAR_STATUS.SUCCESS,
-        });
-      }, 3000);
+    if (!isOpened && ref.current.timeout) {
+      clearTimeout(ref.current.timeout);
+      return;
     }
-  });
+
+    ref.current.timeout = setTimeout(() => {
+      setState({
+        isOpened: false,
+        message: "",
+        status: SNACKBAR_STATUS.SUCCESS,
+      });
+    }, SNACKBAR_TIME);
+  }, [isOpened]);
 
   return isOpened && element
     ? ReactDOM.createPortal(
