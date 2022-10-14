@@ -9,23 +9,27 @@ import * as Styled from "./style";
 
 const SNACKBAR_TIME = 3000;
 
+type TimerRef = {
+  timeout: NodeJS.Timeout | null;
+};
+
 function Snackbar() {
   const [{ isOpened, message, status }, setState] =
     useRecoilState(snackbarState);
 
   const element = document.querySelector("#portal-root");
-  const ref = useRef<any>({
-    element: null,
+  const snackbarRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<TimerRef>({
     timeout: null,
   });
 
   useEffect(() => {
-    if (!isOpened && ref.current.timeout) {
-      clearTimeout(ref.current.timeout);
+    if (!isOpened && timerRef.current.timeout) {
+      clearTimeout(timerRef.current.timeout);
       return;
     }
 
-    ref.current.timeout = setTimeout(() => {
+    timerRef.current.timeout = setTimeout(() => {
       setState({
         isOpened: false,
         message: "",
@@ -36,10 +40,7 @@ function Snackbar() {
 
   return isOpened && element
     ? ReactDOM.createPortal(
-        <Styled.Container
-          status={status}
-          ref={(el) => (ref.current.element = el)}
-        >
+        <Styled.Container status={status} ref={snackbarRef}>
           {message}
         </Styled.Container>,
         element
