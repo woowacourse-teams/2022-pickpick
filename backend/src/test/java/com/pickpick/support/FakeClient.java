@@ -22,7 +22,7 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public BotInfoDto callBotInfo(final String code) {
-        return new BotInfoDto(code, code);
+        return new BotInfoDto(code, code, code);
     }
 
     @Override
@@ -55,6 +55,11 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public void sendMessage(final Reminder reminder) {
+
+    }
+
+    @Override
+    public void inviteBotToChannel(final Member member, final Channel channel) {
 
     }
 }

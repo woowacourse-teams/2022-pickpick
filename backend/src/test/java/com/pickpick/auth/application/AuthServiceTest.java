@@ -153,6 +153,7 @@ class AuthServiceTest {
         response.setAuthedUser(authedUser);
         response.setTeam(team);
         response.setAccessToken("botToken");
+        response.setBotUserId("botSlackId");
 
         return response;
     }

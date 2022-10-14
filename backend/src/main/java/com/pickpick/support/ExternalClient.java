@@ -23,4 +23,6 @@ public interface ExternalClient {
     Participation findChannelParticipation(String userToken);
 
     void sendMessage(Reminder reminder);
+
+    void inviteBotToChannel(Member member, Channel channel);
 }
