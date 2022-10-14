@@ -33,7 +33,7 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
-        workspace = externalClient.callBotInfo(MEMBER_SLACK_ID).toEntity();
+        workspace = externalClient.callWorkspaceInfo(MEMBER_SLACK_ID).toEntity();
     }
 
     @Test

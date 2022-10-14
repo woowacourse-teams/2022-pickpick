@@ -27,7 +27,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     void init() {
         String memberSlackId = MemberFixture.createFirst().getSlackId();
         워크스페이스_초기화_및_로그인(memberSlackId);
-        workspace = externalClient.callBotInfo(memberSlackId).toEntity();
+        workspace = externalClient.callWorkspaceInfo(memberSlackId).toEntity();
     }
 
     @Test
