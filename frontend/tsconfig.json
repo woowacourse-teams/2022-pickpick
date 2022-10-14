@@ -105,5 +105,10 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src", "public", "src/@types/custom.d.ts"]
+  "include": [
+    "src",
+    "public",
+    "src/@types/style.d.ts",
+    "src/@types/custom.d.ts"
+  ]
 }

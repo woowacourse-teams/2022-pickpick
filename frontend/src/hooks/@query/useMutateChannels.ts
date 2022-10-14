@@ -3,8 +3,8 @@ import { useMutation } from "react-query";
 import { subscribeChannel, unsubscribeChannel } from "@src/api/channels";
 
 interface Props {
-  handleSettleSubscribeChannel?: () => void;
-  handleSettleUnsubscribeChannel?: () => void;
+  handleSettleSubscribeChannel?: VoidFunction;
+  handleSettleUnsubscribeChannel?: VoidFunction;
 }
 
 type Handler = (id: string) => void;

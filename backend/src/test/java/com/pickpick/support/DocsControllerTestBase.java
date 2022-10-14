@@ -3,7 +3,6 @@ package com.pickpick.support;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickpick.auth.application.AuthService;
 import com.pickpick.auth.support.JwtTokenProvider;
@@ -38,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class DocsControllerTest {
+public class DocsControllerTestBase {
 
     private static final String BEARER_JWT_TOKEN = "Bearer provided.jwt.token";
 
@@ -105,8 +104,7 @@ public class DocsControllerTest {
                 .params(requestParam);
     }
 
-    protected MockHttpServletRequestBuilder post(final String uri, final String body)
-            throws JsonProcessingException {
+    protected MockHttpServletRequestBuilder post(final String uri, final String body) {
         return MockMvcRequestBuilders
                 .post(uri)
                 .header(HttpHeaders.AUTHORIZATION, BEARER_JWT_TOKEN)

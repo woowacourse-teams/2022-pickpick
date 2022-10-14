@@ -3,21 +3,24 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useGetSubscribedChannels from "@src/hooks/@query/useGetSubscribedChannels";
 
 import { SubscribedChannel } from "@src/@types/api";
+import { isEqualArray } from "@src/@utils";
 
 interface Props {
   currentChannelIds: number[];
 }
 
-interface ReturnType {
+interface UseSelectChannelsResult {
   allChannels: SubscribedChannel[];
   selectedChannelIds: number[];
   getCurrentChannels: SubscribedChannel[];
   getRemainingChannels: SubscribedChannel[];
   handleToggleChannel: (id: number) => void;
-  handleToggleAllChannels: () => void;
+  handleToggleAllChannels: VoidFunction;
 }
 
-function useSelectChannels({ currentChannelIds }: Props): ReturnType {
+function useSelectChannels({
+  currentChannelIds,
+}: Props): UseSelectChannelsResult {
   const [visitingChannelIds, setVisitingChannelIds] =
     useState<number[]>(currentChannelIds);
   const [selectedChannelIds, setSelectedChannelIds] = useState<number[]>([]);
@@ -72,10 +75,7 @@ function useSelectChannels({ currentChannelIds }: Props): ReturnType {
   }, [allChannels, visitingChannelIds]);
 
   useEffect(() => {
-    if (
-      JSON.stringify(currentChannelIds) === JSON.stringify(visitingChannelIds)
-    )
-      return;
+    if (isEqualArray(currentChannelIds, visitingChannelIds)) return;
 
     setVisitingChannelIds(currentChannelIds);
   }, [currentChannelIds]);

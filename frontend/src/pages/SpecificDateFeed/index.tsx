@@ -22,8 +22,10 @@ import useMessageDate from "@src/hooks/useMessageDate";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 
+import { DEFAULT_CHANNEL_ID } from "@src/@constants/api";
 import { FlexColumn } from "@src/@styles/shared";
-import { extractResponseMessages, parseMeridiemTime } from "@src/@utils";
+import { extractResponseMessages } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
@@ -88,7 +90,9 @@ function SpecificDateFeed() {
     >
       <SearchForm
         currentChannelIds={
-          channelId && channelId !== "main" ? [Number(channelId)] : []
+          channelId && channelId !== DEFAULT_CHANNEL_ID
+            ? [Number(channelId)]
+            : []
         }
       />
 
@@ -124,7 +128,7 @@ function SpecificDateFeed() {
                   )}
                   <MessageCard
                     username={username}
-                    date={parseMeridiemTime(postedDate)}
+                    date={parseMessageDateFromISO(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}

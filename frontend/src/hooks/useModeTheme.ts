@@ -9,7 +9,7 @@ import { ThemeKind } from "@src/@types/shared";
 
 interface UseModeThemeResult {
   theme: ThemeKind;
-  handleToggleTheme: () => void;
+  handleToggleTheme: VoidFunction;
 }
 
 function useModeTheme(): UseModeThemeResult {

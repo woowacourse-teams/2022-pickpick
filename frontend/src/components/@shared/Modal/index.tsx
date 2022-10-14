@@ -5,7 +5,7 @@ import { StrictPropsWithChildren } from "@src/@types/utils";
 
 interface Props {
   isOpened: boolean;
-  handleCloseModal: () => void;
+  handleCloseModal: VoidFunction;
 }
 
 function Modal({

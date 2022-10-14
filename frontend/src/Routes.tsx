@@ -14,7 +14,7 @@ import LayoutContainer from "@src/components/@layouts/LayoutContainer";
 import PrivateRouter from "@src/components/Router/PrivateRouter";
 import PublicRouter from "@src/components/Router/PublicRouter";
 
-import { PATH_NAME } from "@src/@constants";
+import { PATH_NAME } from "@src/@constants/path";
 
 const routes = [
   {

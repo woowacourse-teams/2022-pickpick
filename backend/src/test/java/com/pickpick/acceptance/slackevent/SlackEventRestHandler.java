@@ -2,8 +2,10 @@ package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.post;
 
+import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.slackevent.application.SlackEvent;
+import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
@@ -33,6 +35,24 @@ public class SlackEventRestHandler {
                                                          final String displayName, final String thumbnailUrl) {
         Map<String, Object> request = SlackEventRequestFactory.memberUpdateEvent(slackId, realName, displayName,
                 thumbnailUrl);
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 채널_생성(final Workspace workspace, final Channel channel) {
+        Map<String, Object> request = SlackEventRequestFactory.channelCreatedEvent(workspace.getSlackId(),
+                channel.getSlackId(), channel.getName());
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 채널_이름_변경(final Workspace workspace, final Channel channel,
+                                                         final String channelNewName) {
+        Map<String, Object> request = SlackEventRequestFactory.channelRenameEvent(workspace.getSlackId(),
+                channel.getSlackId(), channelNewName);
+        return post(SLACK_EVENT_API_URL, request);
+    }
+
+    public static ExtractableResponse<Response> 채널_삭제(final Channel channel) {
+        Map<String, Object> request = SlackEventRequestFactory.channelDeletedEvent(channel.getSlackId());
         return post(SLACK_EVENT_API_URL, request);
     }
 

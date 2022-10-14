@@ -1,4 +1,4 @@
-import { SLACK_LOGIN_URL } from "@src/@constants";
+import { SLACK_LOGIN_URL } from "@src/@constants/api";
 
 import * as Styled from "./style";
 

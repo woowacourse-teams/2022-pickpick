@@ -5,7 +5,7 @@ import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_�
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.멤버_정보_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.fixture.MemberFixture;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("멤버 관련 슬랙 이벤트 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class MemberEventAcceptanceTest extends AcceptanceTest {
+class MemberEventAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.BOM.getSlackId();
+    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 
     private Workspace workspace;
 

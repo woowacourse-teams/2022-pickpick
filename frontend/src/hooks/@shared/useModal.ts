@@ -13,9 +13,9 @@ type Refetch = <TPageData>(
 
 interface UseModalResult {
   isModalOpened: boolean;
-  handleOpenModal: () => void;
-  handleCloseModal: () => void;
-  handleToggleModal: () => void;
+  handleOpenModal: VoidFunction;
+  handleCloseModal: VoidFunction;
+  handleToggleModal: VoidFunction;
 }
 
 function useModal(refetch?: Refetch): UseModalResult {

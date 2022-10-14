@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderSaveRequest;
-import com.pickpick.support.DocsControllerTest;
+import com.pickpick.support.DocsControllerTestBase;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.http.HttpHeaders;
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-public class ReminderControllerTest extends DocsControllerTest {
+class ReminderControllerTest extends DocsControllerTestBase {
 
     private static final String REMINDER_API_URL = "/api/reminders";
 

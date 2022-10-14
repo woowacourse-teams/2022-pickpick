@@ -2,7 +2,7 @@ import LogoIcon from "@public/assets/icons/pickpick.svg";
 
 import Button from "@src/components/@shared/Button";
 
-import { SLACK_LOGIN_URL } from "@src/@constants";
+import { SLACK_LOGIN_URL } from "@src/@constants/api";
 import { FlexRow } from "@src/@styles/shared";
 
 import * as Styled from "./style";
