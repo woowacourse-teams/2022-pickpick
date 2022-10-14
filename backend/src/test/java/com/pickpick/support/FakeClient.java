@@ -56,4 +56,9 @@ public class FakeClient implements ExternalClient {
     public void sendMessage(final Reminder reminder) {
 
     }
+
+    @Override
+    public void inviteBotToChannel(final Member member, final Channel channel) {
+
+    }
 }

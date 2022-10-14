@@ -22,4 +22,6 @@ public interface ExternalClient {
     List<Channel> findAllWorkspaceChannels(Workspace workspace);
 
     void sendMessage(Reminder reminder);
+
+    void inviteBotToChannel(Member member, Channel channel);
 }

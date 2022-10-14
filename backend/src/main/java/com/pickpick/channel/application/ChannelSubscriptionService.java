@@ -13,6 +13,7 @@ import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.support.ExternalClient;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,13 +27,15 @@ public class ChannelSubscriptionService {
     private static final int ORDER_FIRST = 1;
     private static final int ORDER_NEXT = 1;
 
+    private final ExternalClient externalClient;
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final ChannelRepository channels;
     private final MemberRepository members;
 
-    public ChannelSubscriptionService(final ChannelSubscriptionRepository channelSubscriptions,
-                                      final ChannelRepository channels,
-                                      final MemberRepository members) {
+    public ChannelSubscriptionService(final ExternalClient externalClient,
+                                      final ChannelSubscriptionRepository channelSubscriptions,
+                                      final ChannelRepository channels, final MemberRepository members) {
+        this.externalClient = externalClient;
         this.channelSubscriptions = channelSubscriptions;
         this.channels = channels;
         this.members = members;
@@ -47,6 +50,7 @@ public class ChannelSubscriptionService {
 
         validateDuplicatedSubscription(channel, member);
 
+        externalClient.inviteBotToChannel(member, channel);
         channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(member)));
     }
 

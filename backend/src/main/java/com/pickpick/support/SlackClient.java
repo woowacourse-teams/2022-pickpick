@@ -11,10 +11,12 @@ import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.SlackApiTextResponse;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
+import com.slack.api.methods.request.conversations.ConversationsInviteRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
+import com.slack.api.methods.response.conversations.ConversationsInviteResponse;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.users.UsersIdentityResponse;
@@ -32,9 +34,10 @@ public class SlackClient implements ExternalClient {
 
     private static final String OAUTH_ACCESS_METHOD_NAME = "oauthV2Access";
     private static final String USERS_IDENTITY_METHOD_NAME = "usersIdentity";
-    private static final String CHANNEL_INFO_METHOD_NAME = "conversationsInfo";
     private static final String USER_LIST_METHOD_NAME = "usersList";
+    private static final String CHANNEL_INFO_METHOD_NAME = "conversationsInfo";
     private static final String CHANNEL_LIST_METHOD_NAME = "conversationsList";
+    private static final String CHANNEL_INVITE_METHOD_NAME = "conversationsInvite";
     private static final String CHAT_POST_METHOD_NAME = "chatPostMessage";
     private static final String REMINDER_TEXT_FORMAT =
             "============================ \n " +
@@ -184,6 +187,29 @@ public class SlackClient implements ExternalClient {
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(CHAT_POST_METHOD_NAME);
         }
+    }
+
+    @Override
+    public void inviteBotToChannel(final Member member, final Channel channel) {
+        ConversationsInviteRequest request = ConversationsInviteRequest.builder()
+                .channel(channel.getSlackId())
+                .token(member.getToken())
+                .users(List.of(member.getWorkspace().getBotToken()))
+                .build();
+
+        try {
+            ConversationsInviteResponse response = methodsClient.conversationsInvite(request);
+            if (isBotAlreadyInChannel(response)) {
+                return;
+            }
+            validateResponse(CHANNEL_INVITE_METHOD_NAME, response);
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException(CHANNEL_INVITE_METHOD_NAME);
+        }
+    }
+
+    private boolean isBotAlreadyInChannel(final ConversationsInviteResponse response) {
+        return "already_in_channel".equals(response.getError());
     }
 
     private <T extends SlackApiTextResponse> void validateResponse(final String methodName, final T response) {
