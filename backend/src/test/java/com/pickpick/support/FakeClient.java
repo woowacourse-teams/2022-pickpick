@@ -1,6 +1,6 @@
 package com.pickpick.support;
 
-import com.pickpick.auth.application.dto.BotInfoDto;
+import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
@@ -21,8 +21,8 @@ public class FakeClient implements ExternalClient {
     }
 
     @Override
-    public BotInfoDto callBotInfo(final String code) {
-        return new BotInfoDto(code, code, code);
+    public WorkspaceInfoDto callWorkspaceInfo(final String code) {
+        return new WorkspaceInfoDto(code, code, code);
     }
 
     @Override

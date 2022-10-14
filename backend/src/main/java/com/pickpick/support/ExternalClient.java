@@ -1,6 +1,6 @@
 package com.pickpick.support;
 
-import com.pickpick.auth.application.dto.BotInfoDto;
+import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
@@ -12,7 +12,7 @@ public interface ExternalClient {
 
     String callUserToken(String code);
 
-    BotInfoDto callBotInfo(String code);
+    WorkspaceInfoDto callWorkspaceInfo(String code);
 
     String callMemberSlackId(String accessToken);
 
