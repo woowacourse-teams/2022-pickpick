@@ -134,9 +134,10 @@ class ChannelServiceTest {
         conversationsListResponse.setOk(true);
         List<Conversation> conversations = new ArrayList<>();
         for (Channel channel : channels) {
-            Conversation conversation = new Conversation();
-            conversation.setId(channel.getSlackId());
-            conversation.setMember(true);
+            Conversation conversation = Conversation.builder()
+                    .id(channel.getSlackId())
+                    .isMember(true)
+                    .build();
             conversations.add(conversation);
         }
         conversationsListResponse.setChannels(conversations);
