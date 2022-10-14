@@ -36,6 +36,9 @@ public class Member {
     @Column(name = "first_login", nullable = false)
     private boolean isFirstLogin = true;
 
+    @Column(name = "token", length = 64, unique = true)
+    private String token;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
@@ -56,8 +59,9 @@ public class Member {
         this.workspace = workspace;
     }
 
-    public void markLoggedIn() {
+    public void firstLogin(final String token) {
         this.isFirstLogin = false;
+        this.token = token;
     }
 
     public void update(final String username, final String thumbnailUrl) {

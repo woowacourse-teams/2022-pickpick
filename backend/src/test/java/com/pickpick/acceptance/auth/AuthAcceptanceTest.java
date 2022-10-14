@@ -26,7 +26,7 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 정상_로그인() {
         // given
-        String memberSlackId = MemberFixture.BOM.getSlackId();
+        String memberSlackId = MemberFixture.createFirst().getSlackId();
 
         // when
         ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberSlackId);
