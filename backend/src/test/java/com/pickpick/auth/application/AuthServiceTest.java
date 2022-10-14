@@ -11,6 +11,7 @@ import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.exception.auth.ExpiredTokenException;
 import com.pickpick.exception.auth.InvalidTokenException;
+import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -75,7 +76,7 @@ class AuthServiceTest {
     @Test
     void login() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("slackId", "botToken"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
@@ -94,7 +95,7 @@ class AuthServiceTest {
     @Test
     void firstLogin() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(new Workspace("slackId", "botToken"));
+        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
         Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))

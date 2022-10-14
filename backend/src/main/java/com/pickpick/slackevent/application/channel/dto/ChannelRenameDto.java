@@ -3,15 +3,15 @@ package com.pickpick.slackevent.application.channel.dto;
 import lombok.Getter;
 
 @Getter
-public class SlackChannelRenameDto {
+public class ChannelRenameDto {
 
     private String slackId;
     private String newName;
 
-    private SlackChannelRenameDto() {
+    private ChannelRenameDto() {
     }
 
-    public SlackChannelRenameDto(final String slackId, final String newName) {
+    public ChannelRenameDto(final String slackId, final String newName) {
         this.slackId = slackId;
         this.newName = newName;
     }

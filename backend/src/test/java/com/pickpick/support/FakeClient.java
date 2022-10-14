@@ -31,7 +31,7 @@ public class FakeClient implements ExternalClient {
     }
 
     @Override
-    public List<Member> findAllWorkspaceMembers(final Workspace workspace) {
+    public List<Member> findMembersByWorkspace(final Workspace workspace) {
         return Arrays.stream(MemberFixture.values())
                 .map(it -> it.create(workspace))
                 .collect(Collectors.toList());
@@ -40,15 +40,16 @@ public class FakeClient implements ExternalClient {
     @Override
     public List<Channel> findChannelsByWorkspace(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
+                .filter(ChannelFixture::isDefaultChannel)
                 .map(channel -> channel.create(workspace))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Participation findParticipation(final String userToken) {
+    public Participation findChannelParticipation(final String userToken) {
         Map<String, Boolean> participation = Arrays.stream(ChannelFixture.values())
                 .collect(Collectors.toMap(ChannelFixture::getSlackId, it -> true));
-        
+
         return new Participation(participation);
     }
 

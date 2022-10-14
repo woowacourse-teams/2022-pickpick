@@ -61,7 +61,7 @@ public class AuthService {
         BotInfoDto botInfoDto = slackClient.callBotInfo(code);
         Workspace workspace = workspaces.save(botInfoDto.toEntity());
 
-        List<Member> allWorkspaceMembers = slackClient.findAllWorkspaceMembers(workspace);
+        List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
         members.saveAll(allWorkspaceMembers);
 
         List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
