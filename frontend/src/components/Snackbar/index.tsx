@@ -8,7 +8,7 @@ import { SNACKBAR_STATUS } from "@src/@constants";
 
 import * as Styled from "./style";
 
-const SNACKBAR_TIME = 3000;
+const DURATION = 3000;
 
 type TimerRef = {
   timeout: NodeJS.Timeout | null;
@@ -35,7 +35,7 @@ function Snackbar() {
         message: "",
         status: SNACKBAR_STATUS.SUCCESS,
       });
-    }, SNACKBAR_TIME);
+    }, DURATION);
   }, [isOpened]);
 
   return (
