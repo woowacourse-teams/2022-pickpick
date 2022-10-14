@@ -20,7 +20,7 @@ public class Workspace {
     @Column(name = "slack_id", length = 15, nullable = false, unique = true, updatable = false)
     private String slackId;
 
-    @Column(name = "bot_token", length = 64, nullable = false, unique = true, updatable = false)
+    @Column(name = "bot_token", length = 256, nullable = false, unique = true, updatable = false)
     private String botToken;
 
     protected Workspace() {
