@@ -55,9 +55,9 @@ class MessageCreatedServiceTest {
     @Test
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
-        Workspace workspace = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(workspace));
-        Channel notice = channels.save(NOTICE.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.create(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_18_00_00.create(notice, summer);
 
         Optional<Channel> channelBeforeSave = channels.findBySlackId(notice.getSlackId());
@@ -82,9 +82,9 @@ class MessageCreatedServiceTest {
     @Test
     void doNotSaveReplyMessage() {
         //given
-        Workspace workspace = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(workspace));
-        Channel notice = channels.save(NOTICE.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.create(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_18_00_00.create(notice, summer);
 
         // when

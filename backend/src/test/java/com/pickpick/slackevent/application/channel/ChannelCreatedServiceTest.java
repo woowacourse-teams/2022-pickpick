@@ -43,9 +43,9 @@ class ChannelCreatedServiceTest {
     @Test
     void channelCreate() {
         // given
-        Workspace workspace = workspaces.save(JUPJUP.create());
-        Channel channel = QNA.create();
-        String request = createChannelCreatedRequest(workspace, channel);
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Channel channel = QNA.create(jupjup);
+        String request = createChannelCreatedRequest(channel);
 
         // when
         channelCreatedService.execute(request);
@@ -55,12 +55,12 @@ class ChannelCreatedServiceTest {
         assertThat(actual).isNotEmpty();
     }
 
-    private String createChannelCreatedRequest(final Workspace workspace, final Channel channel) {
+    private String createChannelCreatedRequest(final Channel channel) {
         return toJson(
                 Map.of(
-                        "team_id", workspace.getSlackId(),
+                        "team_id", channel.getWorkspace().getSlackId(),
                         "event", Map.of(
-                                "type", SlackEvent.CHANNEL_CREATED,
+                                "type", SlackEvent.CHANNEL_CREATED.getType(),
                                 "channel", Map.of(
                                         "id", channel.getSlackId(),
                                         "name", channel.getName(),

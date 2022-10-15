@@ -82,7 +82,7 @@ class MessageChangedServiceTest {
         // given 
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member summer = members.save(SUMMER.create(jupjup));
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_14_00_00.create(notice, summer);
 
         Optional<Message> beforeSaveMessage = messages.findBySlackId(message.getSlackId());
@@ -104,7 +104,7 @@ class MessageChangedServiceTest {
     private Message saveMessage() {
         Workspace jupjup = JUPJUP.create();
         Member summer = SUMMER.create(jupjup);
-        Channel notice = NOTICE.create();
+        Channel notice = NOTICE.create(jupjup);
         Message message = PLAIN_20220712_14_00_00.create(notice, summer);
 
         workspaces.save(jupjup);

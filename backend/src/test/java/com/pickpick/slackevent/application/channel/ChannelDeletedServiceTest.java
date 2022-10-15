@@ -57,7 +57,7 @@ class ChannelDeletedServiceTest {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member hope = members.save(HOPE.create(jupjup));
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         messages.save(PLAIN_20220712_18_00_00.create(notice, hope));
         messages.save(PLAIN_20220715_14_00_00.create(notice, hope));
 

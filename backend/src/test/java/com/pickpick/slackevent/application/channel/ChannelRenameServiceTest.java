@@ -1,6 +1,7 @@
 package com.pickpick.slackevent.application.channel;
 
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,6 +11,8 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +25,9 @@ class ChannelRenameServiceTest {
 
     @Autowired
     private ChannelRepository channels;
+
+    @Autowired
+    private WorkspaceRepository workspaces;
 
     @Autowired
     private ChannelRenameService channelRenameService;
@@ -38,7 +44,8 @@ class ChannelRenameServiceTest {
     @Test
     void channelNameShouldBeChangedOnChannelRenameEvent() {
         // given
-        Channel notice = channels.save(NOTICE.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         String newChannelName = "변경된 채널 이름";
 
         String request = createChannelRenamedRequest(notice, newChannelName);

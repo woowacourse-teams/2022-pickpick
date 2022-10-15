@@ -25,13 +25,6 @@ public enum ChannelFixture {
         this.defaultChannel = defaultChannel;
     }
 
-    public static Channel findFirst() {
-        return Arrays.stream(ChannelFixture.values())
-                .findFirst()
-                .orElse(NOTICE)
-                .create();
-    }
-
     public static List<Channel> createAllChannels(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
                 .map(channel -> channel.create(workspace))
@@ -44,6 +37,7 @@ public enum ChannelFixture {
                 .count();
     }
 
+    // TODO 제거 필요
     public Channel create() {
         return new Channel(slackId, name);
     }

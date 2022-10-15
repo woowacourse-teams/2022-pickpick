@@ -59,7 +59,7 @@ class MessageThreadBroadcastServiceTest {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member bom = members.save(BOM.create(jupjup));
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_14_00_00.create(notice, bom);
 
         Optional<Channel> channelBeforeSave = channels.findBySlackId(notice.getSlackId());
@@ -87,7 +87,7 @@ class MessageThreadBroadcastServiceTest {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member bom = members.save(BOM.create(jupjup));
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, bom));
 
         Optional<Message> messageBeforeExecute = messages.findBySlackId(message.getSlackId());
@@ -120,7 +120,7 @@ class MessageThreadBroadcastServiceTest {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member bom = members.save(BOM.create(jupjup));
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_14_00_00.create(notice, bom);
 
         Optional<Message> messageBeforeExecute = messages.findBySlackId(message.getSlackId());

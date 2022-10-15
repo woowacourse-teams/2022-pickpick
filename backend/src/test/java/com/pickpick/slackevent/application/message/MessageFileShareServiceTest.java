@@ -61,7 +61,7 @@ class MessageFileShareServiceTest {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member bom = members.save(BOM.create(jupjup));
-        Channel qna = channels.save(QNA.create());
+        Channel qna = channels.save(QNA.create(jupjup));
         Message message = PLAIN_20220715_17_00_00.create(qna, bom);
 
         Optional<Channel> channelBeforeSave = channels.findBySlackId(qna.getSlackId());
