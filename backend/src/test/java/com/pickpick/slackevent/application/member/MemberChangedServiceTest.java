@@ -5,7 +5,6 @@ import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -53,8 +52,7 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(summer.getId())
-                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+        Member actual = members.getById(summer.getId());
 
         assertThat(actual.getUsername()).isEqualTo(displayName);
     }
@@ -74,8 +72,7 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(summer.getId())
-                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+        Member actual = members.getById(summer.getId());
 
         assertThat(actual.getUsername()).isEqualTo(realName);
     }
@@ -93,8 +90,7 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(summer.getId())
-                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+        Member actual = members.getById(summer.getId());
 
         assertThat(actual.getThumbnailUrl()).isEqualTo(changedThumbnailUrl);
     }
