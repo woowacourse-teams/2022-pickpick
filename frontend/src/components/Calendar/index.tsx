@@ -68,15 +68,17 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
 
       <Styled.Days>
         {getCurrentDays().map((day, index) => {
+          const today = todayDate.getDate();
+
           const isBlank = day === "";
-          const isFuture = day > todayDate.getDate() && isFutureMonth();
-          const isCurrentDay = day === todayDate.getDate() && isCurrentMonth();
+          const isFuture = day > today && isFutureMonth();
+          const isToday = day === today && isCurrentMonth();
 
           if (isBlank || isFuture) {
             return (
               <Styled.Day
                 isBlank={isBlank}
-                isCurrentDay={isCurrentDay}
+                isToday={isToday}
                 isFuture={isFuture}
                 onClick={handleCloseCalendar}
               >
@@ -97,7 +99,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
             >
               <Styled.Day
                 isBlank={isBlank}
-                isCurrentDay={isCurrentDay}
+                isToday={isToday}
                 isFuture={isFuture}
                 onClick={handleCloseCalendar}
               >
