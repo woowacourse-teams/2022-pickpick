@@ -3,6 +3,8 @@ package com.pickpick.channel.application;
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -18,8 +20,6 @@ import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
-import com.pickpick.fixture.MemberFixture;
-import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -68,9 +68,10 @@ class ChannelSubscriptionServiceTest {
     @Test
     void save() {
         //1  given
-        Member bom = members.save(bom());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
         Long bomId = bom.getId();
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
 
         ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bomId);
 
@@ -91,7 +92,8 @@ class ChannelSubscriptionServiceTest {
     @Test
     void saveByNotExistedChannelId() {
         // given
-        Member bom = members.save(bom());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
         ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(NOT_EXISTED_CHANNEL_ID);
 
         // when & then
@@ -103,8 +105,9 @@ class ChannelSubscriptionServiceTest {
     @Test
     void saveAlreadySubscribedChannel() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
         subscribeChannel(bom, notice);
 
         // when & then
@@ -116,9 +119,10 @@ class ChannelSubscriptionServiceTest {
     @Test
     void setViewOrderByRequestOrder() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
 
         // when
         subscribeChannel(bom, notice);
@@ -142,10 +146,11 @@ class ChannelSubscriptionServiceTest {
     @Test
     void subscribeChannelOrderIsLast() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
-        Channel qna = channels.save(QNA.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
         subscribeChannelsInListOrder(bom, List.of(qna, notice, freeChat));
 
@@ -163,10 +168,11 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrder() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
-        Channel qna = channels.save(QNA.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
@@ -191,10 +197,11 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithDuplicateViewOrder() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
-        Channel qna = channels.save(QNA.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
@@ -213,10 +220,11 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithInvalidChannelId() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
-        Channel unsubscribed = channels.save(QNA.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel unsubscribed = channels.save(QNA.create(jupjup));
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat));
 
@@ -235,10 +243,11 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithNotEnoughChannelId() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
-        Channel qna = channels.save(QNA.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
         subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
@@ -256,8 +265,9 @@ class ChannelSubscriptionServiceTest {
     @Test
     void unsubscribeChannel() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
         subscribeChannel(bom, notice);
 
         boolean isExistBeforeUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
@@ -278,8 +288,9 @@ class ChannelSubscriptionServiceTest {
     @Test
     void unsubscribeInvalidChannelSubscription() {
         // given
-        Member bom = members.save(bom());
-        Channel notice = channels.save(NOTICE.create());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
 
         // when & then
         assertThatThrownBy(() -> channelSubscriptionService.delete(notice.getId(), bom.getId()))
@@ -290,16 +301,16 @@ class ChannelSubscriptionServiceTest {
     @Test
     void unsubscribeNotExistedChannel() {
         // given
-        Member bom = members.save(bom());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(bom(jupjup));
 
         // when & then
         assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, bom.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
 
-    private Member bom() {
-        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-        Member member = MemberFixture.BOM.create(workspace);
+    private Member bom(final Workspace workspace) {
+        Member member = BOM.create(workspace);
         member.firstLogin("xoxp-token");
         return members.save(member);
     }
