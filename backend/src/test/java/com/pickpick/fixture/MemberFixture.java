@@ -30,6 +30,7 @@ public enum MemberFixture {
                 .create();
     }
 
+    // TODO 제거 필요
     public Member create() {
         return new Member(slackId, username, thumbnailUrl);
     }
