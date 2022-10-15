@@ -4,6 +4,7 @@ import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_18_00_00;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,6 +27,8 @@ import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +66,9 @@ class BookmarkServiceTest {
     @Autowired
     private BookmarkRepository bookmarks;
 
+    @Autowired
+    private WorkspaceRepository workspaces;
+
     @MockBean
     private DateTimeProvider dateTimeProvider;
 
@@ -82,7 +88,8 @@ class BookmarkServiceTest {
         @Test
         void save() {
             // given
-            Member member = members.save(HOPE.create());
+            Workspace workspace = workspaces.save(JUPJUP.create());
+            Member member = members.save(HOPE.create(workspace));
             Channel channel = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
@@ -101,7 +108,8 @@ class BookmarkServiceTest {
         @Test
         void delete() {
             // given
-            Member member = members.save(HOPE.create());
+            Workspace workspace = workspaces.save(JUPJUP.create());
+            Member member = members.save(HOPE.create(workspace));
             Channel channel = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
@@ -119,8 +127,9 @@ class BookmarkServiceTest {
         @Test
         void deleteOtherMembers() {
             // given
-            Member owner = members.save(HOPE.create());
-            Member other = members.save(KKOJAE.create());
+            Workspace workspace = workspaces.save(JUPJUP.create());
+            Member owner = members.save(HOPE.create(workspace));
+            Member other = members.save(KKOJAE.create(workspace));
             Channel channel = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, other));
 
@@ -144,8 +153,9 @@ class BookmarkServiceTest {
     @Nested
     class find {
 
-        Member hope = saveMember(HOPE);
-        Member kkojae = saveMember(KKOJAE);
+        Workspace workspace = workspaces.save(JUPJUP.create());
+        Member hope = saveMember(HOPE, workspace);
+        Member kkojae = saveMember(KKOJAE, workspace);
 
         Channel notice = channels.save(NOTICE.create());
 
@@ -283,8 +293,8 @@ class BookmarkServiceTest {
             }
         }
 
-        private Member saveMember(final MemberFixture memberFixture) {
-            Member member = memberFixture.create();
+        private Member saveMember(final MemberFixture memberFixture, final Workspace workspace) {
+            Member member = memberFixture.create(workspace);
             member.firstLogin("xoxp-" + member.getSlackId());
             return members.save(member);
         }

@@ -1,19 +1,22 @@
 package com.pickpick.slackevent.application.message;
 
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
+import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_18_00_00;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.support.DatabaseCleaner;
-import com.pickpick.utils.TimeUtils;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
@@ -24,38 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class MessageCreatedServiceTest {
-
-    private static final Member SAMPLE_MEMBER = MemberFixture.BOM.create();
-    private static final Channel SAMPLE_CHANNEL = ChannelFixture.NOTICE.create();
-    private static final Message SAMPLE_MESSAGE = new Message(
-            "db8a1f84-8acf-46ab-b93d-85177cee3e97",
-            "메시지 전송!",
-            SAMPLE_MEMBER,
-            SAMPLE_CHANNEL,
-            TimeUtils.toLocalDateTime("1656919966.864259"),
-            TimeUtils.toLocalDateTime("1656919966.864259")
-    );
-    private static final String MESSAGE_CREATED_REQUEST = toJson(
-            Map.of("event", Map.of(
-                    "type", "message",
-                    "channel", SAMPLE_CHANNEL.getSlackId(),
-                    "text", SAMPLE_MESSAGE.getText(),
-                    "user", SAMPLE_MEMBER.getSlackId(),
-                    "ts", "1656919966.864259",
-                    "client_msg_id", SAMPLE_MESSAGE.getSlackId())
-            )
-    );
-    private static final String MESSAGE_REPLIED_REQUEST = toJson(
-            Map.of("event", Map.of(
-                    "type", "message",
-                    "channel", SAMPLE_CHANNEL.getSlackId(),
-                    "text", SAMPLE_MESSAGE.getText(),
-                    "user", SAMPLE_MEMBER.getSlackId(),
-                    "ts", "1656919966.864259",
-                    "client_msg_id", SAMPLE_MESSAGE.getSlackId(),
-                    "thread_ts", "1234599999")
-            )
-    );
 
     @Autowired
     private MessageCreatedService messageCreatedService;
@@ -70,6 +41,9 @@ class MessageCreatedServiceTest {
     private ChannelRepository channels;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @AfterEach
@@ -81,15 +55,19 @@ class MessageCreatedServiceTest {
     @Test
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
-        members.save(SAMPLE_MEMBER);
-        channels.save(SAMPLE_CHANNEL);
-        Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Workspace workspace = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.create(workspace));
+        Channel notice = channels.save(NOTICE.create());
+        Message message = PLAIN_20220712_18_00_00.create(notice, summer);
+
+        Optional<Channel> channelBeforeSave = channels.findBySlackId(notice.getSlackId());
+        Optional<Message> messageBeforeSave = messages.findBySlackId(message.getSlackId());
 
         // when
-        messageCreatedService.execute(MESSAGE_CREATED_REQUEST);
-        Optional<Channel> channelAfterSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageAfterSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        String messageCreatedRequest = createMessageCreatedRequest(notice, message, summer);
+        messageCreatedService.execute(messageCreatedRequest);
+        Optional<Channel> channelAfterSave = channels.findBySlackId(notice.getSlackId());
+        Optional<Message> messageAfterSave = messages.findBySlackId(message.getSlackId());
 
         // then
         assertAll(
@@ -104,15 +82,45 @@ class MessageCreatedServiceTest {
     @Test
     void doNotSaveReplyMessage() {
         //given
-        members.save(SAMPLE_MEMBER);
-        channels.save(SAMPLE_CHANNEL);
+        Workspace workspace = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.create(workspace));
+        Channel notice = channels.save(NOTICE.create());
+        Message message = PLAIN_20220712_18_00_00.create(notice, summer);
 
         // when
-        messageCreatedService.execute(MESSAGE_REPLIED_REQUEST);
+        String messageRepliedRequest = createMessageRepliedRequest(notice, message, summer);
+        messageCreatedService.execute(messageRepliedRequest);
 
         // then
-        Optional<Message> message = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Optional<Message> messageAfterExecute = messages.findBySlackId(message.getSlackId());
 
-        assertThat(message).isEmpty();
+        assertThat(messageAfterExecute).isEmpty();
+    }
+
+    private String createMessageCreatedRequest(final Channel channel, final Message message, final Member member) {
+        return toJson(
+                Map.of("event", Map.of(
+                        "type", "message",
+                        "channel", channel.getSlackId(),
+                        "text", message.getText(),
+                        "user", member.getSlackId(),
+                        "ts", "1656919966.864259",
+                        "client_msg_id", message.getSlackId())
+                )
+        );
+    }
+
+    private String createMessageRepliedRequest(final Channel channel, final Message message, final Member member) {
+        return toJson(
+                Map.of("event", Map.of(
+                        "type", "message",
+                        "channel", channel.getSlackId(),
+                        "text", message.getText(),
+                        "user", member.getSlackId(),
+                        "ts", "1656919966.864259",
+                        "client_msg_id", message.getSlackId(),
+                        "thread_ts", "1234599999")
+                )
+        );
     }
 }

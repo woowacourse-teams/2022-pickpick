@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.exception.member.MemberInvalidThumbnailUrlException;
 import com.pickpick.exception.member.MemberInvalidUsernameException;
+import com.pickpick.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -15,7 +16,8 @@ class MemberTest {
     @NullAndEmptySource
     void updateInvalidUsername(final String username) {
         // given
-        Member member = new Member("U12345", "사용자", "test.png");
+        Workspace workspace = new Workspace("T00001", "xoxp-token-1234", "UB000001");
+        Member member = new Member("U12345", "사용자", "test.png", workspace);
 
         // when & then
         assertThatThrownBy(() -> member.update(username, "test.png"))
@@ -27,7 +29,8 @@ class MemberTest {
     @NullAndEmptySource
     void updateInvalidThumbnailUrl(final String thumbnailUrl) {
         // given
-        Member member = new Member("U12345", "사용자", "test.png");
+        Workspace workspace = new Workspace("T00001", "xoxp-token-1234", "UB000001");
+        Member member = new Member("U12345", "사용자", "test.png", workspace);
 
         // when & then
         assertThatThrownBy(() -> member.update("사용자", thumbnailUrl))
