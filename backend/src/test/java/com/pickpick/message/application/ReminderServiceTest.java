@@ -6,6 +6,7 @@ import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MemberFixture.YEONLOG;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -28,6 +29,8 @@ import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,17 +68,20 @@ class ReminderServiceTest {
     private ReminderRepository reminders;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @DisplayName("리마인더 조회 시")
     @TestInstance(Lifecycle.PER_CLASS)
     @Nested
     class find {
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.create(jupjup));
+        Member yeonlog = members.save(YEONLOG.create(jupjup));
 
-        Member bom = members.save(BOM.create());
-        Member yeonlog = members.save(YEONLOG.create());
-
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
         List<Message> noticeMessages = createAndSaveMessages(notice, yeonlog);
 
         List<Reminder> bomReminders = saveRemindersAtDifferentTimes(bom, noticeMessages);
@@ -339,8 +345,9 @@ class ReminderServiceTest {
         @Test
         void save() {
             // given
-            Member yeonlog = members.save(YEONLOG.create());
-            Channel notice = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
             int beforeSize = findReminderSize(yeonlog);
@@ -358,8 +365,9 @@ class ReminderServiceTest {
         @Test
         void update() {
             // given
-            Member yeonlog = members.save(YEONLOG.create());
-            Channel notice = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
             LocalDateTime originTime = LocalDateTime.now().plusHours(1);
@@ -378,9 +386,10 @@ class ReminderServiceTest {
         @Test
         void updateReminderDoesNotExistThrowsException() {
             // given
-            Member yeonlog = members.save(YEONLOG.create());
-            Member other = members.save(BOM.create());
-            Channel notice = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Member other = members.save(BOM.create(jupjup));
+            Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
             reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
@@ -395,8 +404,9 @@ class ReminderServiceTest {
         @Test
         void delete() {
             // given
-            Member yeonlog = members.save(YEONLOG.create());
-            Channel notice = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
             Reminder saved = reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
@@ -413,9 +423,10 @@ class ReminderServiceTest {
         @Test
         void deleteReminderDoesNotExistThrowsException() {
             // given
-            Member yeonlog = members.save(YEONLOG.create());
-            Member other = members.save(BOM.create());
-            Channel notice = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Member other = members.save(BOM.create(jupjup));
+            Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
             reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
