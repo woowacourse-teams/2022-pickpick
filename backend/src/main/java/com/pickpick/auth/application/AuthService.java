@@ -1,6 +1,6 @@
 package com.pickpick.auth.application;
 
-import com.pickpick.auth.application.dto.BotInfoDto;
+import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.channel.domain.Channel;
@@ -58,8 +58,8 @@ public class AuthService {
 
     @Transactional
     public LoginResponse registerWorkspace(final String code) {
-        BotInfoDto botInfoDto = slackClient.callBotInfo(code);
-        Workspace workspace = workspaces.save(botInfoDto.toEntity());
+        WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
+        Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
         List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
         members.saveAll(allWorkspaceMembers);

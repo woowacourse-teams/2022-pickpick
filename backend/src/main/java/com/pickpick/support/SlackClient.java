@@ -1,6 +1,6 @@
 package com.pickpick.support;
 
-import com.pickpick.auth.application.dto.BotInfoDto;
+import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.config.SlackProperties;
 import com.pickpick.exception.SlackApiCallException;
@@ -61,9 +61,9 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public BotInfoDto callBotInfo(final String code) {
+    public WorkspaceInfoDto callWorkspaceInfo(final String code) {
         OAuthV2AccessResponse response = callOAuth2(code);
-        return new BotInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId());
+        return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId());
     }
 
     private OAuthV2AccessResponse callOAuth2(final String code) {

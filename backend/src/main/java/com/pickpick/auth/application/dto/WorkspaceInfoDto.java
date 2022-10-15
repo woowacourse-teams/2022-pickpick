@@ -4,13 +4,13 @@ import com.pickpick.workspace.domain.Workspace;
 import lombok.Getter;
 
 @Getter
-public class BotInfoDto {
+public class WorkspaceInfoDto {
 
     private final String workspaceSlackId;
     private final String botToken;
     private final String botSlackId;
 
-    public BotInfoDto(final String workspaceSlackId, final String botToken, final String botSlackId) {
+    public WorkspaceInfoDto(final String workspaceSlackId, final String botToken, final String botSlackId) {
         this.workspaceSlackId = workspaceSlackId;
         this.botToken = botToken;
         this.botSlackId = botSlackId;
