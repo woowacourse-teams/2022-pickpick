@@ -88,9 +88,9 @@ class BookmarkServiceTest {
         @Test
         void save() {
             // given
-            Workspace workspace = workspaces.save(JUPJUP.create());
-            Member member = members.save(HOPE.create(workspace));
-            Channel channel = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member member = members.save(HOPE.create(jupjup));
+            Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
@@ -108,9 +108,9 @@ class BookmarkServiceTest {
         @Test
         void delete() {
             // given
-            Workspace workspace = workspaces.save(JUPJUP.create());
-            Member member = members.save(HOPE.create(workspace));
-            Channel channel = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member member = members.save(HOPE.create(jupjup));
+            Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             Bookmark bookmark = bookmarks.save(new Bookmark(member, message));
@@ -127,10 +127,10 @@ class BookmarkServiceTest {
         @Test
         void deleteOtherMembers() {
             // given
-            Workspace workspace = workspaces.save(JUPJUP.create());
-            Member owner = members.save(HOPE.create(workspace));
-            Member other = members.save(KKOJAE.create(workspace));
-            Channel channel = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member owner = members.save(HOPE.create(jupjup));
+            Member other = members.save(KKOJAE.create(jupjup));
+            Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, other));
 
             Bookmark bookmark = new Bookmark(owner, message);
@@ -153,11 +153,11 @@ class BookmarkServiceTest {
     @Nested
     class find {
 
-        Workspace workspace = workspaces.save(JUPJUP.create());
-        Member hope = saveMember(HOPE, workspace);
-        Member kkojae = saveMember(KKOJAE, workspace);
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member hope = saveMember(HOPE, jupjup);
+        Member kkojae = saveMember(KKOJAE, jupjup);
 
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
 
         List<Message> savedMessages = createAndSaveMessages(notice, kkojae);
         List<Bookmark> hopesBookmarks = saveBookmarksAtDifferentTimes(hope, savedMessages);
