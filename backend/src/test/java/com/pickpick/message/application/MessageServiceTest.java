@@ -104,8 +104,8 @@ class MessageServiceTest {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member summer = members.save(SUMMER.create(jupjup));
-        Channel notice = channels.save(NOTICE.create());
-        Channel freeChat = channels.save(FREE_CHAT.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
 
         List<Message> noticeMessages = createAndSaveMessages(notice, summer);
         List<Message> freeChatMessages = createAndSaveMessages(freeChat, summer);
