@@ -1,13 +1,15 @@
 package com.pickpick.slackevent.application.message;
 
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -15,7 +17,8 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.support.DatabaseCleaner;
-import com.pickpick.utils.TimeUtils;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
@@ -27,28 +30,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class MessageThreadBroadcastServiceTest {
 
-    private final Member SAMPLE_MEMBER = MemberFixture.BOM.create();
-    private final Channel SAMPLE_CHANNEL = ChannelFixture.NOTICE.create();
-    private final Message SAMPLE_MESSAGE = new Message(
-            "db8a1f84-8acf-46ab-b93d-85177cee3e96",
-            "메시지 전송!",
-            SAMPLE_MEMBER,
-            SAMPLE_CHANNEL,
-            TimeUtils.toLocalDateTime("1656919966.864259"),
-            TimeUtils.toLocalDateTime("1656919966.864259")
-    );
-    private final String MESSAGE_THREAD_BROADCAST_REQUEST = toJson(
-            Map.of("event", Map.of(
-                            "type", SlackEvent.MESSAGE_THREAD_BROADCAST.getType(),
-                            "subtype", SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype(),
-                            "channel", SAMPLE_CHANNEL.getSlackId(),
-                            "text", SAMPLE_MESSAGE.getText(),
-                            "user", SAMPLE_MEMBER.getSlackId(),
-                            "ts", "1656919966.864259",
-                            "client_msg_id", SAMPLE_MESSAGE.getSlackId()
-                    )
-            )
-    );
     @Autowired
     private MessageThreadBroadcastService messageThreadBroadcastService;
 
@@ -62,6 +43,9 @@ class MessageThreadBroadcastServiceTest {
     private ChannelRepository channels;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @AfterEach
@@ -73,15 +57,20 @@ class MessageThreadBroadcastServiceTest {
     @Test
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
-        members.save(SAMPLE_MEMBER);
-        channels.save(SAMPLE_CHANNEL);
-        Optional<Channel> channelBeforeSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageBeforeSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.create(jupjup));
+        Channel notice = channels.save(NOTICE.create());
+        Message message = PLAIN_20220712_14_00_00.create(notice, bom);
+
+        Optional<Channel> channelBeforeSave = channels.findBySlackId(notice.getSlackId());
+        Optional<Message> messageBeforeSave = messages.findBySlackId(message.getSlackId());
 
         // when
-        messageThreadBroadcastService.execute(MESSAGE_THREAD_BROADCAST_REQUEST);
-        Optional<Channel> channelAfterSave = channels.findBySlackId(SAMPLE_CHANNEL.getSlackId());
-        Optional<Message> messageAfterSave = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        String request = createMessageThreadBroadcastRequest(notice, message, bom);
+        messageThreadBroadcastService.execute(request);
+
+        Optional<Channel> channelAfterSave = channels.findBySlackId(notice.getSlackId());
+        Optional<Message> messageAfterSave = messages.findBySlackId(message.getSlackId());
 
         // then
         assertAll(
@@ -96,26 +85,29 @@ class MessageThreadBroadcastServiceTest {
     @Test
     void notSave() {
         // given
-        members.save(SAMPLE_MEMBER);
-        channels.save(SAMPLE_CHANNEL);
-        messages.save(SAMPLE_MESSAGE);
-        Optional<Message> messageBeforeExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.create(jupjup));
+        Channel notice = channels.save(NOTICE.create());
+        Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, bom));
+
+        Optional<Message> messageBeforeExecute = messages.findBySlackId(message.getSlackId());
 
         SlackMessageDto messageDto = new SlackMessageDto(
-                SAMPLE_MEMBER.getSlackId(),
-                SAMPLE_MESSAGE.getSlackId(),
+                bom.getSlackId(),
+                message.getSlackId(),
                 "1656919966.864259",
                 "1656919966.864259",
                 "수정된 메시지 텍스트",
-                SAMPLE_CHANNEL.getSlackId());
+                notice.getSlackId());
 
         // when
         messageThreadBroadcastService.saveWhenSubtypeIsMessageChanged(messageDto);
 
         // then
-        Optional<Message> messageAfterExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Optional<Message> messageAfterExecute = messages.findBySlackId(message.getSlackId());
 
         assertAll(
+                () -> assertThat(messageBeforeExecute).isPresent(),
                 () -> assertThat(messageBeforeExecute.get().getText()).isNotEqualTo(
                         messageAfterExecute.get().getText()),
                 () -> assertThat(messageAfterExecute.get().getText()).isEqualTo("수정된 메시지 텍스트")
@@ -126,28 +118,47 @@ class MessageThreadBroadcastServiceTest {
     @Test
     void save() {
         // given
-        members.save(SAMPLE_MEMBER);
-        channels.save(SAMPLE_CHANNEL);
-        Optional<Message> messageBeforeExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.create(jupjup));
+        Channel notice = channels.save(NOTICE.create());
+        Message message = PLAIN_20220712_14_00_00.create(notice, bom);
+
+        Optional<Message> messageBeforeExecute = messages.findBySlackId(message.getSlackId());
 
         SlackMessageDto messageDto = new SlackMessageDto(
-                SAMPLE_MEMBER.getSlackId(),
-                SAMPLE_MESSAGE.getSlackId(),
+                bom.getSlackId(),
+                message.getSlackId(),
                 "1656919966.864259",
                 "1656919966.864259",
                 "messageText",
-                SAMPLE_CHANNEL.getSlackId());
+                notice.getSlackId());
 
         // when
         messageThreadBroadcastService.saveWhenSubtypeIsMessageChanged(messageDto);
 
         // then
-        Optional<Message> messageAfterExecute = messages.findBySlackId(SAMPLE_MESSAGE.getSlackId());
+        Optional<Message> messageAfterExecute = messages.findBySlackId(message.getSlackId());
 
         assertAll(
                 () -> assertThat(messageBeforeExecute).isEmpty(),
                 () -> assertThat(messageAfterExecute).isPresent(),
                 () -> assertThat(messageAfterExecute.get().getText()).isEqualTo("messageText")
+        );
+    }
+
+    private String createMessageThreadBroadcastRequest(final Channel channel, final Message message,
+                                                       final Member member) {
+        return toJson(
+                Map.of("event", Map.of(
+                                "type", SlackEvent.MESSAGE_THREAD_BROADCAST.getType(),
+                                "subtype", SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype(),
+                                "channel", channel.getSlackId(),
+                                "text", message.getText(),
+                                "user", member.getSlackId(),
+                                "ts", "1656919966.864259",
+                                "client_msg_id", message.getSlackId()
+                        )
+                )
         );
     }
 }
