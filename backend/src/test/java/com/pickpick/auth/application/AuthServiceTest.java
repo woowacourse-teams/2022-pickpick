@@ -97,7 +97,7 @@ class AuthServiceTest {
     void firstLogin() throws SlackApiException, IOException {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member member = members.save(KKOJAE.create(jupjup));
+        Member member = members.save(KKOJAE.hasNeverLoggedIn(jupjup));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .willReturn(generateOAuthV2AccessResponse(jupjup.getSlackId()));

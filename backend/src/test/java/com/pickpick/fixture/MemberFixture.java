@@ -36,6 +36,12 @@ public enum MemberFixture {
     }
 
     public Member create(final Workspace workspace) {
+        Member member = new Member(slackId, username, thumbnailUrl, workspace);
+        member.firstLogin("xoxp-" + slackId);
+        return member;
+    }
+
+    public Member hasNeverLoggedIn(final Workspace workspace) {
         return new Member(slackId, username, thumbnailUrl, workspace);
     }
 

@@ -14,7 +14,6 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
 import com.pickpick.fixture.BookmarkFindRequestFactory;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.fixture.MessageFixtures;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -154,8 +153,8 @@ class BookmarkServiceTest {
     class find {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member hope = saveMember(HOPE, jupjup);
-        Member kkojae = saveMember(KKOJAE, jupjup);
+        Member hope = members.save(HOPE.create(jupjup));
+        Member kkojae = members.save(KKOJAE.create(jupjup));
 
         Channel notice = channels.save(NOTICE.create(jupjup));
 
@@ -291,12 +290,6 @@ class BookmarkServiceTest {
                         () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
                 );
             }
-        }
-
-        private Member saveMember(final MemberFixture memberFixture, final Workspace workspace) {
-            Member member = memberFixture.create(workspace);
-            member.firstLogin("xoxp-" + member.getSlackId());
-            return members.save(member);
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {

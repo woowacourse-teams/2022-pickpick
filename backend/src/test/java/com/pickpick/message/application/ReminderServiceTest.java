@@ -161,7 +161,7 @@ class ReminderServiceTest {
         @DisplayName("정렬 시 리마인드 시간이 같다면 id 오름차순 정렬된다")
         @Test
         void orderByIdWhenRemindDateIsSame() {
-            Member hope = members.save(HOPE.create());
+            Member hope = members.save(HOPE.create(jupjup));
             Message firstMessage = saveDummyMessage(hope, notice);
             Message secondMessage = saveDummyMessage(hope, notice);
 
@@ -261,7 +261,7 @@ class ReminderServiceTest {
         @DisplayName("messageId와 memberId가 일치하는 리마인더가 없다면 예외가 발생한다")
         @Test
         void findOneThrowsException() {
-            Member kkojae = members.save(KKOJAE.create());
+            Member kkojae = members.save(KKOJAE.create(jupjup));
             Message target = noticeMessages.get(0);
 
             assertThatThrownBy(() -> reminderService.findOne(target.getId(), kkojae.getId()))

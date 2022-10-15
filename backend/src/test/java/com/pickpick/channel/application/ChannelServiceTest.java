@@ -3,6 +3,8 @@ package com.pickpick.channel.application;
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.YEONLOG;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,8 +15,6 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.fixture.MemberFixture;
-import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -70,12 +70,12 @@ class ChannelServiceTest {
     @Test
     void findAll() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-        Member yeonLog = saveMember(workspace);
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member yeonLog = members.save(YEONLOG.create(jupjup));
 
-        Channel notice = channels.save(NOTICE.create(workspace));
-        Channel freeChat = channels.save(FREE_CHAT.create(workspace));
-        Channel qna = channels.save(QNA.create(workspace));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
@@ -99,12 +99,11 @@ class ChannelServiceTest {
     @Test
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-        Member yeonLog = saveMember(workspace);
-
-        Channel notice = channels.save(NOTICE.create(workspace));
-        Channel freeChat = channels.save(FREE_CHAT.create(workspace));
-        Channel qna = channels.save(QNA.create(workspace));
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member yeonLog = members.save(YEONLOG.create(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
@@ -121,12 +120,6 @@ class ChannelServiceTest {
         // then
         assertThat(channelNames).isNotEmpty()
                 .doesNotContain(freeChat.getName(), qna.getName());
-    }
-
-    private Member saveMember(final Workspace workspace) {
-        Member member = MemberFixture.YEONLOG.create(workspace);
-        member.firstLogin("xoxp-token");
-        return members.save(member);
     }
 
     private ConversationsListResponse generateConversationsListResponse(final Channel... channels) {
