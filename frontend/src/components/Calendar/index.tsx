@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTheme } from "styled-components";
 
 import WrapperButton from "@src/components/@shared/WrapperButton";
 import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
@@ -26,11 +27,17 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
     handleIncrementMonth,
   } = useCalendar();
 
+  const theme = useTheme();
+
   return (
     <Styled.Container>
       <Styled.Month>
         <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
-          <ArrowIconLeft width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconLeft
+            width="24px"
+            height="24px"
+            fill={theme.COLOR.SECONDARY.DEFAULT}
+          />
         </WrapperButton>
 
         <Styled.Title>
@@ -45,7 +52,11 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
         >
-          <ArrowIconRight width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconRight
+            width="24px"
+            height="24px"
+            fill={theme.COLOR.SECONDARY.DEFAULT}
+          />
         </WrapperButton>
       </Styled.Month>
 
