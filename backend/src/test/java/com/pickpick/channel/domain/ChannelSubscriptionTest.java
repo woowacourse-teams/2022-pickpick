@@ -17,7 +17,7 @@ class ChannelSubscriptionTest {
     void changeOrder(final int invalidOrder) {
         // given
         Workspace workspace = new Workspace("T000001", "xoxp-token-1234", "UB00001");
-        Channel channel = new Channel("slackId", "채널 이름");
+        Channel channel = new Channel("slackId", "채널 이름", workspace);
         Member member = new Member("slackId", "유저 이름", "Profile.png", workspace);
         ChannelSubscription channelSubscription = new ChannelSubscription(channel, member, 1);
 
