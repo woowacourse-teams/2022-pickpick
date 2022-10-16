@@ -42,6 +42,7 @@ function App() {
         {element}
         <Snackbar />
       </ThemeProvider>
+
       <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
     </QueryClientProvider>
   );
