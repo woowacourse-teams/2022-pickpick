@@ -10,25 +10,25 @@ interface StyledProps extends StyledDefaultProps {
 }
 
 const fadeIn = keyframes`
-    from {
-      bottom: 0;
-      opacity: 0;
-    }
-    to {
-      bottom: 90px;
-      opacity: 1;
-    }
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 90px;
+    opacity: 1;
+  }
 `;
 
 const fadeOut = keyframes`
-from {
-  bottom: 90px;
-  opacity: 1;
-}
-to {
-  bottom: 0;
-  opacity: 0;
-}
+  from {
+    bottom: 90px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 `;
 
 export const Container = styled.div`
