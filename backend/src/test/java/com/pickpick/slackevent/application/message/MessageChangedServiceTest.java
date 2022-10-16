@@ -57,7 +57,11 @@ class MessageChangedServiceTest {
     @Test
     void changedMessage() {
         // given
-        Message storedMessage = saveMessage();
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.create(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Message storedMessage = PLAIN_20220712_14_00_00.create(notice, summer);
+
         String updatedText = "Message is updated!";
         String modifiedDate = "1234567890.123456";
 
@@ -99,18 +103,6 @@ class MessageChangedServiceTest {
                 () -> assertThat(afterSaveMessage).isPresent(),
                 () -> assertThat(afterSaveMessage.get().getSlackId()).isEqualTo(message.getSlackId())
         );
-    }
-
-    private Message saveMessage() {
-        Workspace jupjup = JUPJUP.create();
-        Member summer = SUMMER.create(jupjup);
-        Channel notice = NOTICE.create(jupjup);
-        Message message = PLAIN_20220712_14_00_00.create(notice, summer);
-
-        workspaces.save(jupjup);
-        members.save(summer);
-        channels.save(notice);
-        return messages.save(message);
     }
 
     private String createMessageChangedEvent(final Message message, final String updatedText,

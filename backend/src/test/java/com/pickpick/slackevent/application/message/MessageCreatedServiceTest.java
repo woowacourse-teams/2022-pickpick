@@ -63,8 +63,9 @@ class MessageCreatedServiceTest {
         Optional<Channel> channelBeforeSave = channels.findBySlackId(notice.getSlackId());
         Optional<Message> messageBeforeSave = messages.findBySlackId(message.getSlackId());
 
-        // when
         String messageCreatedRequest = createMessageCreatedRequest(notice, message, summer);
+
+        // when
         messageCreatedService.execute(messageCreatedRequest);
         Optional<Channel> channelAfterSave = channels.findBySlackId(notice.getSlackId());
         Optional<Message> messageAfterSave = messages.findBySlackId(message.getSlackId());
@@ -87,8 +88,9 @@ class MessageCreatedServiceTest {
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_18_00_00.create(notice, summer);
 
-        // when
         String messageRepliedRequest = createMessageRepliedRequest(notice, message, summer);
+
+        // when
         messageCreatedService.execute(messageRepliedRequest);
 
         // then

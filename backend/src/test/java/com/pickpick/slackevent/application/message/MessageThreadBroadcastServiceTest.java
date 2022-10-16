@@ -65,8 +65,9 @@ class MessageThreadBroadcastServiceTest {
         Optional<Channel> channelBeforeSave = channels.findBySlackId(notice.getSlackId());
         Optional<Message> messageBeforeSave = messages.findBySlackId(message.getSlackId());
 
-        // when
         String request = createMessageThreadBroadcastRequest(notice, message, bom);
+
+        // when
         messageThreadBroadcastService.execute(request);
 
         Optional<Channel> channelAfterSave = channels.findBySlackId(notice.getSlackId());
