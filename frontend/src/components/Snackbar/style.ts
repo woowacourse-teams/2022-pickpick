@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 import { SNACKBAR_STATUS } from "@src/@constants";
 import { StyledDefaultProps } from "@src/@types/shared";
@@ -8,6 +8,17 @@ interface StyledProps extends StyledDefaultProps {
   status: SnackbarStatus;
 }
 
+const fadeIn = keyframes`
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+    to {
+      bottom: 90px;
+      opacity: 1;
+    }
+`;
+
 export const Container = styled.div`
   display: flex;
   align-items: center;
@@ -15,7 +26,7 @@ export const Container = styled.div`
 
   position: fixed;
   left: 50%;
-  bottom: 100px;
+  bottom: 90px;
 
   width: 300px;
   min-height: 60px;
@@ -24,6 +35,7 @@ export const Container = styled.div`
 
   transform: translate(-50%, 0);
   z-index: 3;
+  animation: ${fadeIn} 0.7s;
 
   ${({ theme, status }: StyledProps) => css`
     color: ${theme.COLOR.TEXT.WHITE};

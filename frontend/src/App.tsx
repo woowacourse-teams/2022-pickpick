@@ -21,7 +21,7 @@ function App() {
   const { handleError } = useApiError();
   const { theme } = useModeTheme();
   const element = useRoutes(routes);
-  const { openSuccessSnackbar } = useSnackbar();
+  const { openFailureSnackbar } = useSnackbar();
 
   useEffect(() => {
     queryClient.setDefaultOptions({
@@ -34,7 +34,7 @@ function App() {
         onError: handleError,
       },
     });
-    openSuccessSnackbar("메롱");
+    openFailureSnackbar("메롱");
   }, []);
 
   return (
