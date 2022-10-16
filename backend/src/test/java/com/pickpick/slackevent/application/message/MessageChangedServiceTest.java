@@ -60,13 +60,14 @@ class MessageChangedServiceTest {
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member summer = members.save(SUMMER.create(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
-        Message storedMessage = PLAIN_20220712_14_00_00.create(notice, summer);
+        Message storedMessage = messages.save(PLAIN_20220712_14_00_00.create(notice, summer));
 
         String updatedText = "Message is updated!";
         String modifiedDate = "1234567890.123456";
 
-        // when
         String request = createMessageChangedEvent(storedMessage, updatedText, modifiedDate);
+
+        // when
         messageChangedService.execute(request);
 
         // then
@@ -91,8 +92,9 @@ class MessageChangedServiceTest {
 
         Optional<Message> beforeSaveMessage = messages.findBySlackId(message.getSlackId());
 
-        // when
         String request = messageThreadBroadcastEvent(message);
+
+        // when
         messageChangedService.execute(request);
 
         // then
