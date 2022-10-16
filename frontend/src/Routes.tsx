@@ -4,6 +4,7 @@ import {
   Certification,
   Feed,
   Home,
+  RegisterSlackWorkspace,
   Reminder,
   SearchResult,
   SpecificDateFeed,
@@ -100,6 +101,10 @@ const routes = [
   {
     path: PATH_NAME.CERTIFICATION,
     element: <Certification />,
+  },
+  {
+    path: PATH_NAME.REGISTER_SLACK_WORKSPACE,
+    element: <RegisterSlackWorkspace />,
   },
 ];
 
