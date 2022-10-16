@@ -15,13 +15,10 @@ import { THEME_KIND } from "@src/@constants";
 import GlobalStyle from "@src/@styles/GlobalStyle";
 import { DARK_MODE_THEME, LIGHT_MODE_THEME } from "@src/@styles/theme";
 
-import useSnackbar from "./hooks/useSnackbar";
-
 function App() {
   const { handleError } = useApiError();
   const { theme } = useModeTheme();
   const element = useRoutes(routes);
-  const { openFailureSnackbar } = useSnackbar();
 
   useEffect(() => {
     queryClient.setDefaultOptions({
@@ -34,7 +31,6 @@ function App() {
         onError: handleError,
       },
     });
-    openFailureSnackbar("메롱");
   }, []);
 
   return (
@@ -46,7 +42,6 @@ function App() {
         {element}
         <Snackbar />
       </ThemeProvider>
-
       <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
     </QueryClientProvider>
   );
