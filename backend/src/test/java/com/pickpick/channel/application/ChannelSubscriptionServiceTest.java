@@ -67,7 +67,7 @@ class ChannelSubscriptionServiceTest {
     @DisplayName("채널 구독을 단건 저장")
     @Test
     void save() {
-        //1  given
+        // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member bom = members.save(BOM.create(jupjup));
         Long bomId = bom.getId();
