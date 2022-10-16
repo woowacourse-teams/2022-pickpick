@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
-} from "react-query";
 
-import { ResponseSubscribedChannels } from "@src/@types/api";
-
-type Refetch = <TPageData>(
-  options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
-) => Promise<QueryObserverResult<ResponseSubscribedChannels, unknown>>;
+interface Props {
+  openModalEffectCallback?: (...args: any[]) => unknown;
+  closeModalEffectCallback?: (...args: any[]) => unknown;
+}
 
 interface UseModalResult {
   isModalOpened: boolean;
@@ -18,7 +12,10 @@ interface UseModalResult {
   handleToggleModal: VoidFunction;
 }
 
-function useModal(refetch?: Refetch): UseModalResult {
+function useModal({
+  openModalEffectCallback,
+  closeModalEffectCallback,
+}: Props = {}): UseModalResult {
   const [isModalOpened, setIsModalOpened] = useState(false);
 
   const handleOpenModal = () => {
@@ -36,12 +33,13 @@ function useModal(refetch?: Refetch): UseModalResult {
   useEffect(() => {
     if (isModalOpened) {
       document.body.style.overflowY = "hidden";
-      refetch && refetch();
+      openModalEffectCallback && openModalEffectCallback();
 
       return;
     }
 
     document.body.style.overflowY = "auto";
+    closeModalEffectCallback && closeModalEffectCallback();
 
     return () => {
       document.body.style.overflowY = "auto";
