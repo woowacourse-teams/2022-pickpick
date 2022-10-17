@@ -4,7 +4,7 @@ import { StyledDefaultProps } from "@src/@types/shared";
 
 interface StyledDayProps extends StyledDefaultProps {
   isBlank: boolean;
-  isCurrentDay: boolean;
+  isToday: boolean;
   isFuture: boolean;
 }
 
@@ -86,7 +86,7 @@ export const Day = styled.div`
     border-radius: 100px;
   }
 
-  ${({ theme, isBlank, isCurrentDay, isFuture }: StyledDayProps) => css`
+  ${({ theme, isBlank, isToday, isFuture }: StyledDayProps) => css`
     background-color: ${isBlank
       ? theme.COLOR.CONTAINER.DEFAULT
       : theme.COLOR.BACKGROUND.SECONDARY};
@@ -95,9 +95,7 @@ export const Day = styled.div`
     opacity: ${isFuture ? 0.3 : 1};
 
     div {
-      border: ${isCurrentDay
-        ? `1px solid ${theme.COLOR.PRIMARY.DEFAULT}`
-        : "none"};
+      border: ${isToday ? `1px solid ${theme.COLOR.PRIMARY.DEFAULT}` : "none"};
     }
   `}
 `;

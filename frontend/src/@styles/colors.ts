@@ -17,6 +17,7 @@ export const COLORS = {
   BLUE: {
     90: "#0742FA",
     50: "#6E91FF",
+    40: "#4ACECE",
   },
   ORANGE: {
     90: "#FF9900",
@@ -27,6 +28,7 @@ export const COLORS = {
       "linear-gradient(180deg, rgba(64,64,64,1) 0%, rgba(64,64,64,1) 57%, rgba(255,197,110,1) 81%, rgba(255,197,110,1) 91%, rgba(64,64,64,1) 100%)",
   },
   RED: {
-    50: "#FF9494",
+    50: "#E84444",
+    40: "#FF9494",
   },
 } as const;
