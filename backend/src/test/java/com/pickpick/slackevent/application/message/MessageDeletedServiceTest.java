@@ -1,5 +1,9 @@
 package com.pickpick.slackevent.application.message;
 
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
+import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,8 +14,8 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.support.DatabaseCleaner;
-import java.time.LocalDateTime;
-import java.util.List;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
@@ -22,18 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class MessageDeletedServiceTest {
-
-    private static final String MESSAGE_SLACK_ID = "db8a1f84-8acf-46ab-b93d-85177cee3e97";
-    private static final Member SAMPLE_MEMBER = new Member("U03MKN0UW", "사용자", "test.png");
-    private static final Channel SAMPLE_CHANNEL = new Channel("ASDFB", "채널");
-    private static final Message SAMPLE_MESSAGE = new Message(
-            MESSAGE_SLACK_ID,
-            "메시지 전송!",
-            SAMPLE_MEMBER,
-            SAMPLE_CHANNEL,
-            LocalDateTime.now(),
-            LocalDateTime.now()
-    );
 
     @Autowired
     private MessageDeletedService messageDeletedService;
@@ -48,6 +40,9 @@ class MessageDeletedServiceTest {
     private ChannelRepository channels;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @AfterEach
@@ -59,8 +54,8 @@ class MessageDeletedServiceTest {
     @Test
     void deletedMessage() {
         // given
-        saveMessage();
-        Map<String, String> previousMessage = Map.of("client_msg_id", MESSAGE_SLACK_ID);
+        Message storedMessage = saveMessage();
+        Map<String, String> previousMessage = Map.of("client_msg_id", storedMessage.getSlackId());
         Map<String, Object> event = Map.of("previous_message", previousMessage);
         String request = toJson(Map.of("event", event));
 
@@ -68,15 +63,15 @@ class MessageDeletedServiceTest {
         messageDeletedService.execute(request);
 
         // then
-        Optional<Message> findMessage = messages.findBySlackId(MESSAGE_SLACK_ID);
+        Optional<Message> findMessage = messages.findBySlackId(storedMessage.getSlackId());
         assertThat(findMessage).isEmpty();
     }
 
-    private void saveMessage() {
-        members.saveAll(List.of(SAMPLE_MEMBER));
+    private Message saveMessage() {
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
 
-        channels.save(SAMPLE_CHANNEL);
-
-        messages.save(SAMPLE_MESSAGE);
+        return messages.save(PLAIN_20220712_14_00_00.create(notice, summer));
     }
 }

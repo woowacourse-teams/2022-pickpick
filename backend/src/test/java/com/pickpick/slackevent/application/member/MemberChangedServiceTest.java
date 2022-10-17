@@ -1,13 +1,15 @@
 package com.pickpick.slackevent.application.member;
 
 import static com.pickpick.fixture.MemberFixture.SUMMER;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +27,9 @@ class MemberChangedServiceTest {
     private MemberRepository members;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @AfterEach
@@ -36,7 +41,8 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByDisplayName() {
         // given
-        Member summer = members.save(SUMMER.create());
+        Workspace workspace = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.createLogin(workspace));
 
         // when
         String realName = "최혜원";
@@ -46,8 +52,7 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(summer.getId())
-                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+        Member actual = members.getById(summer.getId());
 
         assertThat(actual.getUsername()).isEqualTo(displayName);
     }
@@ -56,7 +61,8 @@ class MemberChangedServiceTest {
     @Test
     void changeUsernameByRealNameWhenDisplayNameIsBlank() {
         // given
-        Member summer = members.save(SUMMER.create());
+        Workspace workspace = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.createLogin(workspace));
 
         // when
         String realName = "최혜원";
@@ -66,8 +72,7 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(summer.getId())
-                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+        Member actual = members.getById(summer.getId());
 
         assertThat(actual.getUsername()).isEqualTo(realName);
     }
@@ -76,7 +81,8 @@ class MemberChangedServiceTest {
     @Test
     void changedThumbnailUrl() {
         // given
-        Member summer = members.save(SUMMER.create());
+        Workspace workspace = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.createLogin(workspace));
 
         // when
         String changedThumbnailUrl = "https://hyewon.png";
@@ -84,8 +90,7 @@ class MemberChangedServiceTest {
         memberChangedService.execute(request);
 
         // then
-        Member actual = members.findById(summer.getId())
-                .orElseThrow(() -> new MemberNotFoundException(summer.getId()));
+        Member actual = members.getById(summer.getId());
 
         assertThat(actual.getThumbnailUrl()).isEqualTo(changedThumbnailUrl);
     }
