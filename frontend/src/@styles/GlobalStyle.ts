@@ -19,23 +19,27 @@ const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
   @font-face {
     font-family: 'Roboto';
     font-weight: 300;
-    src: local('Roboto-Light'), url(${RobotoLightWoff2}) format('woff2'), url(${RobotoLightWoff}) format('woff'), url(${RobotoLightTtf}) format('truetype');
+    font-display: swap;
+    src: url(${RobotoLightWoff2}) format('woff2'), url(${RobotoLightWoff}) format('woff'), url(${RobotoLightTtf}) format('truetype');
   }
 
   @font-face {
     font-family: 'Roboto';
     font-weight: 400;
-    src: local('Roboto-Regular'), url(${RobotoRegularWoff2}) format('woff2'), url(${RobotoRegularWoff}) format('woff'), url(${RobotoRegularTtf}) format('truetype');
+    font-display: swap;
+    src: url(${RobotoRegularWoff2}) format('woff2'), url(${RobotoRegularWoff}) format('woff'), url(${RobotoRegularTtf}) format('truetype');
   }
   
   @font-face {
     font-family: 'Roboto';
     font-weight: 600;
-    src: local('Roboto-Bold'), url(${RobotoBoldWoff2}) format('woff2'), url(${RobotoBoldWoff}) format('woff'), url(${RobotoBoldTtf}) format('truetype');
+    font-display: swap;
+    src: url(${RobotoBoldWoff2}) format('woff2'), url(${RobotoBoldWoff}) format('woff'), url(${RobotoBoldTtf}) format('truetype');
   }
 
   @font-face {
     font-family: 'Twayair';
+    font-display: swap;
     src: url(${TwayairWoff2}) format('woff2'), url(${TwayairWoff}) format('woff'), url(${TwayairTtf}) format('truetype');
   }
 
