@@ -31,7 +31,7 @@ function Navigation() {
     isModalOpened: isMenuDrawerOpened,
     handleCloseModal: handleCloseDrawer,
     handleToggleModal: handleToggleDrawer,
-  } = useModal(refetch);
+  } = useModal({ openModalCallback: refetch });
 
   const {
     isModalOpened: isLogoutButtonOpened,
