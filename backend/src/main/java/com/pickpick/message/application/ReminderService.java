@@ -1,7 +1,6 @@
 package com.pickpick.message.application;
 
 import com.pickpick.exception.message.ReminderDeleteFailureException;
-import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
@@ -149,8 +148,7 @@ public class ReminderService {
 
     @Transactional
     public void update(final Long memberId, final ReminderSaveRequest request) {
-        Reminder reminder = reminders.findByMessageIdAndMemberId(request.getMessageId(), memberId)
-                .orElseThrow(() -> new ReminderUpdateFailureException(request.getMessageId(), memberId));
+        Reminder reminder = reminders.getByMessageIdAndMemberId(request.getMessageId(), memberId);
 
         reminder.updateRemindDate(request.getReminderDate());
     }

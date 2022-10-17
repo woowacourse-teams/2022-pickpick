@@ -252,7 +252,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
     }
 
     @Test
-    void 사용자에게_존재하지_않는_리마인더_수정() {
+    void 존재하지_않는_리마인더_수정() {
         // given
         String token1 = jwtTokenProvider.createToken("1");
         String token2 = jwtTokenProvider.createToken("2");
@@ -262,6 +262,21 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
 
         // when
         ExtractableResponse<Response> response = 리마인더_수정(token2, 1L, LocalDateTime.now().plusHours(1));
+
+        // then
+        상태코드_404_확인(response);
+    }
+
+    @Test
+    void 과거_시각으로_리마인더_시각_수정() {
+        // given
+        String token = jwtTokenProvider.createToken("1");
+
+        메시지_전송(MEMBER_SLACK_ID);
+        리마인더_생성(token, 1, LocalDateTime.now().plusDays(1));
+
+        // when
+        ExtractableResponse<Response> response = 리마인더_수정(token, 1L, LocalDateTime.now().minusMinutes(10));
 
         // then
         상태코드_400_확인(response);

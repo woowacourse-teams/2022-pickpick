@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
+import com.pickpick.exception.message.ReminderInvalidDateException;
 import com.pickpick.exception.message.ReminderNotFoundException;
-import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.fixture.MessageFixtures;
 import com.pickpick.fixture.ReminderFindRequestFactory;
 import com.pickpick.member.domain.Member;
@@ -370,7 +370,23 @@ class ReminderServiceTest {
             // when & then
             ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(2));
             assertThatThrownBy(() -> reminderService.update(other.getId(), request))
-                    .isInstanceOf(ReminderUpdateFailureException.class);
+                    .isInstanceOf(ReminderNotFoundException.class);
+        }
+
+        @DisplayName("수정 시 리마인드 시각이 현재보다 과거라면 예외가 발생한다")
+        @Test
+        void updateReminderRemindDateForPastThrowsException() {
+            // given
+            Member yeonlog = members.save(YEONLOG.create());
+            Channel notice = channels.save(NOTICE.create());
+            Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
+
+            reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
+
+            // when & then
+            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().minusMinutes(10));
+            assertThatThrownBy(() -> reminderService.update(yeonlog.getId(), request))
+                    .isInstanceOf(ReminderInvalidDateException.class);
         }
 
         @DisplayName("리마인더를 단건 삭제한다")
