@@ -58,7 +58,7 @@ class MessageThreadBroadcastServiceTest {
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member bom = members.save(BOM.create(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_14_00_00.create(notice, bom);
 
@@ -87,7 +87,7 @@ class MessageThreadBroadcastServiceTest {
     void notSave() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member bom = members.save(BOM.create(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, bom));
 
@@ -120,7 +120,7 @@ class MessageThreadBroadcastServiceTest {
     void save() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member bom = members.save(BOM.create(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_14_00_00.create(notice, bom);
 

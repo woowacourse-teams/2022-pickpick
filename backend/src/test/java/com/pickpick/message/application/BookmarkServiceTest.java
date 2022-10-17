@@ -88,7 +88,7 @@ class BookmarkServiceTest {
         void save() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member member = members.save(HOPE.create(jupjup));
+            Member member = members.save(HOPE.createLogin(jupjup));
             Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
@@ -108,7 +108,7 @@ class BookmarkServiceTest {
         void delete() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member member = members.save(HOPE.create(jupjup));
+            Member member = members.save(HOPE.createLogin(jupjup));
             Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
@@ -127,8 +127,8 @@ class BookmarkServiceTest {
         void deleteOtherMembers() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member owner = members.save(HOPE.create(jupjup));
-            Member other = members.save(KKOJAE.create(jupjup));
+            Member owner = members.save(HOPE.createLogin(jupjup));
+            Member other = members.save(KKOJAE.createLogin(jupjup));
             Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, other));
 
@@ -153,8 +153,8 @@ class BookmarkServiceTest {
     class find {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member hope = members.save(HOPE.create(jupjup));
-        Member kkojae = members.save(KKOJAE.create(jupjup));
+        Member hope = members.save(HOPE.createLogin(jupjup));
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
 
         Channel notice = channels.save(NOTICE.create(jupjup));
 

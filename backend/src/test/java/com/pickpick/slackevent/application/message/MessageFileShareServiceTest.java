@@ -60,7 +60,7 @@ class MessageFileShareServiceTest {
     void saveMessageWhenFileShareEventPassed(final String expectedText) {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member bom = members.save(BOM.create(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
         Message message = PLAIN_20220715_17_00_00.create(qna, bom);
 

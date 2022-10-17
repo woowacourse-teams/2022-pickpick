@@ -56,7 +56,7 @@ class MessageCreatedServiceTest {
     void saveMessageWhenMessageCreatedEventPassed() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_18_00_00.create(notice, summer);
 
@@ -84,7 +84,7 @@ class MessageCreatedServiceTest {
     void doNotSaveReplyMessage() {
         //given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_18_00_00.create(notice, summer);
 

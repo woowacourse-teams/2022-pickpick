@@ -19,7 +19,7 @@ class MemberTest {
     void updateInvalidUsername(final String username) {
         // given
         Workspace jupjup = JUPJUP.create();
-        Member bom = BOM.create(jupjup);
+        Member bom = BOM.createLogin(jupjup);
 
         // when & then
         assertThatThrownBy(() -> bom.update(username, "test.png"))
@@ -32,7 +32,7 @@ class MemberTest {
     void updateInvalidThumbnailUrl(final String thumbnailUrl) {
         // given
         Workspace jupjup = JUPJUP.create();
-        Member bom = BOM.create(jupjup);
+        Member bom = BOM.createLogin(jupjup);
 
         // when & then
         assertThatThrownBy(() -> bom.update("사용자", thumbnailUrl))

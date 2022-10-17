@@ -69,7 +69,7 @@ class MessageDeletedServiceTest {
 
     private Message saveMessage() {
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
 
         return messages.save(PLAIN_20220712_14_00_00.create(notice, summer));

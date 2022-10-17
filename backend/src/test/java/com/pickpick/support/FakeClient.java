@@ -33,7 +33,7 @@ public class FakeClient implements ExternalClient {
     @Override
     public List<Member> findMembersByWorkspace(final Workspace workspace) {
         return Arrays.stream(MemberFixture.values())
-                .map(it -> it.create(workspace))
+                .map(member -> member.createLogin(workspace))
                 .collect(Collectors.toList());
     }
 

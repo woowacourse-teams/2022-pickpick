@@ -78,8 +78,8 @@ class ReminderServiceTest {
     @Nested
     class find {
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member bom = members.save(BOM.create(jupjup));
-        Member yeonlog = members.save(YEONLOG.create(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
 
         Channel notice = channels.save(NOTICE.create(jupjup));
         List<Message> noticeMessages = createAndSaveMessages(notice, yeonlog);
@@ -161,7 +161,7 @@ class ReminderServiceTest {
         @DisplayName("정렬 시 리마인드 시간이 같다면 id 오름차순 정렬된다")
         @Test
         void orderByIdWhenRemindDateIsSame() {
-            Member hope = members.save(HOPE.create(jupjup));
+            Member hope = members.save(HOPE.createLogin(jupjup));
             Message firstMessage = saveDummyMessage(hope, notice);
             Message secondMessage = saveDummyMessage(hope, notice);
 
@@ -261,7 +261,7 @@ class ReminderServiceTest {
         @DisplayName("messageId와 memberId가 일치하는 리마인더가 없다면 예외가 발생한다")
         @Test
         void findOneThrowsException() {
-            Member kkojae = members.save(KKOJAE.create(jupjup));
+            Member kkojae = members.save(KKOJAE.createLogin(jupjup));
             Message target = noticeMessages.get(0);
 
             assertThatThrownBy(() -> reminderService.findOne(target.getId(), kkojae.getId()))
@@ -346,7 +346,7 @@ class ReminderServiceTest {
         void save() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
             Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
@@ -366,7 +366,7 @@ class ReminderServiceTest {
         void update() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
             Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
@@ -387,8 +387,8 @@ class ReminderServiceTest {
         void updateReminderDoesNotExistThrowsException() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member yeonlog = members.save(YEONLOG.create(jupjup));
-            Member other = members.save(BOM.create(jupjup));
+            Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
+            Member other = members.save(BOM.createLogin(jupjup));
             Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
@@ -405,7 +405,7 @@ class ReminderServiceTest {
         void delete() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member yeonlog = members.save(YEONLOG.create(jupjup));
+            Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
             Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
@@ -424,8 +424,8 @@ class ReminderServiceTest {
         void deleteReminderDoesNotExistThrowsException() {
             // given
             Workspace jupjup = workspaces.save(JUPJUP.create());
-            Member yeonlog = members.save(YEONLOG.create(jupjup));
-            Member other = members.save(BOM.create(jupjup));
+            Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
+            Member other = members.save(BOM.createLogin(jupjup));
             Channel notice = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 

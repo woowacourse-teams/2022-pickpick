@@ -42,7 +42,7 @@ class MemberChangedServiceTest {
     void changeUsernameByDisplayName() {
         // given
         Workspace workspace = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(workspace));
+        Member summer = members.save(SUMMER.createLogin(workspace));
 
         // when
         String realName = "최혜원";
@@ -62,7 +62,7 @@ class MemberChangedServiceTest {
     void changeUsernameByRealNameWhenDisplayNameIsBlank() {
         // given
         Workspace workspace = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(workspace));
+        Member summer = members.save(SUMMER.createLogin(workspace));
 
         // when
         String realName = "최혜원";
@@ -82,7 +82,7 @@ class MemberChangedServiceTest {
     void changedThumbnailUrl() {
         // given
         Workspace workspace = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(workspace));
+        Member summer = members.save(SUMMER.createLogin(workspace));
 
         // when
         String changedThumbnailUrl = "https://hyewon.png";

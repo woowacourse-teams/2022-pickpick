@@ -27,21 +27,16 @@ public enum MemberFixture {
         return Arrays.stream(MemberFixture.values())
                 .findFirst()
                 .orElse(SUMMER)
-                .create();
+                .createLogin(WorkspaceFixture.JUPJUP.create());
     }
 
-    // TODO 제거 필요
-    public Member create() {
-        return new Member(slackId, username, thumbnailUrl);
-    }
-
-    public Member create(final Workspace workspace) {
+    public Member createLogin(final Workspace workspace) {
         Member member = new Member(slackId, username, thumbnailUrl, workspace);
         member.firstLogin("xoxp-" + slackId);
         return member;
     }
 
-    public Member hasNeverLoggedIn(final Workspace workspace) {
+    public Member createNeverLoggedIn(final Workspace workspace) {
         return new Member(slackId, username, thumbnailUrl, workspace);
     }
 

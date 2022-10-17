@@ -58,7 +58,7 @@ class MessageChangedServiceTest {
     void changedMessage() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message storedMessage = messages.save(PLAIN_20220712_14_00_00.create(notice, summer));
 
@@ -86,7 +86,7 @@ class MessageChangedServiceTest {
     void saveThreadBroadcastMessage() {
         // given 
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Message message = PLAIN_20220712_14_00_00.create(notice, summer);
 

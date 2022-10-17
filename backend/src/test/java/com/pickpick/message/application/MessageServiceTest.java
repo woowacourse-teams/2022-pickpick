@@ -103,7 +103,7 @@ class MessageServiceTest {
         }
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member summer = members.save(SUMMER.create(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
 

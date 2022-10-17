@@ -21,7 +21,7 @@ class ChannelSubscriptionTest {
         // given
         Workspace jupjup = JUPJUP.create();
         Channel qna = QNA.create();
-        Member bom = BOM.create(jupjup);
+        Member bom = BOM.createLogin(jupjup);
         ChannelSubscription channelSubscription = new ChannelSubscription(qna, bom, 1);
 
         // when & then

@@ -71,7 +71,7 @@ class ChannelServiceTest {
     void findAll() throws SlackApiException, IOException {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member yeonLog = members.save(YEONLOG.create(jupjup));
+        Member yeonLog = members.save(YEONLOG.createLogin(jupjup));
 
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
@@ -100,7 +100,7 @@ class ChannelServiceTest {
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member yeonLog = members.save(YEONLOG.create(jupjup));
+        Member yeonLog = members.save(YEONLOG.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
