@@ -9,9 +9,9 @@ import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Clock;
@@ -43,7 +43,7 @@ public class ReminderService {
     }
 
     @Transactional
-    public void save(final Long memberId, final ReminderSaveRequest request) {
+    public void save(final Long memberId, final ReminderRequest request) {
         Member member = members.getById(memberId);
 
         Message message = messages.getById(request.getMessageId());
@@ -147,7 +147,7 @@ public class ReminderService {
     }
 
     @Transactional
-    public void update(final Long memberId, final ReminderSaveRequest request) {
+    public void update(final Long memberId, final ReminderRequest request) {
         Reminder reminder = reminders.getByMessageIdAndMemberId(request.getMessageId(), memberId);
 
         reminder.updateRemindDate(request.getReminderDate());

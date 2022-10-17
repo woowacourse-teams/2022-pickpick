@@ -13,9 +13,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.support.DocsControllerTestBase;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,10 +35,10 @@ class ReminderControllerTest extends DocsControllerTestBase {
     @Test
     void save() throws Exception {
         doNothing().when(reminderService)
-                .save(anyLong(), any(ReminderSaveRequest.class));
+                .save(anyLong(), any(ReminderRequest.class));
 
         String body = objectMapper.writeValueAsString(
-                new ReminderSaveRequest(1L, LocalDateTime.now().plusDays(2))
+                new ReminderRequest(1L, LocalDateTime.now().plusDays(2))
         );
         ResultActions result = mockMvc.perform(post(REMINDER_API_URL, body))
                 .andExpect(status().isCreated());
@@ -141,10 +141,10 @@ class ReminderControllerTest extends DocsControllerTestBase {
     @Test
     void update() throws Exception {
         doNothing().when(reminderService)
-                .update(anyLong(), any(ReminderSaveRequest.class));
+                .update(anyLong(), any(ReminderRequest.class));
 
         String body = objectMapper.writeValueAsString(
-                new ReminderSaveRequest(2L, LocalDateTime.now().plusDays(2))
+                new ReminderRequest(2L, LocalDateTime.now().plusDays(2))
         );
 
         ResultActions result = mockMvc.perform(put(REMINDER_API_URL, body))

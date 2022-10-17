@@ -24,9 +24,9 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import com.pickpick.support.DatabaseCleaner;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -328,7 +328,7 @@ class ReminderServiceTest {
             int beforeSize = findReminderSize(yeonlog);
 
             // when
-            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(1));
+            ReminderRequest request = new ReminderRequest(message.getId(), LocalDateTime.now().plusHours(1));
             reminderService.save(yeonlog.getId(), request);
 
             // then
@@ -349,7 +349,7 @@ class ReminderServiceTest {
 
             // when
             LocalDateTime updateTime = LocalDateTime.now().plusDays(1);
-            reminderService.update(yeonlog.getId(), new ReminderSaveRequest(message.getId(), updateTime));
+            reminderService.update(yeonlog.getId(), new ReminderRequest(message.getId(), updateTime));
 
             // then
             Reminder actual = reminders.getByMessageIdAndMemberId(message.getId(), yeonlog.getId());
@@ -368,7 +368,7 @@ class ReminderServiceTest {
             reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
 
             // when & then
-            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(2));
+            ReminderRequest request = new ReminderRequest(message.getId(), LocalDateTime.now().plusHours(2));
             assertThatThrownBy(() -> reminderService.update(other.getId(), request))
                     .isInstanceOf(ReminderNotFoundException.class);
         }
@@ -384,7 +384,7 @@ class ReminderServiceTest {
             reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
 
             // when & then
-            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().minusMinutes(10));
+            ReminderRequest request = new ReminderRequest(message.getId(), LocalDateTime.now().minusMinutes(10));
             assertThatThrownBy(() -> reminderService.update(yeonlog.getId(), request))
                     .isInstanceOf(ReminderInvalidDateException.class);
         }

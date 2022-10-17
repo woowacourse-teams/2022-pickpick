@@ -3,9 +3,9 @@ package com.pickpick.message.ui;
 import com.pickpick.auth.support.AuthenticationPrincipal;
 import com.pickpick.message.application.ReminderService;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
+import com.pickpick.message.ui.dto.ReminderRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
-import com.pickpick.message.ui.dto.ReminderSaveRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +30,8 @@ public class ReminderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void save(@AuthenticationPrincipal final Long memberId,
-                     @RequestBody final ReminderSaveRequest reminderSaveRequest) {
-        reminderService.save(memberId, reminderSaveRequest);
+                     @RequestBody final ReminderRequest reminderRequest) {
+        reminderService.save(memberId, reminderRequest);
     }
 
     @GetMapping(params = "messageId")
@@ -46,7 +46,7 @@ public class ReminderController {
 
     @PutMapping
     public void update(@AuthenticationPrincipal final Long memberId,
-                       @RequestBody final ReminderSaveRequest request) {
+                       @RequestBody final ReminderRequest request) {
         reminderService.update(memberId, request);
     }
 
