@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 interface Props {
-  openModalEffectCallback?: (...args: any[]) => unknown;
-  closeModalEffectCallback?: (...args: any[]) => unknown;
+  openModalCallback?: (...args: any[]) => unknown;
+  closeModalCallback?: (...args: any[]) => unknown;
 }
 
 interface UseModalResult {
@@ -13,8 +13,8 @@ interface UseModalResult {
 }
 
 function useModal({
-  openModalEffectCallback,
-  closeModalEffectCallback,
+  openModalCallback,
+  closeModalCallback,
 }: Props = {}): UseModalResult {
   const [isModalOpened, setIsModalOpened] = useState(false);
 
@@ -33,13 +33,13 @@ function useModal({
   useEffect(() => {
     if (isModalOpened) {
       document.body.style.overflowY = "hidden";
-      openModalEffectCallback && openModalEffectCallback();
+      openModalCallback && openModalCallback();
 
       return;
     }
 
     document.body.style.overflowY = "auto";
-    closeModalEffectCallback && closeModalEffectCallback();
+    closeModalCallback && closeModalCallback();
 
     return () => {
       document.body.style.overflowY = "auto";
