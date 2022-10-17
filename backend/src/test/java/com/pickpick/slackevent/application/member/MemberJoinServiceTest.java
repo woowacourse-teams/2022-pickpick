@@ -1,11 +1,10 @@
 package com.pickpick.slackevent.application.member;
 
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.pickpick.exception.member.MemberNotFoundException;
-import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -15,7 +14,6 @@ import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,13 +35,6 @@ class MemberJoinServiceTest {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
-
-    private Workspace workspace;
-
-    @BeforeEach
-    void init() {
-        workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-    }
 
     @AfterEach
     void tearDown() {
@@ -76,11 +67,12 @@ class MemberJoinServiceTest {
     @Test
     void saveNewMember() {
         // given
+        Workspace jupjup = workspaces.save(JUPJUP.create());
         String slackId = "U0000000001";
         Optional<Member> memberBeforeJoin = members.findBySlackId(slackId);
 
         // when
-        String request = createTeamJoinEvent(slackId, workspace.getSlackId(), "최혜원", "써머");
+        String request = createTeamJoinEvent(slackId, jupjup.getSlackId(), "최혜원", "써머");
         memberJoinService.execute(request);
 
         // then
@@ -96,17 +88,17 @@ class MemberJoinServiceTest {
     @Test
     void saveUsernameAsDisplayName() {
         // given
+        Workspace jupjup = workspaces.save(JUPJUP.create());
         String slackId = "U0000000001";
         String realName = "최혜원";
         String displayName = "써머";
 
         // when
-        String request = createTeamJoinEvent(slackId, workspace.getSlackId(), realName, displayName);
+        String request = createTeamJoinEvent(slackId, jupjup.getSlackId(), realName, displayName);
         memberJoinService.execute(request);
 
         // then
-        Member memberAfterJoin = members.findBySlackId(slackId)
-                .orElseThrow(() -> new MemberNotFoundException(slackId));
+        Member memberAfterJoin = members.getBySlackId(slackId);
 
         assertThat(memberAfterJoin.getUsername()).isEqualTo(displayName);
     }
@@ -115,17 +107,17 @@ class MemberJoinServiceTest {
     @Test
     void saveUsernameAsRealNameIfDisplayNameIsEmpty() {
         // given
+        Workspace jupjup = workspaces.save(JUPJUP.create());
         String slackId = "U0000000001";
         String realName = "최혜원";
         String displayName = "";
 
         // when
-        String request = createTeamJoinEvent(slackId, workspace.getSlackId(), realName, displayName);
+        String request = createTeamJoinEvent(slackId, jupjup.getSlackId(), realName, displayName);
         memberJoinService.execute(request);
 
         // then
-        Member memberAfterJoin = members.findBySlackId(slackId)
-                .orElseThrow(() -> new MemberNotFoundException(slackId));
+        Member memberAfterJoin = members.getBySlackId(slackId);
 
         assertThat(memberAfterJoin.getUsername()).isEqualTo(realName);
     }

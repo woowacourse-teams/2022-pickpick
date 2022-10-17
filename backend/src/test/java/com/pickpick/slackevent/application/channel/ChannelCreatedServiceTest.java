@@ -1,12 +1,13 @@
 package com.pickpick.slackevent.application.channel;
 
+import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
-import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.WorkspaceFixture;
+import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
@@ -42,20 +43,9 @@ class ChannelCreatedServiceTest {
     @Test
     void channelCreate() {
         // given
-        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-        Channel channel = ChannelFixture.QNA.create();
-        String request = toJson(
-                Map.of(
-                        "team_id", workspace.getSlackId(),
-                        "event", Map.of(
-                                "type", "channel_Created",
-                                "channel", Map.of(
-                                        "id", channel.getSlackId(),
-                                        "name", channel.getName(),
-                                        "created", "1234567890")
-                        )
-                )
-        );
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Channel channel = QNA.create(jupjup);
+        String request = createChannelCreatedRequest(channel);
 
         // when
         channelCreatedService.execute(request);
@@ -63,5 +53,20 @@ class ChannelCreatedServiceTest {
         // then
         Optional<Channel> actual = channels.findBySlackId(channel.getSlackId());
         assertThat(actual).isNotEmpty();
+    }
+
+    private String createChannelCreatedRequest(final Channel channel) {
+        return toJson(
+                Map.of(
+                        "team_id", channel.getWorkspace().getSlackId(),
+                        "event", Map.of(
+                                "type", SlackEvent.CHANNEL_CREATED.getType(),
+                                "channel", Map.of(
+                                        "id", channel.getSlackId(),
+                                        "name", channel.getName(),
+                                        "created", "1234567890")
+                        )
+                )
+        );
     }
 }

@@ -4,6 +4,7 @@ import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_18_00_00;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -13,7 +14,6 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.BookmarkDeleteFailureException;
 import com.pickpick.fixture.BookmarkFindRequestFactory;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.fixture.MessageFixtures;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -26,6 +26,8 @@ import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +65,9 @@ class BookmarkServiceTest {
     @Autowired
     private BookmarkRepository bookmarks;
 
+    @Autowired
+    private WorkspaceRepository workspaces;
+
     @MockBean
     private DateTimeProvider dateTimeProvider;
 
@@ -82,8 +87,9 @@ class BookmarkServiceTest {
         @Test
         void save() {
             // given
-            Member member = members.save(HOPE.create());
-            Channel channel = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member member = members.save(HOPE.createLogin(jupjup));
+            Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             BookmarkRequest bookmarkRequest = new BookmarkRequest(message.getId());
@@ -101,8 +107,9 @@ class BookmarkServiceTest {
         @Test
         void delete() {
             // given
-            Member member = members.save(HOPE.create());
-            Channel channel = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member member = members.save(HOPE.createLogin(jupjup));
+            Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, member));
 
             Bookmark bookmark = bookmarks.save(new Bookmark(member, message));
@@ -119,9 +126,10 @@ class BookmarkServiceTest {
         @Test
         void deleteOtherMembers() {
             // given
-            Member owner = members.save(HOPE.create());
-            Member other = members.save(KKOJAE.create());
-            Channel channel = channels.save(NOTICE.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member owner = members.save(HOPE.createLogin(jupjup));
+            Member other = members.save(KKOJAE.createLogin(jupjup));
+            Channel channel = channels.save(NOTICE.create(jupjup));
             Message message = messages.save(PLAIN_20220712_18_00_00.create(channel, other));
 
             Bookmark bookmark = new Bookmark(owner, message);
@@ -144,10 +152,11 @@ class BookmarkServiceTest {
     @Nested
     class find {
 
-        Member hope = saveMember(HOPE);
-        Member kkojae = saveMember(KKOJAE);
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member hope = members.save(HOPE.createLogin(jupjup));
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
 
-        Channel notice = channels.save(NOTICE.create());
+        Channel notice = channels.save(NOTICE.create(jupjup));
 
         List<Message> savedMessages = createAndSaveMessages(notice, kkojae);
         List<Bookmark> hopesBookmarks = saveBookmarksAtDifferentTimes(hope, savedMessages);
@@ -281,12 +290,6 @@ class BookmarkServiceTest {
                         () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
                 );
             }
-        }
-
-        private Member saveMember(final MemberFixture memberFixture) {
-            Member member = memberFixture.create();
-            member.firstLogin("xoxp-" + member.getSlackId());
-            return members.save(member);
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {

@@ -1,53 +1,64 @@
-import { useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
+
+import Portal from "@src/components/@shared/Portal";
 
 import { snackbarState } from "@src/@atoms";
 import { SNACKBAR_STATUS } from "@src/@constants";
 
 import * as Styled from "./style";
 
+const DURATION = 3500;
+const DURATION_OFFSET = 500;
+
+type TimerRef = {
+  durationTimer: NodeJS.Timeout | null;
+  durationWithOffsetTimer: NodeJS.Timeout | null;
+};
+
 function Snackbar() {
   const [{ isOpened, message, status }, setState] =
     useRecoilState(snackbarState);
 
-  const element = document.querySelector("#portal-root");
-  const ref = useRef<any>({
-    element: null,
-    timeout: null,
+  const [isAlive, setIsAlive] = useState(true);
+
+  const timerRef = useRef<TimerRef>({
+    durationTimer: null,
+    durationWithOffsetTimer: null,
   });
 
   useEffect(() => {
-    if (isOpened) {
-      if (ref.current.timeout) {
-        const [showAnimation] = ref.current.element.getAnimations();
-
-        showAnimation?.cancel();
-        showAnimation?.play();
-        clearTimeout(ref.current.timeout);
-      }
-
-      ref.current.timeout = setTimeout(() => {
-        setState({
-          isOpened: false,
-          message: "",
-          status: SNACKBAR_STATUS.SUCCESS,
-        });
-      }, 3000);
+    if (
+      !isOpened &&
+      timerRef.current.durationTimer &&
+      timerRef.current.durationWithOffsetTimer
+    ) {
+      clearTimeout(timerRef.current.durationTimer);
+      clearTimeout(timerRef.current.durationWithOffsetTimer);
+      return;
     }
-  });
 
-  return isOpened && element
-    ? ReactDOM.createPortal(
-        <Styled.Container
-          status={status}
-          ref={(el) => (ref.current.element = el)}
-        >
-          {message}
-        </Styled.Container>,
-        element
-      )
-    : null;
+    timerRef.current.durationTimer = setTimeout(() => {
+      setState({
+        isOpened: false,
+        message: "",
+        status: SNACKBAR_STATUS.SUCCESS,
+      });
+      setIsAlive(true);
+    }, DURATION);
+
+    timerRef.current.durationWithOffsetTimer = setTimeout(() => {
+      setIsAlive(false);
+    }, DURATION - DURATION_OFFSET);
+  }, [isOpened]);
+
+  return (
+    <Portal isOpened={isOpened}>
+      <Styled.Container status={status} isAlive={isAlive}>
+        {message}
+      </Styled.Container>
+    </Portal>
+  );
 }
 
 export default Snackbar;

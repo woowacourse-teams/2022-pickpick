@@ -41,6 +41,20 @@ public class AuthService {
     }
 
     @Transactional
+    public LoginResponse registerWorkspace(final String code) {
+        WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
+        Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
+
+        List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
+        members.saveAll(allWorkspaceMembers);
+
+        List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
+        channels.saveAll(allWorkspaceChannels);
+
+        return login(code);
+    }
+
+    @Transactional
     public LoginResponse login(final String code) {
         String userToken = slackClient.callUserToken(code);
         String memberSlackId = slackClient.callMemberSlackId(userToken);
@@ -54,19 +68,5 @@ public class AuthService {
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
                 .firstLogin(isFirstLogin)
                 .build();
-    }
-
-    @Transactional
-    public LoginResponse registerWorkspace(final String code) {
-        WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
-        Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
-
-        List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
-        members.saveAll(allWorkspaceMembers);
-
-        List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
-        channels.saveAll(allWorkspaceChannels);
-
-        return login(code);
     }
 }
