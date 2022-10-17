@@ -52,7 +52,7 @@ export const Container = styled.div`
     color: ${theme.COLOR.TEXT.WHITE};
     background-color: ${status === SNACKBAR_STATUS.SUCCESS
       ? theme.COLOR.CONTAINER.LIGHT_BLUE
-      : theme.COLOR.CONTAINER.LIGHT_RED};
+      : theme.COLOR.CONTAINER.RED};
 
     animation: ${isAlive ? fadeIn : fadeOut} 0.7s;
   `}

@@ -24,6 +24,8 @@ export type Theme = {
     CONTAINER: {
       DEFAULT: string;
       WHITE: string;
+      RED: string;
+      BLUE: string;
       LIGHT_RED: string;
       LIGHT_BLUE: string;
       LIGHT_ORANGE: string;

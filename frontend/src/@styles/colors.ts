@@ -16,7 +16,8 @@ export const COLORS = {
   WHITE: "#FFFFFF",
   BLUE: {
     90: "#0742FA",
-    50: "#4ACECE",
+    50: "#6E91FF",
+    40: "#4ACECE",
   },
   ORANGE: {
     90: "#FF9900",
@@ -28,5 +29,6 @@ export const COLORS = {
   },
   RED: {
     50: "#E84444",
+    40: "#FF9494",
   },
 } as const;
