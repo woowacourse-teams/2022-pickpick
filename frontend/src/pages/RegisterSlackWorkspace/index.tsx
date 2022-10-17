@@ -9,7 +9,7 @@ import useAuthentication from "@src/hooks/useAuthentication";
 
 import { PATH_NAME } from "@src/@constants/path";
 
-function Certification() {
+function RegisterSlackWorkspace() {
   const navigate = useNavigate();
   const slackCode = useGetSearchParam({ key: "code" });
   const { login } = useAuthentication();
@@ -32,4 +32,4 @@ function Certification() {
   return <Loader />;
 }
 
-export default Certification;
+export default RegisterSlackWorkspace;
