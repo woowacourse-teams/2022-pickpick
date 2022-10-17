@@ -32,7 +32,7 @@ function AddChannel() {
             <Button
               key={id}
               size="medium"
-              isActive={isSubscribed}
+              styleType={isSubscribed ? "tertiary" : "primary"}
               onClick={() => {
                 isSubscribed
                   ? handleUnSubscribeChannel(id)

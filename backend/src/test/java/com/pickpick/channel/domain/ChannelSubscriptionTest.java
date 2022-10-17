@@ -1,9 +1,13 @@
 package com.pickpick.channel.domain;
 
+import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.exception.channel.SubscriptionInvalidOrderException;
 import com.pickpick.member.domain.Member;
+import com.pickpick.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -15,9 +19,10 @@ class ChannelSubscriptionTest {
     @ParameterizedTest
     void changeOrder(final int invalidOrder) {
         // given
-        Channel channel = new Channel("slackId", "채널 이름");
-        Member member = new Member("slackId", "유저 이름", "Profile.png");
-        ChannelSubscription channelSubscription = new ChannelSubscription(channel, member, 1);
+        Workspace jupjup = JUPJUP.create();
+        Channel qna = QNA.create();
+        Member bom = BOM.createLogin(jupjup);
+        ChannelSubscription channelSubscription = new ChannelSubscription(qna, bom, 1);
 
         // when & then
         assertThatThrownBy(() -> channelSubscription.changeOrder(invalidOrder))

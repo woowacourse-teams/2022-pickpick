@@ -11,7 +11,7 @@ const iconColorTable = {
   `,
   alarm: css`
     background-color: ${({ theme }: StyledDefaultProps) =>
-      theme.COLOR.CONTAINER.LIGHT_BLUE};
+      theme.COLOR.CONTAINER.BLUE};
   `,
   star: css`
     background-color: ${({ theme }: StyledDefaultProps) =>

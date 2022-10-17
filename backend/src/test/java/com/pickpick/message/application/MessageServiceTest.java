@@ -1,11 +1,15 @@
 package com.pickpick.message.application;
 
+import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
 import static com.pickpick.fixture.MessageRequestFactory.futureFromTargetMessageInChannels;
 import static com.pickpick.fixture.MessageRequestFactory.onlyCount;
 import static com.pickpick.fixture.MessageRequestFactory.pastFromTargetMessageInChannels;
 import static com.pickpick.fixture.MessageRequestFactory.searchByKeywordInChannels;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
@@ -27,6 +31,8 @@ import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -75,6 +81,9 @@ class MessageServiceTest {
     private ReminderRepository reminders;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private MessageService messageService;
 
     @Autowired
@@ -93,9 +102,10 @@ class MessageServiceTest {
             databaseCleaner.clear();
         }
 
-        Member summer = members.save(summer());
-        Channel notice = channels.save(notice());
-        Channel freeChat = channels.save(freeChat());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member summer = members.save(SUMMER.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
 
         List<Message> noticeMessages = createAndSaveMessages(notice, summer);
         List<Message> freeChatMessages = createAndSaveMessages(freeChat, summer);
@@ -346,18 +356,6 @@ class MessageServiceTest {
                     .filter(message -> message.getId().equals(target.getId()))
                     .findAny()
                     .orElseThrow(NoSuchElementException::new);
-        }
-
-        private Member summer() {
-            return new Member("U00001", "써머", "https://summer.png");
-        }
-
-        private Channel notice() {
-            return new Channel("C00001", "공지사항");
-        }
-
-        private Channel freeChat() {
-            return new Channel("C00002", "잡담");
         }
 
         private List<Long> extractIdsCreatedAfterTargetOrderByDate(final List<Message> messages, final Message target) {

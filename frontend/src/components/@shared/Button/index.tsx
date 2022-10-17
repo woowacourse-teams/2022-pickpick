@@ -4,11 +4,12 @@ import { StrictPropsWithChildren } from "@src/@types/utils";
 
 import * as Styled from "./style";
 
+export type StyleType = "primary" | "secondary" | "tertiary";
 export type Size = "small" | "medium" | "large";
 
 export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: Size;
-  isActive: boolean;
+  styleType: StyleType;
 }
 
 function Button({ children, ...props }: StrictPropsWithChildren<Props>) {
@@ -17,7 +18,7 @@ function Button({ children, ...props }: StrictPropsWithChildren<Props>) {
 
 Button.defaultProps = {
   size: "large",
-  isActive: true,
+  styleType: "primary",
 };
 
 export default Button;

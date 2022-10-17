@@ -24,3 +24,17 @@ export const slackLogin: SlackLogin = async (code) => {
   });
   return data;
 };
+
+type RegisterSlackWorkspace = (code: string) => Promise<ResponseToken>;
+export const registerSlackWorkspace: RegisterSlackWorkspace = async (code) => {
+  const { data } = await fetcher.get<ResponseToken>(
+    API_ENDPOINT.SLACK_REGISTER_WORKSPACE,
+    {
+      headers: { ...getPublicHeaders() },
+      params: {
+        code,
+      },
+    }
+  );
+  return data;
+};
