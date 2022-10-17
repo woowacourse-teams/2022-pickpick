@@ -22,7 +22,6 @@ function Snackbar() {
 
   const [isAlive, setIsAlive] = useState(true);
 
-  const snackbarRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<TimerRef>({
     durationTimer: null,
     durationWithOffsetTimer: null,
@@ -55,7 +54,7 @@ function Snackbar() {
 
   return (
     <Portal isOpened={isOpened}>
-      <Styled.Container status={status} ref={snackbarRef} isAlive={isAlive}>
+      <Styled.Container status={status} isAlive={isAlive}>
         {message}
       </Styled.Container>
     </Portal>
