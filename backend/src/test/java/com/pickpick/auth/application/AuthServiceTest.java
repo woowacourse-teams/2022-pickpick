@@ -1,5 +1,7 @@
 package com.pickpick.auth.application;
 
+import static com.pickpick.fixture.MemberFixture.KKOJAE;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -11,7 +13,6 @@ import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.exception.auth.ExpiredTokenException;
 import com.pickpick.exception.auth.InvalidTokenException;
-import com.pickpick.fixture.WorkspaceFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -76,11 +77,11 @@ class AuthServiceTest {
     @Test
     void login() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-        Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member member = members.save(KKOJAE.createLogin(jupjup));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .willReturn(generateOAuthV2AccessResponse(workspace.getSlackId()));
+                .willReturn(generateOAuthV2AccessResponse(jupjup.getSlackId()));
         given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
                 .willReturn(generateUsersIdentityResponse(member.getSlackId()));
 
@@ -95,11 +96,11 @@ class AuthServiceTest {
     @Test
     void firstLogin() throws SlackApiException, IOException {
         // given
-        Workspace workspace = workspaces.save(WorkspaceFixture.JUPJUP.create());
-        Member member = members.save(new Member("slackId", "username", "thumbnail.png"));
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member member = members.save(KKOJAE.createNeverLoggedIn(jupjup));
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .willReturn(generateOAuthV2AccessResponse(workspace.getSlackId()));
+                .willReturn(generateOAuthV2AccessResponse(jupjup.getSlackId()));
         given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
                 .willReturn(generateUsersIdentityResponse(member.getSlackId()));
 
