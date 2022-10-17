@@ -1,5 +1,7 @@
 package com.pickpick.member.domain;
 
+import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.exception.member.MemberInvalidThumbnailUrlException;
@@ -16,11 +18,11 @@ class MemberTest {
     @NullAndEmptySource
     void updateInvalidUsername(final String username) {
         // given
-        Workspace workspace = new Workspace("T00001", "xoxp-token-1234", "UB000001");
-        Member member = new Member("U12345", "사용자", "test.png", workspace);
+        Workspace jupjup = JUPJUP.create();
+        Member bom = BOM.create(jupjup);
 
         // when & then
-        assertThatThrownBy(() -> member.update(username, "test.png"))
+        assertThatThrownBy(() -> bom.update(username, "test.png"))
                 .isInstanceOf(MemberInvalidUsernameException.class);
     }
 
@@ -29,11 +31,11 @@ class MemberTest {
     @NullAndEmptySource
     void updateInvalidThumbnailUrl(final String thumbnailUrl) {
         // given
-        Workspace workspace = new Workspace("T00001", "xoxp-token-1234", "UB000001");
-        Member member = new Member("U12345", "사용자", "test.png", workspace);
+        Workspace jupjup = JUPJUP.create();
+        Member bom = BOM.create(jupjup);
 
         // when & then
-        assertThatThrownBy(() -> member.update("사용자", thumbnailUrl))
+        assertThatThrownBy(() -> bom.update("사용자", thumbnailUrl))
                 .isInstanceOf(MemberInvalidThumbnailUrlException.class);
     }
 }

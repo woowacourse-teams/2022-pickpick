@@ -1,5 +1,7 @@
 package com.pickpick.channel.domain;
 
+import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.pickpick.exception.channel.ChannelInvalidNameException;
@@ -15,11 +17,11 @@ class ChannelTest {
     @ParameterizedTest
     void changeName(final String invalidName) {
         // given
-        Workspace workspace = new Workspace("T000001", "xoxp-token-1234", "UB00001");
-        Channel channel = new Channel("slackId", "채널 이름", workspace);
+        Workspace jupjup = JUPJUP.create();
+        Channel freeChat = FREE_CHAT.create(jupjup);
 
         // when & then
-        assertThatThrownBy(() -> channel.changeName(invalidName))
+        assertThatThrownBy(() -> freeChat.changeName(invalidName))
                 .isInstanceOf(ChannelInvalidNameException.class);
     }
 }
