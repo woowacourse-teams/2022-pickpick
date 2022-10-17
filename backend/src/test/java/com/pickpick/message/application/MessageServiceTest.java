@@ -394,6 +394,7 @@ class MessageServiceTest {
         }
 
         @DisplayName("isBookmarked 필드는")
+        @TestInstance(Lifecycle.PER_CLASS)
         @Nested
         class isBookmarked {
 
@@ -427,10 +428,11 @@ class MessageServiceTest {
         }
 
         @DisplayName("리마인더 관련 필드는")
+        @TestInstance(Lifecycle.PER_CLASS)
         @Nested
         class reminder {
-            Reminder reminder = reminders.save(
-                    new Reminder(summer, noticeMessages.get(0), LocalDateTime.parse("2022-08-12T00:00:00")));
+            LocalDateTime remindDate = LocalDateTime.now().plusHours(1);
+            Reminder reminder = reminders.save(new Reminder(summer, noticeMessages.get(0), remindDate));
 
             MessageRequest request = fromLatestInChannels(List.of(notice), noticeMessages.size());
 
@@ -453,8 +455,10 @@ class MessageServiceTest {
             @DisplayName("등록된 리마인더 시간이 LocalDateTime.now()보다 과거면 isSetReminded는 false, remindDate는 null이다")
             @Test
             void remindDateIsPastIsSetRemindedFalseAndRemindDateNull() {
+                LocalDateTime future = remindDate.plusDays(1);
                 given(clock.instant())
-                        .willReturn(Instant.parse("2022-08-11T23:50:00Z"));
+                        .willReturn(parseToInstant(future));
+
                 MessageResponses response = messageService.find(summer.getId(), request);
                 List<MessageResponse> messages = response.getMessages();
 
@@ -469,8 +473,10 @@ class MessageServiceTest {
             @DisplayName("등록된 리마인더 시간이 LocalDateTime.now()와 동일하면 isSetReminded는 false, remindDate는 null이다")
             @Test
             void remindDateIsSameAsNowSetRemindedFalseAndRemindDateNull() {
+                LocalDateTime now = remindDate;
                 given(clock.instant())
-                        .willReturn(Instant.parse("2022-08-12T00:00:00Z"));
+                        .willReturn(parseToInstant(now));
+
                 MessageResponses response = messageService.find(summer.getId(), request);
                 List<MessageResponse> messages = response.getMessages();
 
@@ -485,8 +491,10 @@ class MessageServiceTest {
             @DisplayName("등록한 리마인더 시간이 LocalDateTime.now()보다 미래면 isSetReminded는 true, remindDate는 설정 시간값이다")
             @Test
             void remindDateIsFutureUsSetRemindedTrueAndRemindDateExists() {
+                LocalDateTime past = remindDate.minusDays(1);
                 given(clock.instant())
-                        .willReturn(Instant.parse("2022-08-11T00:00:00Z"));
+                        .willReturn(parseToInstant(past));
+
                 MessageResponses response = messageService.find(summer.getId(), request);
                 List<MessageResponse> messages = response.getMessages();
 
@@ -494,9 +502,12 @@ class MessageServiceTest {
 
                 assertAll(
                         () -> assertThat(remindedMessage.isSetReminded()).isTrue(),
-                        () -> assertThat(remindedMessage.getRemindDate())
-                                .isEqualTo(LocalDateTime.parse("2022-08-12T00:00:00"))
+                        () -> assertThat(remindedMessage.getRemindDate()).isEqualTo(remindDate)
                 );
+            }
+
+            private Instant parseToInstant(final LocalDateTime localDateTime) {
+                return Instant.parse(localDateTime.toString().substring(0, 20) + "Z");
             }
         }
 

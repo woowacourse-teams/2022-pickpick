@@ -48,7 +48,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_전송(MEMBER_SLACK_ID);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_생성(token, 1, LocalDateTime.now());
+        ExtractableResponse<Response> response = 리마인더_생성(token, 1, LocalDateTime.now().plusHours(1));
 
         // then
         상태코드_201_확인(response);
@@ -59,7 +59,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         // given
         String token = jwtTokenProvider.createToken("1");
         메시지_전송(MEMBER_SLACK_ID);
-        리마인더_생성(token, 1, LocalDateTime.now());
+        리마인더_생성(token, 1, LocalDateTime.now().plusHours(1));
 
         // when
         ExtractableResponse<Response> response = 리마인더_단건_조회(token, 1L);
@@ -245,7 +245,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         리마인더_생성(token, messageId, LocalDateTime.now().plusDays(1));
 
         // when
-        ExtractableResponse<Response> response = 리마인더_수정(token, messageId, LocalDateTime.now());
+        ExtractableResponse<Response> response = 리마인더_수정(token, messageId, LocalDateTime.now().plusHours(1));
 
         // then
         상태코드_200_확인(response);
@@ -261,7 +261,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         리마인더_생성(token1, 1, LocalDateTime.now().plusDays(1));
 
         // when
-        ExtractableResponse<Response> response = 리마인더_수정(token2, 1L, LocalDateTime.now());
+        ExtractableResponse<Response> response = 리마인더_수정(token2, 1L, LocalDateTime.now().plusHours(1));
 
         // then
         상태코드_400_확인(response);
@@ -274,7 +274,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_전송(MEMBER_SLACK_ID);
 
         long messageId = 1L;
-        리마인더_생성(token, messageId, LocalDateTime.now());
+        리마인더_생성(token, messageId, LocalDateTime.now().plusHours(1));
 
         // when
         ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);

@@ -1,5 +1,6 @@
 package com.pickpick.message.domain;
 
+import com.pickpick.exception.message.ReminderInvalidDateException;
 import com.pickpick.member.domain.Member;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -37,12 +38,20 @@ public class Reminder {
     }
 
     public Reminder(final Member member, final Message message, final LocalDateTime remindDate) {
+        validateRemindDate(remindDate);
         this.member = member;
         this.message = message;
         this.remindDate = remindDate;
     }
 
+    private void validateRemindDate(final LocalDateTime remindDate) {
+        if (remindDate.isBefore(LocalDateTime.now())) {
+            throw new ReminderInvalidDateException(remindDate);
+        }
+    }
+
     public void updateRemindDate(final LocalDateTime remindDate) {
+        validateRemindDate(remindDate);
         this.remindDate = remindDate;
     }
 }

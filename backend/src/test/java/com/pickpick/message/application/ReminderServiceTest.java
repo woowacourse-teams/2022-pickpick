@@ -122,24 +122,6 @@ class ReminderServiceTest {
             assertThat(response.hasFuture()).isTrue();
         }
 
-        @DisplayName("현재 시간보다 과거의 리마인더는 조회되지 않는다")
-        @Test
-        void excludePastReminders() {
-            Message message = saveDummyMessage(bom, notice);
-            LocalDateTime pastDateTime = LocalDateTime.now().minusMinutes(10);
-
-            Reminder pastReminder = reminders.save(new Reminder(bom, message, pastDateTime));
-
-            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(overTotalSize);
-            List<ReminderResponse> foundReminders = reminderService.find(request, bom.getId())
-                    .getReminders();
-
-            assertAll(
-                    () -> assertThat(foundReminders).isNotEmpty(),
-                    () -> assertThat(foundReminders).extracting("id").doesNotContain(pastReminder.getId())
-            );
-        }
-
         @DisplayName("정렬 기준은 리마인드 시간 기준 오름차순이다")
         @Test
         void orderByRemindDateAsc() {
