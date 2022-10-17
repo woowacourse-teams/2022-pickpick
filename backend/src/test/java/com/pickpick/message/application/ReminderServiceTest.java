@@ -386,7 +386,8 @@ class ReminderServiceTest {
         @Test
         void updateReminderRemindDateForPastThrowsException() {
             // given
-            Member yeonlog = members.save(YEONLOG.create());
+            Workspace jupjup = workspaces.save(JUPJUP.create());
+            Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
             Channel notice = channels.save(NOTICE.create());
             Message message = messages.save(PLAIN_20220712_14_00_00.create(notice, yeonlog));
 
