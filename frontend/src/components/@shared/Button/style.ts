@@ -2,7 +2,41 @@ import styled, { CSSProp, css } from "styled-components";
 
 import { StyledDefaultProps, Theme } from "@src/@types/shared";
 
-import { Props, Size } from ".";
+import { Props, Size, StyleType } from ".";
+
+const styleTable: Record<StyleType, CSSProp<Theme>> = {
+  primary: css`
+    font-weight: 600;
+
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.TEXT.WHITE};
+      background-color: ${theme.COLOR.PRIMARY.DEFAULT};
+
+      &: hover {
+        background-color: ${theme.COLOR.CONTAINER.LIGHT_ORANGE};
+      }
+    `}
+  `,
+
+  secondary: css`
+    font-weight: 600;
+
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.PRIMARY.DEFAULT};
+      border: 1px solid ${theme.COLOR.PRIMARY.DEFAULT};
+      background-color: transparent;
+    `}
+  `,
+
+  tertiary: css`
+    font-weight: 400;
+
+    ${({ theme }: StyledDefaultProps) => css`
+      color: ${theme.COLOR.TEXT.DEFAULT};
+      background-color: ${theme.COLOR.BACKGROUND.TERTIARY};
+    `}
+  `,
+};
 
 const sizeTable: Record<Size, CSSProp<Theme>> = {
   small: css`
@@ -20,29 +54,10 @@ const sizeTable: Record<Size, CSSProp<Theme>> = {
     `}
   `,
   large: css`
-    padding: 0.75rem 5.875rem;
+    padding: 0.65rem 5.875rem;
 
     ${({ theme }: StyledDefaultProps) => css`
       font-size: ${theme.FONT_SIZE.LARGE_BODY};
-    `}
-  `,
-};
-
-const colorTable = {
-  active: css`
-    font-weight: 600;
-
-    ${({ theme }: StyledDefaultProps) => css`
-      color: ${theme.COLOR.TEXT.WHITE};
-      background-color: ${theme.COLOR.PRIMARY.DEFAULT};
-    `}
-  `,
-  inactive: css`
-    font-weight: 400;
-
-    ${({ theme }: StyledDefaultProps) => css`
-      color: ${theme.COLOR.TEXT.DEFAULT};
-      background-color: ${theme.COLOR.BACKGROUND.TERTIARY};
     `}
   `,
 };
@@ -52,9 +67,10 @@ export const Container = styled.button`
   border-radius: 50px;
   white-space: nowrap;
   cursor: pointer;
+  transition: 0.5s;
 
-  ${({ size, isActive }: Pick<Props, "size" | "isActive" | "onClick">) => css`
-    ${colorTable[isActive ? "active" : "inactive"]}
+  ${({ size, styleType }: Pick<Props, "size" | "styleType" | "onClick">) => css`
+    ${styleTable[styleType]}
     ${sizeTable[size]};
   `}
 `;

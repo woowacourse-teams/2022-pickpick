@@ -20,11 +20,14 @@ module.exports = merge(common, {
     new ReactRefreshWebpackPlugin(),
     new DefinePlugin({
       "process.env.API_URL": JSON.stringify(process.env.API_URL),
-      "process.env.SLACK_REDIRECT_URL": JSON.stringify(
-        process.env.SLACK_REDIRECT_URL
+      "process.env.SLACK_LOGIN_REDIRECT_URL": JSON.stringify(
+        process.env.SLACK_LOGIN_REDIRECT_URL
       ),
       "process.env.SLACK_CLIENT_ID": JSON.stringify(
         process.env.SLACK_CLIENT_ID
+      ),
+      "process.env.SLACK_REGISTER_WORKSPACE_REDIRECT_URL": JSON.stringify(
+        process.env.SLACK_REGISTER_WORKSPACE_REDIRECT_URL
       ),
     }),
     new BundleAnalyzerPlugin(),
