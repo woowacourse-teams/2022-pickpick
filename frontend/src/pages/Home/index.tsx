@@ -12,6 +12,10 @@ function Home() {
     location.href = SLACK_URL.REGISTER_WORKSPACE;
   };
 
+  const handleNavigateToLogin = () => {
+    location.href = SLACK_URL.LOGIN;
+  };
+
   return (
     <Styled.Container>
       <Styled.GreetingContainer>
@@ -29,9 +33,19 @@ function Home() {
             우리가 주워줄게!
           </h2>
         </FlexRow>
-        <Button onClick={handleNavigateToRegisterWorkspace}>
-          워크스페이스 동록하기
-        </Button>
+        <FlexRow
+          gap="10px"
+          flexWrap="wrap"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Button onClick={handleNavigateToRegisterWorkspace}>
+            워크스페이스 등록
+          </Button>
+          <Button onClick={handleNavigateToLogin} styleType="secondary">
+            로그인
+          </Button>
+        </FlexRow>
       </Styled.GreetingContainer>
 
       <Styled.UsageContainer>

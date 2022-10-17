@@ -29,7 +29,11 @@ function SearchOptions({
 
       <Styled.ScrollContainer>
         <Button
-          isActive={selectedChannelIds.length === allChannels.length}
+          styleType={
+            selectedChannelIds.length === allChannels.length
+              ? "primary"
+              : "tertiary"
+          }
           size="small"
           onClick={handleToggleAllChannels}
           type="button"
@@ -42,7 +46,7 @@ function SearchOptions({
         {currentChannels.map(({ name, id }) => (
           <Button
             key={id}
-            isActive={selectedChannelIds.includes(id)}
+            styleType={selectedChannelIds.includes(id) ? "primary" : "tertiary"}
             size="small"
             onClick={() => handleToggleChannel(id)}
             type="button"
@@ -54,7 +58,7 @@ function SearchOptions({
         {remainingChannels.map(({ name, id }) => (
           <Button
             key={id}
-            isActive={selectedChannelIds.includes(id)}
+            styleType={selectedChannelIds.includes(id) ? "primary" : "tertiary"}
             size="small"
             onClick={() => handleToggleChannel(id)}
             type="button"
