@@ -34,7 +34,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 새로운_채널_생성_시_저장() {
         // given
-        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        Channel channel = ChannelFixture.NEW_CHANNEL.create(workspace);
 
         // when
         ExtractableResponse<Response> response = 채널_생성(workspace, channel);
@@ -46,7 +46,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 기존_채널_이름_변경_시_반영() {
         // given
-        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        Channel channel = ChannelFixture.NEW_CHANNEL.create(workspace);
         채널_생성(workspace, channel);
 
         // when
@@ -59,7 +59,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 채널_삭제_확인() {
         // given
-        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        Channel channel = ChannelFixture.NEW_CHANNEL.create(workspace);
         채널_생성(workspace, channel);
 
         // when

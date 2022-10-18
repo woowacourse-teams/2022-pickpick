@@ -2,7 +2,6 @@ package com.pickpick.fixture;
 
 import com.pickpick.member.domain.Member;
 import com.pickpick.workspace.domain.Workspace;
-import java.util.Arrays;
 
 public enum MemberFixture {
 
@@ -23,25 +22,18 @@ public enum MemberFixture {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public static Member createFirst() {
-        return Arrays.stream(MemberFixture.values())
-                .findFirst()
-                .orElse(SUMMER)
-                .createLogin(WorkspaceFixture.JUPJUP.create());
-    }
-
     public Member createLogin(final Workspace workspace) {
         Member member = new Member(slackId, username, thumbnailUrl, workspace);
         member.firstLogin("xoxp-" + slackId);
         return member;
     }
 
-    public String getCode() {
-        return this.slackId + "code";
-    }
-
     public Member createNeverLoggedIn(final Workspace workspace) {
         return new Member(slackId, username, thumbnailUrl, workspace);
+    }
+
+    public String getCode() {
+        return this.slackId + "code";
     }
 
     public String getSlackId() {

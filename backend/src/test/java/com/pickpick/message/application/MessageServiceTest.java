@@ -2,6 +2,7 @@ package com.pickpick.message.application;
 
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.ChannelFixture.QNA;
 import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
@@ -282,7 +283,7 @@ class MessageServiceTest {
         @Nested
         class multipleChannelIdsInParameters {
 
-            Channel qna = channels.save(new Channel("C00003", "질문과 답변"));
+            Channel qna = channels.save(QNA.create(jupjup));
             List<Message> qnaMessages = createAndSaveMessages(qna, summer);
 
             MessageRequest request = fromLatestInChannels(List.of(notice, freeChat), MESSAGE_COUNT_OVER_TOTAL_SIZE);

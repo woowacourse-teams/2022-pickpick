@@ -38,11 +38,6 @@ public enum ChannelFixture {
                 .count();
     }
 
-    // TODO 제거 필요
-    public Channel create() {
-        return new Channel(slackId, name);
-    }
-
     public Channel create(final Workspace workspace) {
         return new Channel(slackId, name, workspace);
     }

@@ -46,12 +46,6 @@ public class Member {
     protected Member() {
     }
 
-    public Member(final String slackId, final String username, final String thumbnailUrl) {
-        this.slackId = slackId;
-        this.username = username;
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
     public Member(final String slackId, final String username, final String thumbnailUrl, final Workspace workspace) {
         this.slackId = slackId;
         this.username = username;
