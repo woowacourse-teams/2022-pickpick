@@ -2,16 +2,19 @@ import Button from "@src/components/@shared/Button";
 
 import usePushPreviousPage from "@src/hooks/@shared/usePushPreviousPage";
 
-import { FlexColumn } from "@src/@styles/shared";
+import * as Styled from "./style";
 
 function EmptyStatus() {
   const pushPreviousPage = usePushPreviousPage();
 
   return (
-    <FlexColumn gap="30px" margin="25vh 0" alignItems="center">
-      <h3>조회된 결과가 없습니다.</h3>
-      <Button onClick={pushPreviousPage}>뒤로가기</Button>
-    </FlexColumn>
+    <Styled.Container>
+      <h1>조회된 결과가 없습니다.</h1>
+
+      <Button type="button" onClick={pushPreviousPage}>
+        뒤로가기
+      </Button>
+    </Styled.Container>
   );
 }
 
