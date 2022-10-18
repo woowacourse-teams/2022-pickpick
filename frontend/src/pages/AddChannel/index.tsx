@@ -27,25 +27,29 @@ function AddChannel() {
       </Styled.Description>
 
       <FlexColumn gap="50px" alignItems="end">
-        <Styled.ChannelListContainer>
+        <Styled.ChannelListContainer role="list">
           {data?.channels.map(({ id, name, isSubscribed }) => (
             <Button
               key={id}
               size="medium"
-              styleType={isSubscribed ? "tertiary" : "primary"}
+              styleType={isSubscribed ? "primary" : "tertiary"}
               onClick={() => {
                 isSubscribed
                   ? handleUnSubscribeChannel(id)
                   : handleSubscribeChannel(id);
               }}
+              role="listItem"
+              aria-label={`${name} 채널은 ${
+                isSubscribed ? "구독중 입니다." : "구독중이 아닙니다."
+              } ${name} 채널 ${isSubscribed ? "구독 해제" : "구독"}`}
             >
               <>#{name}</>
             </Button>
           ))}
         </Styled.ChannelListContainer>
 
-        <Link to={PATH_NAME.FEED}>
-          <Styled.Button>다음</Styled.Button>
+        <Link to={PATH_NAME.FEED} role="button">
+          <Styled.Button type="button">채널 선택 완료</Styled.Button>
         </Link>
       </FlexColumn>
     </Styled.Container>
