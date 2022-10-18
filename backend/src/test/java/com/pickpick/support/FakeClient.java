@@ -1,14 +1,11 @@
 package com.pickpick.support;
 
-import static com.pickpick.fixture.FakeClientFixture.codeAndMember;
-import static com.pickpick.fixture.FakeClientFixture.codeAndWorkspace;
-import static com.pickpick.fixture.FakeClientFixture.tokenAndMember;
 
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.FakeClientFixture;
 import com.pickpick.fixture.MemberFixture;
+import com.pickpick.fixture.StubSlack;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.slackevent.domain.Participation;
@@ -20,26 +17,25 @@ import java.util.stream.Collectors;
 
 public class FakeClient implements ExternalClient {
 
-    private final FakeClientFixture fakeClientFixture;
+    private final StubSlack stubSlack;
 
-    public FakeClient(final FakeClientFixture fakeClientFixture) {
-        this.fakeClientFixture = fakeClientFixture;
+    public FakeClient(final StubSlack stubSlack) {
+        this.stubSlack = stubSlack;
     }
 
     @Override
     public String callUserToken(final String code) {
-        return codeAndMember.get(code).getToken();
+        return stubSlack.callUserToken(code);
     }
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
-        Workspace workspace = codeAndWorkspace.get(code);
-        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId());
+        return stubSlack.callWorkspaceInfo(code);
     }
 
     @Override
     public String callMemberSlackId(final String userToken) {
-        return tokenAndMember.get(userToken).getSlackId();
+        return stubSlack.callMemberSlackId(userToken);
     }
 
     @Override
@@ -55,28 +51,14 @@ public class FakeClient implements ExternalClient {
                 .filter(ChannelFixture::isJupjupChannel)
                 .map(channelFixture -> channelFixture.create(workspace))
                 .collect(Collectors.toList());
-//
-//        return Arrays.stream(ChannelFixture.values())
-//                .filter(ChannelFixture::isDefaultChannel)
-//                .map(channel -> channel.create(workspace))
-//                .collect(Collectors.toList());
     }
 
     @Override
     public Participation findChannelParticipation(final String userToken) {
-        Member member = tokenAndMember.get(userToken);
-        List<Channel> participatingChannels = fakeClientFixture.getMemberParticipatingChannels().get(member.getToken());
-
-        Map<String, Boolean> participation = Arrays.stream(ChannelFixture.values())
-                .collect(Collectors.toMap(ChannelFixture::getSlackId,
-                        fixture -> isParticipatingChannel(fixture, participatingChannels)));
+        List<Channel> participatingChannels = stubSlack.getParticipatingChannels(userToken);
+        Map<String, Boolean> participation = createParticipation(participatingChannels);
 
         return new Participation(participation);
-
-//        Map<String, Boolean> participation = Arrays.stream(ChannelFixture.values())
-//                .collect(Collectors.toMap(ChannelFixture::getSlackId, it -> true));
-//
-//        return new Participation(participation);
     }
 
     @Override
@@ -87,6 +69,12 @@ public class FakeClient implements ExternalClient {
     @Override
     public void inviteBotToChannel(final Member member, final Channel channel) {
 
+    }
+
+    private Map<String, Boolean> createParticipation(final List<Channel> participatingChannels) {
+        return Arrays.stream(ChannelFixture.values())
+                .collect(Collectors.toMap(ChannelFixture::getSlackId,
+                        fixture -> isParticipatingChannel(fixture, participatingChannels)));
     }
 
     private boolean isParticipatingChannel(ChannelFixture fixture, List<Channel> participatingChannels) {

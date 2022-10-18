@@ -14,7 +14,6 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
-import com.pickpick.fixture.FakeClientFixture;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import io.restassured.response.ExtractableResponse;
@@ -36,9 +35,10 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     void init() {
         String memberCode = 슬랙에서_멤버의_코드_발행();
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
+
         token = 로그인_응답에서_토큰_추출(loginResponse);
 
-        memberSlackId = FakeClientFixture.getMemberSlackIdByCode(memberCode);
+        memberSlackId = 코드로_멤버의_SlackId_추출(memberCode);
     }
 
     @Test

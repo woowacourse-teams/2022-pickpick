@@ -2,6 +2,7 @@ package com.pickpick.fixture;
 
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 
+import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;
 import com.pickpick.workspace.domain.Workspace;
@@ -13,41 +14,46 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FakeClientFixture {
+public class StubSlack {
 
-    Map<String, List<Channel>> memberParticipatingChannels = new HashMap<>();
+    private final Workspace jupjup = JUPJUP.create();
 
-    static Workspace jupjup = JUPJUP.create();
+    private final Map<String, List<Channel>> memberParticipatingChannels = new HashMap<>();
 
-    public static Map<String, Workspace> codeAndWorkspace = Arrays.stream(MemberFixture.values())
+    private final Map<String, Workspace> codeAndWorkspace = Arrays.stream(MemberFixture.values())
             .map(memberFixture -> memberFixture.createLogin(jupjup))
             .collect(Collectors.toMap(member -> member.getSlackId() + "code", member -> jupjup));
 
-    public static Map<String, Member> codeAndMember = Arrays.stream(MemberFixture.values())
+    private final Map<String, Member> codeAndMember = Arrays.stream(MemberFixture.values())
             .map(memberFixture -> memberFixture.createLogin(jupjup))
             .collect(Collectors.toMap(member -> member.getSlackId() + "code", member -> member));
 
-    public static Map<String, Member> tokenAndMember = Arrays.stream(MemberFixture.values())
+    private final Map<String, Member> tokenAndMember = Arrays.stream(MemberFixture.values())
             .map(memberFixture -> memberFixture.createLogin(jupjup))
             .collect(Collectors.toMap(Member::getToken, member -> member));
 
-    public static Map<String, Channel> slackIdAndChannel = Arrays.stream(ChannelFixture.values())
-            .map(channelFixture -> channelFixture.create(jupjup))
-            .collect(Collectors.toMap(Channel::getSlackId, channel -> channel));
+    public String callUserToken(final String code) {
+        return codeAndMember.get(code).getToken();
+    }
 
-    public static String getRandomMemberCode() {
+    public WorkspaceInfoDto callWorkspaceInfo(final String code) {
+        Workspace workspace = codeAndWorkspace.get(code);
+        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId());
+    }
+
+    public String callMemberSlackId(final String userToken) {
+        return tokenAndMember.get(userToken).getSlackId();
+    }
+
+    public String getRandomMemberCode() {
         return codeAndMember.keySet()
                 .stream()
                 .findFirst()
                 .orElse(MemberFixture.values()[0].getSlackId() + "code");
     }
 
-    public static String getMemberSlackIdByCode(String code) {
+    public String getMemberSlackIdByCode(String code) {
         return codeAndMember.get(code).getSlackId();
-    }
-
-    public static int getDefaultChannelSize() {
-        return ChannelFixture.values().length;
     }
 
     public void setParticipatingChannel(Member member, Channel... channels) {
@@ -59,7 +65,8 @@ public class FakeClientFixture {
         memberParticipatingChannels.put(member.getToken(), channels);
     }
 
-    public Map<String, List<Channel>> getMemberParticipatingChannels() {
-        return memberParticipatingChannels;
+    public List<Channel> getParticipatingChannels(final String userToken) {
+        Member member = tokenAndMember.get(userToken);
+        return memberParticipatingChannels.get(member.getToken());
     }
 }

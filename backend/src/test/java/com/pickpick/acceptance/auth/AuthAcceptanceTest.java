@@ -25,7 +25,6 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 정상_로그인() {
         // given
-        //String memberSlackId = MemberFixture.createFirst().getSlackId();
         String memberCode = 슬랙에서_멤버의_코드_발행();
 
         // when

@@ -36,7 +36,6 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void 가입_후_로그인() {
         String memberCode = 슬랙에서_멤버의_코드_발행();
-
         슬랙에서_멤버가_줍줍의_모든_채널에_참여(memberCode);
 
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);

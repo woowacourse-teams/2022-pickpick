@@ -13,7 +13,7 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.fixture.FakeClientFixture;
+import com.pickpick.fixture.StubSlack;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -58,7 +58,7 @@ class ChannelServiceTest {
     private ExternalClient externalClient;
 
     @Autowired
-    private FakeClientFixture fakeClientFixture;
+    private StubSlack stubSlack;
 
     @AfterEach
     void tearDown() {
@@ -76,7 +76,7 @@ class ChannelServiceTest {
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
 
-        fakeClientFixture.setParticipatingChannel(yeonLog, notice, freeChat, qna);
+        stubSlack.setParticipatingChannel(yeonLog, notice, freeChat, qna);
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
@@ -105,7 +105,7 @@ class ChannelServiceTest {
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
-        fakeClientFixture.setParticipatingChannel(yeonLog, notice);
+        stubSlack.setParticipatingChannel(yeonLog, notice);
 
         // when
         List<String> channelNames = channelService.findByWorkspace(yeonLog.getId())

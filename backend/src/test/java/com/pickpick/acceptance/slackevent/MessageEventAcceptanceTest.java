@@ -11,7 +11,6 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
-import com.pickpick.fixture.FakeClientFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
@@ -34,9 +33,8 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     void init() {
         String memberCode = 슬랙에서_멤버의_코드_발행();
         워크스페이스_초기화_및_로그인(memberCode);
-        memberSlackId = FakeClientFixture.getMemberSlackIdByCode(memberCode);
-//        멤버가_슬랙에서_줍줍의_모든_채널에_참여(memberCode);
-        workspace = externalClient.callWorkspaceInfo(memberCode).toEntity();
+        memberSlackId = 코드로_멤버의_SlackId_추출(memberCode);
+        workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(memberCode);
     }
 
     @Test

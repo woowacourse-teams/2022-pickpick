@@ -28,7 +28,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
         워크스페이스_초기화_및_로그인(memberCode);
         슬랙에서_멤버가_줍줍의_모든_채널에_참여(memberCode);
 
-        workspace = externalClient.callWorkspaceInfo(memberCode).toEntity();
+        workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(memberCode);
     }
 
     @Test

@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.acceptance.message.MessageRestHandler.MessageRequestBuilder;
 import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.FakeClientFixture;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
@@ -38,9 +37,9 @@ class MessageAcceptanceTest extends AcceptanceTestBase {
     void init() {
         String memberCode = 슬랙에서_멤버의_코드_발행();
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
+        
         token = 로그인_응답에서_토큰_추출(loginResponse);
-        memberSlackId = FakeClientFixture.getMemberSlackIdByCode(memberCode);
-//        멤버가_슬랙에서_줍줍의_모든_채널에_참여(memberCode);
+        memberSlackId = 코드로_멤버의_SlackId_추출(memberCode);
     }
 
     @Test
