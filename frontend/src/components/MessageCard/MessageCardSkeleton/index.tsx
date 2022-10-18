@@ -4,7 +4,7 @@ import * as Styled from "./style";
 
 function MessageCardSkeleton() {
   return (
-    <Styled.Container>
+    <Styled.Container aria-hidden>
       <Styled.ProfileImageSkeleton />
       <FlexColumn width="100%" gap="4px">
         <Styled.WriterSkeleton />
