@@ -41,7 +41,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void registerWorkspace(final String code) {
+    public void initWorkspace(final String code) {
         WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
