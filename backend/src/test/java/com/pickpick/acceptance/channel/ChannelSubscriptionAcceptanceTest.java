@@ -16,7 +16,7 @@ import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
-import com.pickpick.fixture.MemberFixture;
+import com.pickpick.fixture.FakeClientFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -31,14 +31,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 
     private String token;
 
     @BeforeEach
     void 가입_후_로그인() {
-        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
-        token = jwtTokenProvider.createToken("1");
+        String memberCode = FakeClientFixture.getRandomMemberCode();
+        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
+        token = loginResponse.jsonPath().get("token");
     }
 
     @Test

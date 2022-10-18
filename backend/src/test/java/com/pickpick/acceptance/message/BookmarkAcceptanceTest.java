@@ -14,7 +14,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
-import com.pickpick.fixture.MemberFixture;
+import com.pickpick.fixture.FakeClientFixture;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
 import io.restassured.response.ExtractableResponse;
@@ -29,18 +29,21 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class BookmarkAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
+    private String token;
+    private String memberId;
 
     @BeforeEach
     void init() {
-        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
+        String memberCode = FakeClientFixture.getRandomMemberCode();
+        memberId = FakeClientFixture.getMemberSlackIdByCode(memberCode);
+        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
+        token = loginResponse.jsonPath().get("token");
     }
 
     @Test
     void 북마크_생성_검증() {
         // given
-        String token = jwtTokenProvider.createToken("1");
-        메시지_전송(MEMBER_SLACK_ID);
+        메시지_전송(memberId);
 
         // when
         ExtractableResponse<Response> response = 북마크_생성(token, 1L);
@@ -52,9 +55,8 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 특정_멤버가_북마크한_메시지_목록_조회() {
         // given
-        String token = jwtTokenProvider.createToken("1");
 
-        메시지_목록_생성(MEMBER_SLACK_ID, 3);
+        메시지_목록_생성(memberId, 3);
         북마크_생성(token, 1L);
         북마크_생성(token, 2L);
 
@@ -72,10 +74,8 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 북마크_id로_조회할_경우_더_과거의_북마크들_아이디만_조회() {
         // given
-        String token = jwtTokenProvider.createToken("1");
-
         int messageCount = 10;
-        메시지_목록_생성(MEMBER_SLACK_ID, messageCount);
+        메시지_목록_생성(memberId, messageCount);
 
         List<Long> messageIdsForBookmark = List.of(1L, 3L, 5L, 7L);
         북마크_목록_생성(token, messageIdsForBookmark);
@@ -94,9 +94,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 북마크_정상_삭제() {
         // given
-        String token = jwtTokenProvider.createToken("1");
-
-        메시지_전송(MEMBER_SLACK_ID);
+        메시지_전송(memberId);
         long messageId = 1L;
         북마크_생성(token, messageId);
 
@@ -113,7 +111,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
         String token1 = jwtTokenProvider.createToken("1");
         String token2 = jwtTokenProvider.createToken("2");
 
-        메시지_전송(MEMBER_SLACK_ID);
+        메시지_전송(memberId);
         북마크_생성(token2, 1L);
 
         // when

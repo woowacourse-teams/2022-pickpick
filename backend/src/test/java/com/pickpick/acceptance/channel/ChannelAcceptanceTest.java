@@ -18,14 +18,12 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelAcceptanceTest extends AcceptanceTestBase {
 
-    //private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
-    private static final String MEMBER_CODE = FakeClientFixture.getRandomMemberCode();
 
     @Test
     void 유저_전체_채널_목록_조회() {
         // given
-        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(MEMBER_CODE);
-        //String token = jwtTokenProvider.createToken("1");
+        String memberCode = FakeClientFixture.getRandomMemberCode();
+        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
         String token = loginResponse.jsonPath().get("token");
 
         // when

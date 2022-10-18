@@ -35,6 +35,10 @@ public class FakeClientFixture {
                 .orElse(MemberFixture.values()[0].getSlackId() + "code");
     }
 
+    public static String getMemberSlackIdByCode(String code) {
+        return codeAndMember.get(code).getSlackId();
+    }
+
     public static int getDefaultChannelSize() {
         return ChannelFixture.values().length;
     }
