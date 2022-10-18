@@ -8,7 +8,6 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.StubSlack;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.support.ExternalClient;
-import com.pickpick.support.TestConfig;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -21,9 +20,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 
-@Import(value = TestConfig.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTestBase {

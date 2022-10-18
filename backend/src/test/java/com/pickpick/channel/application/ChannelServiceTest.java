@@ -17,8 +17,6 @@ import com.pickpick.fixture.StubSlack;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
-import com.pickpick.support.ExternalClient;
-import com.pickpick.support.TestConfig;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
 import com.slack.api.methods.SlackApiException;
@@ -30,9 +28,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
-@Import(TestConfig.class)
 @SpringBootTest
 class ChannelServiceTest {
 
@@ -53,9 +49,6 @@ class ChannelServiceTest {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
-
-    @Autowired
-    private ExternalClient externalClient;
 
     @Autowired
     private StubSlack stubSlack;
