@@ -36,6 +36,10 @@ public enum MemberFixture {
         return member;
     }
 
+    public String getCode() {
+        return this.slackId + "code";
+    }
+
     public Member createNeverLoggedIn(final Workspace workspace) {
         return new Member(slackId, username, thumbnailUrl, workspace);
     }

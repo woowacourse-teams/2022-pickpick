@@ -50,8 +50,6 @@ public class AuthService {
 
         List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
-
-        //return login(code);
     }
 
     @Transactional
