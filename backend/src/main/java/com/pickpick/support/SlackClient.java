@@ -90,9 +90,9 @@ public class SlackClient implements ExternalClient {
     }
 
     @Override
-    public String callMemberSlackId(final String accessToken) {
+    public String callMemberSlackId(final String userToken) {
         UsersIdentityRequest request = UsersIdentityRequest.builder()
-                .token(accessToken)
+                .token(userToken)
                 .build();
 
         try {

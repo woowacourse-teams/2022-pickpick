@@ -1,5 +1,9 @@
 package com.pickpick.support;
 
+import static com.pickpick.fixture.FakeClientFixture.codeAndMember;
+import static com.pickpick.fixture.FakeClientFixture.codeAndWorkspace;
+import static com.pickpick.fixture.FakeClientFixture.tokenAndMember;
+
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
@@ -17,32 +21,37 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public String callUserToken(final String code) {
-        return code;
+        return codeAndMember.get(code).getToken();
     }
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
-        return new WorkspaceInfoDto(code, code, code);
+        Workspace workspace = codeAndWorkspace.get(code);
+        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId());
     }
 
     @Override
-    public String callMemberSlackId(final String accessToken) {
-        return accessToken;
+    public String callMemberSlackId(final String userToken) {
+        return tokenAndMember.get(userToken).getSlackId();
     }
 
     @Override
     public List<Member> findMembersByWorkspace(final Workspace workspace) {
         return Arrays.stream(MemberFixture.values())
-                .map(member -> member.createLogin(workspace))
+                .map(memberFixture -> memberFixture.createNeverLoggedIn(workspace))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Channel> findChannelsByWorkspace(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
-                .filter(ChannelFixture::isDefaultChannel)
-                .map(channel -> channel.create(workspace))
+                .map(channelFixture -> channelFixture.create(workspace))
                 .collect(Collectors.toList());
+//
+//        return Arrays.stream(ChannelFixture.values())
+//                .filter(ChannelFixture::isDefaultChannel)
+//                .map(channel -> channel.create(workspace))
+//                .collect(Collectors.toList());
     }
 
     @Override

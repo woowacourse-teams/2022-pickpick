@@ -41,7 +41,7 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse registerWorkspace(final String code) {
+    public void registerWorkspace(final String code) {
         WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
@@ -51,7 +51,7 @@ public class AuthService {
         List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
 
-        return login(code);
+        //return login(code);
     }
 
     @Transactional

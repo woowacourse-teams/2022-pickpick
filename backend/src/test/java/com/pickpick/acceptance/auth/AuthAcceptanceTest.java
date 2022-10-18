@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.fixture.MemberFixture;
+import com.pickpick.fixture.FakeClientFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -26,10 +26,11 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 정상_로그인() {
         // given
-        String memberSlackId = MemberFixture.createFirst().getSlackId();
+        //String memberSlackId = MemberFixture.createFirst().getSlackId();
+        String memberCode = FakeClientFixture.getRandomMemberCode();
 
         // when
-        ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberSlackId);
+        ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberCode);
 
         // then
         상태코드_200_확인(response);
