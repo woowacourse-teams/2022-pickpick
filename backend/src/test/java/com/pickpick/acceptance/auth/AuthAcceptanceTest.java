@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.fixture.FakeClientFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +26,7 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     void 정상_로그인() {
         // given
         //String memberSlackId = MemberFixture.createFirst().getSlackId();
-        String memberCode = FakeClientFixture.getRandomMemberCode();
+        String memberCode = 슬랙에서_멤버의_코드_발행();
 
         // when
         ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberCode);

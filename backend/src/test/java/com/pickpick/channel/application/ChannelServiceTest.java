@@ -13,10 +13,11 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
+import com.pickpick.fixture.FakeClientFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
-import com.pickpick.support.FakeClient;
+import com.pickpick.support.ExternalClient;
 import com.pickpick.support.TestConfig;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
@@ -54,7 +55,10 @@ class ChannelServiceTest {
     private DatabaseCleaner databaseCleaner;
 
     @Autowired
-    private FakeClient fakeClient;
+    private ExternalClient externalClient;
+
+    @Autowired
+    private FakeClientFixture fakeClientFixture;
 
     @AfterEach
     void tearDown() {
@@ -72,7 +76,7 @@ class ChannelServiceTest {
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
 
-        fakeClient.setParticipatingChannel(yeonLog, notice, freeChat, qna);
+        fakeClientFixture.setParticipatingChannel(yeonLog, notice, freeChat, qna);
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
@@ -101,7 +105,7 @@ class ChannelServiceTest {
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
-        fakeClient.setParticipatingChannel(yeonLog, notice);
+        fakeClientFixture.setParticipatingChannel(yeonLog, notice);
 
         // when
         List<String> channelNames = channelService.findByWorkspace(yeonLog.getId())

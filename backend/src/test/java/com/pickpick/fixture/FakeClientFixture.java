@@ -6,10 +6,17 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;
 import com.pickpick.workspace.domain.Workspace;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FakeClientFixture {
+
+    Map<String, List<Channel>> memberParticipatingChannels = new HashMap<>();
+
     static Workspace jupjup = JUPJUP.create();
 
     public static Map<String, Workspace> codeAndWorkspace = Arrays.stream(MemberFixture.values())
@@ -41,5 +48,18 @@ public class FakeClientFixture {
 
     public static int getDefaultChannelSize() {
         return ChannelFixture.values().length;
+    }
+
+    public void setParticipatingChannel(Member member, Channel... channels) {
+        memberParticipatingChannels.put(member.getToken(), List.of(channels));
+    }
+
+    public void setParticipatingChannel(String memberCode, List<Channel> channels) {
+        Member member = codeAndMember.get(memberCode);
+        memberParticipatingChannels.put(member.getToken(), channels);
+    }
+
+    public Map<String, List<Channel>> getMemberParticipatingChannels() {
+        return memberParticipatingChannels;
     }
 }

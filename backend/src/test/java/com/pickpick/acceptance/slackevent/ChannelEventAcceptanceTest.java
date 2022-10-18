@@ -9,7 +9,6 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_�
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,9 +24,11 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String memberSlackId = MemberFixture.createFirst().getSlackId();
-        워크스페이스_초기화_및_로그인(memberSlackId);
-        workspace = externalClient.callWorkspaceInfo(memberSlackId).toEntity();
+        String memberCode = 슬랙에서_멤버의_코드_발행();
+        워크스페이스_초기화_및_로그인(memberCode);
+        슬랙에서_멤버가_줍줍의_모든_채널에_참여(memberCode);
+
+        workspace = externalClient.callWorkspaceInfo(memberCode).toEntity();
     }
 
     @Test

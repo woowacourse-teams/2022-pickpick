@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.fixture.FakeClientFixture;
+import com.pickpick.fixture.ChannelFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -22,9 +22,11 @@ class ChannelAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 유저_전체_채널_목록_조회() {
         // given
-        String memberCode = FakeClientFixture.getRandomMemberCode();
+        String memberCode = 슬랙에서_멤버의_코드_발행();
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
-        String token = loginResponse.jsonPath().get("token");
+        String token = 로그인_응답에서_토큰_추출(loginResponse);
+
+        슬랙에서_멤버가_줍줍의_모든_채널에_참여(memberCode);
 
         // when
         ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
@@ -33,6 +35,6 @@ class ChannelAcceptanceTest extends AcceptanceTestBase {
         List<ChannelResponse> channels = response.jsonPath().getList("channels.", ChannelResponse.class);
 
         상태코드_200_확인(response);
-        assertThat(channels).hasSize(FakeClientFixture.getDefaultChannelSize());
+        assertThat(channels).hasSize(ChannelFixture.getDefaultSize());
     }
 }

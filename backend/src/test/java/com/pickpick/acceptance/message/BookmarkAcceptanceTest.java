@@ -30,20 +30,21 @@ import org.junit.jupiter.api.Test;
 class BookmarkAcceptanceTest extends AcceptanceTestBase {
 
     private String token;
-    private String memberId;
+    private String memberSlackId;
 
     @BeforeEach
     void init() {
-        String memberCode = FakeClientFixture.getRandomMemberCode();
-        memberId = FakeClientFixture.getMemberSlackIdByCode(memberCode);
+        String memberCode = 슬랙에서_멤버의_코드_발행();
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
-        token = loginResponse.jsonPath().get("token");
+        token = 로그인_응답에서_토큰_추출(loginResponse);
+
+        memberSlackId = FakeClientFixture.getMemberSlackIdByCode(memberCode);
     }
 
     @Test
     void 북마크_생성_검증() {
         // given
-        메시지_전송(memberId);
+        메시지_전송(memberSlackId);
 
         // when
         ExtractableResponse<Response> response = 북마크_생성(token, 1L);
@@ -56,7 +57,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     void 특정_멤버가_북마크한_메시지_목록_조회() {
         // given
 
-        메시지_목록_생성(memberId, 3);
+        메시지_목록_생성(memberSlackId, 3);
         북마크_생성(token, 1L);
         북마크_생성(token, 2L);
 
@@ -75,7 +76,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     void 북마크_id로_조회할_경우_더_과거의_북마크들_아이디만_조회() {
         // given
         int messageCount = 10;
-        메시지_목록_생성(memberId, messageCount);
+        메시지_목록_생성(memberSlackId, messageCount);
 
         List<Long> messageIdsForBookmark = List.of(1L, 3L, 5L, 7L);
         북마크_목록_생성(token, messageIdsForBookmark);
@@ -94,7 +95,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 북마크_정상_삭제() {
         // given
-        메시지_전송(memberId);
+        메시지_전송(memberSlackId);
         long messageId = 1L;
         북마크_생성(token, messageId);
 
@@ -111,7 +112,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
         String token1 = jwtTokenProvider.createToken("1");
         String token2 = jwtTokenProvider.createToken("2");
 
-        메시지_전송(memberId);
+        메시지_전송(memberSlackId);
         북마크_생성(token2, 1L);
 
         // when

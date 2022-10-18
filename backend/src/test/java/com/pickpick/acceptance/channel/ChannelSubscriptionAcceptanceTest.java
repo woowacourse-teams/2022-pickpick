@@ -16,7 +16,6 @@ import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
-import com.pickpick.fixture.FakeClientFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -36,9 +35,12 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void 가입_후_로그인() {
-        String memberCode = FakeClientFixture.getRandomMemberCode();
+        String memberCode = 슬랙에서_멤버의_코드_발행();
+
+        슬랙에서_멤버가_줍줍의_모든_채널에_참여(memberCode);
+
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
-        token = loginResponse.jsonPath().get("token");
+        token = 로그인_응답에서_토큰_추출(loginResponse);
     }
 
     @Test

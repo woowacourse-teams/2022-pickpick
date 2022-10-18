@@ -17,23 +17,24 @@ public enum ChannelFixture {
 
     private final String slackId;
     private final String name;
-    private final boolean defaultChannel;
+    private final boolean isJupjupChannel;
 
-    ChannelFixture(final String slackId, final String name, final boolean defaultChannel) {
+    ChannelFixture(final String slackId, final String name, final boolean isJupjupChannel) {
         this.slackId = slackId;
         this.name = name;
-        this.defaultChannel = defaultChannel;
+        this.isJupjupChannel = isJupjupChannel;
     }
 
     public static List<Channel> createAllChannels(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
+                .filter(ChannelFixture::isJupjupChannel)
                 .map(channel -> channel.create(workspace))
                 .collect(Collectors.toList());
     }
 
     public static int getDefaultSize() {
         return (int) Arrays.stream(ChannelFixture.values())
-                .filter(ChannelFixture::isDefaultChannel)
+                .filter(ChannelFixture::isJupjupChannel)
                 .count();
     }
 
@@ -54,7 +55,7 @@ public enum ChannelFixture {
         return slackId;
     }
 
-    public boolean isDefaultChannel() {
-        return defaultChannel;
+    public boolean isJupjupChannel() {
+        return isJupjupChannel;
     }
 }
