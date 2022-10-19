@@ -27,8 +27,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class SlackClient implements ExternalClient {
 
@@ -179,6 +181,7 @@ public class SlackClient implements ExternalClient {
             }
             validateResponse(CHANNEL_INVITE_METHOD_NAME, response);
         } catch (IOException | SlackApiException e) {
+            log.error(CHANNEL_INVITE_METHOD_NAME, e);
             throw new SlackApiCallException(CHANNEL_INVITE_METHOD_NAME);
         }
     }
@@ -189,6 +192,7 @@ public class SlackClient implements ExternalClient {
             validateResponse(methodName, result);
             return result;
         } catch (IOException | SlackApiException e) {
+            log.error(methodName, e);
             throw new SlackApiCallException(methodName);
         }
     }
