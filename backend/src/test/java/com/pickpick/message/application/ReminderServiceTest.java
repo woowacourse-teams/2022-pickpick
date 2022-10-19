@@ -4,6 +4,7 @@ import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.MemberFixture.BOM;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MemberFixture.YEONLOG;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
@@ -80,6 +81,7 @@ class ReminderServiceTest {
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member bom = members.save(BOM.createLogin(jupjup));
         Member yeonlog = members.save(YEONLOG.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
 
         Channel notice = channels.save(NOTICE.create(jupjup));
         List<Message> noticeMessages = createAndSaveMessages(notice, yeonlog);
@@ -268,6 +270,140 @@ class ReminderServiceTest {
                     .isInstanceOf(ReminderNotFoundException.class);
         }
 
+        @DisplayName("리마인더 메시지 내부에 멘션 아이디가 있다면")
+        @Nested
+        class mentionMessage {
+
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(100);
+            ReminderResponses response = reminderService.find(request, summer.getId());
+
+            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
+            @Test
+            void isExistedMentionId() {
+                List<ReminderResponse> foundMessages = response.getReminders()
+                        .stream()
+                        .filter(message -> message.getText().contains("한 번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(
+                                BOM.createLogin(jupjup).getUsername())
+                );
+            }
+
+            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
+            @Test
+            void isNotExistedMentionId() {
+                List<ReminderResponse> foundMessages = response.getReminders()
+                        .stream()
+                        .filter(message -> message.getText().contains("존재하지 않는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains("<@")
+                );
+            }
+
+            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
+            @Test
+            void isSeveralSameId() {
+                List<ReminderResponse> foundMessages = response.getReminders()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
+                );
+            }
+
+            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
+            @Test
+            void isSeveralMemberMentioned() {
+                List<ReminderResponse> foundMessages = response.getReminders()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(BOM.createLogin(jupjup).getUsername(),
+                                SUMMER.createLogin(jupjup).getUsername())
+                );
+            }
+        }
+
+        @DisplayName("단건 조회시 리마인더 메시지 내부에 멘션 아이디가 있다면")
+        @Nested
+        class mentionMessageInOneReminder {
+
+            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(100);
+            ReminderResponses response = reminderService.find(request, summer.getId());
+
+            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
+            @Test
+            void isExistedMentionId() {
+                Reminder target = bomReminders.stream()
+                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("한 번 존재하는 유저"))
+                        .findFirst()
+                        .get();
+
+                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
+                        target.getMember().getId());
+
+                assertThat(response.getText()).contains(BOM.createLogin(jupjup).getUsername());
+            }
+
+            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
+            @Test
+            void isNotExistedMentionId() {
+                Reminder target = bomReminders.stream()
+                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("존재하지 않는 유저"))
+                        .findFirst()
+                        .get();
+
+                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
+                        target.getMember().getId());
+
+                assertThat(response.getText()).contains("<@");
+            }
+
+            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
+            @Test
+            void isSeveralSameId() {
+                List<ReminderResponse> foundMessages = response.getReminders()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
+                );
+            }
+
+            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
+            @Test
+            void isSeveralMemberMentioned() {
+                List<ReminderResponse> foundMessages = response.getReminders()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(
+                                BOM.createLogin(jupjup).getUsername(),
+                                SUMMER.createLogin(jupjup).getUsername())
+                );
+            }
+        }
+
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
             List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
@@ -353,7 +489,8 @@ class ReminderServiceTest {
             int beforeSize = findReminderSize(yeonlog);
 
             // when
-            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(1));
+            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(),
+                    LocalDateTime.now().plusHours(1));
             reminderService.save(yeonlog.getId(), request);
 
             // then
@@ -395,7 +532,8 @@ class ReminderServiceTest {
             reminders.save(new Reminder(yeonlog, message, LocalDateTime.now().plusHours(1)));
 
             // when & then
-            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(), LocalDateTime.now().plusHours(2));
+            ReminderSaveRequest request = new ReminderSaveRequest(message.getId(),
+                    LocalDateTime.now().plusHours(2));
             assertThatThrownBy(() -> reminderService.update(other.getId(), request))
                     .isInstanceOf(ReminderUpdateFailureException.class);
         }

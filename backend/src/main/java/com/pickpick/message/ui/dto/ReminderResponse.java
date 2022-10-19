@@ -51,4 +51,8 @@ public class ReminderResponse {
                 .remindDate(reminder.getRemindDate())
                 .build();
     }
+
+    public void setText(final String text) {
+        this.text = text;
+    }
 }
