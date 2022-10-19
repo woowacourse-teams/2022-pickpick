@@ -15,33 +15,29 @@ public enum ChannelFixture {
 
     private final String slackId;
     private final String name;
-    private final boolean isJupjupChannel;
+    private final boolean isDefaultChannel;
 
-    ChannelFixture(final String slackId, final String name, final boolean isJupjupChannel) {
+    ChannelFixture(final String slackId, final String name, final boolean isDefaultChannel) {
         this.slackId = slackId;
         this.name = name;
-        this.isJupjupChannel = isJupjupChannel;
+        this.isDefaultChannel = isDefaultChannel;
     }
 
     public static int getDefaultSize() {
         return (int) Arrays.stream(ChannelFixture.values())
-                .filter(ChannelFixture::isJupjupChannel)
+                .filter(ChannelFixture::isDefaultChannel)
                 .count();
     }
 
     public Channel create(final Workspace workspace) {
         return new Channel(slackId, name, workspace);
     }
-
-    public boolean isSameSlackId(final String slackId) {
-        return this.slackId.equals(slackId);
-    }
-
+    
     public String getSlackId() {
         return slackId;
     }
 
-    public boolean isJupjupChannel() {
-        return isJupjupChannel;
+    public boolean isDefaultChannel() {
+        return isDefaultChannel;
     }
 }

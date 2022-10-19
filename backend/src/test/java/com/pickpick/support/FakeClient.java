@@ -63,7 +63,7 @@ public class FakeClient implements ExternalClient {
     @Override
     public List<Channel> findChannelsByWorkspace(final Workspace workspace) {
         return Arrays.stream(ChannelFixture.values())
-                .filter(ChannelFixture::isJupjupChannel)
+                .filter(ChannelFixture::isDefaultChannel)
                 .map(channelFixture -> channelFixture.create(workspace))
                 .collect(Collectors.toList());
     }
