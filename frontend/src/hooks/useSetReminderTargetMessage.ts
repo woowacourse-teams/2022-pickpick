@@ -5,13 +5,13 @@ interface ReminderTarget {
   remindDate?: string;
 }
 
-interface ReturnType {
+interface UseSetReminderTargetMessageResult {
   reminderTarget: ReminderTarget;
   handleUpdateReminderTarget: (reminderTarget: ReminderTarget) => void;
-  handleInitializeReminderTarget: () => void;
+  handleInitializeReminderTarget: VoidFunction;
 }
 
-function useSetReminderTargetMessage(): ReturnType {
+function useSetReminderTargetMessage(): UseSetReminderTargetMessageResult {
   const [reminderTarget, setReminderTarget] = useState<ReminderTarget>({
     id: -1,
     remindDate: "",

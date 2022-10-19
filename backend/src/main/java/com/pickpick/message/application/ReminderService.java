@@ -1,9 +1,6 @@
 package com.pickpick.message.application;
 
-import com.pickpick.exception.member.MemberNotFoundException;
-import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
-import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -48,19 +45,16 @@ public class ReminderService {
 
     @Transactional
     public void save(final Long memberId, final ReminderSaveRequest request) {
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
-        Message message = messages.findById(request.getMessageId())
-                .orElseThrow(() -> new MessageNotFoundException(request.getMessageId()));
+        Message message = messages.getById(request.getMessageId());
 
         Reminder reminder = new Reminder(member, message, request.getReminderDate());
         reminders.save(reminder);
     }
 
     public ReminderResponse findOne(final Long messageId, final Long memberId) {
-        Reminder reminder = reminders.findByMessageIdAndMemberId(messageId, memberId)
-                .orElseThrow(() -> new ReminderNotFoundException(messageId, memberId));
+        Reminder reminder = reminders.getByMessageIdAndMemberId(messageId, memberId);
 
         return ReminderResponse.from(reminder);
     }
@@ -94,8 +88,7 @@ public class ReminderService {
             return QReminder.reminder.remindDate.after(LocalDateTime.now(clock));
         }
 
-        Reminder reminder = reminders.findById(reminderId)
-                .orElseThrow(() -> new ReminderNotFoundException(reminderId));
+        Reminder reminder = reminders.getById(reminderId);
 
         if (isTargetDateMessageLeft(reminder)) {
             return (QReminder.reminder.remindDate.eq(reminder.getRemindDate())

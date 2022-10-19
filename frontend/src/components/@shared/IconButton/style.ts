@@ -1,5 +1,7 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
+
 import { Props } from ".";
 
 const iconColorTable = {
@@ -9,7 +11,7 @@ const iconColorTable = {
   `,
   alarm: css`
     background-color: ${({ theme }: StyledDefaultProps) =>
-      theme.COLOR.CONTAINER.LIGHT_BLUE};
+      theme.COLOR.CONTAINER.BLUE};
   `,
   star: css`
     background-color: ${({ theme }: StyledDefaultProps) =>

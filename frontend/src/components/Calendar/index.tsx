@@ -1,17 +1,19 @@
-import * as Styled from "./style";
-import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
-import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
-import useCalendar from "@src/hooks/useCalendar";
-import WrapperButton from "../@shared/WrapperButton";
 import { Link } from "react-router-dom";
-import { ISOConverter } from "@src/@utils";
+import { useTheme } from "styled-components";
 
-const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
-const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
+import WrapperButton from "@src/components/@shared/WrapperButton";
+import ArrowIconLeft from "@src/components/@svgIcons/ArrowIconLeft";
+import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
+import useCalendar from "@src/components/Calendar/@hooks/useCalendar";
+
+import { MONTHS, WEEKDAYS } from "@src/@constants/date";
+import { ISOConverter } from "@src/@utils/date";
+
+import * as Styled from "./style";
 
 interface Props {
   channelId: string;
-  handleCloseCalendar: () => void;
+  handleCloseCalendar: VoidFunction;
 }
 
 function Calendar({ channelId, handleCloseCalendar }: Props) {
@@ -25,11 +27,17 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
     handleIncrementMonth,
   } = useCalendar();
 
+  const theme = useTheme();
+
   return (
     <Styled.Container>
       <Styled.Month>
         <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
-          <ArrowIconLeft width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconLeft
+            width="24px"
+            height="24px"
+            fill={theme.COLOR.SECONDARY.DEFAULT}
+          />
         </WrapperButton>
 
         <Styled.Title>
@@ -44,7 +52,11 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
         >
-          <ArrowIconRight width="24px" height="24px" fill="#8B8B8B" />
+          <ArrowIconRight
+            width="24px"
+            height="24px"
+            fill={theme.COLOR.SECONDARY.DEFAULT}
+          />
         </WrapperButton>
       </Styled.Month>
 
@@ -56,21 +68,27 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
 
       <Styled.Days>
         {getCurrentDays().map((day, index) => {
-          const isBlank = day === "";
-          const isFuture = day > todayDate.getDate() && isFutureMonth();
-          const isCurrentDay = day === todayDate.getDate() && isCurrentMonth();
+          const today = todayDate.getDate();
 
-          return isBlank || isFuture ? (
-            <Styled.Day
-              isBlank={isBlank}
-              isCurrentDay={isCurrentDay}
-              isFuture={isFuture}
-              onClick={handleCloseCalendar}
-            >
-              {day}
-              <div></div>
-            </Styled.Day>
-          ) : (
+          const isBlank = day === "";
+          const isFuture = day > today && isFutureMonth();
+          const isToday = day === today && isCurrentMonth();
+
+          if (isBlank || isFuture) {
+            return (
+              <Styled.Day
+                isBlank={isBlank}
+                isToday={isToday}
+                isFuture={isFuture}
+                onClick={handleCloseCalendar}
+              >
+                {day}
+                <div></div>
+              </Styled.Day>
+            );
+          }
+
+          return (
             <Link
               key={index}
               to={`/feed/${channelId}/${ISOConverter(
@@ -81,7 +99,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
             >
               <Styled.Day
                 isBlank={isBlank}
-                isCurrentDay={isCurrentDay}
+                isToday={isToday}
                 isFuture={isFuture}
                 onClick={handleCloseCalendar}
               >

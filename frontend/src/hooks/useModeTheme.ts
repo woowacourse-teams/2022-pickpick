@@ -1,15 +1,18 @@
 import { useEffect } from "react";
-import useWebStorage, { STORAGE_KIND } from "@src/hooks/useWebStorage";
 import { useRecoilState } from "recoil";
+
+import useWebStorage, { STORAGE_KIND } from "@src/hooks/@shared/useWebStorage";
+
 import { themeState } from "@src/@atoms";
-import { ThemeKind } from "@src/@types/shared";
 import { THEME_KIND } from "@src/@constants";
-interface ReturnType {
+import { ThemeKind } from "@src/@types/shared";
+
+interface UseModeThemeResult {
   theme: ThemeKind;
-  handleToggleTheme: () => void;
+  handleToggleTheme: VoidFunction;
 }
 
-function useModeTheme(): ReturnType {
+function useModeTheme(): UseModeThemeResult {
   const [theme, setTheme] = useRecoilState(themeState);
 
   const { getItem: getStoredTheme, setItem: setStoredTheme } =
@@ -33,13 +36,16 @@ function useModeTheme(): ReturnType {
     const storedTheme = getStoredTheme();
     if (storedTheme === THEME_KIND.DARK || storedTheme === THEME_KIND.LIGHT) {
       handleChangeTheme(storedTheme);
+
       return;
     }
 
     if (window.matchMedia("(prefers-color-scheme: light)").matches) {
       handleChangeTheme(THEME_KIND.LIGHT);
+
       return;
     }
+
     handleChangeTheme(THEME_KIND.DARK);
   }, []);
 

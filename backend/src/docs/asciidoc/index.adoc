@@ -96,3 +96,7 @@ operation::reminder-controller-test/delete[snippets='http-request,request-header
 === 리마인더 수정 API
 
 operation::reminder-controller-test/update[snippets='http-request,request-headers,request-fields,http-response']
+
+= 에러
+
+operation::error-code-docs-test/error-codes[snippets='error-code,http-response']

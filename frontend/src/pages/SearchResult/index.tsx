@@ -1,28 +1,30 @@
-import * as Styled from "../Feed/style";
-import MessageCard from "@src/components/MessageCard";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { FlexColumn } from "@src/@styles/shared";
+import * as Styled from "@src/pages/Feed/style";
+
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
-import {
-  getChannelIdsParams,
-  extractResponseMessages,
-  parseTime,
-} from "@src/@utils";
-import useModal from "@src/hooks/useModal";
-import Portal from "@src/components/@shared/Portal";
-import Dimmer from "@src/components/@shared/Dimmer";
-import ReminderModal from "@src/components/ReminderModal";
-import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
+import Modal from "@src/components/@shared/Modal";
+import AddReminder from "@src/components/AddReminder";
+import MessageCard from "@src/components/MessageCard";
+import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import SearchForm from "@src/components/SearchForm";
-import useGetSearchParam from "@src/hooks/useGetSearchParam";
-import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
+
+import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
+import useModal from "@src/hooks/@shared/useModal";
+import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
+
+import { SEARCH_PARAMS } from "@src/@constants/api";
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseMessages, getChannelIdsParams } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function SearchResult() {
-  const keyword = useGetSearchParam("keyword");
-  const channelIds = useGetSearchParam("channelIds");
+  const keyword = useGetSearchParam({ key: SEARCH_PARAMS.SEARCH_KEYWORD });
+  const channelIds = useGetSearchParam({
+    key: SEARCH_PARAMS.SEARCH_CHANNEL_IDS,
+  });
 
   const {
     reminderTarget,
@@ -81,7 +83,7 @@ function SearchResult() {
               <MessageCard
                 key={id}
                 username={username}
-                date={parseTime(postedDate)}
+                date={parseMessageDateFromISO(postedDate)}
                 text={text}
                 thumbnail={userThumbnail}
                 isRemindedMessage={false}
@@ -111,26 +113,23 @@ function SearchResult() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isReminderModalOpened}>
-        <>
-          <Dimmer
-            hasBackgroundColor={true}
-            onClick={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-          />
-          <ReminderModal
-            messageId={reminderTarget.id}
-            remindDate={reminderTarget.remindDate ?? ""}
-            handleCloseReminderModal={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-            refetchFeed={refetch}
-          />
-        </>
-      </Portal>
+      <Modal
+        isOpened={isReminderModalOpened}
+        handleCloseModal={() => {
+          handleInitializeReminderTarget();
+          handleCloseReminderModal();
+        }}
+      >
+        <AddReminder
+          messageId={reminderTarget.id}
+          remindDate={reminderTarget.remindDate ?? ""}
+          handleCloseReminderModal={() => {
+            handleInitializeReminderTarget();
+            handleCloseReminderModal();
+          }}
+          refetchFeed={refetch}
+        />
+      </Modal>
     </Styled.Container>
   );
 }

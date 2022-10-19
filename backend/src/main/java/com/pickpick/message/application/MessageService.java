@@ -2,8 +2,6 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.exception.channel.SubscriptionNotFoundException;
-import com.pickpick.exception.message.MessageNotFoundException;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QBookmark;
@@ -64,8 +62,7 @@ public class MessageService {
             return channelIds;
         }
 
-        ChannelSubscription firstSubscription = channelSubscriptions.findFirstByMemberIdOrderByViewOrderAsc(memberId)
-                .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
+        ChannelSubscription firstSubscription = channelSubscriptions.getFirstByMemberIdOrderByViewOrderAsc(memberId);
 
         return List.of(firstSubscription.getChannelId());
     }
@@ -162,8 +159,7 @@ public class MessageService {
 
 
     private Predicate messageIdCondition(final Long messageId, final boolean needPastMessage) {
-        Message message = messages.findById(messageId)
-                .orElseThrow(() -> new MessageNotFoundException(messageId));
+        Message message = messages.getById(messageId);
 
         LocalDateTime messageDate = message.getPostedDate();
 
@@ -212,7 +208,7 @@ public class MessageService {
     }
 
     private boolean hasFuture(final List<Long> channelIds, final MessageRequest messageRequest,
-                            final List<MessageResponse> messages) {
+                              final List<MessageResponse> messages) {
         if (messages.isEmpty()) {
             return false;
         }
@@ -236,7 +232,7 @@ public class MessageService {
     }
 
     private BooleanExpression meetAllHasFutureCondition(final List<Long> channelIds, final MessageRequest request,
-                                                      final List<MessageResponse> messages) {
+                                                        final List<MessageResponse> messages) {
         MessageResponse targetMessage = messages.get(0);
 
         return channelIdsIn(channelIds)

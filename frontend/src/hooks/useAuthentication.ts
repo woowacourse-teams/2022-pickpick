@@ -1,21 +1,20 @@
-import {
-  ACCESS_TOKEN_KEY,
-  QUERY_KEY,
-  MESSAGES,
-  PATH_NAME,
-} from "@src/@constants";
-import { deleteCookie, setCookie } from "@src/@utils";
 import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import useSnackbar from "@src/hooks/useSnackbar";
-import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
-interface ReturnType {
+import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
+import useSnackbar from "@src/hooks/useSnackbar";
+
+import { ACCESS_TOKEN_KEY, QUERY_KEY } from "@src/@constants/api";
+import { MESSAGE } from "@src/@constants/message";
+import { PATH_NAME } from "@src/@constants/path";
+import { deleteCookie, setCookie } from "@src/@utils";
+
+interface UseAuthenticationResult {
   login: (token: string, isFirstLogin: boolean) => void;
-  logout: () => void;
+  logout: VoidFunction;
 }
 
-function useAuthentication(): ReturnType {
+function useAuthentication(): UseAuthenticationResult {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openSuccessSnackbar } = useSnackbar();
@@ -24,7 +23,7 @@ function useAuthentication(): ReturnType {
   const login = (token: string, isFirstLogin: boolean) => {
     setCookie(ACCESS_TOKEN_KEY, token);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
-    openSuccessSnackbar(MESSAGES.LOGIN_SUCCESS);
+    openSuccessSnackbar(MESSAGE.LOGIN_SUCCESS);
     if (isFirstLogin) {
       navigate(PATH_NAME.ADD_CHANNEL);
       return;

@@ -19,6 +19,6 @@ public class ChannelController {
 
     @GetMapping
     public ChannelResponses findAllChannels(final @AuthenticationPrincipal Long memberId) {
-        return channelService.findAll(memberId);
+        return channelService.findByWorkspace(memberId);
     }
 }

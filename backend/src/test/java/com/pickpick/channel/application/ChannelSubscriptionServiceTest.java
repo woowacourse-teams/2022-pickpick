@@ -1,7 +1,13 @@
 package com.pickpick.channel.application;
 
+import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
+import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -9,20 +15,27 @@ import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
-import com.pickpick.config.DatabaseCleaner;
+import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
 import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.support.DatabaseCleaner;
+import com.pickpick.support.TestConfig;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
+@Import(TestConfig.class)
 @SpringBootTest
 class ChannelSubscriptionServiceTest {
 
@@ -41,6 +54,9 @@ class ChannelSubscriptionServiceTest {
     private MemberRepository members;
 
     @Autowired
+    private WorkspaceRepository workspaces;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     @AfterEach
@@ -52,23 +68,36 @@ class ChannelSubscriptionServiceTest {
     @Test
     void save() {
         // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Long bomId = bom.getId();
+        Channel notice = channels.save(NOTICE.create(jupjup));
+
+        ChannelSubscriptionResponses subscriptionsBeforeSave = channelSubscriptionService.findByMemberId(bomId);
+
+        // when
+        ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(notice.getId());
+        channelSubscriptionService.save(request, bomId);
+
+        ChannelSubscriptionResponses subscriptionsAfterSave = channelSubscriptionService.findByMemberId(bomId);
 
         // then
-        assertThat(channelSubscriptionService.findByMemberId(member.getId()).getChannels()).hasSize(1);
+        assertAll(
+                () -> assertThat(subscriptionsBeforeSave.getChannels()).isEmpty(),
+                () -> assertThat(subscriptionsAfterSave.getChannels()).hasSize(1)
+        );
     }
 
-    @DisplayName("존재하지 않는 채널 ID로 채널 저장 시 에러 발생")
+    @DisplayName("존재하지 않는 채널 ID로 구독 요청 시 에러 발생")
     @Test
     void saveByNotExistedChannelId() {
         // given
-        Member member = saveMember();
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
         ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(NOT_EXISTED_CHANNEL_ID);
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.save(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.save(request, bom.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
 
@@ -76,83 +105,114 @@ class ChannelSubscriptionServiceTest {
     @Test
     void saveAlreadySubscribedChannel() {
         // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        subscribeChannel(bom, notice);
 
         // when & then
-        assertThatThrownBy(() -> subscribeChannel(member, channel))
+        assertThatThrownBy(() -> subscribeChannel(bom, notice))
                 .isInstanceOf(SubscriptionDuplicateException.class);
+    }
+
+    @DisplayName("구독 요청 순서대로 채널의 view order 지정")
+    @Test
+    void setViewOrderByRequestOrder() {
+        // given
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+
+        // when
+        subscribeChannel(bom, notice);
+        subscribeChannel(bom, freeChat);
+
+        List<ChannelSubscriptionResponse> foundChannels = channelSubscriptionService
+                .findByMemberId(bom.getId())
+                .getChannels();
+
+        // then
+        ChannelSubscriptionResponse firstSubscribed = extractTargetChannel(foundChannels, notice);
+        ChannelSubscriptionResponse secondSubscribed = extractTargetChannel(foundChannels, freeChat);
+
+        assertAll(
+                () -> assertThat(firstSubscribed.getOrder()).isEqualTo(1),
+                () -> assertThat(secondSubscribed.getOrder()).isEqualTo(2)
+        );
     }
 
     @DisplayName("구독한 채널 조회 시 view order 순서대로 출력")
     @Test
     void subscribeChannelOrderIsLast() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
-        subscribeChannelsInListOrder(member, List.of(channel3, channel1, channel2));
+        subscribeChannelsInListOrder(bom, List.of(qna, notice, freeChat));
 
         // when
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
-                .findByMemberId(member.getId())
+                .findByMemberId(bom.getId())
                 .getChannels();
-        
+
         // then
         assertThat(channelSubscriptions).extracting("id")
-                .containsExactly(channel3.getId(), channel1.getId(), channel2.getId());
+                .containsExactly(qna.getId(), notice.getId(), freeChat.getId());
     }
 
     @DisplayName("채널 구독 순서를 변경하기")
     @Test
     void updateChannelSubscriptionOrder() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
         // when
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel2.getId(), 1),
-                new ChannelOrderRequest(channel1.getId(), 2),
-                new ChannelOrderRequest(channel3.getId(), 3)
+                new ChannelOrderRequest(freeChat.getId(), 1),
+                new ChannelOrderRequest(notice.getId(), 2),
+                new ChannelOrderRequest(qna.getId(), 3)
         );
-        channelSubscriptionService.updateOrders(request, member.getId());
+        channelSubscriptionService.updateOrders(request, bom.getId());
 
         List<ChannelSubscriptionResponse> channelSubscriptions = channelSubscriptionService
-                .findByMemberId(member.getId())
+                .findByMemberId(bom.getId())
                 .getChannels();
 
         //then
         assertThat(channelSubscriptions).extracting("id")
-                .containsExactly(channel2.getId(), channel1.getId(), channel3.getId());
+                .containsExactly(freeChat.getId(), notice.getId(), qna.getId());
     }
 
-    @DisplayName("채널 구독 순서 변경 시 중복 viewOrder가 들어올 경우 에러 발생")
+    @DisplayName("채널 구독 순서 변경 시 중복 view order 가 들어올 경우 에러 발생")
     @Test
     void updateChannelSubscriptionOrderWithDuplicateViewOrder() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2),
-                new ChannelOrderRequest(channel3.getId(), 2)
+                new ChannelOrderRequest(notice.getId(), 1),
+                new ChannelOrderRequest(freeChat.getId(), 2),
+                new ChannelOrderRequest(qna.getId(), 2)
         );
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, bom.getId()))
                 .isInstanceOf(SubscriptionOrderDuplicateException.class);
     }
 
@@ -160,21 +220,22 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithInvalidChannelId() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel unsubscribed = channels.save(QNA.create(jupjup));
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat));
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2),
-                new ChannelOrderRequest(channel3.getId(), 3)
+                new ChannelOrderRequest(notice.getId(), 1),
+                new ChannelOrderRequest(freeChat.getId(), 2),
+                new ChannelOrderRequest(unsubscribed.getId(), 3)
         );
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, bom.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
 
@@ -182,34 +243,57 @@ class ChannelSubscriptionServiceTest {
     @Test
     void updateChannelSubscriptionOrderWithNotEnoughChannelId() {
         // given
-        Member member = saveMember();
-        Channel channel1 = saveChannel("slackId1", "채널 이름1");
-        Channel channel2 = saveChannel("slackId2", "채널 이름2");
-        Channel channel3 = saveChannel("slackId3", "채널 이름3");
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
+        Channel qna = channels.save(QNA.create(jupjup));
 
-        subscribeChannelsInListOrder(member, List.of(channel1, channel2, channel3));
+        subscribeChannelsInListOrder(bom, List.of(notice, freeChat, qna));
 
         List<ChannelOrderRequest> request = List.of(
-                new ChannelOrderRequest(channel1.getId(), 1),
-                new ChannelOrderRequest(channel2.getId(), 2)
+                new ChannelOrderRequest(notice.getId(), 1),
+                new ChannelOrderRequest(freeChat.getId(), 2)
         );
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.updateOrders(request, bom.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
+    }
+
+    @DisplayName("채널 구독 취소")
+    @Test
+    void unsubscribeChannel() {
+        // given
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        subscribeChannel(bom, notice);
+
+        boolean isExistBeforeUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
+
+        // when
+        channelSubscriptionService.delete(notice.getId(), bom.getId());
+
+        // then
+        boolean isExistAfterUnsubscribe = channelSubscriptions.existsByChannelAndMember(notice, bom);
+
+        assertAll(
+                () -> assertThat(isExistBeforeUnsubscribe).isTrue(),
+                () -> assertThat(isExistAfterUnsubscribe).isFalse()
+        );
     }
 
     @DisplayName("구독 중이 아닌 채널 구독 취소시 예외 발생")
     @Test
     void unsubscribeInvalidChannelSubscription() {
         // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
-        channelSubscriptionService.delete(channel.getId(), member.getId());
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Channel notice = channels.save(NOTICE.create(jupjup));
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.delete(channel.getId(), member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.delete(notice.getId(), bom.getId()))
                 .isInstanceOf(SubscriptionNotExistException.class);
     }
 
@@ -217,44 +301,28 @@ class ChannelSubscriptionServiceTest {
     @Test
     void unsubscribeNotExistedChannel() {
         // given
-        Member member = saveMember();
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+        Member bom = members.save(BOM.createLogin(jupjup));
 
         // when & then
-        assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, member.getId()))
+        assertThatThrownBy(() -> channelSubscriptionService.delete(NOT_EXISTED_CHANNEL_ID, bom.getId()))
                 .isInstanceOf(ChannelNotFoundException.class);
     }
 
-    @DisplayName("채널 구독 취소")
-    @Test
-    void unsubscribeChannel() {
-        // given
-        Member member = saveMember();
-        Channel channel = saveChannel("slackId", "채널 이름");
-        subscribeChannel(member, channel);
-
-        // when
-        channelSubscriptionService.delete(channel.getId(), member.getId());
-
-        // then
-        boolean isSubscribed = channelSubscriptions.existsByChannelAndMember(channel, member);
-
-        assertThat(isSubscribed).isFalse();
-    }
-
-    private Member saveMember() {
-        return members.save(new Member("TESTMEMBER", "테스트 계정", "test.png"));
-    }
-
-    private Channel saveChannel(final String slackId, final String channelName) {
-        return channels.save(new Channel(slackId, channelName));
-    }
-
-    private void subscribeChannel(Member member, Channel channel) {
+    private void subscribeChannel(final Member member, final Channel channel) {
         ChannelSubscriptionRequest request = new ChannelSubscriptionRequest(channel.getId());
         channelSubscriptionService.save(request, member.getId());
     }
 
-    private void subscribeChannelsInListOrder(Member member, List<Channel> channels) {
+    private ChannelSubscriptionResponse extractTargetChannel(final List<ChannelSubscriptionResponse> foundChannels,
+                                                             final Channel target) {
+        return foundChannels.stream()
+                .filter(channel -> channel.getId().equals(target.getId()))
+                .findAny()
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private void subscribeChannelsInListOrder(final Member member, final List<Channel> channels) {
         for (Channel channel : channels) {
             subscribeChannel(member, channel);
         }

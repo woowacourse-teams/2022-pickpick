@@ -1,27 +1,29 @@
-import * as Styled from "./style";
-import { PATH_NAME } from "@src/@constants";
-import StarIcon from "@src/components/@svgIcons/StarIcon";
-import MenuIcon from "@src/components/@svgIcons/MenuIcon";
+import { useTheme } from "styled-components";
+
+import Button from "@src/components/@shared/Button";
+import Modal from "@src/components/@shared/Modal";
+import WrapperButton from "@src/components/@shared/WrapperButton";
+import WrapperLink from "@src/components/@shared/WrapperNavLink";
 import HomeIcon from "@src/components/@svgIcons/HomeIcon";
 import InfoIcon from "@src/components/@svgIcons/InfoIcon";
+import MenuIcon from "@src/components/@svgIcons/MenuIcon";
 import ReminderIconInactive from "@src/components/@svgIcons/ReminderIconInactive";
-import WrapperButton from "@src/components/@shared/WrapperButton";
-import Dimmer from "@src/components/@shared/Dimmer";
-import Portal from "@src/components/@shared/Portal";
-import WrapperLink from "@src/components/@shared/WrapperLink";
-import Drawer from "@src/components/Drawer";
-import useModal from "@src/hooks/useModal";
-import Button from "@src/components/@shared/Button";
+import StarIcon from "@src/components/@svgIcons/StarIcon";
+import ChannelsDrawer from "@src/components/ChannelsDrawer";
+
+import useGetSubscribedChannels from "@src/hooks/@query/useGetSubscribedChannels";
+import useModal from "@src/hooks/@shared/useModal";
+import useOuterClick from "@src/hooks/@shared/useOuterClick";
 import useAuthentication from "@src/hooks/useAuthentication";
-import { useTheme } from "styled-components";
-import { Theme } from "@src/@types/shared";
-import useGetSubscribedChannels from "@src/hooks/query/useGetSubscribedChannels";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
-import useOuterClick from "@src/hooks/useOuterClick";
+
+import { PATH_NAME } from "@src/@constants/path";
+
+import * as Styled from "./style";
 
 function Navigation() {
   const { logout } = useAuthentication();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const { getRecentFeedPath } = useRecentFeedPath();
   const { data, refetch } = useGetSubscribedChannels();
 
@@ -29,7 +31,7 @@ function Navigation() {
     isModalOpened: isMenuDrawerOpened,
     handleCloseModal: handleCloseDrawer,
     handleToggleModal: handleToggleDrawer,
-  } = useModal(refetch);
+  } = useModal({ openModalCallback: refetch });
 
   const {
     isModalOpened: isLogoutButtonOpened,
@@ -122,26 +124,23 @@ function Navigation() {
         </WrapperButton>
       </div>
 
-      <Portal isOpened={isMenuDrawerOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseDrawer} />
-          <div ref={drawerInnerRef}>
-            <Drawer
-              channels={data?.channels}
-              handleCloseDrawer={handleCloseDrawer}
-            />
-          </div>
-        </>
-      </Portal>
+      <Modal isOpened={isMenuDrawerOpened} handleCloseModal={handleCloseDrawer}>
+        <div ref={drawerInnerRef}>
+          <ChannelsDrawer
+            channels={data?.channels}
+            handleCloseDrawer={handleCloseDrawer}
+          />
+        </div>
+      </Modal>
 
-      <Portal isOpened={isLogoutButtonOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseLogoutButton} />
-          <Styled.LogoutButtonContainer>
-            <Button onClick={handleLogout}>로그아웃</Button>
-          </Styled.LogoutButtonContainer>
-        </>
-      </Portal>
+      <Modal
+        isOpened={isLogoutButtonOpened}
+        handleCloseModal={handleCloseLogoutButton}
+      >
+        <Styled.LogoutButtonContainer>
+          <Button onClick={handleLogout}>로그아웃</Button>
+        </Styled.LogoutButtonContainer>
+      </Modal>
     </Styled.Container>
   );
 }

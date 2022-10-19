@@ -1,205 +1,345 @@
 package com.pickpick.acceptance.message;
 
+import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
+import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
+import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
+import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
+import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_생성;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
+import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.키워드를_포함한_메시지_목록_생성;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
 
-import com.pickpick.acceptance.AcceptanceTest;
+import com.pickpick.acceptance.AcceptanceTestBase;
+import com.pickpick.acceptance.message.MessageRestHandler.MessageRequestBuilder;
+import com.pickpick.fixture.ChannelFixture;
+import com.pickpick.fixture.MemberFixture;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.Clock;
-import java.time.Instant;
-import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql({"/message.sql"})
-
-@DisplayName("메시지 기능")
+@DisplayName("메시지 인수 테스트")
 @SuppressWarnings("NonAsciiCharacters")
-class MessageAcceptanceTest extends AcceptanceTest {
+class MessageAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MESSAGE_API_URL = "/api/messages";
-    private static final long MEMBER_ID = 1L;
+    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 
-    @SpyBean
-    private Clock clock;
+    private String token;
 
-    private static Stream<Arguments> methodSource() {
-        return Stream.of(
-                Arguments.of(
-                        "channelIds가 5이면, 5번 채널의 가장 최근 메시지 20개가 응답되어야 한다.",
-                        createQueryParams("", "", "5", "", "", ""),
-                        true,
-                        createExpectedMessageIds(38L, 19L),
-                        true),
-                Arguments.of(
-                        "channelIds가 5이고, needPastMessage가 true이고 date가 존재할 경우, 5번 채널의 해당 날짜 보다 과거 데이터 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("", "2022-07-13T19:21:55", "5", "true", "", ""),
-                        false,
-                        createExpectedMessageIds(6L, 1L),
-                        true),
-                Arguments.of(
-                        "channelIds가 5이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 해당 메시지 보다 과거 데이터 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("", "", "5", "true", "6", ""),
-                        false,
-                        createExpectedMessageIds(5L, 1L),
-                        true),
-                Arguments.of(
-                        "channelIds가 5이고, needPastMessage가 false이고 messageId가 존재할 경우, 5번 채널의 해당 메시지 보다 미래 데이터 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("", "", "5", "false", "6", ""),
-                        true,
-                        createExpectedMessageIds(26L, 7L),
-                        false),
-                Arguments.of(
-                        "channelIds가 5이고, keyword가 '줍'일 경우, 5번 채널의 메시지 중 '줍'이 포함된 메시지 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("줍", "", "5", "", "", ""),
-                        false,
-                        createExpectedMessageIds(28L, 23L),
-                        true),
-                Arguments.of(
-                        "channelIds가 5이고, keyword가 '호'이고, needPastMessage가 true이고 messageId가 존재할 경우, 5번 채널의 '호'가 포함된 메시지 중, 전달된 메시지 ID의 메시지보다 더 과거 메시지 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("호", "", "5", "", "13", ""),
-                        false,
-                        createExpectedMessageIds(7L, 4L),
-                        true),
-                Arguments.of(
-                        "channelIds가 5이고, keyword가 'jupjup'일 경우, 5번 채널의 메시지 중 'jupjup'이 포함된 메시지 20개를 시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("jupjup", "", "5", "", "", ""),
-                        false,
-                        createExpectedMessageIds(18L, 14L),
-                        true),
-                Arguments.of(
-                        "쿼리 파라미터가 전혀 전달되지 않았을 경우, 회원의 채널 정렬 상 첫번째 채널의 최신 20개 메시지를 작성시간 내림차순으로 응답해야 한다.",
-                        createQueryParams("", "", "", "", "", ""),
-                        true,
-                        createExpectedMessageIds(38L, 19L),
-                        true)
-        );
+    @BeforeEach
+    void init() {
+        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
+        token = jwtTokenProvider.createToken("1");
     }
 
-    private static Map<String, Object> createQueryParams(
-            final String keyword, final String date, final String channelIds, final String needPastMessage,
-            final String messageId, final String messageCount
-    ) {
-        return Map.of(
-                "keyword", keyword,
-                "date", date,
-                "channelIds", channelIds,
-                "needPastMessage", needPastMessage,
-                "messageId", messageId,
-                "messageCount", messageCount
-        );
+    @Test
+    void 텍스트가_비었으면_메시지_조회_시_필터링_됨() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 10);
+        빈_메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).doesNotContain(12L);
     }
 
-    private static List<Long> createExpectedMessageIds(final Long startInclusive, final Long endInclusive) {
-        return LongStream.rangeClosed(endInclusive, startInclusive)
-                .boxed()
-                .sorted(Comparator.reverseOrder())
+    @Test
+    void 조회할_과거_메시지가_있으면_hasPast가_true() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 21);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(toMessageResponses(response).hasPast()).isTrue();
+    }
+
+    @Test
+    void 조회할_과거_메시지가_없으면_hasPast가_false() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 2);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(toMessageResponses(response).hasPast()).isFalse();
+    }
+
+    @Test
+    void 조회할_미래_메시지가_있으면_hasFuture가_true() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 21);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageId(3L);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(toMessageResponses(response).hasFuture()).isTrue();
+    }
+
+    @Test
+    void 조회할_미래_메시지가_없으면_hasFuture가_false() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 11);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(toMessageResponses(response).hasFuture()).isFalse();
+    }
+
+    @Test
+    void 키워드_검색() {
+        // given
+        String keyword = "줍줍";
+        메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
+
+        int messageCount = 5;
+        키워드를_포함한_메시지_목록_생성(MEMBER_SLACK_ID, messageCount, keyword);
+        메시지_목록_생성(MEMBER_SLACK_ID, 3);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .keyword(keyword);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(messageCount);
+    }
+
+    @Test
+    void 특정_채널_목록에서_조회() {
+        // given
+        메시지_전송(MEMBER_SLACK_ID, ChannelFixture.NOTICE);
+        메시지_전송(MEMBER_SLACK_ID, ChannelFixture.FREE_CHAT);
+
+        List<Long> channelIds = List.of(1L, 2L);
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .channelIds(channelIds);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(channelIds.size());
+    }
+
+    @Test
+    void 메시지_조회_시_작성_시간_기준_내림차순으로_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).isEqualTo(List.of(5L, 4L, 3L, 2L, 1L));
+    }
+
+    @Test
+    void count_값이_없으면_기본으로_20개_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 25);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(20);
+    }
+
+    @Test
+    void count_값이_있으면_해당_값만큼_메시지_조회() {
+        // given
+        int messageCount = 5;
+        메시지_목록_생성(MEMBER_SLACK_ID, messageCount + 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageCount(messageCount);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_개수(response)).isEqualTo(messageCount);
+    }
+
+    @Test
+    void 북마크한_메시지는_isBookmarked가_true() {
+        // given
+        메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
+        북마크_생성(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(북마크_여부(response)).isTrue();
+    }
+
+    @Test
+    void 북마크하지_않은_메시지는_isBookmarked가_false() {
+        // given
+        메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(북마크_여부(response)).isFalse();
+    }
+
+    @Test
+    void 리마인드한_메시지는_isSetReminded가_true() {
+        // given
+        메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
+        리마인더_생성(token, 1L, LocalDateTime.now().plusDays(1));
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(리마인드_여부(response)).isTrue();
+    }
+
+    @Test
+    void 리마인드하지_않은_메시지는_isSetReminded가_false() {
+        // given
+        메시지_전송(MEMBER_SLACK_ID);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder();
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(리마인드_여부(response)).isFalse();
+    }
+
+    @Test
+    void 메시지_ID_3번이고_needPastMessage가_false인_경우_해당_메시지보다_미래_메시지를_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageId(3L)
+                .needPastMessage(false);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).isEqualTo(List.of(5L, 4L));
+    }
+
+    @Test
+    void 메시지_ID_3번이고_needPastMessage가_true인_경우_해당_메시지보다_과거_메시지를_조회() {
+        // given
+        메시지_목록_생성(MEMBER_SLACK_ID, 5);
+        채널_구독_요청(token, 1L);
+
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .messageId(3L)
+                .needPastMessage(true);
+
+        // when
+        ExtractableResponse<Response> response = 메시지_조회(token, request);
+
+        // then
+        상태코드_200_확인(response);
+        assertThat(메시지_ID_목록(response)).isEqualTo(List.of(2L, 1L));
+    }
+
+    private List<Long> 메시지_ID_목록(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response)
+                .getMessages()
+                .stream()
+                .map(MessageResponse::getId)
                 .collect(Collectors.toList());
     }
 
-    @MethodSource("methodSource")
-    @ParameterizedTest(name = "{0}")
-    void 메시지_조회_API(final String description, final Map<String, Object> request, final boolean expectedhasPast,
-                    final List<Long> expectedMessageIds, final boolean expectedNeedPastMessage) {
-        // given & when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
-
-        // then
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        assertAll(
-                () -> 상태코드_200_확인(response),
-                () -> assertThat(messageResponses.hasPast()).isEqualTo(expectedhasPast),
-                () -> assertThat(messageResponses.isNeedPastMessage()).isEqualTo(expectedNeedPastMessage),
-                () -> assertThat(messageResponses.getMessages())
-                        .extracting("id")
-                        .isEqualTo(expectedMessageIds)
-        );
+    private int 메시지_개수(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response).getMessages().size();
     }
 
-    @ValueSource(strings = {"", "true"})
-    @ParameterizedTest
-    void 메시지_조회_시_needPastMessage_true_응답_확인(final String needPastMessage) {
-        // given
-        Map<String, Object> request = createQueryParams("jupjup", "", "5", needPastMessage, "", "");
-
-        // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        // then
-        상태코드_200_확인(response);
-        assertThat(messageResponses.isNeedPastMessage()).isTrue();
+    private boolean 북마크_여부(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response).getMessages()
+                .get(0)
+                .isBookmarked();
     }
 
-    @Test
-    void 메시지_조회_시_needPastMessage가_False일_경우_응답_확인() {
-        // given
-        Map<String, Object> request = createQueryParams("jupjup", "", "5", "false", "", "");
-
-        // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
-        MessageResponses messageResponses = response.as(MessageResponses.class);
-
-        // then
-        상태코드_200_확인(response);
-        assertThat(messageResponses.isNeedPastMessage()).isFalse();
+    private boolean 리마인드_여부(final ExtractableResponse<Response> response) {
+        return toMessageResponses(response).getMessages()
+                .get(0)
+                .isSetReminded();
     }
 
-    @Test
-    void 이미_리마인드_완료된_메시지_조회_시_isSetReminded가_false이고_remindDate가_null() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-13T00:00:00Z"));
-        Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
-
-        // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
-        MessageResponse messageResponse = response.as(MessageResponses.class)
-                .getMessages()
-                .get(0);
-
-        // then
-        상태코드_200_확인(response);
-        assertAll(
-                () -> assertThat(messageResponse.isSetReminded()).isFalse(),
-                () -> assertThat(messageResponse.getRemindDate()).isNull()
-        );
-    }
-
-    @Test
-    void 리마인드_해야하는_메시지_조회_시_isSetReminded가_true이고_remindDate에_값이_존재() {
-        // given
-        given(clock.instant())
-                .willReturn(Instant.parse("2022-08-10T00:00:00Z"));
-        Map<String, Object> request = createQueryParams("", "", "5", "true", "", "1");
-
-        // when
-        ExtractableResponse<Response> response = getWithCreateToken(MESSAGE_API_URL, MEMBER_ID, request);
-        MessageResponse messageResponse = response.as(MessageResponses.class)
-                .getMessages()
-                .get(0);
-
-        // then
-        상태코드_200_확인(response);
-        assertAll(
-                () -> assertThat(messageResponse.isSetReminded()).isTrue(),
-                () -> assertThat(messageResponse.getRemindDate()).isNotNull()
-        );
+    private MessageResponses toMessageResponses(final ExtractableResponse<Response> response) {
+        return response.jsonPath().getObject("", MessageResponses.class);
     }
 }

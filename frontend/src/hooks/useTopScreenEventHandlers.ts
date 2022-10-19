@@ -1,4 +1,4 @@
-import { useEffect, useRef, WheelEventHandler, TouchEventHandler } from "react";
+import { TouchEventHandler, WheelEventHandler, useEffect, useRef } from "react";
 
 interface Props {
   isCallable?: boolean;
@@ -8,7 +8,7 @@ interface Props {
   wheelDistanceCriterion: number;
 }
 
-interface ReturnType {
+interface UseTopScreenEventHandlerResult {
   onWheel: WheelEventHandler<HTMLDivElement>;
   onTouchStart: TouchEventHandler<HTMLDivElement>;
   onTouchEnd: TouchEventHandler<HTMLDivElement>;
@@ -20,7 +20,7 @@ function useTopScreenEventHandler({
   scrollOffset,
   touchDistanceCriterion,
   wheelDistanceCriterion,
-}: Props): ReturnType {
+}: Props): UseTopScreenEventHandlerResult {
   const wheelPosition = useRef({ default: 0, move: 0, scroll: 0 });
   const touchPosition = useRef({ start: 0, end: 0 });
   const scrollPosition = useRef({ default: 0 });

@@ -1,21 +1,40 @@
-import { API_ENDPOINT } from "@src/@constants";
-import { fetcher } from ".";
-import { ResponseToken } from "@src/@types/shared";
-import { getPrivateHeaders, getPublicHeaders } from "@src/api/utils";
+import { fetcher } from "@src/api";
 
-export const isCertificated = async () => {
-  const { data } = await fetcher.get(API_ENDPOINT.CERTIFICATION, {
+import { API_ENDPOINT } from "@src/@constants/api";
+import { ResponseToken } from "@src/@types/api";
+import { getPrivateHeaders, getPublicHeaders } from "@src/@utils/api";
+
+type IsCertificated = () => Promise<unknown>;
+
+export const isCertificated: IsCertificated = async () => {
+  const { data } = await fetcher.get<unknown>(API_ENDPOINT.CERTIFICATION, {
     headers: { ...getPrivateHeaders() },
   });
   return data;
 };
 
-export const slackLogin = async (code: string) => {
+type SlackLogin = (code: string) => Promise<ResponseToken>;
+
+export const slackLogin: SlackLogin = async (code) => {
   const { data } = await fetcher.get<ResponseToken>(API_ENDPOINT.SLACK_LOGIN, {
     headers: { ...getPublicHeaders() },
     params: {
       code,
     },
   });
+  return data;
+};
+
+type RegisterSlackWorkspace = (code: string) => Promise<ResponseToken>;
+export const registerSlackWorkspace: RegisterSlackWorkspace = async (code) => {
+  const { data } = await fetcher.get<ResponseToken>(
+    API_ENDPOINT.SLACK_REGISTER_WORKSPACE,
+    {
+      headers: { ...getPublicHeaders() },
+      params: {
+        code,
+      },
+    }
+  );
   return data;
 };

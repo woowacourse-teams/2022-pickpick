@@ -1,8 +1,8 @@
 package com.pickpick.slackevent;
 
+import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static utils.JsonUtils.toJson;
 
 import com.pickpick.exception.slackevent.SlackEventNotFoundException;
 import com.pickpick.slackevent.application.SlackEvent;
@@ -27,6 +27,7 @@ class SlackEventTest {
                         SlackEvent.MESSAGE_THREAD_BROADCAST),
                 Arguments.of(Map.of("event", Map.of("type", "message", "subtype", "file_share")),
                         SlackEvent.MESSAGE_FILE_SHARE),
+                Arguments.of(Map.of("event", Map.of("type", "channel_created")), SlackEvent.CHANNEL_CREATED),
                 Arguments.of(Map.of("event", Map.of("type", "channel_rename")), SlackEvent.CHANNEL_RENAME),
                 Arguments.of(Map.of("event", Map.of("type", "channel_deleted")), SlackEvent.CHANNEL_DELETED),
                 Arguments.of(Map.of("event", Map.of("type", "user_profile_changed")), SlackEvent.MEMBER_CHANGED),

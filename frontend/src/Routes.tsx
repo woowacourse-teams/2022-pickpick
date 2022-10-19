@@ -1,18 +1,21 @@
-import NotFound from "@src/pages/NotFound";
-import { PATH_NAME } from "@src/@constants";
-import LayoutContainer from "@src/components/@layouts/LayoutContainer";
-import PrivateRouter from "@src/components/PrivateRouter";
-import PublicRouter from "@src/components/PublicRouter";
 import {
   AddChannel,
   Bookmark,
-  Reminder,
-  Feed,
-  SpecificDateFeed,
-  Home,
   Certification,
+  Feed,
+  Home,
+  RegisterSlackWorkspace,
+  Reminder,
   SearchResult,
-} from "./pages";
+  SpecificDateFeed,
+} from "@src/pages";
+import NotFound from "@src/pages/NotFound";
+
+import LayoutContainer from "@src/components/@layouts/LayoutContainer";
+import PrivateRouter from "@src/components/Router/PrivateRouter";
+import PublicRouter from "@src/components/Router/PublicRouter";
+
+import { PATH_NAME } from "@src/@constants/path";
 
 const routes = [
   {
@@ -98,6 +101,10 @@ const routes = [
   {
     path: PATH_NAME.CERTIFICATION,
     element: <Certification />,
+  },
+  {
+    path: PATH_NAME.REGISTER_SLACK_WORKSPACE,
+    element: <RegisterSlackWorkspace />,
   },
 ];
 

@@ -1,22 +1,26 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 interface StyledDayProps extends StyledDefaultProps {
   isBlank: boolean;
-  isCurrentDay: boolean;
+  isToday: boolean;
   isFuture: boolean;
 }
 
 export const Container = styled.div`
-  width: 280px;
-  height: 313px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  width: 280px;
+  height: 313px;
   padding: 18px;
+
   position: fixed;
   top: 40%;
   left: 50%;
+
   transform: translate(-50%, -50%);
   z-index: 2;
 
@@ -26,10 +30,11 @@ export const Container = styled.div`
 `;
 
 export const Month = styled.div`
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  width: 100%;
 `;
 
 export const Title = styled.h1`
@@ -39,10 +44,11 @@ export const Title = styled.h1`
 `;
 
 export const Weekdays = styled.div`
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
+
+  width: 100%;
 `;
 
 export const Weekday = styled.p`
@@ -80,7 +86,7 @@ export const Day = styled.div`
     border-radius: 100px;
   }
 
-  ${({ theme, isBlank, isCurrentDay, isFuture }: StyledDayProps) => css`
+  ${({ theme, isBlank, isToday, isFuture }: StyledDayProps) => css`
     background-color: ${isBlank
       ? theme.COLOR.CONTAINER.DEFAULT
       : theme.COLOR.BACKGROUND.SECONDARY};
@@ -89,9 +95,7 @@ export const Day = styled.div`
     opacity: ${isFuture ? 0.3 : 1};
 
     div {
-      border: ${isCurrentDay
-        ? `1px solid ${theme.COLOR.PRIMARY.DEFAULT}`
-        : "none"};
+      border: ${isToday ? `1px solid ${theme.COLOR.PRIMARY.DEFAULT}` : "none"};
     }
   `}
 `;

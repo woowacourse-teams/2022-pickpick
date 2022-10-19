@@ -8,13 +8,12 @@ import com.pickpick.channel.ui.dto.ChannelOrderRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionRequest;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponse;
 import com.pickpick.channel.ui.dto.ChannelSubscriptionResponses;
-import com.pickpick.exception.channel.ChannelNotFoundException;
 import com.pickpick.exception.channel.SubscriptionDuplicateException;
 import com.pickpick.exception.channel.SubscriptionNotExistException;
 import com.pickpick.exception.channel.SubscriptionOrderDuplicateException;
-import com.pickpick.exception.member.MemberNotFoundException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.support.ExternalClient;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,13 +27,15 @@ public class ChannelSubscriptionService {
     private static final int ORDER_FIRST = 1;
     private static final int ORDER_NEXT = 1;
 
+    private final ExternalClient externalClient;
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final ChannelRepository channels;
     private final MemberRepository members;
 
-    public ChannelSubscriptionService(final ChannelSubscriptionRepository channelSubscriptions,
-                                      final ChannelRepository channels,
-                                      final MemberRepository members) {
+    public ChannelSubscriptionService(final ExternalClient externalClient,
+                                      final ChannelSubscriptionRepository channelSubscriptions,
+                                      final ChannelRepository channels, final MemberRepository members) {
+        this.externalClient = externalClient;
         this.channelSubscriptions = channelSubscriptions;
         this.channels = channels;
         this.members = members;
@@ -43,14 +44,13 @@ public class ChannelSubscriptionService {
     @Transactional
     public void save(final ChannelSubscriptionRequest subscriptionRequest, final Long memberId) {
         Long channelId = subscriptionRequest.getChannelId();
-        Channel channel = channels.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        Channel channel = channels.getById(channelId);
 
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
         validateDuplicatedSubscription(channel, member);
 
+        externalClient.inviteBotToChannel(member, channel);
         channelSubscriptions.save(new ChannelSubscription(channel, member, getMaxViewOrder(member)));
     }
 
@@ -136,11 +136,9 @@ public class ChannelSubscriptionService {
 
     @Transactional
     public void delete(final Long channelId, final Long memberId) {
-        Channel channel = channels.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        Channel channel = channels.getById(channelId);
 
-        Member member = members.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+        Member member = members.getById(memberId);
 
         validateSubscriptionExist(channel, member);
 

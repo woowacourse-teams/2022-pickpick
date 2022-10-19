@@ -1,7 +1,9 @@
-import { PropsWithChildren } from "react";
-import * as Styled from "./style";
-import ProfileImage from "@src/components/ProfileImage";
+import ProfileImage from "@src/components/MessageCard/ProfileImage";
+
 import { FlexRow } from "@src/@styles/shared";
+import { StrictPropsWithChildren } from "@src/@types/utils";
+
+import * as Styled from "./style";
 
 interface Props {
   username: string;
@@ -18,11 +20,12 @@ function MessageCard({
   thumbnail,
   isRemindedMessage,
   children,
-}: PropsWithChildren<Props>) {
+}: StrictPropsWithChildren<Props>) {
   return (
     <Styled.Container>
       <FlexRow columnGap="8px" width="100%">
         <ProfileImage src={thumbnail} alt={`${username} 프로필 사진`} />
+
         <div>
           <FlexRow columnGap="4px" alignItems="center">
             <Styled.Writer>{username}</Styled.Writer>

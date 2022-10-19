@@ -1,36 +1,39 @@
 package com.pickpick.auth.application;
 
+import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import com.pickpick.config.SlackProperties;
-import com.pickpick.exception.SlackApiCallException;
-import com.pickpick.exception.member.MemberNotFoundException;
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
-import com.slack.api.methods.request.users.UsersIdentityRequest;
-import java.io.IOException;
-import javax.transaction.Transactional;
+import com.pickpick.support.ExternalClient;
+import com.pickpick.workspace.domain.Workspace;
+import com.pickpick.workspace.domain.WorkspaceRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final MemberRepository members;
-    private final MethodsClient slackClient;
+    private final WorkspaceRepository workspaces;
+    private final ChannelRepository channels;
+    private final ExternalClient slackClient;
     private final JwtTokenProvider jwtTokenProvider;
-    private final SlackProperties slackProperties;
 
-    public AuthService(final MemberRepository members, final MethodsClient slackClient,
-                       final JwtTokenProvider jwtTokenProvider, final SlackProperties slackProperties) {
+    public AuthService(final MemberRepository members, final WorkspaceRepository workspaces,
+                       final ChannelRepository channels, final ExternalClient slackClient,
+                       final JwtTokenProvider jwtTokenProvider) {
         this.members = members;
+        this.workspaces = workspaces;
+        this.channels = channels;
         this.slackClient = slackClient;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.slackProperties = slackProperties;
     }
 
     public void verifyToken(final String token) {
@@ -38,50 +41,32 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse login(final String code) {
-        String token = requestSlackToken(code);
-        String memberSlackId = requestMemberSlackId(token);
+    public LoginResponse registerWorkspace(final String code) {
+        WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
+        Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
-        Member member = members.findBySlackId(memberSlackId)
-                .orElseThrow(() -> new MemberNotFoundException(memberSlackId));
+        List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
+        members.saveAll(allWorkspaceMembers);
+
+        List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
+        channels.saveAll(allWorkspaceChannels);
+
+        return login(code);
+    }
+
+    @Transactional
+    public LoginResponse login(final String code) {
+        String userToken = slackClient.callUserToken(code);
+        String memberSlackId = slackClient.callMemberSlackId(userToken);
+
+        Member member = members.getBySlackId(memberSlackId);
 
         boolean isFirstLogin = member.isFirstLogin();
-        member.markLoggedIn();
+        member.firstLogin(userToken);
 
         return LoginResponse.builder()
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))
                 .firstLogin(isFirstLogin)
                 .build();
-    }
-
-    private String requestSlackToken(final String code) {
-        OAuthV2AccessRequest request = OAuthV2AccessRequest.builder()
-                .clientId(slackProperties.getClientId())
-                .clientSecret(slackProperties.getClientSecret())
-                .redirectUri(slackProperties.getRedirectUrl())
-                .code(code)
-                .build();
-
-        try {
-            return slackClient.oauthV2Access(request)
-                    .getAuthedUser()
-                    .getAccessToken();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException("oauthV2Access");
-        }
-    }
-
-    private String requestMemberSlackId(final String token) {
-        UsersIdentityRequest request = UsersIdentityRequest.builder()
-                .token(token)
-                .build();
-
-        try {
-            return slackClient.usersIdentity(request)
-                    .getUser()
-                    .getId();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException("usersIdentity");
-        }
     }
 }

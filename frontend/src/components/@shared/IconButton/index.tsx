@@ -1,4 +1,7 @@
-import { PropsWithChildren, ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes } from "react";
+
+import { StrictPropsWithChildren } from "@src/@types/utils";
+
 import * as Styled from "./style";
 
 export type Icon = "star" | "alarm";
@@ -8,7 +11,7 @@ export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   isActive: boolean;
 }
 
-function IconButton({ children, ...props }: PropsWithChildren<Props>) {
+function IconButton({ children, ...props }: StrictPropsWithChildren<Props>) {
   return <Styled.Container {...props}>{children}</Styled.Container>;
 }
 

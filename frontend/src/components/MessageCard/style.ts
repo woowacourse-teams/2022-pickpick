@@ -1,14 +1,16 @@
-import { StyledDefaultProps } from "@src/@types/shared";
 import styled, { css } from "styled-components";
+
+import { StyledDefaultProps } from "@src/@types/shared";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  column-gap: 4px;
+
+  width: 100%;
   height: auto;
   padding: 14px;
-  column-gap: 4px;
-  width: 100%;
   border-radius: 4px;
   box-shadow: 0.5px 0.5px 2px 0px rgba(0, 0, 0, 0.1);
 

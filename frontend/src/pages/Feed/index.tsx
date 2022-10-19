@@ -1,31 +1,36 @@
-import { FlexColumn } from "@src/@styles/shared";
-import MessageCard from "@src/components/MessageCard";
-import * as Styled from "./style";
-import React from "react";
-import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseMessages, parseTime } from "@src/@utils";
-import useMessageDate from "@src/hooks/useMessageDate";
+import { Fragment } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import DateDropdown from "@src/components/DateDropdown";
-import useModal from "@src/hooks/useModal";
-import Portal from "@src/components/@shared/Portal";
-import Dimmer from "@src/components/@shared/Dimmer";
+
+import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
+import Modal from "@src/components/@shared/Modal";
+import AddReminder from "@src/components/AddReminder";
 import Calendar from "@src/components/Calendar";
+import DateDropdown from "@src/components/DateDropdown";
 import EmptyStatus from "@src/components/EmptyStatus";
+import MessageCard from "@src/components/MessageCard";
+import BookmarkButton from "@src/components/MessageCard/MessageIconButtons/BookmarkButton";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 import SearchForm from "@src/components/SearchForm";
-import ReminderModal from "@src/components/ReminderModal";
+
+import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
+import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useModal from "@src/hooks/@shared/useModal";
+import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
+import useMessageDate from "@src/hooks/useMessageDate";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import BookmarkButton from "@src/components/MessageIconButtons/BookmarkButton";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import useMutateBookmark from "@src/hooks/query/useMutateBookmark";
-import useGetInfiniteMessages from "@src/hooks/query/useGetInfiniteMessages";
-import useScrollToTop from "@src/hooks/useScrollToTop";
+
+import { DEFAULT_CHANNEL_ID } from "@src/@constants/api";
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseMessages } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
+
+import * as Styled from "./style";
 
 function Feed() {
   const { channelId } = useParams();
-  const { isRenderDate } = useMessageDate();
   const { key: queryKey } = useLocation();
+  const shouldRenderDate = useMessageDate();
 
   const {
     reminderTarget,
@@ -85,17 +90,17 @@ function Feed() {
               const parsedDate = postedDate.split("T")[0];
 
               return (
-                <React.Fragment key={id}>
-                  {isRenderDate(parsedDate) && (
+                <Fragment key={id}>
+                  {shouldRenderDate(parsedDate) && (
                     <DateDropdown
                       postedDate={parsedDate}
-                      channelId={channelId ?? "main"}
+                      channelId={channelId ?? DEFAULT_CHANNEL_ID}
                       handleOpenCalendar={handleOpenCalendar}
                     />
                   )}
                   <MessageCard
                     username={username}
-                    date={parseTime(postedDate)}
+                    date={parseMessageDateFromISO(postedDate)}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={false}
@@ -118,7 +123,7 @@ function Feed() {
                       />
                     </>
                   </MessageCard>
-                </React.Fragment>
+                </Fragment>
               );
             }
           )}
@@ -127,36 +132,30 @@ function Feed() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isCalendarOpened}>
-        <>
-          <Dimmer hasBackgroundColor={true} onClick={handleCloseCalendar} />
-          <Calendar
-            channelId={channelId ?? "main"}
-            handleCloseCalendar={handleCloseCalendar}
-          />
-        </>
-      </Portal>
+      <Modal isOpened={isCalendarOpened} handleCloseModal={handleCloseCalendar}>
+        <Calendar
+          channelId={channelId ?? DEFAULT_CHANNEL_ID}
+          handleCloseCalendar={handleCloseCalendar}
+        />
+      </Modal>
 
-      <Portal isOpened={isReminderModalOpened}>
-        <>
-          <Dimmer
-            hasBackgroundColor={true}
-            onClick={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-          />
-          <ReminderModal
-            messageId={reminderTarget.id}
-            remindDate={reminderTarget.remindDate ?? ""}
-            handleCloseReminderModal={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-            refetchFeed={refetch}
-          />
-        </>
-      </Portal>
+      <Modal
+        isOpened={isReminderModalOpened}
+        handleCloseModal={() => {
+          handleInitializeReminderTarget();
+          handleCloseReminderModal();
+        }}
+      >
+        <AddReminder
+          messageId={reminderTarget.id}
+          remindDate={reminderTarget.remindDate ?? ""}
+          handleCloseReminderModal={() => {
+            handleInitializeReminderTarget();
+            handleCloseReminderModal();
+          }}
+          refetchFeed={refetch}
+        />
+      </Modal>
     </Styled.Container>
   );
 }

@@ -1,20 +1,26 @@
 package com.pickpick.member.domain;
 
-import java.util.List;
+import com.pickpick.exception.member.MemberNotFoundException;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
 
 public interface MemberRepository extends Repository<Member, Long> {
 
-    Optional<Member> findById(Long id);
-
-    Optional<Member> findBySlackId(String slackId);
-
     Member save(Member member);
 
     void saveAll(Iterable<Member> members);
 
-    List<Member> findAll();
+    Optional<Member> findById(Long id);
 
-    void deleteAll();
+    Optional<Member> findBySlackId(String slackId);
+
+    default Member getById(final Long id) {
+        return findById(id)
+                .orElseThrow(() -> new MemberNotFoundException(id));
+    }
+
+    default Member getBySlackId(final String slackId) {
+        return findBySlackId(slackId)
+                .orElseThrow(() -> new MemberNotFoundException(slackId));
+    }
 }

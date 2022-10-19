@@ -1,12 +1,19 @@
-import * as Styled from "./style";
-import Button from "@src/components/@shared/Button";
-import { FlexRow } from "@src/@styles/shared";
 import LogoIcon from "@public/assets/icons/pickpick.svg";
-import { SLACK_LOGIN_URL } from "@src/@constants";
+
+import Button from "@src/components/@shared/Button";
+
+import { SLACK_URL } from "@src/@constants/path";
+import { FlexRow } from "@src/@styles/shared";
+
+import * as Styled from "./style";
 
 function Home() {
-  const handleNavigateToAddChannel = () => {
-    location.href = SLACK_LOGIN_URL;
+  const handleNavigateToRegisterWorkspace = () => {
+    location.href = SLACK_URL.REGISTER_WORKSPACE;
+  };
+
+  const handleNavigateToLogin = () => {
+    location.href = SLACK_URL.LOGIN;
   };
 
   return (
@@ -26,7 +33,19 @@ function Home() {
             우리가 주워줄게!
           </h2>
         </FlexRow>
-        <Button onClick={handleNavigateToAddChannel}>시작하기</Button>
+        <FlexRow
+          gap="10px"
+          flexWrap="wrap"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Button onClick={handleNavigateToRegisterWorkspace}>
+            워크스페이스 등록
+          </Button>
+          <Button onClick={handleNavigateToLogin} styleType="secondary">
+            로그인
+          </Button>
+        </FlexRow>
       </Styled.GreetingContainer>
 
       <Styled.UsageContainer>

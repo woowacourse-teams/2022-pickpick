@@ -1,5 +1,5 @@
-import { Component, ReactNode, PropsWithChildren } from "react";
-
+import { Component, ReactNode } from "react";
+import { StrictPropsWithChildren } from "@src/@types/utils";
 interface Props {
   fallback: ReactNode;
 }
@@ -8,7 +8,7 @@ interface State {
   hasError: boolean;
 }
 
-class ErrorBoundary extends Component<PropsWithChildren<Props>, State> {
+class ErrorBoundary extends Component<StrictPropsWithChildren<Props>, State> {
   public state: State = {
     hasError: false,
   };

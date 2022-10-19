@@ -1,18 +1,21 @@
-import { FlexColumn } from "@src/@styles/shared";
-import MessageCard from "@src/components/MessageCard";
-import * as Styled from "../Feed/style";
+import * as Styled from "@src/pages/Feed/style";
+
 import InfiniteScroll from "@src/components/@shared/InfiniteScroll";
-import MessagesLoadingStatus from "@src/components/MessagesLoadingStatus";
-import { extractResponseReminders, parseTime } from "@src/@utils";
+import Modal from "@src/components/@shared/Modal";
+import AddReminder from "@src/components/AddReminder";
 import EmptyStatus from "@src/components/EmptyStatus";
-import Portal from "@src/components/@shared/Portal";
-import Dimmer from "@src/components/@shared/Dimmer";
-import ReminderModal from "@src/components/ReminderModal";
-import useModal from "@src/hooks/useModal";
+import MessageCard from "@src/components/MessageCard";
+import ReminderButton from "@src/components/MessageCard/MessageIconButtons/ReminderButton";
+import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
+
+import useGetInfiniteReminders from "@src/hooks/@query/useGetInfiniteReminders";
+import useModal from "@src/hooks/@shared/useModal";
+import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
-import ReminderButton from "@src/components/MessageIconButtons/ReminderButton";
-import useGetInfiniteReminders from "@src/hooks/query/useGetInfiniteReminders";
-import useScrollToTop from "@src/hooks/useScrollToTop";
+
+import { FlexColumn } from "@src/@styles/shared";
+import { extractResponseReminders } from "@src/@utils/api";
+import { parseMessageDateFromISO } from "@src/@utils/date";
 
 function Reminder() {
   const {
@@ -21,7 +24,6 @@ function Reminder() {
     handleInitializeReminderTarget,
   } = useSetReminderTargetMessage();
 
-  useGetInfiniteReminders;
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useGetInfiniteReminders();
 
@@ -60,7 +62,7 @@ function Reminder() {
                   <MessageCard
                     key={id}
                     username={username}
-                    date={`${date} ${parseTime(remindDate)}`}
+                    date={`${date} ${parseMessageDateFromISO(remindDate)}`}
                     text={text}
                     thumbnail={userThumbnail}
                     isRemindedMessage={true}
@@ -84,26 +86,23 @@ function Reminder() {
         </FlexColumn>
       </InfiniteScroll>
 
-      <Portal isOpened={isReminderModalOpened}>
-        <>
-          <Dimmer
-            hasBackgroundColor={true}
-            onClick={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-          />
-          <ReminderModal
-            messageId={reminderTarget.id}
-            remindDate={reminderTarget.remindDate ?? ""}
-            handleCloseReminderModal={() => {
-              handleInitializeReminderTarget();
-              handleCloseReminderModal();
-            }}
-            refetchFeed={refetch}
-          />
-        </>
-      </Portal>
+      <Modal
+        isOpened={isReminderModalOpened}
+        handleCloseModal={() => {
+          handleInitializeReminderTarget();
+          handleCloseReminderModal();
+        }}
+      >
+        <AddReminder
+          messageId={reminderTarget.id}
+          remindDate={reminderTarget.remindDate ?? ""}
+          handleCloseReminderModal={() => {
+            handleInitializeReminderTarget();
+            handleCloseReminderModal();
+          }}
+          refetchFeed={refetch}
+        />
+      </Modal>
     </Styled.Container>
   );
 }

@@ -1,11 +1,14 @@
-import { PropsWithChildren } from "react";
-import * as Styled from "./style";
+import { useLocation } from "react-router-dom";
+
 import Header from "@src/components/@layouts/Header";
 import Navigation from "@src/components/@layouts/Navigation";
-import { useLocation } from "react-router-dom";
-import { PATH_NAME } from "@src/@constants";
 
-function LayoutContainer({ children }: PropsWithChildren) {
+import { PATH_NAME } from "@src/@constants/path";
+import { StrictPropsWithChildren } from "@src/@types/utils";
+
+import * as Styled from "./style";
+
+function LayoutContainer({ children }: StrictPropsWithChildren) {
   const { pathname } = useLocation();
 
   const hasHeader = () => pathname === PATH_NAME.HOME;
@@ -13,11 +16,11 @@ function LayoutContainer({ children }: PropsWithChildren) {
     pathname !== PATH_NAME.HOME && pathname !== PATH_NAME.ADD_CHANNEL;
 
   return (
-    <Styled.Container>
+    <div>
       {hasHeader() && <Header />}
       <Styled.Main hasMarginTop={hasHeader()}>{children}</Styled.Main>
       {hasNavBar() && <Navigation />}
-    </Styled.Container>
+    </div>
   );
 }
 
