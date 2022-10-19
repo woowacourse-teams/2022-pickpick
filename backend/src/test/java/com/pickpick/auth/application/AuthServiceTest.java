@@ -18,13 +18,12 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
-import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsListRequest.ConversationsListRequestBuilder;
+import com.slack.api.methods.request.conversations.ConversationsListRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
-import com.slack.api.methods.request.users.UsersListRequest.UsersListRequestBuilder;
+import com.slack.api.methods.request.users.UsersListRequest;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
@@ -126,9 +125,9 @@ class AuthServiceTest {
 
         given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
                 .willReturn(generateOAuthV2AccessResponse(workspaceSlackId));
-        given(slackClient.conversationsList((RequestConfigurator<ConversationsListRequestBuilder>) any()))
+        given(slackClient.conversationsList(any(ConversationsListRequest.class)))
                 .willReturn(generateConversationsListResponse());
-        given(slackClient.usersList((RequestConfigurator<UsersListRequestBuilder>) any()))
+        given(slackClient.usersList(any(UsersListRequest.class)))
                 .willReturn(generateUsersListResponse(memberSlackId));
         given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
                 .willReturn(generateUsersIdentityResponse(memberSlackId));
