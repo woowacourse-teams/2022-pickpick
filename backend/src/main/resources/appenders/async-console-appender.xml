@@ -1,10 +1,10 @@
 <included>
     <appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
-
         <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <pattern>
+                %highlight([%-5level]) %d{yyyy-MM-dd HH:mm:ss} %cyan([%thread]) %magenta([%logger{0}:%line])-%message%n
+            </pattern>
         </encoder>
-
     </appender>
 
     <appender name="ASYNC_CONSOLE_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
