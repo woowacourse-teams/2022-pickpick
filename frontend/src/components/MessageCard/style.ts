@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 import { StyledDefaultProps } from "@src/@types/shared";
 
-export const Container = styled.div`
+export const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 12px;

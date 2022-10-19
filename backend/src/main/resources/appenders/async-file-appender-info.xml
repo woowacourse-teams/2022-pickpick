@@ -1,7 +1,9 @@
 <included>
-    <appender name="FILE_APPENDER_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <timestamp key="DATE_FORMAT"
+               datePattern="yyyy-MM-dd"/>
 
-        <file>${FILE_PATH}/${DATE_FORMAT}/info/info.log</file>
+    <appender name="FILE_APPENDER_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/logs/${DATE_FORMAT}/info/info.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
@@ -10,11 +12,13 @@
         </filter>
 
         <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <pattern>
+                [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%thread] [%logger{0}:%line] - %message %n
+            </pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${FILE_PATH}/%d{yyyy-MM-dd}/info/info_%i.log</fileNamePattern>
+            <fileNamePattern>${user.home}/logs/%d{yyyy-MM-dd}/info/info_%i.log</fileNamePattern>
             <maxFileSize>5MB</maxFileSize>
             <maxHistory>2</maxHistory>
             <totalSizeCap>30MB</totalSizeCap>
