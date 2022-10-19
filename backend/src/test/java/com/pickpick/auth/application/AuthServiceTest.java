@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class AuthServiceTest {
@@ -110,7 +109,6 @@ class AuthServiceTest {
         assertThat(afterSave).isNotEmpty();
     }
 
-    @Transactional
     @DisplayName("워크스페이스 초기화 시 해당 워크스페이스의 채널과 멤버를 저장한다.")
     @Test
     void registerWorkspaceAnd() {
@@ -125,9 +123,11 @@ class AuthServiceTest {
         List<Channel> jupjupChannels = channels.findAllByWorkspaceOrderByName(savedJupjup);
         Member savedKkojae = members.getBySlackId(kkojae.getSlackId());
 
+        List<Member> memberInJupjup = members.findAllByWorkspace(savedJupjup);
+
         // then
         assertThat(jupjupChannels).isNotEmpty();
-        assertThat(savedKkojae.getWorkspace()).isEqualTo(savedJupjup);
+        assertThat(memberInJupjup).extracting("slackId").contains(savedKkojae.getSlackId());
     }
 
     @DisplayName("유효한 토큰을 검증한다.")
