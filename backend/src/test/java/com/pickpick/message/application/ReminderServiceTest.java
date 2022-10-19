@@ -375,15 +375,15 @@ class ReminderServiceTest {
             @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
             @Test
             void isSeveralSameId() {
-                List<ReminderResponse> foundMessages = response.getReminders()
-                        .stream()
-                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
-                        .collect(Collectors.toList());
+                Reminder target = bomReminders.stream()
+                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("여러번 존재하는 유저"))
+                        .findFirst()
+                        .get();
 
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
-                );
+                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
+                        target.getMember().getId());
+
+                assertThat(response.getText()).doesNotContain("<@");
             }
 
             @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
