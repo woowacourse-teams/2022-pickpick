@@ -16,7 +16,7 @@ import useModal from "@src/hooks/@shared/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { SEARCH_PARAMS } from "@src/@constants/api";
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
 import { extractResponseMessages, getChannelIdsParams } from "@src/@utils/api";
 import { parseMessageDateFromISO } from "@src/@utils/date";
 
@@ -54,6 +54,8 @@ function SearchResult() {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>검색 결과</SrOnlyTitle>
+
       <SearchForm
         currentKeyword={keyword}
         currentChannelIds={channelIds.split(",").map(Number)}
