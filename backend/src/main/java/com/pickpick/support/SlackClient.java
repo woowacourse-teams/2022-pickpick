@@ -120,7 +120,12 @@ public class SlackClient implements ExternalClient {
     private List<Member> toMembers(final List<User> users, final Workspace workspace) {
         return users.stream()
                 .map(user -> toMember(user, workspace))
+                .filter(this::isNotSlackBot)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isNotSlackBot(final Member member) {
+        return !"USLACKBOT".equalsIgnoreCase(member.getSlackId());
     }
 
     private Member toMember(final User user, final Workspace workspace) {
