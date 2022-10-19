@@ -8,7 +8,7 @@ interface StyledDayProps extends StyledDefaultProps {
   isFuture: boolean;
 }
 
-export const Container = styled.div`
+export const Container = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
