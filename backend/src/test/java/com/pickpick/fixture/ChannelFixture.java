@@ -3,8 +3,6 @@ package com.pickpick.fixture;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.workspace.domain.Workspace;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public enum ChannelFixture {
 
@@ -23,13 +21,6 @@ public enum ChannelFixture {
         this.slackId = slackId;
         this.name = name;
         this.isJupjupChannel = isJupjupChannel;
-    }
-
-    public static List<Channel> createAllChannels(final Workspace workspace) {
-        return Arrays.stream(ChannelFixture.values())
-                .filter(ChannelFixture::isJupjupChannel)
-                .map(channel -> channel.create(workspace))
-                .collect(Collectors.toList());
     }
 
     public static int getDefaultSize() {

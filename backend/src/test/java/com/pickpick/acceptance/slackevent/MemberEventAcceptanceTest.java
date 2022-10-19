@@ -23,7 +23,7 @@ class MemberEventAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String code = 슬랙에서_멤버의_코드_발행(BOM);
+        String code = 슬랙에서_코드_발행(BOM);
         워크스페이스_초기화_및_로그인(code);
 
         memberSlackId = 코드로_멤버의_SlackId_추출(code);

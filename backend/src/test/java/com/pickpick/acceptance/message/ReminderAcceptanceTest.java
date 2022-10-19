@@ -34,15 +34,15 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class ReminderAcceptanceTest extends AcceptanceTestBase {
 
-    private String jwtToken;
+    private String token;
     private String memberSlackId;
 
     @BeforeEach
     void init() {
-        String code = 슬랙에서_멤버의_코드_발행(BOM);
+        String code = 슬랙에서_코드_발행(BOM);
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(code);
 
-        jwtToken = 로그인_응답에서_토큰_추출(loginResponse);
+        token = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_SlackId_추출(code);
     }
 
@@ -52,7 +52,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_전송(memberSlackId);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_생성(jwtToken, 1, LocalDateTime.now());
+        ExtractableResponse<Response> response = 리마인더_생성(token, 1, LocalDateTime.now());
 
         // then
         상태코드_201_확인(response);
@@ -62,10 +62,10 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
     void 리마인더_단건_조회_정상_응답() {
         // given
         메시지_전송(memberSlackId);
-        리마인더_생성(jwtToken, 1, LocalDateTime.now());
+        리마인더_생성(token, 1, LocalDateTime.now());
 
         // when
-        ExtractableResponse<Response> response = 리마인더_단건_조회(jwtToken, 1L);
+        ExtractableResponse<Response> response = 리마인더_단건_조회(token, 1L);
 
         // then
         상태코드_200_확인(response);
@@ -79,7 +79,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_전송(memberSlackId);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_단건_조회(jwtToken, 1L);
+        ExtractableResponse<Response> response = 리마인더_단건_조회(token, 1L);
 
         // then
         상태코드_404_확인(response);
@@ -92,12 +92,12 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_목록_생성(memberSlackId, messageCount);
 
         List<Long> messageIdsForReminder = List.of(1L, 3L, 5L, 7L);
-        리마인더_목록_생성(jwtToken, messageIdsForReminder);
+        리마인더_목록_생성(token, messageIdsForReminder);
 
         ReminderFindRequest request = new ReminderFindRequest();
 
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(jwtToken, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -117,7 +117,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_목록_생성(memberSlackId, messageCount);
 
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L);
-        리마인더_목록_생성(jwtToken, messageIdsForReminder);
+        리마인더_목록_생성(token, messageIdsForReminder);
 
         List<Long> expectedMessageIds = List.of(3L, 4L, 5L);
 
@@ -125,7 +125,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
                 .reminderId(2L);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(jwtToken, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -144,14 +144,14 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_목록_생성(memberSlackId, messageCount);
 
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
-        리마인더_목록_생성(jwtToken, messageIdsForReminder);
+        리마인더_목록_생성(token, messageIdsForReminder);
 
         ReminderFindRequest request = new ReminderFindRequest()
                 .reminderId(3L)
                 .count(10);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(jwtToken, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -167,13 +167,13 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_목록_생성(memberSlackId, messageCount);
 
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
-        리마인더_목록_생성(jwtToken, messageIdsForReminder);
+        리마인더_목록_생성(token, messageIdsForReminder);
 
         ReminderFindRequest request = new ReminderFindRequest()
                 .count(10);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(jwtToken, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -190,12 +190,12 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
 
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L,
                 16L, 17L, 18L, 19L, 20L);
-        리마인더_목록_생성(jwtToken, messageIdsForReminder);
+        리마인더_목록_생성(token, messageIdsForReminder);
 
         ReminderFindRequest request = new ReminderFindRequest();
 
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(jwtToken, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -210,7 +210,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
 
         List<Long> messageIdsForReminder = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L,
                 16L, 17L, 18L, 19L, 20L);
-        리마인더_목록_생성(jwtToken, messageIdsForReminder);
+        리마인더_목록_생성(token, messageIdsForReminder);
 
         int reminderCount = 10;
 
@@ -218,7 +218,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
                 .count(reminderCount);
 
         // when
-        ExtractableResponse<Response> response = 리마인더_목록_조회(jwtToken, request);
+        ExtractableResponse<Response> response = 리마인더_목록_조회(token, request);
 
         // then
         상태코드_200_확인(response);
@@ -231,10 +231,10 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_전송(memberSlackId);
 
         long messageId = 1L;
-        리마인더_생성(jwtToken, messageId, LocalDateTime.now().plusDays(1));
+        리마인더_생성(token, messageId, LocalDateTime.now().plusDays(1));
 
         // when
-        ExtractableResponse<Response> response = 리마인더_수정(jwtToken, messageId, LocalDateTime.now());
+        ExtractableResponse<Response> response = 리마인더_수정(token, messageId, LocalDateTime.now());
 
         // then
         상태코드_200_확인(response);
@@ -262,10 +262,10 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         메시지_전송(memberSlackId);
 
         long messageId = 1L;
-        리마인더_생성(jwtToken, messageId, LocalDateTime.now());
+        리마인더_생성(token, messageId, LocalDateTime.now());
 
         // when
-        ExtractableResponse<Response> response = 리마인더_삭제(jwtToken, messageId);
+        ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);
 
         // then
         상태코드_204_확인(response);
@@ -277,7 +277,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
         long messageId = 1L;
 
         // when
-        ExtractableResponse<Response> response = 리마인더_삭제(jwtToken, messageId);
+        ExtractableResponse<Response> response = 리마인더_삭제(token, messageId);
 
         // then
         상태코드_400_확인(response);

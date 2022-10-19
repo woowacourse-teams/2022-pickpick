@@ -42,7 +42,7 @@ public class AcceptanceTestBase {
         databaseCleaner.clear();
     }
 
-    protected String 슬랙에서_멤버의_코드_발행(MemberFixture memberFixture) {
+    protected String 슬랙에서_코드_발행(MemberFixture memberFixture) {
         return memberFixture.getCode();
     }
 

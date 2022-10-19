@@ -26,7 +26,7 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 정상_로그인() {
         // given
-        String code = 슬랙에서_멤버의_코드_발행(BOM);
+        String code = 슬랙에서_코드_발행(BOM);
 
         // when
         ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(code);
