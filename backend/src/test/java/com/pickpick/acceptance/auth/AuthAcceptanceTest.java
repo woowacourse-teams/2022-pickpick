@@ -5,6 +5,7 @@ import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
+import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
@@ -25,7 +26,7 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 정상_로그인() {
         // given
-        String memberCode = 슬랙에서_멤버의_코드_발행();
+        String memberCode = 슬랙에서_멤버의_코드_발행(BOM);
 
         // when
         ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberCode);

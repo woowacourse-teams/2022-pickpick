@@ -3,6 +3,7 @@ package com.pickpick.channel.application;
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MemberFixture.YEONLOG;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +14,6 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
 import com.pickpick.channel.ui.dto.ChannelResponse;
-import com.pickpick.fixture.StubSlack;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -50,9 +50,6 @@ class ChannelServiceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    @Autowired
-    private StubSlack stubSlack;
-
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
@@ -68,8 +65,6 @@ class ChannelServiceTest {
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
-
-        stubSlack.setParticipatingChannel(yeonLog, notice, freeChat, qna);
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
@@ -91,17 +86,15 @@ class ChannelServiceTest {
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member yeonLog = members.save(YEONLOG.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
 
-        channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
-
-        stubSlack.setParticipatingChannel(yeonLog, notice);
+        channelSubscriptions.save(new ChannelSubscription(notice, summer, 1));
 
         // when
-        List<String> channelNames = channelService.findByWorkspace(yeonLog.getId())
+        List<String> channelNames = channelService.findByWorkspace(summer.getId())
                 .getChannels()
                 .stream()
                 .map(ChannelResponse::getName)

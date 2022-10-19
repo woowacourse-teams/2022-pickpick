@@ -4,6 +4,7 @@ import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.멤버_정보_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
+import static com.pickpick.fixture.MemberFixture.BOM;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.workspace.domain.Workspace;
@@ -22,7 +23,7 @@ class MemberEventAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String memberCode = 슬랙에서_멤버의_코드_발행();
+        String memberCode = 슬랙에서_멤버의_코드_발행(BOM);
         워크스페이스_초기화_및_로그인(memberCode);
 
         memberSlackId = 코드로_멤버의_SlackId_추출(memberCode);

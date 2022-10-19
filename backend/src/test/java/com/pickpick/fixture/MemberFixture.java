@@ -22,6 +22,10 @@ public enum MemberFixture {
         this.thumbnailUrl = thumbnailUrl;
     }
 
+    public static String getMemberSlackIdByCode(final String memberCode) {
+        return memberCode.replace("code", "");
+    }
+
     public Member createLogin(final Workspace workspace) {
         Member member = new Member(slackId, username, thumbnailUrl, workspace);
         member.firstLogin("xoxp-" + slackId);

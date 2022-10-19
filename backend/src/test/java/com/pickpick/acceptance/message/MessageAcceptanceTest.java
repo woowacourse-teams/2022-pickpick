@@ -10,6 +10,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.빈_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.키워드를_포함한_메시지_목록_생성;
+import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
@@ -35,9 +36,9 @@ class MessageAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String memberCode = 슬랙에서_멤버의_코드_발행();
+        String memberCode = 슬랙에서_멤버의_코드_발행(KKOJAE);
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
-        
+
         token = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_SlackId_추출(memberCode);
     }

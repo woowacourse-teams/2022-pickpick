@@ -9,6 +9,7 @@ import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_�
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저가_구독한_채널_목록_조회_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_취소_요청;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -30,13 +31,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelSubscriptionAcceptanceTest extends AcceptanceTestBase {
 
-
     private String token;
 
     @BeforeEach
     void 가입_후_로그인() {
-        String memberCode = 슬랙에서_멤버의_코드_발행();
-        슬랙에서_멤버가_줍줍의_모든_채널에_참여(memberCode);
+        String memberCode = 슬랙에서_멤버의_코드_발행(SUMMER);
 
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
         token = 로그인_응답에서_토큰_추출(loginResponse);

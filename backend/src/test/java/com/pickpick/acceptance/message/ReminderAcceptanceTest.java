@@ -13,6 +13,7 @@ import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_�
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
+import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -38,9 +39,9 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String memberCode = 슬랙에서_멤버의_코드_발행();
+        String memberCode = 슬랙에서_멤버의_코드_발행(BOM);
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(memberCode);
-        
+
         jwtToken = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_SlackId_추출(memberCode);
     }
