@@ -6,7 +6,7 @@ import com.pickpick.message.domain.Message;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public enum MessageFixtures {
+public enum MessageFixture {
 
     PLAIN_20220712_14_00_00("일반 텍스트", LocalDateTime.of(2022, 7, 12, 14, 0, 0)),
     PLAIN_20220712_15_00_00("일반 텍스트", LocalDateTime.of(2022, 7, 12, 15, 0, 0)),
@@ -42,7 +42,7 @@ public enum MessageFixtures {
     private final String text;
     private final LocalDateTime dateTime;
 
-    MessageFixtures(final String text, final LocalDateTime dateTime) {
+    MessageFixture(final String text, final LocalDateTime dateTime) {
         this.text = text;
         this.dateTime = dateTime;
     }

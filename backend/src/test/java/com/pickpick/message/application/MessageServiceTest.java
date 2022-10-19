@@ -19,7 +19,7 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.fixture.MessageFixtures;
+import com.pickpick.fixture.MessageFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -306,7 +306,7 @@ class MessageServiceTest {
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
-            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+            List<Message> messagesInChannel = Arrays.stream(MessageFixture.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
                     .collect(Collectors.toList());
 

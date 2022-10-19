@@ -5,7 +5,7 @@ import static com.pickpick.fixture.MemberFixture.BOM;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MemberFixture.YEONLOG;
-import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
+import static com.pickpick.fixture.MessageFixture.PLAIN_20220712_14_00_00;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -16,7 +16,7 @@ import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.message.ReminderDeleteFailureException;
 import com.pickpick.exception.message.ReminderNotFoundException;
 import com.pickpick.exception.message.ReminderUpdateFailureException;
-import com.pickpick.fixture.MessageFixtures;
+import com.pickpick.fixture.MessageFixture;
 import com.pickpick.fixture.ReminderFindRequestFactory;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
@@ -269,7 +269,7 @@ class ReminderServiceTest {
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
-            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+            List<Message> messagesInChannel = Arrays.stream(MessageFixture.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
                     .collect(Collectors.toList());
 

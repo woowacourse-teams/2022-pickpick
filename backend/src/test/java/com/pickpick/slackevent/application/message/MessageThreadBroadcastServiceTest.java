@@ -2,7 +2,7 @@ package com.pickpick.slackevent.application.message;
 
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.MemberFixture.BOM;
-import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_14_00_00;
+import static com.pickpick.fixture.MessageFixture.PLAIN_20220712_14_00_00;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static com.pickpick.support.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
