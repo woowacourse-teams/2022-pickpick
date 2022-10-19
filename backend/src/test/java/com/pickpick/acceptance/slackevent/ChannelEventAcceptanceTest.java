@@ -25,10 +25,10 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String memberCode = 슬랙에서_멤버의_코드_발행(BOM);
-        워크스페이스_초기화_및_로그인(memberCode);
+        String code = 슬랙에서_멤버의_코드_발행(BOM);
+        워크스페이스_초기화_및_로그인(code);
 
-        workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(memberCode);
+        workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(code);
     }
 
     @Test

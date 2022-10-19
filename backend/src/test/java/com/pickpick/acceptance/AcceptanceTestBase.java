@@ -50,11 +50,11 @@ public class AcceptanceTestBase {
         return loginResponse.jsonPath().get("token");
     }
 
-    protected String 코드로_멤버의_SlackId_추출(final String memberCode) {
-        return MemberFixture.getMemberSlackIdByCode(memberCode);
+    protected String 코드로_멤버의_SlackId_추출(final String code) {
+        return MemberFixture.getMemberSlackIdByCode(code);
     }
 
-    protected Workspace 슬랙에서_멤버의_워크스페이스_정보_호출(final String memberCode) {
-        return externalClient.callWorkspaceInfo(memberCode).toEntity();
+    protected Workspace 슬랙에서_멤버의_워크스페이스_정보_호출(final String code) {
+        return externalClient.callWorkspaceInfo(code).toEntity();
     }
 }

@@ -22,8 +22,8 @@ public enum MemberFixture {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public static String getMemberSlackIdByCode(final String memberCode) {
-        return memberCode.replace("code", "");
+    public static String getMemberSlackIdByCode(final String code) {
+        return code.replace("code", "");
     }
 
     public Member createLogin(final Workspace workspace) {
