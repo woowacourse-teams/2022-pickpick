@@ -35,3 +35,7 @@ const srOnly = css`
 export const SrOnlyTitle = styled.h1`
   ${srOnly}
 `;
+
+export const SrOnlyDescription = styled.p`
+  ${srOnly}
+`;
