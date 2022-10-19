@@ -7,6 +7,7 @@ import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
 import useCalendar from "@src/components/Calendar/@hooks/useCalendar";
 
 import { MONTHS, WEEKDAYS } from "@src/@constants/date";
+import { SrOnlyTitle } from "@src/@styles/shared";
 import { ISOConverter } from "@src/@utils/date";
 
 import * as Styled from "./style";
@@ -31,8 +32,14 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>특정 날짜로 이동</SrOnlyTitle>
+
       <Styled.Month>
-        <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
+        <WrapperButton
+          kind="smallIcon"
+          onClick={handleDecrementMonth}
+          aria-label="이전 달 보기"
+        >
           <ArrowIconLeft
             width="24px"
             height="24px"
@@ -51,6 +58,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           onClick={handleIncrementMonth}
           isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
+          aria-label="다음 달 보기"
         >
           <ArrowIconRight
             width="24px"
@@ -66,7 +74,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
         ))}
       </Styled.Weekdays>
 
-      <Styled.Days>
+      <Styled.Days role="list">
         {getCurrentDays().map((day, index) => {
           const today = todayDate.getDate();
 
@@ -92,10 +100,14 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
             <Link
               key={index}
               to={`/feed/${channelId}/${ISOConverter(
-                `${todayDate.getFullYear()}-${
-                  MONTHS[todayDate.getMonth()]
+                `${firstOfMonthDate.getFullYear()}-${
+                  MONTHS[firstOfMonthDate.getMonth()]
                 }-${day}`
               )}`}
+              role="listItem"
+              aria-label={`${firstOfMonthDate.getFullYear()}년 ${
+                MONTHS[firstOfMonthDate.getMonth()]
+              }월 ${day}일 로 이동`}
             >
               <Styled.Day
                 isBlank={isBlank}
