@@ -16,7 +16,7 @@ function DateDropdownMenu({ date, channelId, handleOpenCalendar }: Props) {
       <hr />
 
       <Styled.Option>
-        <Styled.Button type="button" onClick={handleOpenCalendar}>
+        <Styled.Button type="button" onClick={handleOpenCalendar} tabIndex={1}>
           특정 날짜로 이동
         </Styled.Button>
       </Styled.Option>
