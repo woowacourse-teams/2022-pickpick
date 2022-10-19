@@ -2,11 +2,14 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
+import com.pickpick.member.domain.Member;
+import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QBookmark;
 import com.pickpick.message.domain.QMessage;
 import com.pickpick.message.domain.QReminder;
+import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
@@ -20,7 +23,9 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,19 +35,25 @@ import org.springframework.util.StringUtils;
 @Service
 public class MessageService {
 
+    private static final String MENTION_PREFIX = "<@";
+    private static final String MENSION_SUFFIX = ">";
+    private final MemberRepository members;
     private final MessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final JPAQueryFactory jpaQueryFactory;
     private final Clock clock;
+    private final SlackIdExtractor slackIdExtractor;
 
-    public MessageService(final MessageRepository messages,
+    public MessageService(final MemberRepository members, final MessageRepository messages,
                           final ChannelSubscriptionRepository channelSubscriptions,
-                          final JPAQueryFactory jpaQueryFactory,
-                          final Clock clock) {
+                          final JPAQueryFactory jpaQueryFactory, final Clock clock,
+                          final SlackIdExtractor slackIdExtractor) {
+        this.members = members;
         this.messages = messages;
         this.channelSubscriptions = channelSubscriptions;
         this.jpaQueryFactory = jpaQueryFactory;
         this.clock = clock;
+        this.slackIdExtractor = slackIdExtractor;
     }
 
     public MessageResponses find(final Long memberId, final MessageRequest messageRequest) {
@@ -89,6 +100,8 @@ public class MessageService {
                 .limit(messageCount)
                 .fetch();
 
+        replaceMentionMembers(memberId, messageResponses);
+
         if (needPastMessage) {
             return messageResponses;
         }
@@ -96,6 +109,30 @@ public class MessageService {
         return messageResponses.stream()
                 .sorted(Comparator.comparing(MessageResponse::getPostedDate).reversed())
                 .collect(Collectors.toList());
+    }
+
+    private void replaceMentionMembers(final Long memberId, final List<MessageResponse> messageResponses) {
+        Member member = members.getById(memberId);
+        List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
+
+        Map<String, String> workspaceMemberMap = workspaceMembers.stream()
+                .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
+
+        for (MessageResponse message : messageResponses) {
+            String text = replaceMentionMemberInText(message, workspaceMemberMap);
+            message.setText(text);
+        }
+    }
+
+    private String replaceMentionMemberInText(final MessageResponse message, final Map<String, String> memberMap) {
+        String text = message.getText();
+        Set<String> slackIds = slackIdExtractor.extract(text);
+        for (String slackId : slackIds) {
+            text = text.replace(
+                    MENTION_PREFIX + slackId + MENSION_SUFFIX,
+                    memberMap.getOrDefault(slackId, MENTION_PREFIX + slackId + MENSION_SUFFIX));
+        }
+        return text;
     }
 
     private ConstructorExpression<MessageResponse> getMessageResponseConstructor() {

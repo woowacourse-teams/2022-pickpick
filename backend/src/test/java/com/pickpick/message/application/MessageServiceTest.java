@@ -2,6 +2,7 @@ package com.pickpick.message.application;
 
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.BOM;
 import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
@@ -104,6 +105,7 @@ class MessageServiceTest {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member summer = members.save(SUMMER.createLogin(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
 
@@ -300,6 +302,73 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages).extracting("id").containsAll(noticeMessagesId),
                         () -> assertThat(foundMessages).extracting("id").containsAll(freeChatMessagesId),
                         () -> assertThat(foundMessages).extracting("id").doesNotContainAnyElementsOf(qnaMessagesId)
+                );
+            }
+        }
+
+        @DisplayName("메시지 내부에 멘션 아이디가 있다면")
+        @Nested
+        class mentionMessage {
+            MessageRequest request = searchByKeywordInChannels(List.of(notice), "멘션",
+                    MESSAGE_COUNT_OVER_TOTAL_SIZE);
+            MessageResponses response = messageService.find(summer.getId(), request);
+
+            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
+            @Test
+            void isExistedMentionId() {
+                List<MessageResponse> foundMessages = response.getMessages()
+                        .stream()
+                        .filter(message -> message.getText().contains("한 번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(
+                                BOM.createLogin(jupjup).getUsername())
+                );
+            }
+
+            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
+            @Test
+            void isNotExistedMentionId() {
+                List<MessageResponse> foundMessages = response.getMessages()
+                        .stream()
+                        .filter(message -> message.getText().contains("존재하지 않는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains("<@")
+                );
+            }
+
+            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
+            @Test
+            void isSeveralSameId() {
+                List<MessageResponse> foundMessages = response.getMessages()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
+                );
+            }
+
+            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
+            @Test
+            void isSeveralMemberMentioned() {
+                List<MessageResponse> foundMessages = response.getMessages()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(BOM.createLogin(jupjup).getUsername(),
+                                SUMMER.createLogin(jupjup).getUsername())
                 );
             }
         }
