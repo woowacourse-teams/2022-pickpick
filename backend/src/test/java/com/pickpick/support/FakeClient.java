@@ -45,7 +45,9 @@ public class FakeClient implements ExternalClient {
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
         Workspace workspace = codeAndWorkspace.get(code);
-        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId());
+        Member member = codeAndMember.get(code);
+        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId(),
+                member.getToken());
     }
 
     @Override

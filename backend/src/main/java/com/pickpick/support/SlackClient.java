@@ -55,19 +55,23 @@ public class SlackClient implements ExternalClient {
 
     @Override
     public String callUserToken(final String code) {
-        OAuthV2AccessResponse response = callOAuth2(code);
+        String loginRedirectUrl = slackProperties.getLoginRedirectUrl();
+        OAuthV2AccessResponse response = callOAuth2(code, loginRedirectUrl);
         validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
         return response.getAuthedUser().getAccessToken();
     }
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
-        OAuthV2AccessResponse response = callOAuth2(code);
-        return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId());
+        String workspaceRedirectUrl = slackProperties.getWorkspaceRedirectUrl();
+        OAuthV2AccessResponse response = callOAuth2(code, workspaceRedirectUrl);
+
+        return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId(),
+                response.getAuthedUser().getAccessToken());
     }
 
-    private OAuthV2AccessResponse callOAuth2(final String code) {
-        OAuthV2AccessRequest request = generateOAuthRequest(code);
+    private OAuthV2AccessResponse callOAuth2(final String code, final String redirectUrl) {
+        OAuthV2AccessRequest request = generateOAuthRequest(code, redirectUrl);
 
         try {
             OAuthV2AccessResponse response = methodsClient
@@ -80,11 +84,11 @@ public class SlackClient implements ExternalClient {
         }
     }
 
-    private OAuthV2AccessRequest generateOAuthRequest(final String code) {
+    private OAuthV2AccessRequest generateOAuthRequest(final String code, final String redirectUrl) {
         return OAuthV2AccessRequest.builder()
                 .clientId(slackProperties.getClientId())
                 .clientSecret(slackProperties.getClientSecret())
-                .redirectUri(slackProperties.getRedirectUrl())
+                .redirectUri(redirectUrl)
                 .code(code)
                 .build();
     }
@@ -118,7 +122,12 @@ public class SlackClient implements ExternalClient {
     private List<Member> toMembers(final List<User> users, final Workspace workspace) {
         return users.stream()
                 .map(user -> toMember(user, workspace))
+                .filter(this::isNotSlackBot)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isNotSlackBot(final Member member) {
+        return !"USLACKBOT".equalsIgnoreCase(member.getSlackId());
     }
 
     private Member toMember(final User user, final Workspace workspace) {
@@ -212,7 +221,7 @@ public class SlackClient implements ExternalClient {
 
     private <T extends SlackApiTextResponse> void validateResponse(final String methodName, final T response) {
         if (!response.isOk()) {
-            throw new SlackApiCallException(methodName, response.getError());
+            throw new SlackApiCallException(methodName, response);
         }
     }
 }

@@ -17,11 +17,16 @@ public class SlackProperties {
     private final String clientSecret;
 
     @NotBlank
-    private final String redirectUrl;
+    private final String loginRedirectUrl;
 
-    public SlackProperties(final String clientId, final String clientSecret, final String redirectUrl) {
+    @NotBlank
+    private final String workspaceRedirectUrl;
+
+    public SlackProperties(final String clientId, final String clientSecret, final String loginRedirectUrl,
+                           final String workspaceRedirectUrl) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
+        this.loginRedirectUrl = loginRedirectUrl;
+        this.workspaceRedirectUrl = workspaceRedirectUrl;
     }
 }
