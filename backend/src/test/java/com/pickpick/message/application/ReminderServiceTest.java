@@ -389,15 +389,17 @@ class ReminderServiceTest {
             @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
             @Test
             void isSeveralMemberMentioned() {
-                List<ReminderResponse> foundMessages = response.getReminders()
-                        .stream()
-                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
-                        .collect(Collectors.toList());
+                Reminder target = bomReminders.stream()
+                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("여러명 유저 멘션 텍스트"))
+                        .findFirst()
+                        .get();
+
+                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
+                        target.getMember().getId());
 
                 assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
-                        () -> assertThat(foundMessages.get(0).getText()).contains(
+                        () -> assertThat(response.getText()).doesNotContain("<@"),
+                        () -> assertThat(response.getText()).contains(
                                 BOM.createLogin(jupjup).getUsername(),
                                 SUMMER.createLogin(jupjup).getUsername())
                 );
