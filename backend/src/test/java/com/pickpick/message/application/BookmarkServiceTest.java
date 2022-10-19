@@ -1,8 +1,10 @@
 package com.pickpick.message.application;
 
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.MemberFixture.BOM;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageFixtures.PLAIN_20220712_18_00_00;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +54,9 @@ class BookmarkServiceTest {
 
     @Autowired
     private BookmarkService bookmarkService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private MemberRepository members;
@@ -153,8 +158,11 @@ class BookmarkServiceTest {
     class find {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
+        
         Member hope = members.save(HOPE.createLogin(jupjup));
         Member kkojae = members.save(KKOJAE.createLogin(jupjup));
+        Member bom = members.save(BOM.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
 
         Channel notice = channels.save(NOTICE.create(jupjup));
 
@@ -288,6 +296,74 @@ class BookmarkServiceTest {
                 assertAll(
                         () -> assertThat(foundBookmarks).hasSize(count),
                         () -> assertThat(foundBookmarks).allMatch(bookmark -> bookmark.getId() < targetBookmark.getId())
+                );
+            }
+        }
+
+        @DisplayName("북마크 메시지 내부에 멘션 아이디가 있다면")
+        @Nested
+        class mentionMessageInBookmark {
+
+
+            BookmarkFindRequest request = BookmarkFindRequestFactory.onlyCount(100);
+            BookmarkResponses response = bookmarkService.find(request, hope.getId());
+
+            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
+            @Test
+            void isExistedMentionId() {
+                List<BookmarkResponse> foundMessages = response.getBookmarks()
+                        .stream()
+                        .filter(message -> message.getText().contains("한 번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(
+                                BOM.createLogin(jupjup).getUsername())
+                );
+            }
+
+            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
+            @Test
+            void isNotExistedMentionId() {
+                List<BookmarkResponse> foundMessages = response.getBookmarks()
+                        .stream()
+                        .filter(message -> message.getText().contains("존재하지 않는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains("<@")
+                );
+            }
+
+            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
+            @Test
+            void isSeveralSameId() {
+                List<BookmarkResponse> foundMessages = response.getBookmarks()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
+                );
+            }
+
+            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
+            @Test
+            void isSeveralMemberMentioned() {
+                List<BookmarkResponse> foundMessages = response.getBookmarks()
+                        .stream()
+                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
+                        .collect(Collectors.toList());
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(BOM.createLogin(jupjup).getUsername(),
+                                SUMMER.createLogin(jupjup).getUsername())
                 );
             }
         }

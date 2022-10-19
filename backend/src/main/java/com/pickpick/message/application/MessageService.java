@@ -37,6 +37,7 @@ public class MessageService {
 
     private static final String MENTION_PREFIX = "<@";
     private static final String MENSION_SUFFIX = ">";
+    
     private final MemberRepository members;
     private final MessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
@@ -119,13 +120,12 @@ public class MessageService {
                 .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
 
         for (MessageResponse message : messageResponses) {
-            String text = replaceMentionMemberInText(message, workspaceMemberMap);
+            String text = replaceMentionMemberInText(message.getText(), workspaceMemberMap);
             message.setText(text);
         }
     }
 
-    private String replaceMentionMemberInText(final MessageResponse message, final Map<String, String> memberMap) {
-        String text = message.getText();
+    private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
         Set<String> slackIds = slackIdExtractor.extract(text);
         for (String slackId : slackIds) {
             text = text.replace(

@@ -54,4 +54,8 @@ public class BookmarkResponse {
                 .modifiedDate(message.getModifiedDate())
                 .build();
     }
+
+    public void setText(final String text) {
+        this.text = text;
+    }
 }

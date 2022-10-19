@@ -8,6 +8,7 @@ import com.pickpick.message.domain.BookmarkRepository;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QBookmark;
+import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
@@ -15,6 +16,8 @@ import com.pickpick.message.ui.dto.BookmarkResponses;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +26,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BookmarkService {
 
+    private static final String MENTION_PREFIX = "<@";
+    private static final String MENSION_SUFFIX = ">";
+
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
     private final MemberRepository members;
     private final JPAQueryFactory jpaQueryFactory;
+    private final SlackIdExtractor slackIdExtractor;
 
     public BookmarkService(final BookmarkRepository bookmarks, final MessageRepository messages,
-                           final MemberRepository members, final JPAQueryFactory jpaQueryFactory) {
+                           final MemberRepository members, final JPAQueryFactory jpaQueryFactory,
+                           final SlackIdExtractor slackIdExtractor) {
         this.bookmarks = bookmarks;
         this.messages = messages;
         this.members = members;
         this.jpaQueryFactory = jpaQueryFactory;
+        this.slackIdExtractor = slackIdExtractor;
     }
 
     @Transactional
@@ -49,7 +58,10 @@ public class BookmarkService {
     public BookmarkResponses find(final BookmarkFindRequest request, final Long memberId) {
         List<Bookmark> bookmarkList = findBookmarks(request, memberId);
 
-        return new BookmarkResponses(toBookmarkResponseList(bookmarkList), hasPast(bookmarkList, memberId));
+        List<BookmarkResponse> responses = toBookmarkResponseList(bookmarkList);
+        replaceMentionMembers(memberId, responses);
+
+        return new BookmarkResponses(responses, hasPast(bookmarkList, memberId));
     }
 
     private List<Bookmark> findBookmarks(final BookmarkFindRequest request, final Long memberId) {
@@ -100,6 +112,29 @@ public class BookmarkService {
     private BooleanExpression meetHasPastCondition(final List<Bookmark> bookmarkList) {
         Bookmark targetBookmark = bookmarkList.get(bookmarkList.size() - 1);
         return QBookmark.bookmark.createdDate.before(targetBookmark.getCreatedDate());
+    }
+
+    private void replaceMentionMembers(final Long memberId, final List<BookmarkResponse> bookmarkResponses) {
+        Member member = members.getById(memberId);
+        List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
+
+        Map<String, String> workspaceMemberMap = workspaceMembers.stream()
+                .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
+
+        for (BookmarkResponse response : bookmarkResponses) {
+            String text = replaceMentionMemberInText(response.getText(), workspaceMemberMap);
+            response.setText(text);
+        }
+    }
+
+    private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
+        Set<String> slackIds = slackIdExtractor.extract(text);
+        for (String slackId : slackIds) {
+            text = text.replace(
+                    MENTION_PREFIX + slackId + MENSION_SUFFIX,
+                    memberMap.getOrDefault(slackId, MENTION_PREFIX + slackId + MENSION_SUFFIX));
+        }
+        return text;
     }
 
     @Transactional
