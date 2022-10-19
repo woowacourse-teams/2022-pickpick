@@ -15,7 +15,6 @@ import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.conversations.ConversationsInviteRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.users.UsersIdentityRequest;
-import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.conversations.ConversationsInviteResponse;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
@@ -36,7 +35,6 @@ public class SlackClient implements ExternalClient {
     private static final String OAUTH_ACCESS_METHOD_NAME = "oauthV2Access";
     private static final String USERS_IDENTITY_METHOD_NAME = "usersIdentity";
     private static final String USER_LIST_METHOD_NAME = "usersList";
-    private static final String CHANNEL_INFO_METHOD_NAME = "conversationsInfo";
     private static final String CHANNEL_LIST_METHOD_NAME = "conversationsList";
     private static final String CHANNEL_INVITE_METHOD_NAME = "conversationsInvite";
     private static final String CHAT_POST_METHOD_NAME = "chatPostMessage";
@@ -71,15 +69,9 @@ public class SlackClient implements ExternalClient {
     private OAuthV2AccessResponse callOAuth2(final String code, final String redirectUrl) {
         OAuthV2AccessRequest request = generateOAuthRequest(code, redirectUrl);
 
-        try {
-            OAuthV2AccessResponse response = methodsClient
-                    .oauthV2Access(request);
-            validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
-            return response;
-
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(OAUTH_ACCESS_METHOD_NAME);
-        }
+        return execute(
+                () -> methodsClient.oauthV2Access(request),
+                OAUTH_ACCESS_METHOD_NAME);
     }
 
     private OAuthV2AccessRequest generateOAuthRequest(final String code, final String redirectUrl) {
@@ -97,35 +89,26 @@ public class SlackClient implements ExternalClient {
                 .token(accessToken)
                 .build();
 
-        try {
-            UsersIdentityResponse response = methodsClient.usersIdentity(request);
-            validateResponse(USERS_IDENTITY_METHOD_NAME, response);
-            return response.getUser().getId();
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(USERS_IDENTITY_METHOD_NAME);
-        }
+        UsersIdentityResponse response = execute(
+                () -> methodsClient.usersIdentity(request),
+                USERS_IDENTITY_METHOD_NAME);
+
+        return response.getUser().getId();
     }
 
     @Override
     public List<Member> findMembersByWorkspace(final Workspace workspace) {
-        try {
-            UsersListResponse response = methodsClient.usersList(request -> request.token(workspace.getBotToken()));
-            validateResponse(USER_LIST_METHOD_NAME, response);
-            return toMembers(response.getMembers(), workspace);
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(USER_LIST_METHOD_NAME);
-        }
+        UsersListResponse response = execute(
+                () -> methodsClient.usersList(request -> request.token(workspace.getBotToken())),
+                USER_LIST_METHOD_NAME);
+
+        return toMembers(response.getMembers(), workspace);
     }
 
     private List<Member> toMembers(final List<User> users, final Workspace workspace) {
         return users.stream()
                 .map(user -> toMember(user, workspace))
-                .filter(this::isNotSlackBot)
                 .collect(Collectors.toList());
-    }
-
-    private boolean isNotSlackBot(final Member member) {
-        return !"USLACKBOT".equalsIgnoreCase(member.getSlackId());
     }
 
     private Member toMember(final User user, final Workspace workspace) {
@@ -139,14 +122,10 @@ public class SlackClient implements ExternalClient {
 
     @Override
     public List<Channel> findChannelsByWorkspace(final Workspace workspace) {
-        try {
-            ConversationsListResponse response = methodsClient.conversationsList(
-                    request -> request.token(workspace.getBotToken()));
-            validateResponse(CHANNEL_LIST_METHOD_NAME, response);
-            return toChannels(response.getChannels(), workspace);
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(CHANNEL_LIST_METHOD_NAME);
-        }
+        ConversationsListResponse response = execute(
+                () -> methodsClient.conversationsList(request -> request.token(workspace.getBotToken())),
+                CHANNEL_LIST_METHOD_NAME);
+        return toChannels(response.getChannels(), workspace);
     }
 
     private List<Channel> toChannels(final List<Conversation> channels, final Workspace workspace) {
@@ -161,20 +140,16 @@ public class SlackClient implements ExternalClient {
 
     @Override
     public Participation findChannelParticipation(final String userToken) {
-        try {
-            ConversationsListResponse response = methodsClient.conversationsList(
-                    request -> request.token(userToken));
-            validateResponse(CHANNEL_LIST_METHOD_NAME, response);
+        ConversationsListResponse response = execute(
+                () -> methodsClient.conversationsList(request -> request.token(userToken)),
+                CHANNEL_LIST_METHOD_NAME);
 
-            Map<String, Boolean> participation = response.getChannels()
-                    .stream()
-                    .collect(Collectors.toMap(Conversation::getId, Conversation::isMember));
+        Map<String, Boolean> participation = response.getChannels()
+                .stream()
+                .collect(Collectors.toMap(Conversation::getId, Conversation::isMember));
 
-            return new Participation(participation);
+        return new Participation(participation);
 
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(CHANNEL_LIST_METHOD_NAME);
-        }
     }
 
     @Override
@@ -186,12 +161,7 @@ public class SlackClient implements ExternalClient {
                 .token(member.getWorkspace().getBotToken())
                 .build();
 
-        try {
-            ChatPostMessageResponse response = methodsClient.chatPostMessage(request);
-            validateResponse(CHAT_POST_METHOD_NAME, response);
-        } catch (IOException | SlackApiException e) {
-            throw new SlackApiCallException(CHAT_POST_METHOD_NAME);
-        }
+        execute(() -> methodsClient.chatPostMessage(request), CHAT_POST_METHOD_NAME);
     }
 
     @Override
@@ -210,6 +180,16 @@ public class SlackClient implements ExternalClient {
             validateResponse(CHANNEL_INVITE_METHOD_NAME, response);
         } catch (IOException | SlackApiException e) {
             throw new SlackApiCallException(CHANNEL_INVITE_METHOD_NAME);
+        }
+    }
+
+    private <T extends SlackApiTextResponse> T execute(final SlackFunction<T> slackFunction, final String methodName) {
+        try {
+            T result = slackFunction.execute();
+            validateResponse(methodName, result);
+            return result;
+        } catch (IOException | SlackApiException e) {
+            throw new SlackApiCallException(methodName);
         }
     }
 
