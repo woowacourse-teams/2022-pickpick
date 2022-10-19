@@ -212,7 +212,7 @@ public class SlackClient implements ExternalClient {
 
     private <T extends SlackApiTextResponse> void validateResponse(final String methodName, final T response) {
         if (!response.isOk()) {
-            throw new SlackApiCallException(methodName, response.getError());
+            throw new SlackApiCallException(methodName, response);
         }
     }
 }
