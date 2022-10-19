@@ -5,6 +5,7 @@ import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.exception.workspace.WorkspaceDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.ExternalClient;
@@ -43,6 +44,9 @@ public class AuthService {
     @Transactional
     public LoginResponse registerWorkspace(final String code) {
         WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
+
+        validateExistWorkspace(workspaceInfoDto.getWorkspaceSlackId());
+
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
         List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
@@ -52,6 +56,12 @@ public class AuthService {
         channels.saveAll(allWorkspaceChannels);
 
         return loginByToken(workspaceInfoDto.getUserToken());
+    }
+
+    private void validateExistWorkspace(final String workspaceSlackId) {
+        if (workspaces.existsBySlackId(workspaceSlackId)) {
+            throw new WorkspaceDuplicateException(workspaceSlackId);
+        }
     }
 
     @Transactional
