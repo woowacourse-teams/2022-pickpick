@@ -33,7 +33,6 @@ public class AuthController {
 
     @GetMapping("/slack-workspace")
     public LoginResponse registerWorkspace(@RequestParam @NotEmpty final String code) {
-        authService.initWorkspace(code);
-        return authService.login(code);
+        return authService.registerWorkspace(code);
     }
 }

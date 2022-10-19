@@ -101,7 +101,7 @@ class AuthServiceTest {
         Optional<Workspace> beforeSave = workspaces.findBySlackId(jupjup.getSlackId());
 
         // when
-        authService.initWorkspace(KKOJAE.getCode());
+        authService.registerWorkspace(KKOJAE.getCode());
 
         Optional<Workspace> afterSave = workspaces.findBySlackId(jupjup.getSlackId());
 
@@ -119,7 +119,7 @@ class AuthServiceTest {
         Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
 
         // when
-        authService.initWorkspace(KKOJAE.getCode());
+        authService.registerWorkspace(KKOJAE.getCode());
 
         Workspace savedJupjup = workspaces.getBySlackId(jupjup.getSlackId());
         List<Channel> jupjupChannels = channels.findAllByWorkspaceOrderByName(savedJupjup);
