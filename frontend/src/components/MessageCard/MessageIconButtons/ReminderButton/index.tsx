@@ -19,7 +19,7 @@ function ReminderButton({ isActive, onClick }: Props) {
       icon="alarm"
       isActive={isActive}
       onClick={onClick}
-      tabIndex={1}
+      tabIndex={0}
     >
       <FlexRow justifyContent="center" alignItems="center" gap="5px">
         <Styled.ButtonText>리마인더</Styled.ButtonText>

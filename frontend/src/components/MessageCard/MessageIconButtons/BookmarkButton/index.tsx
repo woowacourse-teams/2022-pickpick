@@ -19,7 +19,7 @@ function BookmarkButton({ isActive, onClick }: Props) {
       icon="star"
       isActive={isActive}
       onClick={onClick}
-      tabIndex={1}
+      tabIndex={0}
     >
       <FlexRow justifyContent="center" alignItems="center" gap="5px">
         <Styled.ButtonText>북마크</Styled.ButtonText>

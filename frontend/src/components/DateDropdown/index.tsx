@@ -22,7 +22,7 @@ function DateDropdown({ postedDate, channelId, handleOpenCalendar }: Props) {
             <DateDropdownToggle
               text={getMessagesDate(postedDate)}
               onClick={handleToggleDropdown}
-              tabIndex={1}
+              tabIndex={0}
               aria-describedby="description"
             />
             <SrOnlyDescription id="description">
