@@ -51,12 +51,16 @@ public class AuthService {
         List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
 
-        return login(code);
+        return loginByToken(workspaceInfoDto.getUserToken());
     }
 
     @Transactional
     public LoginResponse login(final String code) {
         String userToken = slackClient.callUserToken(code);
+        return loginByToken(userToken);
+    }
+
+    private LoginResponse loginByToken(final String userToken) {
         String memberSlackId = slackClient.callMemberSlackId(userToken);
 
         Member member = members.getBySlackId(memberSlackId);
