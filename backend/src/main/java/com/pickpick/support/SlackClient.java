@@ -55,19 +55,21 @@ public class SlackClient implements ExternalClient {
 
     @Override
     public String callUserToken(final String code) {
-        OAuthV2AccessResponse response = callOAuth2(code);
+        String loginRedirectUrl = slackProperties.getLoginRedirectUrl();
+        OAuthV2AccessResponse response = callOAuth2(code, loginRedirectUrl);
         validateResponse(OAUTH_ACCESS_METHOD_NAME, response);
         return response.getAuthedUser().getAccessToken();
     }
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
-        OAuthV2AccessResponse response = callOAuth2(code);
+        String workspaceRedirectUrl = slackProperties.getWorkspaceRedirectUrl();
+        OAuthV2AccessResponse response = callOAuth2(code, workspaceRedirectUrl);
         return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId());
     }
 
-    private OAuthV2AccessResponse callOAuth2(final String code) {
-        OAuthV2AccessRequest request = generateOAuthRequest(code);
+    private OAuthV2AccessResponse callOAuth2(final String code, final String redirectUrl) {
+        OAuthV2AccessRequest request = generateOAuthRequest(code, redirectUrl);
 
         try {
             OAuthV2AccessResponse response = methodsClient
@@ -80,11 +82,11 @@ public class SlackClient implements ExternalClient {
         }
     }
 
-    private OAuthV2AccessRequest generateOAuthRequest(final String code) {
+    private OAuthV2AccessRequest generateOAuthRequest(final String code, final String redirectUrl) {
         return OAuthV2AccessRequest.builder()
                 .clientId(slackProperties.getClientId())
                 .clientSecret(slackProperties.getClientSecret())
-                .redirectUri(slackProperties.getRedirectUrl())
+                .redirectUri(redirectUrl)
                 .code(code)
                 .build();
     }
