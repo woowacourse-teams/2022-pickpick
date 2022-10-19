@@ -275,7 +275,7 @@ class ReminderServiceTest {
         class mentionMessage {
 
             ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(100);
-            ReminderResponses response = reminderService.find(request, summer.getId());
+            ReminderResponses response = reminderService.find(request, bom.getId());
 
             @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
             @Test
