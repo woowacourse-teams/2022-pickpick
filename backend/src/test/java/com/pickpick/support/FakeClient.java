@@ -22,7 +22,7 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
-        return new WorkspaceInfoDto(code, code, code);
+        return new WorkspaceInfoDto(code, code, code, code);
     }
 
     @Override

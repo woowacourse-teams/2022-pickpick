@@ -65,7 +65,9 @@ public class SlackClient implements ExternalClient {
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
         String workspaceRedirectUrl = slackProperties.getWorkspaceRedirectUrl();
         OAuthV2AccessResponse response = callOAuth2(code, workspaceRedirectUrl);
-        return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId());
+
+        return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId(),
+                response.getAuthedUser().getAccessToken());
     }
 
     private OAuthV2AccessResponse callOAuth2(final String code, final String redirectUrl) {
