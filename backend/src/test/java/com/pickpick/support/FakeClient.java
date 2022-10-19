@@ -1,6 +1,8 @@
 package com.pickpick.support;
 
 
+import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
+
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
@@ -21,6 +23,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class FakeClient implements ExternalClient {
 
+    private final Workspace jupjup = JUPJUP.create();
+
+    private final Map<String, Workspace> codeAndWorkspace = Arrays.stream(MemberFixture.values())
+            .map(memberFixture -> memberFixture.createLogin(jupjup))
+            .collect(Collectors.toMap(member -> member.getSlackId() + "code", member -> jupjup));
+
+    private final Map<String, Member> codeAndMember = Arrays.stream(MemberFixture.values())
+            .map(memberFixture -> memberFixture.createLogin(jupjup))
+            .collect(Collectors.toMap(member -> member.getSlackId() + "code", member -> member));
+
+    private final Map<String, Member> tokenAndMember = Arrays.stream(MemberFixture.values())
+            .map(memberFixture -> memberFixture.createLogin(jupjup))
+            .collect(Collectors.toMap(Member::getToken, member -> member));
+
     private final StubSlack stubSlack;
 
     public FakeClient(final StubSlack stubSlack) {
@@ -29,17 +45,18 @@ public class FakeClient implements ExternalClient {
 
     @Override
     public String callUserToken(final String code) {
-        return stubSlack.callUserToken(code);
+        return codeAndMember.get(code).getToken();
     }
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
-        return stubSlack.callWorkspaceInfo(code);
+        Workspace workspace = codeAndWorkspace.get(code);
+        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId());
     }
 
     @Override
     public String callMemberSlackId(final String userToken) {
-        return stubSlack.callMemberSlackId(userToken);
+        return tokenAndMember.get(userToken).getSlackId();
     }
 
     @Override
