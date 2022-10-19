@@ -24,10 +24,13 @@ function useAuthentication(): UseAuthenticationResult {
     setCookie(ACCESS_TOKEN_KEY, token);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
     openSuccessSnackbar(MESSAGE.LOGIN_SUCCESS);
+
     if (isFirstLogin) {
       navigate(PATH_NAME.ADD_CHANNEL);
+
       return;
     }
+
     navigate(PATH_NAME.FEED);
   };
 
@@ -35,6 +38,7 @@ function useAuthentication(): UseAuthenticationResult {
     setRecentFeedPath("");
     deleteCookie(ACCESS_TOKEN_KEY);
     queryClient.invalidateQueries(QUERY_KEY.AUTHENTICATION);
+
     navigate(PATH_NAME.HOME);
   };
 

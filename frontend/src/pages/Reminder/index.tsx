@@ -49,6 +49,7 @@ function Reminder() {
         <FlexColumn gap="4px" width="100%">
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+
             {parsedData.map(
               ({
                 id,
@@ -84,6 +85,7 @@ function Reminder() {
               }
             )}
           </>
+
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>

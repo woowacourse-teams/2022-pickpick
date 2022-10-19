@@ -58,10 +58,10 @@ function DatePicker({
                 optionText: checkedMonth,
                 unit: TIME_UNIT.MONTH,
               })}
-           ${parsePickerOptionText({
-             optionText: checkedDate,
-             unit: TIME_UNIT.DATE,
-           })}`}
+              ${parsePickerOptionText({
+                optionText: checkedDate,
+                unit: TIME_UNIT.DATE,
+              })}`}
               handleToggleDropdown={handleToggleDropdown}
             >
               <CalendarIcon
