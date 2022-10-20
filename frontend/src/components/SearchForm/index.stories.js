@@ -3,6 +3,11 @@ import SearchForm from ".";
 export default {
   title: "@component/SearchForm",
   component: SearchForm,
+  argTypes: {
+    currentChannelIds: {
+      control: false,
+    },
+  },
 };
 
 const Template = (args) => {

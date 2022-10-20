@@ -1,25 +1,22 @@
 import { rest } from "msw";
 
 import { messages } from "../data/messages";
-import { BODY_TYPE, SIZE } from "../utils";
+import { BODY_TYPE } from "../utils";
 
-let bookmarks = [] as any;
+let bookmarks = messages
+  .filter(({ isBookmarked }) => isBookmarked)
+  .map((message) => {
+    return { ...message, messageId: message.id };
+  });
 
 const handlers = [
   rest.get("/api/bookmarks", (req, res, ctx) => {
-    let messageId = req.url.searchParams.get("messageId");
-    if (messageId === "") messageId = "0";
-    const nextId = Number(req.url.searchParams.get("messageId")) + 1;
-    const index = bookmarks.findIndex(
-      ({ id }: { id: number }) => id === nextId
-    );
-    const newBookmarks = bookmarks.slice(index, index + SIZE);
+    console.log(bookmarks);
     return res(
       ctx.status(200),
-      ctx.delay(500),
       ctx.json({
-        bookmarks: newBookmarks,
-        hasFuture: newBookmarks.length >= SIZE,
+        bookmarks,
+        hasFuture: false,
       })
     );
   }),
@@ -30,19 +27,26 @@ const handlers = [
 
     const message = messages.find(({ id }) => id === messageId);
     if (!message) return res(ctx.status(404), ctx.delay(500));
-    message.id = bookmarks.length + 1;
-    bookmarks.push(message);
+    message.isBookmarked = true;
 
-    return res(ctx.status(200), ctx.delay(500));
+    bookmarks.push({ ...message, messageId });
+
+    return res(ctx.status(200));
   }),
 
   rest.delete("/api/bookmarks", (req, res, ctx) => {
     const messageId = Number(req.url.searchParams.get("messageId"));
-    const newBookmarks = bookmarks.filter(
-      ({ id }: { id: number }) => id !== messageId
-    );
+    const message = messages.find(({ id }) => id === messageId);
+    if (message) {
+      message.isBookmarked = false;
+    }
+
+    const newBookmarks = bookmarks.filter(({ id }: { id: number }) => {
+      return id !== messageId;
+    });
     bookmarks = newBookmarks;
-    return res(ctx.status(200), ctx.delay(500));
+
+    return res(ctx.status(200));
   }),
 ];
 

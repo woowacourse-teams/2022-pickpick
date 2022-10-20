@@ -5,8 +5,11 @@ import { MemoryRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 
+import useModeTheme from "@src/hooks/useModeTheme";
+
+import { THEME_KIND } from "@src/@constants";
 import GlobalStyle from "@src/@styles/GlobalStyle";
-import { LIGHT_MODE_THEME } from "@src/@styles/theme";
+import { DARK_MODE_THEME, LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 initialize({
   onUnhandledRequest: "bypass",
@@ -22,17 +25,28 @@ export const parameters = {
   },
 };
 
+const App = ({ children }) => {
+  const { theme } = useModeTheme();
+  return (
+    <ThemeProvider
+      theme={theme === THEME_KIND.LIGHT ? LIGHT_MODE_THEME : DARK_MODE_THEME}
+    >
+      <GlobalStyle />
+      {children}
+      <div id="portal-root"></div>
+    </ThemeProvider>
+  );
+};
+
 export const decorators = [
   mswDecorator,
   (Story) => (
     <MemoryRouter>
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={LIGHT_MODE_THEME}>
-            <GlobalStyle />
+          <App>
             <Story />
-            <div id="portal-root"></div>
-          </ThemeProvider>
+          </App>
         </QueryClientProvider>
       </RecoilRoot>
     </MemoryRouter>

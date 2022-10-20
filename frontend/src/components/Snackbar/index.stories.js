@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import { useEffect } from "react";
+
 import useSnackbar from "@src/hooks/useSnackbar";
 
 import Snackbar from ".";
@@ -16,6 +18,11 @@ export default {
 
 const template = ({ message, status }) => {
   const { openSuccessSnackbar, openFailureSnackbar } = useSnackbar();
+  useEffect(() => {
+    status === "success"
+      ? openSuccessSnackbar(message)
+      : openFailureSnackbar(message);
+  }, []);
   return (
     <div>
       <button
@@ -32,9 +39,15 @@ const template = ({ message, status }) => {
   );
 };
 
-export const defaultTemplate = template.bind({});
+export const SuccessTemplate = template.bind({});
+export const FailureTemplate = template.bind({});
 
-defaultTemplate.args = {
+SuccessTemplate.args = {
   message: "스낵바 메시지",
   status: "success",
+};
+
+FailureTemplate.args = {
+  message: "스낵바 메시지",
+  status: "failure",
 };
