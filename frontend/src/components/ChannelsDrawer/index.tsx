@@ -34,7 +34,6 @@ function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
         <WrapperNavLink to={PATH_NAME.ADD_CHANNEL}>
           {() => (
             <Styled.Button
-              autoFocus
               onClick={handleCloseDrawer}
               aria-label="채널 추가하러 가기"
             >
