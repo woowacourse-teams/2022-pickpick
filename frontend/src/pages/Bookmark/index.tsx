@@ -49,21 +49,25 @@ function Bookmark() {
                 postedDate,
                 text,
                 userThumbnail,
-              }) => (
-                <MessageCard
-                  key={id}
-                  username={username}
-                  isRemindedMessage={false}
-                  date={parseMessageDateFromISO(postedDate)}
-                  text={text}
-                  thumbnail={userThumbnail}
-                >
-                  <BookmarkButton
-                    isActive={true}
-                    onClick={handleRemoveBookmark(messageId)}
-                  />
-                </MessageCard>
-              )
+              }) => {
+                const date = postedDate.split("T")[0];
+
+                return (
+                  <MessageCard
+                    key={id}
+                    username={username}
+                    isRemindedMessage={false}
+                    date={`${date} ${parseMessageDateFromISO(postedDate)}`}
+                    text={text}
+                    thumbnail={userThumbnail}
+                  >
+                    <BookmarkButton
+                      isActive={true}
+                      onClick={handleRemoveBookmark(messageId)}
+                    />
+                  </MessageCard>
+                );
+              }
             )}
           </>
 
