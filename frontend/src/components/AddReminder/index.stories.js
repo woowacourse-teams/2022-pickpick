@@ -23,7 +23,7 @@ const Template = (args) => {
   return <AddReminder {...args} />;
 };
 
-export const DefaultTemplate = Template.bind({
+export const CreateNewReminderTemplate = Template.bind({
   messageId: "1",
   remindDate: "2022-09-22T22:50:00",
   handleCloseReminderModal: () => {
@@ -33,3 +33,16 @@ export const DefaultTemplate = Template.bind({
     return null;
   },
 });
+
+export const ModifyReminderTemplate = Template.bind({});
+
+ModifyReminderTemplate.args = {
+  messageId: "1",
+  remindDate: "2022-12-25T22:10:00",
+  handleCloseReminderModal: () => {
+    return null;
+  },
+  refetchFeed: () => {
+    return null;
+  },
+};
