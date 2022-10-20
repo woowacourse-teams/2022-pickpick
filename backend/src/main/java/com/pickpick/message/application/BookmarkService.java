@@ -123,7 +123,7 @@ public class BookmarkService {
 
         for (BookmarkResponse response : bookmarkResponses) {
             String text = replaceMentionMemberInText(response.getText(), workspaceMemberMap);
-            response.setText(text);
+            response.replaceText(text);
         }
     }
 

@@ -172,7 +172,7 @@ public class ReminderService {
 
         for (ReminderResponse response : reminderResponses) {
             String text = replaceMentionMemberInText(response.getText(), workspaceMemberMap);
-            response.setText(text);
+            response.replaceText(text);
         }
     }
 

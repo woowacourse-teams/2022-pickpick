@@ -37,7 +37,7 @@ public class MessageService {
 
     private static final String MENTION_PREFIX = "<@";
     private static final String MENSION_SUFFIX = ">";
-    
+
     private final MemberRepository members;
     private final MessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
@@ -121,7 +121,7 @@ public class MessageService {
 
         for (MessageResponse message : messageResponses) {
             String text = replaceMentionMemberInText(message.getText(), workspaceMemberMap);
-            message.setText(text);
+            message.replaceText(text);
         }
     }
 

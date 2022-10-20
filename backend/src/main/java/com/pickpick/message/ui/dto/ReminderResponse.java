@@ -52,7 +52,7 @@ public class ReminderResponse {
                 .build();
     }
 
-    public void setText(final String text) {
+    public void replaceText(final String text) {
         this.text = text;
     }
 }
