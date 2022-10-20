@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReminderSender {
 
     private final ReminderRepository reminders;
-    private final ExternalClient slackClient;
+    private final ExternalClient externalClient;
 
-    public ReminderSender(final ReminderRepository reminders, final ExternalClient slackClient) {
+    public ReminderSender(final ReminderRepository reminders, final ExternalClient externalClient) {
         this.reminders = reminders;
-        this.slackClient = slackClient;
+        this.externalClient = externalClient;
     }
 
     @Scheduled(cron = "0 */10 * * * *")
@@ -31,7 +31,7 @@ public class ReminderSender {
         List<Reminder> foundReminders = reminders.findAllByRemindDate(now);
 
         for (Reminder reminder : foundReminders) {
-            slackClient.sendMessage(reminder);
+            externalClient.sendMessage(reminder);
             reminders.deleteById(reminder.getId());
         }
     }

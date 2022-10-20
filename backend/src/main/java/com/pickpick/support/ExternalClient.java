@@ -14,7 +14,7 @@ public interface ExternalClient {
 
     WorkspaceInfoDto callWorkspaceInfo(String code);
 
-    String callMemberSlackId(String accessToken);
+    String callMemberSlackId(String userToken);
 
     List<Member> findMembersByWorkspace(Workspace workspace);
 

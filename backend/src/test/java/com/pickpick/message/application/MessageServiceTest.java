@@ -2,6 +2,9 @@ package com.pickpick.message.application;
 
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.HOPE;
+import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
@@ -18,7 +21,7 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.fixture.MessageFixtures;
+import com.pickpick.fixture.MessageFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -41,8 +44,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -282,7 +287,7 @@ class MessageServiceTest {
         @Nested
         class multipleChannelIdsInParameters {
 
-            Channel qna = channels.save(new Channel("C00003", "질문과 답변"));
+            Channel qna = channels.save(QNA.create(jupjup));
             List<Message> qnaMessages = createAndSaveMessages(qna, summer);
 
             MessageRequest request = fromLatestInChannels(List.of(notice, freeChat), MESSAGE_COUNT_OVER_TOTAL_SIZE);
@@ -305,7 +310,7 @@ class MessageServiceTest {
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
-            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+            List<Message> messagesInChannel = Arrays.stream(MessageFixture.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
                     .collect(Collectors.toList());
 
@@ -521,6 +526,149 @@ class MessageServiceTest {
                         () -> assertThat(isPastMessages).isTrue()
                 );
             }
+        }
+    }
+
+    @DisplayName("메시지 조회시 메시지 텍스트 내부 멘션 아이디는")
+    @Nested
+    class mentionMessage {
+
+        @AfterEach
+        void tearDown() {
+            databaseCleaner.clear();
+        }
+
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
+        Member hope = members.save(HOPE.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
+
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        ChannelSubscription subscription = subscriptions.save(new ChannelSubscription(notice, hope, VIEW_ORDER_FIRST));
+
+        LocalDateTime postedDate = LocalDateTime.now();
+
+        @DisplayName("멘션 아이디가 한 개만 존재하는 경우")
+        @Nested
+        class oneMentionIdExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">" + " 메시지 내용");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void oneMentionId() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + summer.getSlackId() + ">");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("모두 동일한 닉네임으로 대치하여 보여준다.")
+            @Test
+            void sameMentionIds() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class differentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + hope.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void differentMentionIds() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText())
+                                .contains(summer.getUsername(), hope.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디와 다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameAndDifferentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void differentMentionIds() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText())
+                                .contains(summer.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("멘션 아이디가 멤버 중에 존재하지 않는 경우")
+        @Nested
+        class mentionIdNotExisted {
+            Message message = saveMessageWithText("<@UNOTEXISTED> 존재하지 않는 멤버의 슬랙아이디");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("멘션 아이디를 그대로 보여준다.")
+            @Test
+            void notChange() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains("<@UNOTEXISTED>")
+                );
+            }
+        }
+
+        private Message saveMessageWithText(String text) {
+            Message message = new Message(UUID.randomUUID().toString(), text, kkojae, notice, postedDate, postedDate);
+            return messages.save(message);
+        }
+
+        private Bookmark saveBookmark(Message message, Member member) {
+            Bookmark bookmark = new Bookmark(hope, message);
+            return bookmarks.save(bookmark);
         }
     }
 }
