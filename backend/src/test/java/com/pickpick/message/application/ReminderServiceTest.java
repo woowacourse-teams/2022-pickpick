@@ -270,142 +270,6 @@ class ReminderServiceTest {
                     .isInstanceOf(ReminderNotFoundException.class);
         }
 
-        @DisplayName("리마인더 메시지 내부에 멘션 아이디가 있다면")
-        @Nested
-        class mentionMessage {
-
-            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(100);
-            ReminderResponses response = reminderService.find(request, bom.getId());
-
-            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
-            @Test
-            void isExistedMentionId() {
-                List<ReminderResponse> foundMessages = response.getReminders()
-                        .stream()
-                        .filter(message -> message.getText().contains("한 번 존재하는 유저"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).contains(
-                                BOM.createLogin(jupjup).getUsername())
-                );
-            }
-
-            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
-            @Test
-            void isNotExistedMentionId() {
-                List<ReminderResponse> foundMessages = response.getReminders()
-                        .stream()
-                        .filter(message -> message.getText().contains("존재하지 않는 유저"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).contains("<@")
-                );
-            }
-
-            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
-            @Test
-            void isSeveralSameId() {
-                List<ReminderResponse> foundMessages = response.getReminders()
-                        .stream()
-                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
-                );
-            }
-
-            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
-            @Test
-            void isSeveralMemberMentioned() {
-                List<ReminderResponse> foundMessages = response.getReminders()
-                        .stream()
-                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
-                        () -> assertThat(foundMessages.get(0).getText()).contains(BOM.createLogin(jupjup).getUsername(),
-                                SUMMER.createLogin(jupjup).getUsername())
-                );
-            }
-        }
-
-        @DisplayName("단건 조회시 리마인더 메시지 내부에 멘션 아이디가 있다면")
-        @Nested
-        class mentionMessageInOneReminder {
-
-            ReminderFindRequest request = ReminderFindRequestFactory.onlyCount(100);
-            ReminderResponses response = reminderService.find(request, summer.getId());
-
-            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
-            @Test
-            void isExistedMentionId() {
-                Reminder target = bomReminders.stream()
-                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("한 번 존재하는 유저"))
-                        .findFirst()
-                        .get();
-
-                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
-                        target.getMember().getId());
-
-                assertThat(response.getText()).contains(BOM.createLogin(jupjup).getUsername());
-            }
-
-            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
-            @Test
-            void isNotExistedMentionId() {
-                Reminder target = bomReminders.stream()
-                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("존재하지 않는 유저"))
-                        .findFirst()
-                        .get();
-
-                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
-                        target.getMember().getId());
-
-                assertThat(response.getText()).contains("<@");
-            }
-
-            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
-            @Test
-            void isSeveralSameId() {
-                Reminder target = bomReminders.stream()
-                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("여러번 존재하는 유저"))
-                        .findFirst()
-                        .get();
-
-                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
-                        target.getMember().getId());
-
-                assertThat(response.getText()).doesNotContain("<@");
-            }
-
-            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
-            @Test
-            void isSeveralMemberMentioned() {
-                Reminder target = bomReminders.stream()
-                        .filter(bomReminder -> bomReminder.getMessage().getText().contains("여러명 유저 멘션 텍스트"))
-                        .findFirst()
-                        .get();
-
-                ReminderResponse response = reminderService.findOne(target.getMessage().getId(),
-                        target.getMember().getId());
-
-                assertAll(
-                        () -> assertThat(response.getText()).doesNotContain("<@"),
-                        () -> assertThat(response.getText()).contains(
-                                BOM.createLogin(jupjup).getUsername(),
-                                SUMMER.createLogin(jupjup).getUsername())
-                );
-            }
-        }
-
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
             List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
@@ -581,6 +445,196 @@ class ReminderServiceTest {
             return reminderService.find(request, member.getId())
                     .getReminders()
                     .size();
+        }
+    }
+
+    @DisplayName("리마인드 메시지 내부 멘션 아이디는")
+    @Nested
+    class mentionMessageInReminder {
+
+        @AfterEach
+        void tearDown() {
+            databaseCleaner.clear();
+        }
+
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
+        Member hope = members.save(HOPE.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
+
+        Channel notice = channels.save(NOTICE.create(jupjup));
+
+        LocalDateTime postedDate = LocalDateTime.now();
+
+        @DisplayName("멘션 아이디가 한 개만 존재하는 경우")
+        @Nested
+        class oneMentionIdExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">" + " 메시지 내용");
+            Reminder hopesReminder = saverReminders(message, hope);
+
+            @DisplayName("단건 조회 시 올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void findOne() {
+                ReminderResponse response = reminderService.findOne(message.getId(), hope.getId());
+
+                assertThat(response.getText()).contains(summer.getUsername());
+            }
+
+            @DisplayName("다건 조회 시 올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void find() {
+                ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+                ReminderResponses response = reminderService.find(request, hope.getId());
+
+                List<ReminderResponse> foundReminders = response.getReminders();
+
+                assertAll(
+                        () -> assertThat(foundReminders).hasSize(1),
+                        () -> assertThat(foundReminders.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+
+        }
+
+        @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + summer.getSlackId() + ">");
+            Reminder hopesReminder = saverReminders(message, hope);
+
+            @DisplayName("단건 조회 시 올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void findOne() {
+                ReminderResponse response = reminderService.findOne(message.getId(), hope.getId());
+
+                assertThat(response.getText()).doesNotContain("<@");
+            }
+
+            @DisplayName("다건 조회 시 모두 동일한 닉네임으로 대치하여 보여준다.")
+            @Test
+            void find() {
+                ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+                ReminderResponses response = reminderService.find(request, hope.getId());
+
+                List<ReminderResponse> foundReminders = response.getReminders();
+
+                assertAll(
+                        () -> assertThat(foundReminders).hasSize(1),
+                        () -> assertThat(foundReminders.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundReminders.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class differentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + hope.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+            Reminder hopesReminder = saverReminders(message, hope);
+
+            @DisplayName("단건 조회 시 올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void findOne() {
+                ReminderResponse response = reminderService.findOne(message.getId(), hope.getId());
+
+                assertThat(response.getText()).contains(summer.getUsername(), hope.getUsername(), kkojae.getUsername());
+            }
+
+
+            @DisplayName("다건 조회 시 모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void find() {
+                ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+                ReminderResponses response = reminderService.find(request, hope.getId());
+
+                List<ReminderResponse> foundReminders = response.getReminders();
+
+                assertAll(
+                        () -> assertThat(foundReminders).hasSize(1),
+                        () -> assertThat(foundReminders.get(0).getText())
+                                .contains(summer.getUsername(), hope.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디와 다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameAndDifferentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+            Reminder hopesReminder = saverReminders(message, hope);
+
+            @DisplayName("단건 조회 시 모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void findOne() {
+                ReminderResponse response = reminderService.findOne(message.getId(), hope.getId());
+
+                assertThat(response.getText()).contains(summer.getUsername(), kkojae.getUsername());
+            }
+
+            @DisplayName("다건 조회 시 모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void find() {
+                ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+                ReminderResponses response = reminderService.find(request, hope.getId());
+
+                List<ReminderResponse> foundReminders = response.getReminders();
+
+                assertAll(
+                        () -> assertThat(foundReminders).hasSize(1),
+                        () -> assertThat(foundReminders.get(0).getText())
+                                .contains(summer.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("멘션 아이디가 멤버 중에 존재하지 않는 경우")
+        @Nested
+        class mentionIdNotExisted {
+            Message message = saveMessageWithText("<@UNOTEXISTED> 존재하지 않는 멤버의 슬랙아이디");
+            Reminder hopesReminder = saverReminders(message, hope);
+
+            @DisplayName("단건 조회 시 멘션 아이디를 그대로 보여준다.")
+            @Test
+            void findOne() {
+                ReminderResponse response = reminderService.findOne(message.getId(), hope.getId());
+
+                assertThat(response.getText()).contains("<@UNOTEXISTED>");
+            }
+
+
+            @DisplayName("다건 조회시 멘션 아이디를 그대로 보여준다.")
+            @Test
+            void find() {
+                ReminderFindRequest request = ReminderFindRequestFactory.emptyQueryParams();
+                ReminderResponses response = reminderService.find(request, hope.getId());
+
+                List<ReminderResponse> reminderResponses = response.getReminders();
+
+                assertAll(
+                        () -> assertThat(reminderResponses).hasSize(1),
+                        () -> assertThat(reminderResponses.get(0).getText()).contains("<@UNOTEXISTED>")
+                );
+            }
+        }
+
+        private Message saveMessageWithText(String text) {
+            Message message = new Message(UUID.randomUUID().toString(), text, kkojae, notice, postedDate, postedDate);
+            return messages.save(message);
+        }
+
+        private Reminder saverReminders(Message message, Member member) {
+            Reminder reminder = new Reminder(hope, message, postedDate.plusHours(1));
+            return reminders.save(reminder);
         }
     }
 }

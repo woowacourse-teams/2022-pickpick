@@ -530,7 +530,7 @@ class MessageServiceTest {
 
     @DisplayName("메시지 조회시 메시지 텍스트 내부 멘션 아이디는")
     @Nested
-    class mentionMessageInBookmark {
+    class mentionMessage {
 
         @AfterEach
         void tearDown() {
