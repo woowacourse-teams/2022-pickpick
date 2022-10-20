@@ -1,8 +1,11 @@
+import queryClient from "@src/queryClient";
+import { QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 import { RecoilRoot } from "recoil";
+import { ThemeProvider } from "styled-components";
+
 import GlobalStyle from "@src/@styles/GlobalStyle";
+import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -18,10 +21,14 @@ export const decorators = [
   (Story) => (
     <MemoryRouter>
       <RecoilRoot>
-        <ThemeProvider theme={LIGHT_MODE_THEME}>
-          <GlobalStyle />
-          <Story />
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={LIGHT_MODE_THEME}>
+            <GlobalStyle />
+            <Story />
+
+            <div id="portal-root"></div>
+          </ThemeProvider>
+        </QueryClientProvider>
       </RecoilRoot>
     </MemoryRouter>
   ),
