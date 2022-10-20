@@ -168,7 +168,9 @@ function Navigation() {
         handleCloseModal={handleCloseLogoutButton}
       >
         <Styled.LogoutButtonContainer>
-          <Button onClick={handleLogout}>로그아웃</Button>
+          <Button onClick={handleLogout} autoFocus>
+            로그아웃
+          </Button>
         </Styled.LogoutButtonContainer>
       </Modal>
 
