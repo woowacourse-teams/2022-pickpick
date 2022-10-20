@@ -3,6 +3,7 @@ package com.pickpick.message.application;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageFixture.PLAIN_20220712_18_00_00;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -52,6 +54,9 @@ class BookmarkServiceTest {
 
     @Autowired
     private BookmarkService bookmarkService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private MemberRepository members;
@@ -153,6 +158,7 @@ class BookmarkServiceTest {
     class find {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
+
         Member hope = members.save(HOPE.createLogin(jupjup));
         Member kkojae = members.save(KKOJAE.createLogin(jupjup));
 
@@ -338,6 +344,154 @@ class BookmarkServiceTest {
                     .limit(20)
                     .map(Bookmark::getId)
                     .collect(Collectors.toList());
+        }
+    }
+
+
+    @DisplayName("북마크 메시지 내부 멘션 아이디는")
+    @Nested
+    class mentionMessageInBookmark {
+
+        @AfterEach
+        void tearDown() {
+            databaseCleaner.clear();
+        }
+
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
+        Member hope = members.save(HOPE.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
+
+        Channel notice = channels.save(NOTICE.create(jupjup));
+
+        LocalDateTime postedDate = LocalDateTime.now();
+
+        @DisplayName("멘션 아이디가 한 개만 존재하는 경우")
+        @Nested
+        class oneMentionIdExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">" + " 메시지 내용");
+            Bookmark hopesBookmark = saveBookmark(message, hope);
+
+            BookmarkFindRequest request = BookmarkFindRequestFactory.emptyQueryParams();
+            BookmarkResponses response = bookmarkService.find(request, hope.getId());
+
+            @DisplayName("올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void oneMentionId() {
+                List<BookmarkResponse> foundBookmarks = response.getBookmarks();
+
+                assertAll(
+                        () -> assertThat(foundBookmarks).hasSize(1),
+                        () -> assertThat(foundBookmarks.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + summer.getSlackId() + ">");
+            Bookmark hopesBookmark = saveBookmark(message, hope);
+
+            BookmarkFindRequest request = BookmarkFindRequestFactory.emptyQueryParams();
+            BookmarkResponses response = bookmarkService.find(request, hope.getId());
+
+            @DisplayName("모두 동일한 닉네임으로 대치하여 보여준다.")
+            @Test
+            void sameMentionIds() {
+                List<BookmarkResponse> foundBookmarks = response.getBookmarks();
+
+                assertAll(
+                        () -> assertThat(foundBookmarks).hasSize(1),
+                        () -> assertThat(foundBookmarks.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundBookmarks.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class differentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + hope.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+            Bookmark hopesBookmark = saveBookmark(message, hope);
+
+            BookmarkFindRequest request = BookmarkFindRequestFactory.emptyQueryParams();
+            BookmarkResponses response = bookmarkService.find(request, hope.getId());
+
+            @DisplayName("모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void differentMentionIds() {
+                List<BookmarkResponse> foundBookmarks = response.getBookmarks();
+
+                assertAll(
+                        () -> assertThat(foundBookmarks).hasSize(1),
+                        () -> assertThat(foundBookmarks.get(0).getText())
+                                .contains(summer.getUsername(), hope.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디와 다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameAndDifferentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+            Bookmark hopesBookmark = saveBookmark(message, hope);
+
+            BookmarkFindRequest request = BookmarkFindRequestFactory.emptyQueryParams();
+            BookmarkResponses response = bookmarkService.find(request, hope.getId());
+
+            @DisplayName("모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void differentMentionIds() {
+                List<BookmarkResponse> foundBookmarks = response.getBookmarks();
+
+                assertAll(
+                        () -> assertThat(foundBookmarks).hasSize(1),
+                        () -> assertThat(foundBookmarks.get(0).getText())
+                                .contains(summer.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("멘션 아이디가 멤버 중에 존재하지 않는 경우")
+        @Nested
+        class mentionIdNotExisted {
+            Message message = saveMessageWithText("<@UNOTEXISTED> 존재하지 않는 멤버의 슬랙아이디");
+            Bookmark hopesBookmark = saveBookmark(message, hope);
+
+            BookmarkFindRequest request = BookmarkFindRequestFactory.emptyQueryParams();
+            BookmarkResponses response = bookmarkService.find(request, hope.getId());
+
+            @DisplayName("멘션 아이디를 그대로 보여준다.")
+            @Test
+            void notChange() {
+                List<BookmarkResponse> foundBookmarks = response.getBookmarks();
+
+                assertAll(
+                        () -> assertThat(foundBookmarks).hasSize(1),
+                        () -> assertThat(foundBookmarks.get(0).getText()).contains("<@UNOTEXISTED>")
+                );
+            }
+        }
+
+        private Message saveMessageWithText(String text) {
+            Message message = new Message(UUID.randomUUID().toString(), text, kkojae, notice, postedDate, postedDate);
+            return messages.save(message);
+        }
+
+        private Bookmark saveBookmark(Message message, Member member) {
+            Bookmark bookmark = new Bookmark(hope, message);
+            return bookmarks.save(bookmark);
         }
     }
 }

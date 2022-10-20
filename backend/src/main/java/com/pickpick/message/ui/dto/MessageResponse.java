@@ -73,4 +73,8 @@ public class MessageResponse {
         this.setReminded = Objects.nonNull(reminderId);
         this.remindDate = remindDate;
     }
+
+    public void replaceText(final String text) {
+        this.text = text;
+    }
 }
