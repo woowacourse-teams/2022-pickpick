@@ -20,10 +20,9 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
-import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsListRequest.ConversationsListRequestBuilder;
+import com.slack.api.methods.request.conversations.ConversationsListRequest;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.model.Conversation;
 import java.io.IOException;
@@ -79,7 +78,7 @@ class ChannelServiceTest {
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
-        given(methodsClient.conversationsList((RequestConfigurator<ConversationsListRequestBuilder>) any()))
+        given(methodsClient.conversationsList(any(ConversationsListRequest.class)))
                 .willReturn(generateConversationsListResponse(notice, freeChat, qna));
 
         // when
@@ -107,7 +106,7 @@ class ChannelServiceTest {
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
 
-        given(methodsClient.conversationsList((RequestConfigurator<ConversationsListRequestBuilder>) any()))
+        given(methodsClient.conversationsList(any(ConversationsListRequest.class)))
                 .willReturn(generateConversationsListResponse(notice));
 
         // when
