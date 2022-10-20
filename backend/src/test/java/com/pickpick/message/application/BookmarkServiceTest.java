@@ -3,6 +3,7 @@ package com.pickpick.message.application;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static com.pickpick.fixture.MemberFixture.KKOJAE;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageFixture.PLAIN_20220712_18_00_00;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
