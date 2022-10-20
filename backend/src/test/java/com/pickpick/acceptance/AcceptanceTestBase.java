@@ -50,7 +50,7 @@ public class AcceptanceTestBase {
         return loginResponse.jsonPath().get("token");
     }
 
-    protected String 코드로_멤버의_SlackId_추출(final String code) {
+    protected String 코드로_멤버의_slackId_추출(final String code) {
         return MemberFixture.getMemberSlackIdByCode(code);
     }
 

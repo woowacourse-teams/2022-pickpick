@@ -39,7 +39,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
 
-        memberSlackId = 코드로_멤버의_SlackId_추출(code);
+        memberSlackId = 코드로_멤버의_slackId_추출(code);
     }
 
     @Test

@@ -40,7 +40,7 @@ class MessageAcceptanceTest extends AcceptanceTestBase {
         ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(code);
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
-        memberSlackId = 코드로_멤버의_SlackId_추출(code);
+        memberSlackId = 코드로_멤버의_slackId_추출(code);
     }
 
     @Test
