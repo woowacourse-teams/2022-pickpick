@@ -18,6 +18,7 @@ import useAuthentication from "@src/hooks/useAuthentication";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 import { PATH_NAME } from "@src/@constants/path";
+import { SrOnlyDescription } from "@src/@styles/shared";
 
 import * as Styled from "./style";
 
@@ -132,6 +133,12 @@ function Navigation() {
           />
         </div>
       </Modal>
+
+      <SrOnlyDescription aria-live="assertive">
+        {isMenuDrawerOpened
+          ? "채널 변경 창이 열렸습니다."
+          : "채널 변경 창이 닫혔습니다."}
+      </SrOnlyDescription>
 
       <Modal
         isOpened={isLogoutButtonOpened}
