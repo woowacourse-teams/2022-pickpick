@@ -18,14 +18,14 @@ public class SlackIdExtractor {
         Set<String> slackIds = new HashSet<>();
 
         while (matcher.find()) {
-            String slackId = extractPureSlackId(matcher);
+            String slackId = extractSlackId(matcher);
             slackIds.add(slackId);
         }
 
         return slackIds;
     }
 
-    private String extractPureSlackId(final Matcher matcher) {
+    private String extractSlackId(final Matcher matcher) {
         return matcher.group()
                 .replace("<@", "")
                 .replace(">", "");
