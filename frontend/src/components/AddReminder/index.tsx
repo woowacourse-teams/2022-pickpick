@@ -1,5 +1,3 @@
-import { useRef } from "react";
-
 import useDatePicker from "@src/components/AddReminder/@hooks/useDatePicker";
 import useTimePicker from "@src/components/AddReminder/@hooks/useTimePicker";
 import DatePicker from "@src/components/AddReminder/DateTimePicker/DatePicker";
@@ -29,7 +27,6 @@ function AddReminder({
   handleCloseReminderModal,
   refetchFeed,
 }: Props) {
-  const focusRef = useFocus<HTMLDivElement>();
   const {
     yearRef,
     monthRef,
@@ -61,7 +58,7 @@ function AddReminder({
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
 
   return (
-    <Styled.Container tabIndex={-1} ref={focusRef}>
+    <Styled.Container>
       <Styled.Title>리마인더 생성</Styled.Title>
 
       <DatePicker

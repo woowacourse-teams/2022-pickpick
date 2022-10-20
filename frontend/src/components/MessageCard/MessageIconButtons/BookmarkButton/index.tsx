@@ -14,13 +14,7 @@ interface Props {
 
 function BookmarkButton({ isActive, onClick }: Props) {
   return (
-    <IconButton
-      type="button"
-      icon="star"
-      isActive={isActive}
-      onClick={onClick}
-      tabIndex={0}
-    >
+    <IconButton type="button" icon="star" isActive={isActive} onClick={onClick}>
       <SrOnlyDescription>
         {isActive
           ? "북마크가 설정되어 있습니다. 북마크를 해제하시려면 클릭해주세요."

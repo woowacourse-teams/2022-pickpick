@@ -19,7 +19,6 @@ function ReminderButton({ isActive, onClick }: Props) {
       icon="alarm"
       isActive={isActive}
       onClick={onClick}
-      tabIndex={0}
     >
       <SrOnlyDescription>
         {isActive

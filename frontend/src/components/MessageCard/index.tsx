@@ -24,29 +24,21 @@ function MessageCard({
   return (
     <Styled.Container role="listItem">
       <FlexRow columnGap="8px" width="100%">
-        <ProfileImage
-          src={thumbnail}
-          alt={`${username} 프로필 사진`}
-          tabIndex={0}
-        />
+        <ProfileImage src={thumbnail} alt={`${username} 프로필 사진`} />
 
         <div>
           <FlexRow columnGap="4px" alignItems="center">
-            <Styled.Writer
-              tabIndex={0}
-              aria-label={`작성자는 ${username} 입니다.`}
-            >
+            <Styled.Writer aria-label={`작성자는 ${username} 입니다.`}>
               {username}
             </Styled.Writer>
             <Styled.Date
               isHighlighted={isRemindedMessage}
-              tabIndex={0}
               aria-label={`작성일은 ${date} 입니다.`}
             >
               {date}
             </Styled.Date>
           </FlexRow>
-          <Styled.Message tabIndex={0}>{text}</Styled.Message>
+          <Styled.Message>{text}</Styled.Message>
         </div>
       </FlexRow>
 
