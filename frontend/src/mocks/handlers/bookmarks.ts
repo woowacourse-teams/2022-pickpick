@@ -19,7 +19,7 @@ const handlers = [
       ctx.delay(500),
       ctx.json({
         bookmarks: newBookmarks,
-        isLast: newBookmarks.length < SIZE,
+        hasFuture: newBookmarks.length >= SIZE,
       })
     );
   }),
