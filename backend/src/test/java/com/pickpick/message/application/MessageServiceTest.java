@@ -2,6 +2,7 @@ package com.pickpick.message.application;
 
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
+import static com.pickpick.fixture.ChannelFixture.QNA;
 import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
@@ -18,7 +19,7 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.fixture.MessageFixtures;
+import com.pickpick.fixture.MessageFixture;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.Bookmark;
@@ -282,7 +283,7 @@ class MessageServiceTest {
         @Nested
         class multipleChannelIdsInParameters {
 
-            Channel qna = channels.save(new Channel("C00003", "질문과 답변"));
+            Channel qna = channels.save(QNA.create(jupjup));
             List<Message> qnaMessages = createAndSaveMessages(qna, summer);
 
             MessageRequest request = fromLatestInChannels(List.of(notice, freeChat), MESSAGE_COUNT_OVER_TOTAL_SIZE);
@@ -305,7 +306,7 @@ class MessageServiceTest {
         }
 
         private List<Message> createAndSaveMessages(final Channel channel, final Member member) {
-            List<Message> messagesInChannel = Arrays.stream(MessageFixtures.values())
+            List<Message> messagesInChannel = Arrays.stream(MessageFixture.values())
                     .map(messageFixture -> messageFixture.create(channel, member))
                     .collect(Collectors.toList());
 

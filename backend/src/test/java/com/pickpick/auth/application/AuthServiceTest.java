@@ -6,11 +6,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
+import com.pickpick.channel.domain.Channel;
+import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.auth.ExpiredTokenException;
 import com.pickpick.exception.auth.InvalidTokenException;
 import com.pickpick.member.domain.Member;
@@ -18,36 +18,17 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsListRequest;
-import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
-import com.slack.api.methods.request.users.UsersIdentityRequest;
-import com.slack.api.methods.request.users.UsersListRequest;
-import com.slack.api.methods.response.conversations.ConversationsListResponse;
-import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
-import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
-import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.Team;
-import com.slack.api.methods.response.users.UsersIdentityResponse;
-import com.slack.api.methods.response.users.UsersIdentityResponse.User;
-import com.slack.api.methods.response.users.UsersListResponse;
-import com.slack.api.model.User.Profile;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class AuthServiceTest {
-
-    @MockBean
-    private MethodsClient slackClient;
 
     @Autowired
     private AuthService authService;
@@ -57,6 +38,9 @@ class AuthServiceTest {
 
     @Autowired
     private WorkspaceRepository workspaces;
+
+    @Autowired
+    private ChannelRepository channels;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -74,18 +58,13 @@ class AuthServiceTest {
 
     @DisplayName("로그인 시 토큰이 발급된다.")
     @Test
-    void login() throws SlackApiException, IOException {
+    void login() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member member = members.save(KKOJAE.createLogin(jupjup));
-
-        given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .willReturn(generateOAuthV2AccessResponse(jupjup.getSlackId()));
-        given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .willReturn(generateUsersIdentityResponse(member.getSlackId()));
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
 
         // when
-        LoginResponse response = authService.login("1234");
+        LoginResponse response = authService.login(KKOJAE.getCode());
 
         // then
         assertThat(response.getToken()).isNotEmpty();
@@ -93,19 +72,14 @@ class AuthServiceTest {
 
     @DisplayName("최초 로그인 시 isFirstLogin true, 두번째 이후부턴 false가 반환되어야 한다")
     @Test
-    void firstLogin() throws SlackApiException, IOException {
+    void firstLogin() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member member = members.save(KKOJAE.createNeverLoggedIn(jupjup));
-
-        given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .willReturn(generateOAuthV2AccessResponse(jupjup.getSlackId()));
-        given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .willReturn(generateUsersIdentityResponse(member.getSlackId()));
+        Member kkojae = members.save(KKOJAE.createNeverLoggedIn(jupjup));
 
         // when
-        LoginResponse firstLoginResponse = authService.login("1234");
-        LoginResponse secondLoginResponse = authService.login("1234");
+        LoginResponse firstLoginResponse = authService.login(KKOJAE.getCode());
+        LoginResponse secondLoginResponse = authService.login(KKOJAE.getCode());
 
         // then
         assertAll(
@@ -116,82 +90,44 @@ class AuthServiceTest {
         );
     }
 
-    @DisplayName("워크스페이스 초기화 후 로그인한다")
+    @DisplayName("워크스페이스 초기화 시 워크스페이스를 저장한다.")
     @Test
-    void registerWorkspace() throws SlackApiException, IOException {
+    void registerWorkspace() {
         // given
-        String memberSlackId = "U123456";
-        String workspaceSlackId = "T123456";
+        Workspace jupjup = JUPJUP.create();
+        Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
 
-        given(slackClient.oauthV2Access(any(OAuthV2AccessRequest.class)))
-                .willReturn(generateOAuthV2AccessResponse(workspaceSlackId));
-        given(slackClient.conversationsList(any(ConversationsListRequest.class)))
-                .willReturn(generateConversationsListResponse());
-        given(slackClient.usersList(any(UsersListRequest.class)))
-                .willReturn(generateUsersListResponse(memberSlackId));
-        given(slackClient.usersIdentity(any(UsersIdentityRequest.class)))
-                .willReturn(generateUsersIdentityResponse(memberSlackId));
+        Optional<Workspace> beforeSave = workspaces.findBySlackId(jupjup.getSlackId());
 
         // when
-        LoginResponse response = authService.registerWorkspace("code");
+        authService.registerWorkspace(KKOJAE.getCode());
+
+        Optional<Workspace> afterSave = workspaces.findBySlackId(jupjup.getSlackId());
 
         // then
-        assertThat(response.getToken()).isNotEmpty();
-        assertThat(workspaces.findBySlackId(workspaceSlackId)).isNotEmpty();
+        assertThat(beforeSave).isEmpty();
+        assertThat(afterSave).isNotEmpty();
     }
 
-    private OAuthV2AccessResponse generateOAuthV2AccessResponse(final String workspaceSlackId) {
-        OAuthV2AccessResponse response = new OAuthV2AccessResponse();
+    @DisplayName("워크스페이스 초기화 시 해당 워크스페이스의 채널과 멤버를 저장한다.")
+    @Test
+    void registerWorkspaceAnd() {
+        // given
+        Workspace jupjup = JUPJUP.create();
+        Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
 
-        AuthedUser authedUser = new AuthedUser();
-        authedUser.setAccessToken("token");
+        // when
+        authService.registerWorkspace(KKOJAE.getCode());
 
-        Team team = new Team();
-        team.setId(workspaceSlackId);
+        Workspace savedJupjup = workspaces.getBySlackId(jupjup.getSlackId());
+        List<Channel> jupjupChannels = channels.findAllByWorkspaceOrderByName(savedJupjup);
+        Member savedKkojae = members.getBySlackId(kkojae.getSlackId());
 
-        response.setOk(true);
-        response.setAuthedUser(authedUser);
-        response.setTeam(team);
-        response.setAccessToken("botToken");
-        response.setBotUserId("botSlackId");
+        List<Member> memberInJupjup = members.findAllByWorkspace(savedJupjup);
 
-        return response;
-    }
-
-    private UsersListResponse generateUsersListResponse(final String memberSlackId) {
-        UsersListResponse response = new UsersListResponse();
-
-        com.slack.api.model.User member = new com.slack.api.model.User();
-        Profile profile = new Profile();
-        profile.setDisplayName("연로그");
-        profile.setImage48("image48.png");
-
-        member.setId(memberSlackId);
-        member.setProfile(profile);
-
-        response.setOk(true);
-        response.setMembers(List.of(member));
-
-        return response;
-    }
-
-    private UsersIdentityResponse generateUsersIdentityResponse(final String memberSlackId) {
-        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
-
-        User user = new User();
-        user.setId(memberSlackId);
-
-        usersIdentityResponse.setOk(true);
-        usersIdentityResponse.setUser(user);
-
-        return usersIdentityResponse;
-    }
-
-    private ConversationsListResponse generateConversationsListResponse() {
-        ConversationsListResponse conversationsListResponse = new ConversationsListResponse();
-        conversationsListResponse.setOk(true);
-        conversationsListResponse.setChannels(new ArrayList<>());
-        return conversationsListResponse;
+        // then
+        assertThat(jupjupChannels).isNotEmpty();
+        assertThat(memberInJupjup).extracting("slackId").contains(savedKkojae.getSlackId());
     }
 
     @DisplayName("유효한 토큰을 검증한다.")

@@ -20,7 +20,7 @@ class ChannelSubscriptionTest {
     void changeOrder(final int invalidOrder) {
         // given
         Workspace jupjup = JUPJUP.create();
-        Channel qna = QNA.create();
+        Channel qna = QNA.create(jupjup);
         Member bom = BOM.createLogin(jupjup);
         ChannelSubscription channelSubscription = new ChannelSubscription(qna, bom, 1);
 

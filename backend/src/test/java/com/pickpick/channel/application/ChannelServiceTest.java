@@ -3,12 +3,11 @@ package com.pickpick.channel.application;
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
 import static com.pickpick.fixture.ChannelFixture.QNA;
+import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MemberFixture.YEONLOG;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -20,13 +19,8 @@ import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
-import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.conversations.ConversationsListRequest;
-import com.slack.api.methods.response.conversations.ConversationsListResponse;
-import com.slack.api.model.Conversation;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +28,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class ChannelServiceTest {
@@ -57,9 +50,6 @@ class ChannelServiceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    @MockBean
-    private MethodsClient methodsClient;
-
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
@@ -77,9 +67,6 @@ class ChannelServiceTest {
         Channel qna = channels.save(QNA.create(jupjup));
 
         channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
-
-        given(methodsClient.conversationsList(any(ConversationsListRequest.class)))
-                .willReturn(generateConversationsListResponse(notice, freeChat, qna));
 
         // when
         List<ChannelResponse> foundChannels = channelService.findByWorkspace(yeonLog.getId()).getChannels();
@@ -99,18 +86,15 @@ class ChannelServiceTest {
     void findChannelsHasUser() throws SlackApiException, IOException {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member yeonLog = members.save(YEONLOG.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
         Channel qna = channels.save(QNA.create(jupjup));
 
-        channelSubscriptions.save(new ChannelSubscription(freeChat, yeonLog, 1));
-
-        given(methodsClient.conversationsList(any(ConversationsListRequest.class)))
-                .willReturn(generateConversationsListResponse(notice));
+        channelSubscriptions.save(new ChannelSubscription(notice, summer, 1));
 
         // when
-        List<String> channelNames = channelService.findByWorkspace(yeonLog.getId())
+        List<String> channelNames = channelService.findByWorkspace(summer.getId())
                 .getChannels()
                 .stream()
                 .map(ChannelResponse::getName)
@@ -119,21 +103,6 @@ class ChannelServiceTest {
         // then
         assertThat(channelNames).isNotEmpty()
                 .doesNotContain(freeChat.getName(), qna.getName());
-    }
-
-    private ConversationsListResponse generateConversationsListResponse(final Channel... channels) {
-        ConversationsListResponse conversationsListResponse = new ConversationsListResponse();
-        conversationsListResponse.setOk(true);
-        List<Conversation> conversations = new ArrayList<>();
-        for (Channel channel : channels) {
-            Conversation conversation = Conversation.builder()
-                    .id(channel.getSlackId())
-                    .isMember(true)
-                    .build();
-            conversations.add(conversation);
-        }
-        conversationsListResponse.setChannels(conversations);
-        return conversationsListResponse;
     }
 
     private List<Long> filterSubscribedChannelIds(final List<ChannelResponse> foundChannels) {

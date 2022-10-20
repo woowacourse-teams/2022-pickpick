@@ -37,19 +37,13 @@ public class Member {
     private boolean isFirstLogin = true;
 
     @Column(name = "token", length = 256, unique = true)
-    private String token;
+    private String slackToken;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
     protected Member() {
-    }
-
-    public Member(final String slackId, final String username, final String thumbnailUrl) {
-        this.slackId = slackId;
-        this.username = username;
-        this.thumbnailUrl = thumbnailUrl;
     }
 
     public Member(final String slackId, final String username, final String thumbnailUrl, final Workspace workspace) {
@@ -59,9 +53,9 @@ public class Member {
         this.workspace = workspace;
     }
 
-    public void firstLogin(final String token) {
+    public void firstLogin(final String slackToken) {
         this.isFirstLogin = false;
-        this.token = token;
+        this.slackToken = slackToken;
     }
 
     public void update(final String username, final String thumbnailUrl) {
