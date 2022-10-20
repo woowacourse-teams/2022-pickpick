@@ -15,6 +15,7 @@ import SearchForm from "@src/components/SearchForm";
 
 import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useFocus from "@src/hooks/@shared/useFocus";
 import useModal from "@src/hooks/@shared/useModal";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
@@ -31,6 +32,7 @@ function Feed() {
   const { channelId } = useParams();
   const { key: queryKey } = useLocation();
   const shouldRenderDate = useMessageDate();
+  const focusRef = useFocus<HTMLDivElement>();
 
   const {
     reminderTarget,
@@ -66,7 +68,7 @@ function Feed() {
   useScrollToTop();
 
   return (
-    <Styled.Container>
+    <Styled.Container tabIndex={-1} ref={focusRef}>
       <SrOnlyTitle>메인 피드</SrOnlyTitle>
 
       <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />

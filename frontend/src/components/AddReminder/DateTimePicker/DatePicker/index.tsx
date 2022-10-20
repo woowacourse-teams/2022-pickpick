@@ -50,18 +50,19 @@ function DatePicker({
 
             <DateTimePickerToggle
               text={`
-              ${parsePickerOptionText({
-                optionText: checkedYear,
-                unit: TIME_UNIT.YEAR,
-              })} 
-              ${parsePickerOptionText({
-                optionText: checkedMonth,
-                unit: TIME_UNIT.MONTH,
-              })}
-           ${parsePickerOptionText({
-             optionText: checkedDate,
-             unit: TIME_UNIT.DATE,
-           })}`}
+                ${parsePickerOptionText({
+                  optionText: checkedYear,
+                  unit: TIME_UNIT.YEAR,
+                })} 
+                ${parsePickerOptionText({
+                  optionText: checkedMonth,
+                  unit: TIME_UNIT.MONTH,
+                })}
+                ${parsePickerOptionText({
+                  optionText: checkedDate,
+                  unit: TIME_UNIT.DATE,
+                })}
+              `}
               handleToggleDropdown={handleToggleDropdown}
             >
               <CalendarIcon

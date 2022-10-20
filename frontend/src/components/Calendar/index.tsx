@@ -31,14 +31,15 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
   const theme = useTheme();
 
   return (
-    <Styled.Container>
-      <SrOnlyTitle>특정 날짜로 이동</SrOnlyTitle>
+    <Styled.Container role="dialog" aria-modal="true" aria-labelledby="title">
+      <SrOnlyTitle id="title">특정 날짜로 이동</SrOnlyTitle>
 
       <Styled.Month>
         <WrapperButton
           kind="smallIcon"
           onClick={handleDecrementMonth}
           aria-label="이전 달 보기"
+          autoFocus
         >
           <ArrowIconLeft
             width="24px"
@@ -47,7 +48,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           />
         </WrapperButton>
 
-        <Styled.Title>
+        <Styled.Title role="status">
           {`${firstOfMonthDate.getFullYear()}년 ${
             MONTHS[firstOfMonthDate.getMonth()]
           }월`}
@@ -74,7 +75,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
         ))}
       </Styled.Weekdays>
 
-      <Styled.Days role="list">
+      <Styled.Days>
         {getCurrentDays().map((day, index) => {
           const today = todayDate.getDate();
 
@@ -88,7 +89,6 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
                 isBlank={isBlank}
                 isToday={isToday}
                 isFuture={isFuture}
-                onClick={handleCloseCalendar}
               >
                 {day}
                 <div></div>
@@ -104,7 +104,8 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
                   MONTHS[firstOfMonthDate.getMonth()]
                 }-${day}`
               )}`}
-              role="listItem"
+              onClick={handleCloseCalendar}
+              role="button"
               aria-label={`${firstOfMonthDate.getFullYear()}년 ${
                 MONTHS[firstOfMonthDate.getMonth()]
               }월 ${day}일 로 이동`}

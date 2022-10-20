@@ -11,6 +11,7 @@ import SearchForm from "@src/components/SearchForm";
 
 import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useFocus from "@src/hooks/@shared/useFocus";
 import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
 import useModal from "@src/hooks/@shared/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
@@ -25,6 +26,7 @@ function SearchResult() {
   const channelIds = useGetSearchParam({
     key: SEARCH_PARAMS.SEARCH_CHANNEL_IDS,
   });
+  const focusRef = useFocus<HTMLDivElement>();
 
   const {
     reminderTarget,
@@ -53,13 +55,14 @@ function SearchResult() {
   const parsedData = extractResponseMessages(data);
 
   return (
-    <Styled.Container>
+    <Styled.Container tabIndex={-1} ref={focusRef}>
       <SrOnlyTitle>검색 결과</SrOnlyTitle>
 
       <SearchForm
         currentKeyword={keyword}
         currentChannelIds={channelIds.split(",").map(Number)}
       />
+
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
@@ -68,9 +71,12 @@ function SearchResult() {
         <FlexColumn gap="4px" width="100%">
           {isSuccess && parsedData.length === 0 && (
             <FlexColumn gap="30px" margin="25vh 0" alignItems="center">
-              <h3>{`' ${keyword} '`} 에 대한 검색 결과가 없습니다.</h3>
+              <h3 role="status">
+                {`' ${keyword} '`} 에 대한 검색 결과가 없습니다.
+              </h3>
             </FlexColumn>
           )}
+
           {parsedData.map(
             ({
               id,

@@ -1,9 +1,12 @@
+import { useRef } from "react";
+
 import useDatePicker from "@src/components/AddReminder/@hooks/useDatePicker";
 import useTimePicker from "@src/components/AddReminder/@hooks/useTimePicker";
 import DatePicker from "@src/components/AddReminder/DateTimePicker/DatePicker";
 import TimePicker from "@src/components/AddReminder/DateTimePicker/TimePicker";
 
 import useMutateReminder from "@src/hooks/@query/useMutateReminder";
+import useFocus from "@src/hooks/@shared/useFocus";
 
 import { REMINDER_BUTTON_TEXT } from "@src/@constants";
 import { FlexRow } from "@src/@styles/shared";
@@ -26,6 +29,7 @@ function AddReminder({
   handleCloseReminderModal,
   refetchFeed,
 }: Props) {
+  const focusRef = useFocus<HTMLDivElement>();
   const {
     yearRef,
     monthRef,
@@ -57,7 +61,7 @@ function AddReminder({
     useMutateReminder({ handleCloseReminderModal, refetchFeed });
 
   return (
-    <Styled.Container>
+    <Styled.Container tabIndex={-1} ref={focusRef}>
       <Styled.Title>리마인더 생성</Styled.Title>
 
       <DatePicker
