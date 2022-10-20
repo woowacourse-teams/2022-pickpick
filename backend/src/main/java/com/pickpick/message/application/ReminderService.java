@@ -167,11 +167,11 @@ public class ReminderService {
         Member member = members.getById(memberId);
         List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
 
-        Map<String, String> workspaceMemberMap = workspaceMembers.stream()
+        Map<String, String> memberNames = workspaceMembers.stream()
                 .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
 
         for (ReminderResponse response : reminderResponses) {
-            String text = replaceMentionMemberInText(response.getText(), workspaceMemberMap);
+            String text = replaceMentionMemberInText(response.getText(), memberNames);
             response.replaceText(text);
         }
     }
@@ -179,9 +179,8 @@ public class ReminderService {
     private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
         Set<String> slackIds = slackIdExtractor.extract(text);
         for (String slackId : slackIds) {
-            text = text.replace(
-                    MENTION_PREFIX + slackId + MENTION_SUFFIX,
-                    memberMap.getOrDefault(slackId, MENTION_PREFIX + slackId + MENTION_SUFFIX));
+            String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;
+            text = text.replace(mention, memberMap.getOrDefault(slackId, mention));
         }
         return text;
     }

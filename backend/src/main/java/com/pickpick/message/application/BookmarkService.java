@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookmarkService {
 
     private static final String MENTION_PREFIX = "<@";
-    private static final String MENSION_SUFFIX = ">";
+    private static final String MENTION_SUFFIX = ">";
 
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
@@ -130,9 +130,8 @@ public class BookmarkService {
     private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
         Set<String> slackIds = slackIdExtractor.extract(text);
         for (String slackId : slackIds) {
-            text = text.replace(
-                    MENTION_PREFIX + slackId + MENSION_SUFFIX,
-                    memberMap.getOrDefault(slackId, MENTION_PREFIX + slackId + MENSION_SUFFIX));
+            String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;
+            text = text.replace(mention, memberMap.getOrDefault(slackId, mention));
         }
         return text;
     }
