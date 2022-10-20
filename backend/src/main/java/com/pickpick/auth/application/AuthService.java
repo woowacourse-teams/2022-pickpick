@@ -23,16 +23,16 @@ public class AuthService {
     private final MemberRepository members;
     private final WorkspaceRepository workspaces;
     private final ChannelRepository channels;
-    private final ExternalClient slackClient;
+    private final ExternalClient externalClient;
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(final MemberRepository members, final WorkspaceRepository workspaces,
-                       final ChannelRepository channels, final ExternalClient slackClient,
+                       final ChannelRepository channels, final ExternalClient externalClient,
                        final JwtTokenProvider jwtTokenProvider) {
         this.members = members;
         this.workspaces = workspaces;
         this.channels = channels;
-        this.slackClient = slackClient;
+        this.externalClient = externalClient;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -42,13 +42,13 @@ public class AuthService {
 
     @Transactional
     public LoginResponse registerWorkspace(final String code) {
-        WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
+        WorkspaceInfoDto workspaceInfoDto = externalClient.callWorkspaceInfo(code);
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
-        List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
+        List<Member> allWorkspaceMembers = externalClient.findMembersByWorkspace(workspace);
         members.saveAll(allWorkspaceMembers);
 
-        List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
+        List<Channel> allWorkspaceChannels = externalClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
 
         return loginByToken(workspaceInfoDto.getUserToken());
@@ -56,12 +56,12 @@ public class AuthService {
 
     @Transactional
     public LoginResponse login(final String code) {
-        String userToken = slackClient.callUserToken(code);
+        String userToken = externalClient.callUserToken(code);
         return loginByToken(userToken);
     }
 
     private LoginResponse loginByToken(final String userToken) {
-        String memberSlackId = slackClient.callMemberSlackId(userToken);
+        String memberSlackId = externalClient.callMemberSlackId(userToken);
 
         Member member = members.getBySlackId(memberSlackId);
 
