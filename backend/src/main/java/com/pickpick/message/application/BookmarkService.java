@@ -28,6 +28,7 @@ public class BookmarkService {
 
     private static final String MENTION_PREFIX = "<@";
     private static final String MENTION_SUFFIX = ">";
+    private static final String MENTION_MARK = "@";
 
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
@@ -119,7 +120,8 @@ public class BookmarkService {
         List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
 
         Map<String, String> memberNames = workspaceMembers.stream()
-                .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
+                .collect(Collectors.toMap(Member::getSlackId,
+                        workspaceMember -> MENTION_MARK + workspaceMember.getUsername()));
 
         for (BookmarkResponse response : bookmarkResponses) {
             String text = replaceMentionMemberInText(response.getText(), memberNames);
