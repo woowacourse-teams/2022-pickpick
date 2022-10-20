@@ -2,7 +2,8 @@ package com.pickpick.message.application;
 
 import static com.pickpick.fixture.ChannelFixture.FREE_CHAT;
 import static com.pickpick.fixture.ChannelFixture.NOTICE;
-import static com.pickpick.fixture.MemberFixture.BOM;
+import static com.pickpick.fixture.MemberFixture.HOPE;
+import static com.pickpick.fixture.MemberFixture.KKOJAE;
 import static com.pickpick.fixture.MemberFixture.SUMMER;
 import static com.pickpick.fixture.MessageRequestFactory.emptyQueryParams;
 import static com.pickpick.fixture.MessageRequestFactory.fromLatestInChannels;
@@ -42,8 +43,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -105,7 +108,6 @@ class MessageServiceTest {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
         Member summer = members.save(SUMMER.createLogin(jupjup));
-        Member bom = members.save(BOM.createLogin(jupjup));
         Channel notice = channels.save(NOTICE.create(jupjup));
         Channel freeChat = channels.save(FREE_CHAT.create(jupjup));
 
@@ -302,73 +304,6 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages).extracting("id").containsAll(noticeMessagesId),
                         () -> assertThat(foundMessages).extracting("id").containsAll(freeChatMessagesId),
                         () -> assertThat(foundMessages).extracting("id").doesNotContainAnyElementsOf(qnaMessagesId)
-                );
-            }
-        }
-
-        @DisplayName("메시지 내부에 멘션 아이디가 있다면")
-        @Nested
-        class mentionMessage {
-            MessageRequest request = searchByKeywordInChannels(List.of(notice), "멘션",
-                    MESSAGE_COUNT_OVER_TOTAL_SIZE);
-            MessageResponses response = messageService.find(summer.getId(), request);
-
-            @DisplayName("멘션 아이디가 멤버 중에 존재하는 경우 멘션 아이디를 닉네임으로 대치하여 보여준다.")
-            @Test
-            void isExistedMentionId() {
-                List<MessageResponse> foundMessages = response.getMessages()
-                        .stream()
-                        .filter(message -> message.getText().contains("한 번 존재하는 유저"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).contains(
-                                BOM.createLogin(jupjup).getUsername())
-                );
-            }
-
-            @DisplayName("멘션 아이디가 멤버중에 존재하지 않는 경우 멘션 아이디를 그대로 보여준다.")
-            @Test
-            void isNotExistedMentionId() {
-                List<MessageResponse> foundMessages = response.getMessages()
-                        .stream()
-                        .filter(message -> message.getText().contains("존재하지 않는 유저"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).contains("<@")
-                );
-            }
-
-            @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우 모두 대치하여 보여준다.")
-            @Test
-            void isSeveralSameId() {
-                List<MessageResponse> foundMessages = response.getMessages()
-                        .stream()
-                        .filter(message -> message.getText().contains("여러번 존재하는 유저"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@")
-                );
-            }
-
-            @DisplayName("여러 유저를 멘션한 경우 모두 대치해서 보여준다")
-            @Test
-            void isSeveralMemberMentioned() {
-                List<MessageResponse> foundMessages = response.getMessages()
-                        .stream()
-                        .filter(message -> message.getText().contains("여러명 유저 멘션 텍스트"))
-                        .collect(Collectors.toList());
-
-                assertAll(
-                        () -> assertThat(foundMessages).hasSize(1),
-                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
-                        () -> assertThat(foundMessages.get(0).getText()).contains(BOM.createLogin(jupjup).getUsername(),
-                                SUMMER.createLogin(jupjup).getUsername())
                 );
             }
         }
@@ -590,6 +525,149 @@ class MessageServiceTest {
                         () -> assertThat(isPastMessages).isTrue()
                 );
             }
+        }
+    }
+
+    @DisplayName("메시지 조회시 메시지 텍스트 내부 멘션 아이디는")
+    @Nested
+    class mentionMessageInBookmark {
+
+        @AfterEach
+        void tearDown() {
+            databaseCleaner.clear();
+        }
+
+        Workspace jupjup = workspaces.save(JUPJUP.create());
+
+        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
+        Member hope = members.save(HOPE.createLogin(jupjup));
+        Member summer = members.save(SUMMER.createLogin(jupjup));
+
+        Channel notice = channels.save(NOTICE.create(jupjup));
+        ChannelSubscription subscription = subscriptions.save(new ChannelSubscription(notice, hope, VIEW_ORDER_FIRST));
+
+        LocalDateTime postedDate = LocalDateTime.now();
+
+        @DisplayName("멘션 아이디가 한 개만 존재하는 경우")
+        @Nested
+        class oneMentionIdExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">" + " 메시지 내용");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("올바른 닉네임으로 대치하여 보여준다.")
+            @Test
+            void oneMentionId() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + summer.getSlackId() + ">");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("모두 동일한 닉네임으로 대치하여 보여준다.")
+            @Test
+            void sameMentionIds() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).doesNotContain("<@"),
+                        () -> assertThat(foundMessages.get(0).getText()).contains(summer.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class differentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + hope.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void differentMentionIds() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText())
+                                .contains(summer.getUsername(), hope.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("같은 멘션 아이디와 다른 멘션 아이디가 여러 개 존재하는 경우")
+        @Nested
+        class sameAndDifferentMentionIdsExisted {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">"
+                    + "메시지 내용"
+                    + "<@" + summer.getSlackId() + ">"
+                    + "<@" + kkojae.getSlackId() + ">");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("모두 해당 닉네임으로 대치하여 보여준다.")
+            @Test
+            void differentMentionIds() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText())
+                                .contains(summer.getUsername(), kkojae.getUsername())
+                );
+            }
+        }
+
+        @DisplayName("멘션 아이디가 멤버 중에 존재하지 않는 경우")
+        @Nested
+        class mentionIdNotExisted {
+            Message message = saveMessageWithText("<@UNOTEXISTED> 존재하지 않는 멤버의 슬랙아이디");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            @DisplayName("멘션 아이디를 그대로 보여준다.")
+            @Test
+            void notChange() {
+                List<MessageResponse> foundMessages = response.getMessages();
+
+                assertAll(
+                        () -> assertThat(foundMessages).hasSize(1),
+                        () -> assertThat(foundMessages.get(0).getText()).contains("<@UNOTEXISTED>")
+                );
+            }
+        }
+
+        private Message saveMessageWithText(String text) {
+            Message message = new Message(UUID.randomUUID().toString(), text, kkojae, notice, postedDate, postedDate);
+            return messages.save(message);
+        }
+
+        private Bookmark saveBookmark(Message message, Member member) {
+            Bookmark bookmark = new Bookmark(hope, message);
+            return bookmarks.save(bookmark);
         }
     }
 }
