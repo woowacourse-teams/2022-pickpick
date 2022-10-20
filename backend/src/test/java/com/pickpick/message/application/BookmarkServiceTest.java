@@ -158,7 +158,7 @@ class BookmarkServiceTest {
     class find {
 
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        
+
         Member hope = members.save(HOPE.createLogin(jupjup));
         Member kkojae = members.save(KKOJAE.createLogin(jupjup));
         Member bom = members.save(BOM.createLogin(jupjup));
@@ -303,7 +303,6 @@ class BookmarkServiceTest {
         @DisplayName("북마크 메시지 내부에 멘션 아이디가 있다면")
         @Nested
         class mentionMessageInBookmark {
-
 
             BookmarkFindRequest request = BookmarkFindRequestFactory.onlyCount(100);
             BookmarkResponses response = bookmarkService.find(request, hope.getId());
