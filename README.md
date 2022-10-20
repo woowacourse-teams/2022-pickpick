@@ -14,7 +14,7 @@
 ## 📎 바로가기
 
 - 📚 [API 문서](https://dev.jupjup.site/docs)
-- 🎁 [스토리북](https://62e64dc73aafd7bc9338ba73-fpqtettbwt.chromatic.com/)
+- 🎁 [스토리북](https://62e64dc73aafd7bc9338ba73-imzhfpkupu.chromatic.com/)
 - 🐹 [팀문화](https://selective-archeology-e38.notion.site/858f167439b94c9caee71ab177bce08e)
 - 🌎 [깃헙 위키](https://github.com/woowacourse-teams/2022-pickpick/wiki)
 
