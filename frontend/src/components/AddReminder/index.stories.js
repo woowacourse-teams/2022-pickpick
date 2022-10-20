@@ -3,6 +3,20 @@ import AddReminder from ".";
 export default {
   title: "@component/AddReminder",
   component: AddReminder,
+  argTypes: {
+    messageId: {
+      control: false,
+    },
+    handleCloseReminderModal: {
+      control: false,
+    },
+    remindDate: {
+      control: false,
+    },
+    refetchFeed: {
+      control: false,
+    },
+  },
 };
 
 const Template = (args) => {

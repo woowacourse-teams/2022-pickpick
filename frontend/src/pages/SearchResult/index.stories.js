@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import SearchResult from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: SearchResult,
 };
 
-const Template = (args) => <SearchResult {...args} />;
+const Template = (args) => (
+  <Main>
+    <SearchResult {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});

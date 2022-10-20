@@ -14,7 +14,20 @@ export default {
 
 const Template = (args) => <WrapperButton {...args} />;
 
-export const DefaultTemplate = Template.bind({});
-DefaultTemplate.args = {
+export const BigIconButtonTemplate = Template.bind({});
+export const SmallIconButtonTemplate = Template.bind({});
+export const TextButtonTemplate = Template.bind({});
+
+BigIconButtonTemplate.args = {
   children: <GithubIcon width="24px" height="24px" fill="#8B8B8B" />,
+  kind: "bigIcon",
+};
+
+SmallIconButtonTemplate.args = {
+  children: <GithubIcon width="24px" height="24px" fill="#8B8B8B" />,
+  kind: "smallIcon",
+};
+
+TextButtonTemplate.args = {
+  children: "Text Button",
 };

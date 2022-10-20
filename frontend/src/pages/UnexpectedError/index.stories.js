@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import UnexpectedError from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: UnexpectedError,
 };
 
-const Template = (args) => <UnexpectedError {...args} />;
+const Template = (args) => (
+  <Main>
+    <UnexpectedError {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});

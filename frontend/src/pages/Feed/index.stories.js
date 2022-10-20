@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import Feed from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: Feed,
 };
 
-const Template = (args) => <Feed {...args} />;
+const Template = (args) => (
+  <Main>
+    <Feed {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});

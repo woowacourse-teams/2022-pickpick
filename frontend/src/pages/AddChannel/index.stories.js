@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import AddChannel from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: AddChannel,
 };
 
-const Template = (args) => <AddChannel {...args} />;
+const Template = (args) => (
+  <Main>
+    <AddChannel {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});

@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import Bookmark from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: Bookmark,
 };
 
-const Template = (args) => <Bookmark {...args} />;
+const Template = (args) => (
+  <Main>
+    <Bookmark {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});

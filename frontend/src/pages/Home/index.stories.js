@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import Home from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: Home,
 };
 
-const Template = (args) => <Home {...args} />;
+const Template = (args) => (
+  <Main>
+    <Home {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});

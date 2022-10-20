@@ -5,8 +5,6 @@ import { MemoryRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 
-import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
-
 import GlobalStyle from "@src/@styles/GlobalStyle";
 import { LIGHT_MODE_THEME } from "@src/@styles/theme";
 
@@ -32,9 +30,7 @@ export const decorators = [
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={LIGHT_MODE_THEME}>
             <GlobalStyle />
-            <Main>
-              <Story />
-            </Main>
+            <Story />
             <div id="portal-root"></div>
           </ThemeProvider>
         </QueryClientProvider>

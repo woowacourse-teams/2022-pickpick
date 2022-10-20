@@ -1,3 +1,5 @@
+import { Main } from "@src/components/@layouts/LayoutContainer/style.ts";
+
 import Reminder from ".";
 
 export default {
@@ -5,6 +7,10 @@ export default {
   component: Reminder,
 };
 
-const Template = (args) => <Reminder {...args} />;
+const Template = (args) => (
+  <Main>
+    <Reminder {...args} />
+  </Main>
+);
 
 export const DefaultTemplate = Template.bind({});
