@@ -118,11 +118,11 @@ public class BookmarkService {
         Member member = members.getById(memberId);
         List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
 
-        Map<String, String> workspaceMemberMap = workspaceMembers.stream()
+        Map<String, String> memberNames = workspaceMembers.stream()
                 .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
 
         for (BookmarkResponse response : bookmarkResponses) {
-            String text = replaceMentionMemberInText(response.getText(), workspaceMemberMap);
+            String text = replaceMentionMemberInText(response.getText(), memberNames);
             response.replaceText(text);
         }
     }

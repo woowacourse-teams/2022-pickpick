@@ -116,11 +116,11 @@ public class MessageService {
         Member member = members.getById(memberId);
         List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
 
-        Map<String, String> workspaceMemberMap = workspaceMembers.stream()
+        Map<String, String> memberNames = workspaceMembers.stream()
                 .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
 
         for (MessageResponse message : messageResponses) {
-            String text = replaceMentionMemberInText(message.getText(), workspaceMemberMap);
+            String text = replaceMentionMemberInText(message.getText(), memberNames);
             message.replaceText(text);
         }
     }
