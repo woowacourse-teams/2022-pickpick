@@ -57,7 +57,6 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
         <WrapperButton
           kind="smallIcon"
           onClick={handleIncrementMonth}
-          isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
           aria-label="다음 달 보기"
         >

@@ -1,4 +1,5 @@
-import styled, { css, CSSProp } from "styled-components";
+import styled, { CSSProp, css } from "styled-components";
+
 import { Kind, Props } from ".";
 
 type StyledProps = Omit<Props, "children">;
@@ -19,9 +20,9 @@ export const Container = styled.button`
   border: none;
   background-color: inherit;
 
-  ${({ kind, isFuture }: StyledProps) => css`
-    opacity: ${isFuture ? 0.3 : 1};
-    cursor: ${isFuture ? "default" : "pointer"};
+  ${({ kind, disabled }: StyledProps) => css`
+    opacity: ${disabled ? 0.3 : 1};
+    cursor: ${disabled ? "default" : "pointer"};
 
     ${kindTable[kind]};
   `}

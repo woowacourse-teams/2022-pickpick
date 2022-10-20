@@ -7,7 +7,21 @@ export default {
 
 const Template = (args) => <Button {...args} />;
 
-export const DefaultTemplate = Template.bind({});
-DefaultTemplate.args = {
+export const PrimaryTemplate = Template.bind({});
+export const SecondaryTemplate = Template.bind({});
+export const TertiaryTemplate = Template.bind({});
+
+PrimaryTemplate.args = {
+  styleType: "primary",
+  children: "시작하기",
+};
+
+SecondaryTemplate.args = {
+  styleType: "secondary",
+  children: "시작하기",
+};
+
+TertiaryTemplate.args = {
+  styleType: "tertiary",
   children: "시작하기",
 };
