@@ -13,6 +13,7 @@ import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.auth.ExpiredTokenException;
 import com.pickpick.exception.auth.InvalidTokenException;
+import com.pickpick.exception.workspace.WorkspaceDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
@@ -128,6 +129,21 @@ class AuthServiceTest {
         // then
         assertThat(jupjupChannels).isNotEmpty();
         assertThat(memberInJupjup).extracting("slackId").contains(savedKkojae.getSlackId());
+    }
+
+    @DisplayName("이미 등록된 워크스페이스를 재등록시 예외가 발생한다.")
+    @Test
+    void registerExistedWorkspace() {
+        // given
+        Workspace jupjup = JUPJUP.create();
+        Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
+
+        // when
+        authService.registerWorkspace(KKOJAE.getCode());
+
+        // then
+        assertThatThrownBy(() -> authService.registerWorkspace(KKOJAE.getCode()))
+                .isInstanceOf(WorkspaceDuplicateException.class);
     }
 
     @DisplayName("유효한 토큰을 검증한다.")

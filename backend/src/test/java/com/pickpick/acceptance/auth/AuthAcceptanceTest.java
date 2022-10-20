@@ -3,6 +3,7 @@ package com.pickpick.acceptance.auth;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
 import static com.pickpick.fixture.MemberFixture.BOM;
@@ -34,6 +35,36 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
         // then
         상태코드_200_확인(response);
         응답_바디에_토큰_존재(response);
+    }
+
+    @Test
+    void 워크스페이스_초기화_후_다시_로그인() {
+        // given
+        String codeForInit = 슬랙에서_코드_발행(BOM);
+        워크스페이스_초기화_및_로그인(codeForInit);
+
+        // when
+        String codeForLogin = 슬랙에서_코드_발행(BOM);
+        ExtractableResponse<Response> response = 로그인(codeForLogin);
+
+        // then
+        상태코드_200_확인(response);
+        응답_바디에_토큰_존재(response);
+    }
+
+    @Test
+    void 워크스페이스_등록_후_워크스페이스_재등록시_예외처리() {
+        // given
+        String codeForInit = 슬랙에서_코드_발행(BOM);
+        워크스페이스_초기화_및_로그인(codeForInit);
+
+        // when
+        String codeForLogin = 슬랙에서_코드_발행(BOM);
+        ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(codeForLogin);
+
+        // then
+        상태코드_400_확인(response);
+        에러코드_확인(response, "WORKSPACE_DUPLICATE");
     }
 
     @Test
