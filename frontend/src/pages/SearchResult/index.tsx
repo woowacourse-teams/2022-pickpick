@@ -71,7 +71,9 @@ function SearchResult() {
         <FlexColumn gap="4px" width="100%">
           {isSuccess && parsedData.length === 0 && (
             <FlexColumn gap="30px" margin="25vh 0" alignItems="center">
-              <h3>{`' ${keyword} '`} 에 대한 검색 결과가 없습니다.</h3>
+              <h3 role="status">
+                {`' ${keyword} '`} 에 대한 검색 결과가 없습니다.
+              </h3>
             </FlexColumn>
           )}
 
