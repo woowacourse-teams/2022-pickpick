@@ -6,10 +6,10 @@ export const mainFeedResponseData = {
       messages: [
         {
           id: 1,
-          username: "엘보우(송상민)",
+          username: "사용자 닉네임 ",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "엘보우 바보1",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -18,10 +18,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 2,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보2",
+          text: "메시지 입니다.2",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -30,10 +30,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 3,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보4",
+          text: "메시지 입니다.4",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -42,10 +42,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 4,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보5",
+          text: "메시지 입니다.5",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -54,10 +54,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 5,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보6",
+          text: "메시지 입니다.6",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -66,10 +66,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 6,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보7",
+          text: "메시지 입니다.7",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -78,10 +78,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 7,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보8",
+          text: "메시지 입니다.8",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -90,10 +90,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 8,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보9",
+          text: "메시지 입니다.9",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -102,10 +102,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 9,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보10",
+          text: "메시지 입니다.10",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -114,10 +114,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 10,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보11",
+          text: "메시지 입니다.11",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -126,10 +126,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 11,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보12",
+          text: "메시지 입니다.12",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -138,10 +138,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 12,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보13",
+          text: "메시지 입니다.13",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -150,10 +150,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 13,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보14",
+          text: "메시지 입니다.14",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -162,10 +162,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 14,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보15",
+          text: "메시지 입니다.15",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -174,10 +174,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 15,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -186,10 +186,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 16,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -198,10 +198,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 17,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -210,10 +210,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 18,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -222,10 +222,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 19,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -234,10 +234,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 20,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -251,10 +251,10 @@ export const mainFeedResponseData = {
       messages: [
         {
           id: 21,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -263,10 +263,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 22,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -275,10 +275,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 23,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -287,10 +287,10 @@ export const mainFeedResponseData = {
         },
         {
           id: 24,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -314,7 +314,7 @@ export const bookmarkFeedResponseData = {
           username: "엘보우(송상민)",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "엘보우 바보1",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -324,10 +324,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 2,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보2",
+          text: "메시지 입니다.2",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -337,10 +337,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 3,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보4",
+          text: "메시지 입니다.4",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -350,10 +350,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 4,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보5",
+          text: "메시지 입니다.5",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -363,10 +363,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 5,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보6",
+          text: "메시지 입니다.6",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -376,10 +376,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 6,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보7",
+          text: "메시지 입니다.7",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -389,10 +389,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 7,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보8",
+          text: "메시지 입니다.8",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -402,10 +402,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 8,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보9",
+          text: "메시지 입니다.9",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -415,10 +415,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 9,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보10",
+          text: "메시지 입니다.10",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -428,10 +428,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 10,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보11",
+          text: "메시지 입니다.11",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -441,10 +441,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 11,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보12",
+          text: "메시지 입니다.12",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -454,10 +454,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 12,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보13",
+          text: "메시지 입니다.13",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -467,10 +467,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 13,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보14",
+          text: "메시지 입니다.14",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -480,10 +480,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 14,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보15",
+          text: "메시지 입니다.15",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -493,10 +493,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 15,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -506,10 +506,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 16,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -519,10 +519,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 17,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -532,10 +532,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 18,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -545,10 +545,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 19,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -558,10 +558,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 20,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -576,10 +576,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 21,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -589,10 +589,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 22,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -602,10 +602,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 23,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -615,10 +615,10 @@ export const bookmarkFeedResponseData = {
         {
           id: 24,
           messageId: 1,
-          username: "호프(김문희)",
+          username: "사용자 닉네임",
           userThumbnail:
             "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-          text: "호프 바보",
+          text: "메시지 입니다.",
           postedDate: "2022-07-18T14:50:58.972493",
           remindDate: "2022-07-18T14:50:58.972493",
           modifiedDate: "2022-07-18T14:56:58.972493",
@@ -636,7 +636,7 @@ export const refinedFeedResponseData = [
     username: "엘보우(송상민)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "엘보우 바보1",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -645,10 +645,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 2,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보2",
+    text: "메시지 입니다.2",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -657,10 +657,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 3,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보4",
+    text: "메시지 입니다.4",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -669,10 +669,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 4,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보5",
+    text: "메시지 입니다.5",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -681,10 +681,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 5,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보6",
+    text: "메시지 입니다.6",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -693,10 +693,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 6,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보7",
+    text: "메시지 입니다.7",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -705,10 +705,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 7,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보8",
+    text: "메시지 입니다.8",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -717,10 +717,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 8,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보9",
+    text: "메시지 입니다.9",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -729,10 +729,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 9,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보10",
+    text: "메시지 입니다.10",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -741,10 +741,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 10,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보11",
+    text: "메시지 입니다.11",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -753,10 +753,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 11,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보12",
+    text: "메시지 입니다.12",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -765,10 +765,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 12,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보13",
+    text: "메시지 입니다.13",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -777,10 +777,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 13,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보14",
+    text: "메시지 입니다.14",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -789,10 +789,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 14,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보15",
+    text: "메시지 입니다.15",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -801,10 +801,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 15,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -813,10 +813,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 16,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -825,10 +825,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 17,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -837,10 +837,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 18,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -849,10 +849,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 19,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -861,10 +861,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 20,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -873,10 +873,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 21,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -885,10 +885,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 22,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -897,10 +897,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 23,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -909,10 +909,10 @@ export const refinedFeedResponseData = [
   },
   {
     id: 24,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -928,7 +928,7 @@ export const refinedBookmarkFeedResponseData = [
     username: "엘보우(송상민)",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "엘보우 바보1",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -938,10 +938,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 2,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보2",
+    text: "메시지 입니다.2",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -951,10 +951,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 3,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보4",
+    text: "메시지 입니다.4",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -964,10 +964,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 4,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보5",
+    text: "메시지 입니다.5",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -977,10 +977,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 5,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보6",
+    text: "메시지 입니다.6",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -990,10 +990,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 6,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보7",
+    text: "메시지 입니다.7",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1003,10 +1003,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 7,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보8",
+    text: "메시지 입니다.8",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1016,10 +1016,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 8,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보9",
+    text: "메시지 입니다.9",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1029,10 +1029,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 9,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보10",
+    text: "메시지 입니다.10",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1042,10 +1042,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 10,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보11",
+    text: "메시지 입니다.11",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1055,10 +1055,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 11,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보12",
+    text: "메시지 입니다.12",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1068,10 +1068,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 12,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보13",
+    text: "메시지 입니다.13",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1081,10 +1081,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 13,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보14",
+    text: "메시지 입니다.14",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1094,10 +1094,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 14,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보15",
+    text: "메시지 입니다.15",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1107,10 +1107,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 15,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1120,10 +1120,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 16,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1133,10 +1133,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 17,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1146,10 +1146,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 18,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1159,10 +1159,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 19,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1172,10 +1172,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 20,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1185,10 +1185,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 21,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1198,10 +1198,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 22,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1211,10 +1211,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 23,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
@@ -1224,10 +1224,10 @@ export const refinedBookmarkFeedResponseData = [
   {
     id: 24,
     messageId: 1,
-    username: "호프(김문희)",
+    username: "사용자 닉네임",
     userThumbnail:
       "https://ca.slack-edge.com/TFELTJB7V-U02V8MLHTEW-d31d9f3b8609-512",
-    text: "호프 바보",
+    text: "메시지 입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     remindDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
