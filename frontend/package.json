@@ -55,6 +55,7 @@
     "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.1",
     "msw": "^0.43.1",
+    "msw-storybook-addon": "^1.6.3",
     "prettier": "2.7.1",
     "react-refresh": "^0.14.0",
     "ts-jest": "^28.0.5",
