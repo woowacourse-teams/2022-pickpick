@@ -9,6 +9,8 @@ const Template = (args) => {
   return <SearchForm {...args} />;
 };
 
-export const DefaultTemplate = Template.bind({
+export const DefaultTemplate = Template.bind({});
+
+DefaultTemplate.args = {
   currentChannelIds: [],
-});
+};
