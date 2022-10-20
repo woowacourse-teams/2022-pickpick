@@ -37,6 +37,7 @@ public class MessageService {
 
     private static final String MENTION_PREFIX = "<@";
     private static final String MENTION_SUFFIX = ">";
+    private static final String MENTION_MARK = "@";
 
     private final MemberRepository members;
     private final MessageRepository messages;
@@ -117,7 +118,8 @@ public class MessageService {
         List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
 
         Map<String, String> memberNames = workspaceMembers.stream()
-                .collect(Collectors.toMap(Member::getSlackId, Member::getUsername));
+                .collect(Collectors.toMap(Member::getSlackId,
+                        workspaceMember -> MENTION_MARK + workspaceMember.getUsername()));
 
         for (MessageResponse message : messageResponses) {
             String text = replaceMentionMemberInText(message.getText(), memberNames);

@@ -612,7 +612,8 @@ class MessageServiceTest {
                 assertAll(
                         () -> assertThat(foundMessages).hasSize(1),
                         () -> assertThat(foundMessages.get(0).getText())
-                                .contains(summer.getUsername(), hope.getUsername(), kkojae.getUsername())
+                                .contains(summer.getUsername(), hope.getUsername(),
+                                        kkojae.getUsername())
                 );
             }
         }
@@ -659,6 +660,22 @@ class MessageServiceTest {
                         () -> assertThat(foundMessages.get(0).getText()).contains("<@UNOTEXISTED>")
                 );
             }
+        }
+
+        @DisplayName("대치된 멘션 유저 이름 내부에 멘션 기호(@)가 포함되는지 확인한다")
+        @Test
+        void containsMentionMark() {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">" + " 메시지 내용");
+
+            MessageRequest request = emptyQueryParams();
+            MessageResponses response = messageService.find(hope.getId(), request);
+
+            List<MessageResponse> foundMessages = response.getMessages();
+
+            assertAll(
+                    () -> assertThat(foundMessages).hasSize(1),
+                    () -> assertThat(foundMessages.get(0).getText()).contains("@" + summer.getUsername())
+            );
         }
 
         private Message saveMessageWithText(String text) {

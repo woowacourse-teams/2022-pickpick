@@ -627,6 +627,17 @@ class ReminderServiceTest {
             }
         }
 
+        @DisplayName("대치된 멘션 유저 이름 내부에 멘션 기호(@)가 포함되는지 확인한다")
+        @Test
+        void containsMentionMark() {
+            Message message = saveMessageWithText("<@" + summer.getSlackId() + ">" + " 메시지 내용");
+            Reminder hopesReminder = saverReminders(message, hope);
+
+            ReminderResponse response = reminderService.findOne(message.getId(), hope.getId());
+
+            assertThat(response.getText()).contains("@" + summer.getUsername());
+        }
+
         private Message saveMessageWithText(String text) {
             Message message = new Message(UUID.randomUUID().toString(), text, kkojae, notice, postedDate, postedDate);
             return messages.save(message);
