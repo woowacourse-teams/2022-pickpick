@@ -48,17 +48,18 @@ function TimePicker({
         return (
           <FlexColumn ref={innerRef}>
             <Styled.Subtitle>시간</Styled.Subtitle>
+
             <DateTimePickerToggle
               text={`
-              ${checkedMeridiem}
-              ${parsePickerOptionText({
-                optionText: checkedHour,
-                unit: TIME_UNIT.HOUR,
-              })}
-              ${parsePickerOptionText({
-                optionText: checkedMinute,
-                unit: TIME_UNIT.MINUTE,
-              })}
+                ${checkedMeridiem}
+                ${parsePickerOptionText({
+                  optionText: checkedHour,
+                  unit: TIME_UNIT.HOUR,
+                })}
+                ${parsePickerOptionText({
+                  optionText: checkedMinute,
+                  unit: TIME_UNIT.MINUTE,
+                })}
               `}
               handleToggleDropdown={handleToggleDropdown}
             >
