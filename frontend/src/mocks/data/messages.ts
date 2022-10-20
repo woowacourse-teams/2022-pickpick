@@ -8,6 +8,7 @@ export const messages = [
     text: "메시지 입니다.1",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 12712,
@@ -18,6 +19,7 @@ export const messages = [
     text: "메시지입니다.2",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 12713,
@@ -28,6 +30,7 @@ export const messages = [
     text: "메시지입니다.4",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12715,
@@ -38,6 +41,7 @@ export const messages = [
     text: "메시지입니다.5",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 12716,
@@ -48,6 +52,7 @@ export const messages = [
     text: "메시지입니다.6",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12717,
@@ -58,6 +63,7 @@ export const messages = [
     text: "메시지입니다.7",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 12718,
@@ -68,6 +74,7 @@ export const messages = [
     text: "메시지입니다.8",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12719,
@@ -78,6 +85,7 @@ export const messages = [
     text: "메시지입니다.9",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12722,
@@ -88,6 +96,7 @@ export const messages = [
     text: "메시지입니다.10",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12723,
@@ -98,6 +107,7 @@ export const messages = [
     text: "메시지입니다.11",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12724,
@@ -108,6 +118,7 @@ export const messages = [
     text: "메시지입니다.12",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12725,
@@ -118,6 +129,7 @@ export const messages = [
     text: "메시지입니다.13",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12726,
@@ -128,6 +140,7 @@ export const messages = [
     text: "메시지입니다.14",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 12727,
@@ -138,6 +151,7 @@ export const messages = [
     text: "메시지입니다.15",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1274,
@@ -148,6 +162,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1275,
@@ -158,6 +173,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1276,
@@ -168,6 +184,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1277,
@@ -178,6 +195,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1278,
@@ -188,6 +206,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1279,
@@ -198,6 +217,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1212,
@@ -208,6 +228,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1211,
@@ -218,6 +239,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 1213,
@@ -228,6 +250,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1214,
@@ -238,6 +261,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 127,
@@ -248,6 +272,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: true,
   },
   {
     id: 126,
@@ -258,6 +283,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 125,
@@ -268,6 +294,7 @@ export const messages = [
     text: "메시지입니다.",
     postedDate: "2022-07-18T14:50:58.972493",
     modifiedDate: "2022-07-18T14:56:58.972493",
+    isBookmarked: false,
   },
   {
     id: 1299,
