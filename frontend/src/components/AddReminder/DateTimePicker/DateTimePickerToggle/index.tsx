@@ -23,7 +23,12 @@ function DateTimePickerToggle({
     <Styled.Container onClick={handleToggleDropdown}>
       <FlexRow alignItems="center" gap="8px">
         {children}
-        <Styled.Text>{text}</Styled.Text>
+        <Styled.Text
+          aria-live="assertive"
+          aria-label={`${text}를 선택했습니다.`}
+        >
+          {text}
+        </Styled.Text>
       </FlexRow>
 
       <ArrowIconDown
