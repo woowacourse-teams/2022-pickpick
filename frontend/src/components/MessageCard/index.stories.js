@@ -7,6 +7,11 @@ import ReminderButton from "./MessageIconButtons/ReminderButton";
 export default {
   title: "@Component/MessageCard",
   component: MessageCard,
+  argTypes: {
+    children: {
+      control: false,
+    },
+  },
 };
 
 const Template = (args) => <MessageCard {...args} />;
