@@ -8,10 +8,10 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.브로드캐스트_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
+import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
@@ -25,15 +25,17 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class MessageEventAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
     private static final String MESSAGE_SLACK_ID = UUID.randomUUID().toString();
 
     private Workspace workspace;
+    private String memberSlackId;
 
     @BeforeEach
     void init() {
-        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
-        workspace = externalClient.callWorkspaceInfo(MEMBER_SLACK_ID).toEntity();
+        String code = 슬랙에서_코드_발행(BOM);
+        워크스페이스_초기화_및_로그인(code);
+        memberSlackId = 코드로_멤버의_slackId_추출(code);
+        workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(code);
     }
 
     @Test
@@ -52,10 +54,10 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 메시지_저장_성공() {
         // given
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+        회원가입(memberSlackId, workspace.getSlackId());
 
         // when
-        ExtractableResponse<Response> response = 메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID, "");
+        ExtractableResponse<Response> response = 메시지_전송(memberSlackId, MESSAGE_SLACK_ID, "");
 
         // then
         상태코드_200_확인(response);
@@ -64,11 +66,11 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 메시지_수정_요청_시_메시지_내용과_수정_시간이_업데이트_된다() {
         // given
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
-        메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID, "");
+        회원가입(memberSlackId, workspace.getSlackId());
+        메시지_전송(memberSlackId, MESSAGE_SLACK_ID, "");
 
         // when
-        ExtractableResponse<Response> response = 메시지_수정(MEMBER_SLACK_ID, MESSAGE_SLACK_ID);
+        ExtractableResponse<Response> response = 메시지_수정(memberSlackId, MESSAGE_SLACK_ID);
 
         // then
         상태코드_200_확인(response);
@@ -77,10 +79,10 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 메시지_삭제_요청_시_메시지가_삭제_된다() {
         // given
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+        회원가입(memberSlackId, workspace.getSlackId());
 
         // when
-        ExtractableResponse<Response> response = 메시지_삭제(MEMBER_SLACK_ID, MESSAGE_SLACK_ID);
+        ExtractableResponse<Response> response = 메시지_삭제(memberSlackId, MESSAGE_SLACK_ID);
 
         // then
         상태코드_200_확인(response);
@@ -89,10 +91,10 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 스레드를_작성하면서_바로_채널로_전송_시_메시지가_저장된다() {
         // given
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+        회원가입(memberSlackId, workspace.getSlackId());
 
         // when
-        ExtractableResponse<Response> response = 메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID,
+        ExtractableResponse<Response> response = 메시지_전송(memberSlackId, MESSAGE_SLACK_ID,
                 SlackEvent.MESSAGE_THREAD_BROADCAST.getSubtype());
 
         // then
@@ -102,10 +104,10 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 스레드_작성_후_메뉴에서_채널로_전송_시_메시지가_저장된다() {
         // given
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+        회원가입(memberSlackId, workspace.getSlackId());
 
         // when
-        ExtractableResponse<Response> response = 브로드캐스트_메시지_전송(MEMBER_SLACK_ID);
+        ExtractableResponse<Response> response = 브로드캐스트_메시지_전송(memberSlackId);
 
         // then
         상태코드_200_확인(response);
@@ -114,10 +116,10 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 파일_공유_메시지_요청_시_메시지가_저장된다() {
         // given
-        회원가입(MEMBER_SLACK_ID, workspace.getSlackId());
+        회원가입(memberSlackId, workspace.getSlackId());
 
         // when
-        ExtractableResponse<Response> response = 메시지_전송(MEMBER_SLACK_ID, MESSAGE_SLACK_ID,
+        ExtractableResponse<Response> response = 메시지_전송(memberSlackId, MESSAGE_SLACK_ID,
                 SlackEvent.MESSAGE_FILE_SHARE.getSubtype());
 
         // then

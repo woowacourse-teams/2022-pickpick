@@ -15,6 +15,8 @@ public interface MemberRepository extends Repository<Member, Long> {
     Optional<Member> findById(Long id);
 
     Optional<Member> findBySlackId(String slackId);
+    
+    List<Member> findAllByWorkspace(Workspace workspace);
 
     List<Member> findAllByWorkspace(final Workspace workspace);
 

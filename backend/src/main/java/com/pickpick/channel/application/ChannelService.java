@@ -48,14 +48,14 @@ public class ChannelService {
     }
 
     private void validateToken(final Member member) {
-        String token = member.getToken();
+        String token = member.getSlackToken();
         if (StringUtils.isNullOrEmpty(token)) {
             throw new MemberTokenNotFoundException(member.getId(), token);
         }
     }
 
     private List<Channel> findParticipatingChannels(final Member member) {
-        String token = member.getToken();
+        String token = member.getSlackToken();
         Participation participation = externalClient.findChannelParticipation(token);
 
         Workspace workspace = member.getWorkspace();

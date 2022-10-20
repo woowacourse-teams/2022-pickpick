@@ -5,11 +5,11 @@ import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.토큰_검증;
+import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.auth.support.JwtTokenProvider;
-import com.pickpick.fixture.MemberFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -26,10 +26,10 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 정상_로그인() {
         // given
-        String memberSlackId = MemberFixture.createFirst().getSlackId();
+        String code = 슬랙에서_코드_발행(BOM);
 
         // when
-        ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(memberSlackId);
+        ExtractableResponse<Response> response = 워크스페이스_초기화_및_로그인(code);
 
         // then
         상태코드_200_확인(response);

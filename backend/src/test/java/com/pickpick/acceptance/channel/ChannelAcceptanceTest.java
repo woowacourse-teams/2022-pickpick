@@ -3,12 +3,12 @@ package com.pickpick.acceptance.channel;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
+import static com.pickpick.fixture.MemberFixture.YEONLOG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.ui.dto.ChannelResponse;
 import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.MemberFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -19,13 +19,13 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class ChannelAcceptanceTest extends AcceptanceTestBase {
 
-    private static final String MEMBER_SLACK_ID = MemberFixture.createFirst().getSlackId();
 
     @Test
     void 유저_전체_채널_목록_조회() {
         // given
-        워크스페이스_초기화_및_로그인(MEMBER_SLACK_ID);
-        String token = jwtTokenProvider.createToken("1");
+        String code = 슬랙에서_코드_발행(YEONLOG);
+        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(code);
+        String token = 로그인_응답에서_토큰_추출(loginResponse);
 
         // when
         ExtractableResponse<Response> response = 유저_전체_채널_목록_조회_요청(token);
