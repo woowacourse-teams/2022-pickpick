@@ -39,7 +39,6 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           kind="smallIcon"
           onClick={handleDecrementMonth}
           aria-label="이전 달 보기"
-          autoFocus
         >
           <ArrowIconLeft
             width="24px"
