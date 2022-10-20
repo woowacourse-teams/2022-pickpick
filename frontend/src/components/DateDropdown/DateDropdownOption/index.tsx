@@ -19,9 +19,7 @@ function DateDropdownOption({ date, channelId }: Props) {
           role="button"
           aria-label={`${DATE.YESTERDAY}로 이동`}
         >
-          <Styled.Button type="button" tabIndex={-1}>
-            {DATE.YESTERDAY}
-          </Styled.Button>
+          <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
         </Link>
       </Styled.Option>
     );
@@ -35,9 +33,7 @@ function DateDropdownOption({ date, channelId }: Props) {
           role="button"
           aria-label={`${DATE.TODAY}로 이동`}
         >
-          <Styled.Button type="button" tabIndex={-1}>
-            {DATE.TODAY}
-          </Styled.Button>
+          <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
         </Link>
       </Styled.Option>
     );
@@ -51,9 +47,7 @@ function DateDropdownOption({ date, channelId }: Props) {
           role="button"
           aria-label={`${DATE.TODAY}로 이동`}
         >
-          <Styled.Button type="button" tabIndex={-1}>
-            {DATE.TODAY}
-          </Styled.Button>
+          <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
         </Link>
       </Styled.Option>
 
@@ -63,9 +57,7 @@ function DateDropdownOption({ date, channelId }: Props) {
           role="button"
           aria-label={`${DATE.YESTERDAY}로 이동`}
         >
-          <Styled.Button type="button" tabIndex={-1}>
-            {DATE.YESTERDAY}
-          </Styled.Button>
+          <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
         </Link>
       </Styled.Option>
     </>

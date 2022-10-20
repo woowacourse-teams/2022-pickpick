@@ -16,7 +16,6 @@ import SearchForm from "@src/components/SearchForm";
 
 import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
-import useFocus from "@src/hooks/@shared/useFocus";
 import useModal from "@src/hooks/@shared/useModal";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
@@ -32,7 +31,6 @@ function SpecificDateFeed() {
   const { key: queryKey } = useLocation();
   const { date, channelId } = useParams();
   const shouldRenderDate = useMessageDate();
-  const focusRef = useFocus<HTMLDivElement>();
 
   const {
     reminderTarget,
@@ -89,8 +87,6 @@ function SpecificDateFeed() {
       onWheel={onWheel}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
-      tabIndex={-1}
-      ref={focusRef}
     >
       <SrOnlyTitle>특정 날짜 검색 결과</SrOnlyTitle>
 

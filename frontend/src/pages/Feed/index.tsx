@@ -32,7 +32,6 @@ function Feed() {
   const { channelId } = useParams();
   const { key: queryKey } = useLocation();
   const shouldRenderDate = useMessageDate();
-  const focusRef = useFocus<HTMLDivElement>();
 
   const {
     reminderTarget,
@@ -68,7 +67,7 @@ function Feed() {
   useScrollToTop();
 
   return (
-    <Styled.Container tabIndex={-1} ref={focusRef}>
+    <Styled.Container>
       <SrOnlyTitle>메인 피드</SrOnlyTitle>
 
       <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />

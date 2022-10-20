@@ -25,9 +25,7 @@ function SearchOptions({
 }: Props) {
   return (
     <Styled.Container>
-      <Styled.Text tabIndex={0}>
-        검색에 포함 할 채널을 선택해주세요.
-      </Styled.Text>
+      <Styled.Text>검색에 포함 할 채널을 선택해주세요.</Styled.Text>
 
       <Styled.ScrollContainer>
         <Button

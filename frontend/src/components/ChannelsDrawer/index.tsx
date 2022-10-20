@@ -31,7 +31,7 @@ function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
       >
         <Styled.Title aria-label="채널 변경">채널</Styled.Title>
 
-        <WrapperNavLink to={PATH_NAME.ADD_CHANNEL} tabIndex={-1}>
+        <WrapperNavLink to={PATH_NAME.ADD_CHANNEL}>
           {() => (
             <Styled.Button
               autoFocus
@@ -55,7 +55,6 @@ function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
           <WrapperNavLink
             key={channel.id}
             to={`${PATH_NAME.FEED}/${channel.id}`}
-            tabIndex={-1}
           >
             {({ isActive }) => (
               <Styled.Button
