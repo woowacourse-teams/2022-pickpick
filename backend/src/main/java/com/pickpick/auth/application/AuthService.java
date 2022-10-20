@@ -42,7 +42,7 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse registerWorkspace(final String code) {
+    public void registerWorkspace(final String code) {
         WorkspaceInfoDto workspaceInfoDto = externalClient.callWorkspaceInfo(code);
 
         validateExistWorkspace(workspaceInfoDto.getWorkspaceSlackId());
@@ -54,8 +54,6 @@ public class AuthService {
 
         List<Channel> allWorkspaceChannels = externalClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
-
-        return loginByToken(workspaceInfoDto.getUserToken());
     }
 
     private void validateExistWorkspace(final String workspaceSlackId) {

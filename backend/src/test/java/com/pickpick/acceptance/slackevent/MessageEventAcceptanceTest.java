@@ -1,7 +1,7 @@
 package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.URL_검증;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_삭제;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_수정;
@@ -33,7 +33,7 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(BOM);
-        워크스페이스_초기화_및_로그인(code);
+        워크스페이스_초기화(code);
         memberSlackId = 코드로_멤버의_slackId_추출(code);
         workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(code);
     }
