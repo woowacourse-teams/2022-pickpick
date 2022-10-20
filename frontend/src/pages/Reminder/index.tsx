@@ -9,6 +9,7 @@ import ReminderButton from "@src/components/MessageCard/MessageIconButtons/Remin
 import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingStatus";
 
 import useGetInfiniteReminders from "@src/hooks/@query/useGetInfiniteReminders";
+import useFocus from "@src/hooks/@shared/useFocus";
 import useModal from "@src/hooks/@shared/useModal";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
@@ -23,6 +24,7 @@ function Reminder() {
     handleUpdateReminderTarget,
     handleInitializeReminderTarget,
   } = useSetReminderTargetMessage();
+  const focusRef = useFocus<HTMLDivElement>();
 
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useGetInfiniteReminders();
@@ -38,7 +40,7 @@ function Reminder() {
   useScrollToTop();
 
   return (
-    <Styled.Container>
+    <Styled.Container tabIndex={-1} ref={focusRef}>
       <SrOnlyTitle>리마인더</SrOnlyTitle>
 
       <InfiniteScroll

@@ -8,6 +8,7 @@ import MessagesLoadingStatus from "@src/components/MessageCard/MessagesLoadingSt
 
 import useGetInfiniteBookmarks from "@src/hooks/@query/useGetInfiniteBookmarks";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useFocus from "@src/hooks/@shared/useFocus";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 
 import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
@@ -17,6 +18,7 @@ import { parseMessageDateFromISO } from "@src/@utils/date";
 function Bookmark() {
   const { data, isLoading, isSuccess, fetchNextPage, hasNextPage, refetch } =
     useGetInfiniteBookmarks();
+  const focusRef = useFocus<HTMLDivElement>();
 
   const { handleRemoveBookmark } = useMutateBookmark({
     handleSettleRemoveBookmark: refetch,
@@ -27,7 +29,7 @@ function Bookmark() {
   useScrollToTop();
 
   return (
-    <Styled.Container>
+    <Styled.Container tabIndex={-1} ref={focusRef}>
       <SrOnlyTitle>북마크</SrOnlyTitle>
 
       <InfiniteScroll
