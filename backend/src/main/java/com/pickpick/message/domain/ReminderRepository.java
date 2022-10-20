@@ -20,6 +20,8 @@ public interface ReminderRepository extends Repository<Reminder, Long> {
 
     void deleteById(Long id);
 
+    void deleteAllByRemindDate(LocalDateTime remindDate);
+
     default Reminder getById(final Long id) {
         return findById(id)
                 .orElseThrow(() -> new ReminderNotFoundException(id));
