@@ -60,13 +60,13 @@ public class AuthService {
         return loginByToken(userToken);
     }
 
-    private LoginResponse loginByToken(final String userToken) {
-        String memberSlackId = externalClient.callMemberSlackId(userToken);
+    private LoginResponse loginByToken(final String userSlackToken) {
+        String memberSlackId = externalClient.callMemberSlackId(userSlackToken);
 
         Member member = members.getBySlackId(memberSlackId);
 
         boolean isFirstLogin = member.isFirstLogin();
-        member.firstLogin(userToken);
+        member.firstLogin(userSlackToken);
 
         return LoginResponse.builder()
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))

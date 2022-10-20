@@ -35,11 +35,11 @@ public class FakeClient implements ExternalClient {
 
     private final Map<String, Member> tokenAndMember = Arrays.stream(MemberFixture.values())
             .map(memberFixture -> memberFixture.createLogin(jupjup))
-            .collect(Collectors.toMap(Member::getToken, member -> member));
+            .collect(Collectors.toMap(Member::getSlackToken, member -> member));
 
     @Override
     public String callUserToken(final String code) {
-        return codeAndMember.get(code).getToken();
+        return codeAndMember.get(code).getSlackToken();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class FakeClient implements ExternalClient {
         Workspace workspace = codeAndWorkspace.get(code);
         Member member = codeAndMember.get(code);
         return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId(),
-                member.getToken());
+                member.getSlackToken());
     }
 
     @Override

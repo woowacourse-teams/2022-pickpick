@@ -186,7 +186,7 @@ public class SlackClient implements ExternalClient {
     public void inviteBotToChannel(final Member member, final Channel channel) {
         ConversationsInviteRequest request = ConversationsInviteRequest.builder()
                 .channel(channel.getSlackId())
-                .token(member.getToken())
+                .token(member.getSlackToken())
                 .users(List.of(member.getWorkspace().getBotSlackId()))
                 .build();
         log.info(LOGGING_INFO, request);
