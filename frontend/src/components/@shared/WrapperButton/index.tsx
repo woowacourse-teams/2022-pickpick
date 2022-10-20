@@ -8,7 +8,6 @@ export type Kind = "bigIcon" | "smallIcon" | "text";
 
 export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   kind: Kind;
-  isFuture?: boolean;
 }
 
 function WrapperButton({ children, ...props }: StrictPropsWithChildren<Props>) {
