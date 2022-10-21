@@ -27,7 +27,11 @@ function useApiError(): UseApiErrorResult {
 
     if (errorCode === ERROR_CODE.SUBSCRIPTION_NOT_FOUND) {
       navigate(PATH_NAME.ADD_CHANNEL);
+
+      return;
     }
+
+    navigate(PATH_NAME.HOME);
   };
 
   return { handleError };
