@@ -25,10 +25,10 @@ export const slackLogin: SlackLogin = async (code) => {
   return data;
 };
 
-type RegisterSlackWorkspace = (code: string) => Promise<ResponseToken>;
+type RegisterSlackWorkspace = (code: string) => Promise<unknown>;
 
 export const registerSlackWorkspace: RegisterSlackWorkspace = async (code) => {
-  const { data } = await fetcher.get<ResponseToken>(
+  const { data } = await fetcher.get<unknown>(
     API_ENDPOINT.SLACK_REGISTER_WORKSPACE,
     {
       headers: { ...getPublicHeaders() },
