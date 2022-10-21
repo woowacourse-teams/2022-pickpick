@@ -11,15 +11,15 @@ import { PATH_NAME } from "@src/@constants/path";
 function RegisterSlackWorkspace() {
   const navigate = useNavigate();
   const slackCode = useGetSearchParam({ key: "code" });
-  const { isError } = useGetRegisterSlackWorkspace({
+  const { isSuccess } = useGetRegisterSlackWorkspace({
     slackCode,
   });
 
   useEffect(() => {
-    if (!isError) return;
-
-    navigate(PATH_NAME.HOME);
-  }, [isError]);
+    if (isSuccess) {
+      navigate(PATH_NAME.HOME);
+    }
+  }, [isSuccess]);
 
   return <Loader />;
 }
