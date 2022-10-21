@@ -23,7 +23,7 @@ import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage"
 import useTopScreenEventHandler from "@src/hooks/useTopScreenEventHandlers";
 
 import { DEFAULT_CHANNEL_ID } from "@src/@constants/api";
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
 import { extractResponseMessages } from "@src/@utils/api";
 import { parseMessageDateFromISO } from "@src/@utils/date";
 
@@ -88,6 +88,8 @@ function SpecificDateFeed() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
+      <SrOnlyTitle>특정 날짜 검색 결과</SrOnlyTitle>
+
       <SearchForm
         currentChannelIds={
           channelId && channelId !== DEFAULT_CHANNEL_ID
@@ -103,7 +105,9 @@ function SpecificDateFeed() {
       >
         <FlexColumn gap="4px" width="100%">
           {isFetching && <MessagesLoadingStatus length={20} />}
+
           {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+
           {parsedData.map(
             ({
               id,
@@ -126,6 +130,7 @@ function SpecificDateFeed() {
                       handleOpenCalendar={handleOpenCalendar}
                     />
                   )}
+
                   <MessageCard
                     username={username}
                     date={parseMessageDateFromISO(postedDate)}

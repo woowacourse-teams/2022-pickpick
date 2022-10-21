@@ -10,7 +10,7 @@ import useGetInfiniteBookmarks from "@src/hooks/@query/useGetInfiniteBookmarks";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
 import { extractResponseBookmarks } from "@src/@utils/api";
 import { parseMessageDateFromISO } from "@src/@utils/date";
 
@@ -28,14 +28,17 @@ function Bookmark() {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>북마크</SrOnlyTitle>
+
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
         endPoint={!hasNextPage}
       >
-        <FlexColumn gap="4px" width="100%">
+        <FlexColumn gap="4px" width="100%" role="list">
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+
             {parsedData.map(
               ({
                 id,
@@ -44,23 +47,28 @@ function Bookmark() {
                 postedDate,
                 text,
                 userThumbnail,
-              }) => (
-                <MessageCard
-                  key={id}
-                  username={username}
-                  isRemindedMessage={false}
-                  date={parseMessageDateFromISO(postedDate)}
-                  text={text}
-                  thumbnail={userThumbnail}
-                >
-                  <BookmarkButton
-                    isActive={true}
-                    onClick={handleRemoveBookmark(messageId)}
-                  />
-                </MessageCard>
-              )
+              }) => {
+                const date = postedDate.split("T")[0];
+
+                return (
+                  <MessageCard
+                    key={id}
+                    username={username}
+                    isRemindedMessage={false}
+                    date={`${date} ${parseMessageDateFromISO(postedDate)}`}
+                    text={text}
+                    thumbnail={userThumbnail}
+                  >
+                    <BookmarkButton
+                      isActive={true}
+                      onClick={handleRemoveBookmark(messageId)}
+                    />
+                  </MessageCard>
+                );
+              }
             )}
           </>
+
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useTheme } from "styled-components";
 
-import WrapperLink from "@src/components/@shared/WrapperNavLink";
+import WrapperNavLink from "@src/components/@shared/WrapperNavLink";
 import PlusIcon from "@src/components/@svgIcons/PlusIcon";
 import ThemeToggler from "@src/components/ThemeToggler";
 
@@ -29,37 +29,50 @@ function ChannelsDrawer({ channels = [], handleCloseDrawer }: Props) {
         alignItems="center"
         padding="0 20px"
       >
-        <Styled.Title>채널</Styled.Title>
+        <Styled.Title aria-label="채널 변경">채널</Styled.Title>
 
-        <WrapperLink to={PATH_NAME.ADD_CHANNEL}>
+        <WrapperNavLink to={PATH_NAME.ADD_CHANNEL}>
           {() => (
-            <PlusIcon
-              width="14px"
-              height="14px"
-              fill={theme.COLOR.TEXT.DEFAULT}
-            />
+            <Styled.Button
+              onClick={handleCloseDrawer}
+              aria-label="채널 추가하러 가기"
+            >
+              <PlusIcon
+                width="14px"
+                height="14px"
+                fill={theme.COLOR.TEXT.DEFAULT}
+              />
+            </Styled.Button>
           )}
-        </WrapperLink>
+        </WrapperNavLink>
       </FlexRow>
 
       <Styled.Hr />
 
       <FlexColumn gap="9px" padding="0 16px">
         {channels.map((channel, index) => (
-          <WrapperLink key={channel.id} to={`${PATH_NAME.FEED}/${channel.id}`}>
+          <WrapperNavLink
+            key={channel.id}
+            to={`${PATH_NAME.FEED}/${channel.id}`}
+          >
             {({ isActive }) => (
-              <Styled.ChannelName
-                isActive={
-                  isActive ||
-                  (index === 0 &&
-                    (!channelId || channelId === DEFAULT_CHANNEL_ID))
-                }
+              <Styled.Button
+                type="button"
                 onClick={handleCloseDrawer}
+                aria-label={`${channel.name} 이동하기`}
               >
-                #{channel.name}
-              </Styled.ChannelName>
+                <Styled.ChannelName
+                  isActive={
+                    isActive ||
+                    (index === 0 &&
+                      (!channelId || channelId === DEFAULT_CHANNEL_ID))
+                  }
+                >
+                  #{channel.name}
+                </Styled.ChannelName>
+              </Styled.Button>
             )}
-          </WrapperLink>
+          </WrapperNavLink>
         ))}
       </FlexColumn>
 

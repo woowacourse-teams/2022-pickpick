@@ -5,7 +5,7 @@ import { StyledDefaultProps, Theme } from "@src/@types/shared";
 
 import { ButtonText } from ".";
 
-export const Container = styled.div`
+export const Container = styled.section`
   width: 280px;
   padding: 14px;
   border-radius: 4px;

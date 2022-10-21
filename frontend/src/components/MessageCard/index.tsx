@@ -22,14 +22,21 @@ function MessageCard({
   children,
 }: StrictPropsWithChildren<Props>) {
   return (
-    <Styled.Container>
+    <Styled.Container role="listItem">
       <FlexRow columnGap="8px" width="100%">
         <ProfileImage src={thumbnail} alt={`${username} 프로필 사진`} />
 
         <div>
           <FlexRow columnGap="4px" alignItems="center">
-            <Styled.Writer>{username}</Styled.Writer>
-            <Styled.Date isHighlighted={isRemindedMessage}>{date}</Styled.Date>
+            <Styled.Writer aria-label={`작성자는 ${username} 입니다.`}>
+              {username}
+            </Styled.Writer>
+            <Styled.Date
+              isHighlighted={isRemindedMessage}
+              aria-label={`작성일은 ${date} 입니다.`}
+            >
+              {date}
+            </Styled.Date>
           </FlexRow>
           <Styled.Message>{text}</Styled.Message>
         </div>

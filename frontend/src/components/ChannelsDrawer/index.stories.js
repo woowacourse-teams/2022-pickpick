@@ -5,6 +5,11 @@ import ChannelsDrawer from ".";
 export default {
   title: "Component/ChannelsDrawer",
   component: ChannelsDrawer,
+  argTypes: {
+    handleCloseDrawer: {
+      control: false,
+    },
+  },
 };
 
 const Template = (args) => <ChannelsDrawer {...args} />;

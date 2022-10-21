@@ -7,6 +7,7 @@ import ArrowIconRight from "@src/components/@svgIcons/ArrowIconRight";
 import useCalendar from "@src/components/Calendar/@hooks/useCalendar";
 
 import { MONTHS, WEEKDAYS } from "@src/@constants/date";
+import { SrOnlyTitle } from "@src/@styles/shared";
 import { ISOConverter } from "@src/@utils/date";
 
 import * as Styled from "./style";
@@ -30,9 +31,15 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
   const theme = useTheme();
 
   return (
-    <Styled.Container>
+    <Styled.Container role="dialog" aria-modal="true" aria-labelledby="title">
+      <SrOnlyTitle id="title">특정 날짜로 이동</SrOnlyTitle>
+
       <Styled.Month>
-        <WrapperButton kind="smallIcon" onClick={handleDecrementMonth}>
+        <WrapperButton
+          kind="smallIcon"
+          onClick={handleDecrementMonth}
+          aria-label="이전 달 보기"
+        >
           <ArrowIconLeft
             width="24px"
             height="24px"
@@ -40,7 +47,7 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
           />
         </WrapperButton>
 
-        <Styled.Title>
+        <Styled.Title role="status">
           {`${firstOfMonthDate.getFullYear()}년 ${
             MONTHS[firstOfMonthDate.getMonth()]
           }월`}
@@ -49,8 +56,8 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
         <WrapperButton
           kind="smallIcon"
           onClick={handleIncrementMonth}
-          isFuture={isFutureMonth()}
           disabled={isFutureMonth()}
+          aria-label="다음 달 보기"
         >
           <ArrowIconRight
             width="24px"
@@ -80,7 +87,6 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
                 isBlank={isBlank}
                 isToday={isToday}
                 isFuture={isFuture}
-                onClick={handleCloseCalendar}
               >
                 {day}
                 <div></div>
@@ -92,10 +98,15 @@ function Calendar({ channelId, handleCloseCalendar }: Props) {
             <Link
               key={index}
               to={`/feed/${channelId}/${ISOConverter(
-                `${todayDate.getFullYear()}-${
-                  MONTHS[todayDate.getMonth()]
+                `${firstOfMonthDate.getFullYear()}-${
+                  MONTHS[firstOfMonthDate.getMonth()]
                 }-${day}`
               )}`}
+              onClick={handleCloseCalendar}
+              role="button"
+              aria-label={`${firstOfMonthDate.getFullYear()}년 ${
+                MONTHS[firstOfMonthDate.getMonth()]
+              }월 ${day}일 로 이동`}
             >
               <Styled.Day
                 isBlank={isBlank}

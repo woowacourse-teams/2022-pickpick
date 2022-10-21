@@ -15,13 +15,14 @@ import SearchForm from "@src/components/SearchForm";
 
 import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
+import useFocus from "@src/hooks/@shared/useFocus";
 import useModal from "@src/hooks/@shared/useModal";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { DEFAULT_CHANNEL_ID } from "@src/@constants/api";
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
 import { extractResponseMessages } from "@src/@utils/api";
 import { parseMessageDateFromISO } from "@src/@utils/date";
 
@@ -67,6 +68,8 @@ function Feed() {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>메인 피드</SrOnlyTitle>
+
       <SearchForm currentChannelIds={channelId ? [Number(channelId)] : []} />
 
       <InfiniteScroll
@@ -76,6 +79,7 @@ function Feed() {
       >
         <FlexColumn gap="4px" width="100%">
           {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+
           {parsedData.map(
             ({
               id,
@@ -98,6 +102,7 @@ function Feed() {
                       handleOpenCalendar={handleOpenCalendar}
                     />
                   )}
+
                   <MessageCard
                     username={username}
                     date={parseMessageDateFromISO(postedDate)}

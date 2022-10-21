@@ -28,7 +28,7 @@ function DateTimePickerOptions({
             onChange={handleChangeText}
             checked={checkedText === optionText}
           />
-          <Styled.TextOption>
+          <Styled.TextOption role="button">
             {parsePickerOptionText({
               optionText,
               unit,

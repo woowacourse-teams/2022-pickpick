@@ -14,7 +14,11 @@ function DateDropdownOption({ date, channelId }: Props) {
   if (date === DATE.TODAY) {
     return (
       <Styled.Option>
-        <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
+        <Link
+          to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}
+          role="button"
+          aria-label={`${DATE.YESTERDAY}로 이동`}
+        >
           <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
         </Link>
       </Styled.Option>
@@ -24,7 +28,11 @@ function DateDropdownOption({ date, channelId }: Props) {
   if (date === DATE.YESTERDAY) {
     return (
       <Styled.Option>
-        <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
+        <Link
+          to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}
+          role="button"
+          aria-label={`${DATE.TODAY}로 이동`}
+        >
           <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
         </Link>
       </Styled.Option>
@@ -34,13 +42,21 @@ function DateDropdownOption({ date, channelId }: Props) {
   return (
     <>
       <Styled.Option>
-        <Link to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}>
+        <Link
+          to={`/feed/${channelId}/${ISOConverter(DATE.TODAY)}`}
+          role="button"
+          aria-label={`${DATE.TODAY}로 이동`}
+        >
           <Styled.Button type="button">{DATE.TODAY}</Styled.Button>
         </Link>
       </Styled.Option>
 
       <Styled.Option>
-        <Link to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}>
+        <Link
+          to={`/feed/${channelId}/${ISOConverter(DATE.YESTERDAY)}`}
+          role="button"
+          aria-label={`${DATE.YESTERDAY}로 이동`}
+        >
           <Styled.Button type="button">{DATE.YESTERDAY}</Styled.Button>
         </Link>
       </Styled.Option>

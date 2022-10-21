@@ -194,7 +194,7 @@ type GetStandardHourFormMeridiemHour = (
 export const getStandardHourFormMeridiemHour: GetStandardHourFormMeridiemHour =
   (meridiemHour, meridiem) => {
     if (meridiem === MERIDIEM.PM) {
-      return meridiemHour === NOON ? NOON : meridiemHour + NOON;
+      return meridiemHour === NOON ? NOON : Number(meridiemHour) + NOON;
     }
 
     return meridiemHour;

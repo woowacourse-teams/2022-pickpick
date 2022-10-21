@@ -36,11 +36,6 @@ public class Channel {
     protected Channel() {
     }
 
-    public Channel(final String slackId, final String name) {
-        this.slackId = slackId;
-        this.name = name;
-    }
-
     public Channel(final String slackId, final String name, final Workspace workspace) {
         this.slackId = slackId;
         this.name = name;

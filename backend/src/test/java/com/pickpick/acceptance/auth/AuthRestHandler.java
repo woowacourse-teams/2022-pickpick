@@ -23,7 +23,7 @@ public class AuthRestHandler {
         return getWithToken(CERTIFICATION_API_URL, token);
     }
 
-    public static ExtractableResponse<Response> 워크스페이스_초기화_및_로그인(final String code) {
+    public static ExtractableResponse<Response> 워크스페이스_초기화(final String code) {
         Map<String, Object> request = Map.of("code", code);
         return get(WORKSPACE_API_URL, request);
     }

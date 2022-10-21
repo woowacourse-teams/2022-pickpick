@@ -16,7 +16,7 @@ import useModal from "@src/hooks/@shared/useModal";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
 import { SEARCH_PARAMS } from "@src/@constants/api";
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
 import { extractResponseMessages, getChannelIdsParams } from "@src/@utils/api";
 import { parseMessageDateFromISO } from "@src/@utils/date";
 
@@ -54,10 +54,13 @@ function SearchResult() {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>검색 결과</SrOnlyTitle>
+
       <SearchForm
         currentKeyword={keyword}
         currentChannelIds={channelIds.split(",").map(Number)}
       />
+
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
@@ -66,9 +69,12 @@ function SearchResult() {
         <FlexColumn gap="4px" width="100%">
           {isSuccess && parsedData.length === 0 && (
             <FlexColumn gap="30px" margin="25vh 0" alignItems="center">
-              <h3>{`' ${keyword} '`} 에 대한 검색 결과가 없습니다.</h3>
+              <h3 role="status">
+                {`' ${keyword} '`} 에 대한 검색 결과가 없습니다.
+              </h3>
             </FlexColumn>
           )}
+
           {parsedData.map(
             ({
               id,

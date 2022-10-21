@@ -24,6 +24,7 @@ function useModeTheme(): UseModeThemeResult {
   const handleToggleTheme = () => {
     const nextTheme =
       theme === THEME_KIND.LIGHT ? THEME_KIND.DARK : THEME_KIND.LIGHT;
+
     handleChangeTheme(nextTheme);
   };
 
@@ -34,6 +35,7 @@ function useModeTheme(): UseModeThemeResult {
 
   useEffect(() => {
     const storedTheme = getStoredTheme();
+
     if (storedTheme === THEME_KIND.DARK || storedTheme === THEME_KIND.LIGHT) {
       handleChangeTheme(storedTheme);
 

@@ -37,6 +37,11 @@ function SearchOptions({
           size="small"
           onClick={handleToggleAllChannels}
           type="button"
+          aria-label={`${
+            selectedChannelIds.length === allChannels.length
+              ? "전체 선택을 해제하려면 클릭해주세요."
+              : "전체 선택을 하려면 클릭해주세요."
+          }`}
         >
           {selectedChannelIds.length === allChannels.length
             ? "전체 해제"
@@ -50,6 +55,11 @@ function SearchOptions({
             size="small"
             onClick={() => handleToggleChannel(id)}
             type="button"
+            aria-label={`${
+              selectedChannelIds.includes(id)
+                ? `${name} 채널을 검색에 포함하지 않으려면 클릭해주세요.`
+                : `${name} 채널을 검색에 포함하려면 클릭해주세요.`
+            }`}
           >
             <>#{name}</>
           </Button>
@@ -62,6 +72,11 @@ function SearchOptions({
             size="small"
             onClick={() => handleToggleChannel(id)}
             type="button"
+            aria-label={`${
+              selectedChannelIds.includes(id)
+                ? `${name} 채널을 검색에 포함하지 않으려면 클릭해주세요.`
+                : `${name} 채널을 검색에 포함하려면 클릭해주세요.`
+            }`}
           >
             <>#{name}</>
           </Button>

@@ -13,7 +13,7 @@ import useModal from "@src/hooks/@shared/useModal";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useSetReminderTargetMessage from "@src/hooks/useSetReminderTargetMessage";
 
-import { FlexColumn } from "@src/@styles/shared";
+import { FlexColumn, SrOnlyTitle } from "@src/@styles/shared";
 import { extractResponseReminders } from "@src/@utils/api";
 import { parseMessageDateFromISO } from "@src/@utils/date";
 
@@ -39,6 +39,8 @@ function Reminder() {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>리마인더</SrOnlyTitle>
+
       <InfiniteScroll
         callback={fetchNextPage}
         threshold={0.9}
@@ -47,6 +49,7 @@ function Reminder() {
         <FlexColumn gap="4px" width="100%">
           <>
             {isSuccess && parsedData.length === 0 && <EmptyStatus />}
+
             {parsedData.map(
               ({
                 id,
@@ -82,6 +85,7 @@ function Reminder() {
               }
             )}
           </>
+
           {isLoading && <MessagesLoadingStatus length={20} />}
         </FlexColumn>
       </InfiniteScroll>

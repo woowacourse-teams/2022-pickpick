@@ -14,15 +14,33 @@
 ## 📎 바로가기
 
 - 📚 [API 문서](https://dev.jupjup.site/docs)
-- 🎁 [스토리북](https://62e64dc73aafd7bc9338ba73-fihzwjkqkx.chromatic.com)
+- 🎁 [스토리북](https://62e64dc73aafd7bc9338ba73-imzhfpkupu.chromatic.com/)
 - 🐹 [팀문화](https://selective-archeology-e38.notion.site/858f167439b94c9caee71ab177bce08e)
 - 🌎 [깃헙 위키](https://github.com/woowacourse-teams/2022-pickpick/wiki)
 
-<br> 
+<br>
 
 ## 팀원 소개 👩🏻‍💻🧑🏻‍💻
 
-|            [🐈‍⬛ 호프](https://github.com/moonheekim0118)             |            [👍 꼬재](https://github.com/kkojae91)             |             [🌱 봄](https://github.com/JangBomi)             |             [🏝 써머](https://github.com/hyewoncc)             |             [🪁 연로그](https://github.com/yeon-06)              | 
-| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|                                              [🐈‍⬛ 호프](https://github.com/moonheekim0118)                                               |                                              [👍 꼬재](https://github.com/kkojae91)                                               |                                               [🌱 봄](https://github.com/JangBomi)                                                |                                               [🏝 써머](https://github.com/hyewoncc)                                               |                                          [🪁 연로그](https://github.com/yeon-06)                                           |
+| :-------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: |
 | <a href="https://github.com/moonheekim0118"> <img src="https://avatars.githubusercontent.com/u/61469664?v=4" width=200px alt="_"/> </a> | <a href="https://github.com/kkojae91"> <img src="https://avatars.githubusercontent.com/u/68001045?v=4" width=200px alt="_"/> </a> | <a href="https://github.com/JangBomi"> <img src="https://avatars.githubusercontent.com/u/55357130?v=4" width=200px alt="_"/> </a> | <a href="https://github.com/hyewoncc"> <img src="https://avatars.githubusercontent.com/u/80666066?v=4" width=200px alt="_"/> </a> | <a href="https://github.com/yeon-06"> <img src="https://avatars.githubusercontent.com/u/53105735?v=4" width=200px alt="_"> |
-|                         프론트엔드                         |                         프론트엔드                         |                           백엔드                           |                           백엔드                           |                           백엔드                           |
+|                                                               프론트엔드                                                                |                                                            프론트엔드                                                             |                                                              백엔드                                                               |                                                              백엔드                                                               |                                                           백엔드                                                           |
+
+<br>
+
+## 프론트엔드 기술 스택 ✨
+
+![프론트엔드기술스택](https://user-images.githubusercontent.com/61469664/196941679-067588a0-d9e0-4afa-8ad8-18a07abfb70a.png)
+
+<br>
+
+## 백엔드 기술 스택 ⚡️
+
+![백엔드기술스택](https://user-images.githubusercontent.com/61469664/196941717-8993f980-00fb-47f7-ba7f-bc12fbc70677.png)
+
+<br>
+
+## 인프라 기술 스택 ⚙️
+
+![인프라](https://user-images.githubusercontent.com/61469664/196941755-3ca4cd9b-81ce-4301-a549-d8f6d7198980.png)

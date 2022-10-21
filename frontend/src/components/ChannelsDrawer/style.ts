@@ -6,7 +6,7 @@ interface ChannelNameStyledProps extends StyledDefaultProps {
   isActive: boolean;
 }
 
-export const Container = styled.div`
+export const Container = styled.article`
   width: 228px;
   height: calc(100% - 78px);
   padding: 20px 0;
@@ -39,6 +39,15 @@ export const Title = styled.h1`
   ${({ theme }: StyledDefaultProps) => css`
     font-size: ${theme.FONT_SIZE.LARGE_BODY};
   `}
+`;
+
+export const Button = styled.button`
+  width: 100%;
+  text-align: left;
+  border: none;
+  white-space: nowrap;
+  background-color: inherit;
+  cursor: pointer;
 `;
 
 export const ChannelName = styled.p`

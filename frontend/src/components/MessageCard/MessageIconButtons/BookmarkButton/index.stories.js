@@ -12,4 +12,13 @@ export default {
 
 const Template = (args) => <BookmarkButton {...args} />;
 
-export const DefaultTemplate = Template.bind({});
+export const ActiveTemplate = Template.bind({});
+export const InActiveTemplate = Template.bind({});
+
+ActiveTemplate.args = {
+  isActive: true,
+};
+
+InActiveTemplate.args = {
+  isActive: false,
+};

@@ -10,6 +10,8 @@ public interface WorkspaceRepository extends Repository<Workspace, Long> {
 
     Optional<Workspace> findBySlackId(String slackId);
 
+    boolean existsBySlackId(String slackId);
+
     default Workspace getBySlackId(final String slackId) {
         return findBySlackId(slackId)
                 .orElseThrow(() -> new WorkspaceNotFoundException(slackId));

@@ -25,6 +25,8 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
 
     void deleteAllByChannelAndMember(Channel channel, Member member);
 
+    void deleteAllByChannelSlackId(String channelSlackId);
+
     default ChannelSubscription getFirstByMemberIdOrderByViewOrderAsc(final Long memberId) {
         return findFirstByMemberIdOrderByViewOrderAsc(memberId)
                 .orElseThrow(() -> new SubscriptionNotFoundException(memberId));

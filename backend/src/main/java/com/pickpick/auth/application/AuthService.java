@@ -5,6 +5,7 @@ import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
+import com.pickpick.exception.workspace.WorkspaceDuplicateException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.ExternalClient;
@@ -23,16 +24,16 @@ public class AuthService {
     private final MemberRepository members;
     private final WorkspaceRepository workspaces;
     private final ChannelRepository channels;
-    private final ExternalClient slackClient;
+    private final ExternalClient externalClient;
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(final MemberRepository members, final WorkspaceRepository workspaces,
-                       final ChannelRepository channels, final ExternalClient slackClient,
+                       final ChannelRepository channels, final ExternalClient externalClient,
                        final JwtTokenProvider jwtTokenProvider) {
         this.members = members;
         this.workspaces = workspaces;
         this.channels = channels;
-        this.slackClient = slackClient;
+        this.externalClient = externalClient;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -41,28 +42,39 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse registerWorkspace(final String code) {
-        WorkspaceInfoDto workspaceInfoDto = slackClient.callWorkspaceInfo(code);
+    public void registerWorkspace(final String code) {
+        WorkspaceInfoDto workspaceInfoDto = externalClient.callWorkspaceInfo(code);
+
+        validateExistWorkspace(workspaceInfoDto.getWorkspaceSlackId());
+
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
-        List<Member> allWorkspaceMembers = slackClient.findMembersByWorkspace(workspace);
+        List<Member> allWorkspaceMembers = externalClient.findMembersByWorkspace(workspace);
         members.saveAll(allWorkspaceMembers);
 
-        List<Channel> allWorkspaceChannels = slackClient.findChannelsByWorkspace(workspace);
+        List<Channel> allWorkspaceChannels = externalClient.findChannelsByWorkspace(workspace);
         channels.saveAll(allWorkspaceChannels);
+    }
 
-        return login(code);
+    private void validateExistWorkspace(final String workspaceSlackId) {
+        if (workspaces.existsBySlackId(workspaceSlackId)) {
+            throw new WorkspaceDuplicateException(workspaceSlackId);
+        }
     }
 
     @Transactional
     public LoginResponse login(final String code) {
-        String userToken = slackClient.callUserToken(code);
-        String memberSlackId = slackClient.callMemberSlackId(userToken);
+        String userToken = externalClient.callUserToken(code);
+        return loginByToken(userToken);
+    }
+
+    private LoginResponse loginByToken(final String userSlackToken) {
+        String memberSlackId = externalClient.callMemberSlackId(userSlackToken);
 
         Member member = members.getBySlackId(memberSlackId);
 
         boolean isFirstLogin = member.isFirstLogin();
-        member.firstLogin(userToken);
+        member.firstLogin(userSlackToken);
 
         return LoginResponse.builder()
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))

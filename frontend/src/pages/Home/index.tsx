@@ -3,7 +3,7 @@ import LogoIcon from "@public/assets/icons/pickpick.svg";
 import Button from "@src/components/@shared/Button";
 
 import { SLACK_URL } from "@src/@constants/path";
-import { FlexRow } from "@src/@styles/shared";
+import { FlexRow, SrOnlyTitle } from "@src/@styles/shared";
 
 import * as Styled from "./style";
 
@@ -18,6 +18,8 @@ function Home() {
 
   return (
     <Styled.Container>
+      <SrOnlyTitle>줍줍 시작하기</SrOnlyTitle>
+
       <Styled.GreetingContainer>
         <FlexRow
           gap="30px"
@@ -33,6 +35,7 @@ function Home() {
             우리가 주워줄게!
           </h2>
         </FlexRow>
+
         <FlexRow
           gap="10px"
           flexWrap="wrap"
@@ -50,6 +53,7 @@ function Home() {
 
       <Styled.UsageContainer>
         <h1>이용 방법</h1>
+
         <Styled.UsageList>
           <li>
             워크스페이스에 줍줍 Slack App 을 설치하고 백업하고 싶은 채널에

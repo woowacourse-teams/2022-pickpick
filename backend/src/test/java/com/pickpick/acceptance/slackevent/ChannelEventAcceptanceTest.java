@@ -1,15 +1,15 @@
 package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화_및_로그인;
+import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_삭제;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_이름_변경;
+import static com.pickpick.fixture.MemberFixture.BOM;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
-import com.pickpick.fixture.MemberFixture;
 import com.pickpick.workspace.domain.Workspace;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,15 +25,16 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void init() {
-        String memberSlackId = MemberFixture.createFirst().getSlackId();
-        워크스페이스_초기화_및_로그인(memberSlackId);
-        workspace = externalClient.callWorkspaceInfo(memberSlackId).toEntity();
+        String code = 슬랙에서_코드_발행(BOM);
+        워크스페이스_초기화(code);
+
+        workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(code);
     }
 
     @Test
     void 새로운_채널_생성_시_저장() {
         // given
-        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        Channel channel = ChannelFixture.NEW_CHANNEL.create(workspace);
 
         // when
         ExtractableResponse<Response> response = 채널_생성(workspace, channel);
@@ -45,7 +46,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 기존_채널_이름_변경_시_반영() {
         // given
-        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        Channel channel = ChannelFixture.NEW_CHANNEL.create(workspace);
         채널_생성(workspace, channel);
 
         // when
@@ -58,7 +59,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     @Test
     void 채널_삭제_확인() {
         // given
-        Channel channel = ChannelFixture.NEW_CHANNEL.create();
+        Channel channel = ChannelFixture.NEW_CHANNEL.create(workspace);
         채널_생성(workspace, channel);
 
         // when

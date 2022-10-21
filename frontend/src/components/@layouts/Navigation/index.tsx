@@ -18,6 +18,7 @@ import useAuthentication from "@src/hooks/useAuthentication";
 import useRecentFeedPath from "@src/hooks/useRecentFeedPath";
 
 import { PATH_NAME } from "@src/@constants/path";
+import { SrOnlyDescription } from "@src/@styles/shared";
 
 import * as Styled from "./style";
 
@@ -57,7 +58,11 @@ function Navigation() {
   return (
     <Styled.Container>
       <div ref={menuIconInnerRef}>
-        <WrapperButton kind="bigIcon" onClick={handleToggleDrawer}>
+        <WrapperButton
+          kind="bigIcon"
+          onClick={handleToggleDrawer}
+          aria-label="채널 변경 창"
+        >
           <MenuIcon
             width="24px"
             height="24px"
@@ -66,7 +71,12 @@ function Navigation() {
         </WrapperButton>
       </div>
 
-      <WrapperLink to={PATH_NAME.BOOKMARK} kind="bigIcon">
+      <WrapperLink
+        to={PATH_NAME.BOOKMARK}
+        kind="bigIcon"
+        role="button"
+        aria-label="북마크 페이지로 이동하기"
+      >
         {({ isActive }) => {
           return (
             <StarIcon
@@ -82,7 +92,12 @@ function Navigation() {
         }}
       </WrapperLink>
 
-      <WrapperLink to={getRecentFeedPath() ?? PATH_NAME.FEED} kind="bigIcon">
+      <WrapperLink
+        to={getRecentFeedPath() ?? PATH_NAME.FEED}
+        kind="bigIcon"
+        role="button"
+        aria-label="피드 페이지로 이동하기"
+      >
         {({ isActive }) => {
           return (
             <HomeIcon
@@ -98,7 +113,12 @@ function Navigation() {
         }}
       </WrapperLink>
 
-      <WrapperLink to={PATH_NAME.REMINDER} kind="bigIcon">
+      <WrapperLink
+        to={PATH_NAME.REMINDER}
+        kind="bigIcon"
+        role="button"
+        aria-label="리마인더 페이지로 이동하기"
+      >
         {({ isActive }) => {
           return (
             <ReminderIconInactive
@@ -115,7 +135,11 @@ function Navigation() {
       </WrapperLink>
 
       <div ref={logoutButtonInnerRef}>
-        <WrapperButton kind="bigIcon" onClick={handleToggleLogoutButton}>
+        <WrapperButton
+          kind="bigIcon"
+          onClick={handleToggleLogoutButton}
+          aria-label="로그아웃 창"
+        >
           <InfoIcon
             width="24px"
             height="24px"
@@ -133,6 +157,12 @@ function Navigation() {
         </div>
       </Modal>
 
+      <SrOnlyDescription aria-live="assertive">
+        {isMenuDrawerOpened
+          ? "채널 변경 창이 열렸습니다."
+          : "채널 변경 창이 닫혔습니다."}
+      </SrOnlyDescription>
+
       <Modal
         isOpened={isLogoutButtonOpened}
         handleCloseModal={handleCloseLogoutButton}
@@ -141,6 +171,12 @@ function Navigation() {
           <Button onClick={handleLogout}>로그아웃</Button>
         </Styled.LogoutButtonContainer>
       </Modal>
+
+      <SrOnlyDescription aria-live="assertive">
+        {isLogoutButtonOpened
+          ? "로그아웃 창이 열렸습니다."
+          : "로그아웃 창이 닫혔습니다."}
+      </SrOnlyDescription>
     </Styled.Container>
   );
 }
