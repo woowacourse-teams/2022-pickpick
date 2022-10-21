@@ -22,6 +22,7 @@ function PrivateRouter() {
 
   useEffect(() => {
     if (!isError) return;
+
     navigate(PATH_NAME.HOME);
   }, [isError]);
 
