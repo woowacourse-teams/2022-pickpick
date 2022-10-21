@@ -3,6 +3,8 @@ import { ERROR_CODE } from "@src/@constants/api";
 export const MESSAGE = {
   DEFAULT_SERVER_ERROR: "서버에 오류가 있습니다. 잠시 후에 다시 시도해주세요.",
   LOGIN_SUCCESS: "로그인 되었습니다!",
+  WORKSPACE_SUCCESS:
+    "워크스페이스가 등록되었습니다. 로그인 후 서비스를 이용해주세요.",
   INVALID_SEARCH_CHANNELS: "채널을 하나 이상 선택 후 검색 버튼을 눌러주세요.",
   INVALID_SEARCH_KEYWORD: "검색할 키워드를 입력하신 후 검색 버튼을 눌러주세요.",
   INVALID_REMINDER_TIME:
