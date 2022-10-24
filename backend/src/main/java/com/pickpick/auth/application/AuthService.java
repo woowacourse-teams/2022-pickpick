@@ -1,5 +1,6 @@
 package com.pickpick.auth.application;
 
+import com.pickpick.auth.application.dto.MemberInfoDto;
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
@@ -64,17 +65,12 @@ public class AuthService {
 
     @Transactional
     public LoginResponse login(final String code) {
-        String userToken = externalClient.callUserToken(code);
-        return loginByToken(userToken);
-    }
+        MemberInfoDto memberInfoDto = externalClient.callMemberSlackIdByCode(code);
 
-    private LoginResponse loginByToken(final String userSlackToken) {
-        String memberSlackId = externalClient.callMemberSlackId(userSlackToken);
-
-        Member member = members.getBySlackId(memberSlackId);
+        Member member = members.getBySlackId(memberInfoDto.getSlackId());
 
         boolean isFirstLogin = member.isFirstLogin();
-        member.firstLogin(userSlackToken);
+        member.firstLogin(memberInfoDto.getUserToken());
 
         return LoginResponse.builder()
                 .token(jwtTokenProvider.createToken(String.valueOf(member.getId())))

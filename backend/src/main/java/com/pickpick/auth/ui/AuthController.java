@@ -35,4 +35,9 @@ public class AuthController {
     public void registerWorkspace(@RequestParam @NotEmpty final String code) {
         authService.registerWorkspace(code);
     }
+
+    @GetMapping("/check")
+    public void checkVersion() {
+
+    }
 }
