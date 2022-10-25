@@ -15,7 +15,6 @@ import SearchForm from "@src/components/SearchForm";
 
 import useGetInfiniteMessages from "@src/hooks/@query/useGetInfiniteMessages";
 import useMutateBookmark from "@src/hooks/@query/useMutateBookmark";
-import useFocus from "@src/hooks/@shared/useFocus";
 import useModal from "@src/hooks/@shared/useModal";
 import useScrollToTop from "@src/hooks/@shared/useScrollToTop";
 import useMessageDate from "@src/hooks/useMessageDate";
