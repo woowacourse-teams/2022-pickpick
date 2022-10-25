@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "description": "",
+  "name": "줍줍",
+  "version": "1.2.1",
+  "description": "줍줍 프론트엔드",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --open --config webpack.dev.js",
