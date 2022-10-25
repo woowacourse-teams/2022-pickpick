@@ -3,6 +3,7 @@ package com.pickpick.support;
 
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 
+import com.pickpick.auth.application.dto.MemberInfoDto;
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
@@ -36,11 +37,7 @@ public class FakeClient implements ExternalClient {
     private final Map<String, Member> tokenAndMember = Arrays.stream(MemberFixture.values())
             .map(memberFixture -> memberFixture.createLogin(jupjup))
             .collect(Collectors.toMap(Member::getSlackToken, member -> member));
-
-    @Override
-    public String callUserToken(final String code) {
-        return codeAndMember.get(code).getSlackToken();
-    }
+    
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
@@ -53,6 +50,11 @@ public class FakeClient implements ExternalClient {
     @Override
     public String callMemberSlackId(final String userToken) {
         return tokenAndMember.get(userToken).getSlackId();
+    }
+
+    @Override
+    public MemberInfoDto callMemberSlackIdByCode(final String code) {
+        return new MemberInfoDto(codeAndMember.get(code).getSlackId(), codeAndMember.get(code).getSlackToken());
     }
 
     @Override

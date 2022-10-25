@@ -1,5 +1,6 @@
 package com.pickpick.support;
 
+import com.pickpick.auth.application.dto.MemberInfoDto;
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.config.SlackProperties;
@@ -56,12 +57,7 @@ public class SlackClient implements ExternalClient {
         this.slackProperties = slackProperties;
         this.methodsClient = methodsClient;
     }
-
-    @Override
-    public String callUserToken(final String code) {
-        OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getLoginRedirectUrl());
-        return response.getAuthedUser().getAccessToken();
-    }
+    
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
@@ -96,6 +92,13 @@ public class SlackClient implements ExternalClient {
                 request);
 
         return response.getUser().getId();
+    }
+
+    @Override
+    public MemberInfoDto callMemberSlackIdByCode(final String code) {
+        OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getLoginRedirectUrl());
+
+        return new MemberInfoDto(response.getAuthedUser().getId(), response.getAuthedUser().getAccessToken());
     }
 
     @Override
