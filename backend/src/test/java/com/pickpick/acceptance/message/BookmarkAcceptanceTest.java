@@ -5,7 +5,6 @@ import static com.pickpick.acceptance.RestHandler.상태코드_201_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_204_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_삭제;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_조회;
@@ -36,10 +35,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(HOPE);
-        워크스페이스_초기화(code);
-
-        String loginCode = 슬랙에서_코드_발행(HOPE);
-        ExtractableResponse<Response> loginResponse = AuthRestHandler.로그인(loginCode);
+        ExtractableResponse<Response> loginResponse = AuthRestHandler.워크스페이스_초기화(code);
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_slackId_추출(code);

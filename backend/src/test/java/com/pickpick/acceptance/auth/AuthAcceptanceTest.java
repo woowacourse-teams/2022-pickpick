@@ -25,15 +25,12 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     private String secretKey;
 
     @Test
-    void 정상_로그인() {
+    void 정상_워크_스페이스_등록_후_로그인() {
         // given
         String code = 슬랙에서_코드_발행(BOM);
 
         // when
-        워크스페이스_초기화(code);
-
-        String codeForLogin = 슬랙에서_코드_발행(BOM);
-        ExtractableResponse<Response> response = 로그인(codeForLogin);
+        ExtractableResponse<Response> response = 워크스페이스_초기화(code);
 
         // then
         상태코드_200_확인(response);
@@ -41,7 +38,7 @@ class AuthAcceptanceTest extends AcceptanceTestBase {
     }
 
     @Test
-    void 워크스페이스_초기화_후_다시_로그인() {
+    void 정상_로그인() {
         // given
         String codeForInit = 슬랙에서_코드_발행(BOM);
         워크스페이스_초기화(codeForInit);

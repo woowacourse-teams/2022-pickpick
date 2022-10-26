@@ -3,7 +3,6 @@ package com.pickpick.acceptance.channel;
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.에러코드_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.구독한_채널_순서_변경_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저가_구독한_채널_목록_조회_요청;
@@ -37,10 +36,7 @@ class ChannelSubscriptionAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void 가입_후_로그인() {
         String code = 슬랙에서_코드_발행(SUMMER);
-        워크스페이스_초기화(code);
-
-        String loginCode = 슬랙에서_코드_발행(SUMMER);
-        ExtractableResponse<Response> loginResponse = AuthRestHandler.로그인(loginCode);
+        ExtractableResponse<Response> loginResponse = AuthRestHandler.워크스페이스_초기화(code);
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
     }

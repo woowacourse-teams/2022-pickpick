@@ -1,7 +1,6 @@
 package com.pickpick.acceptance.message;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.채널_구독_요청;
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생성;
 import static com.pickpick.acceptance.message.MessageRestHandler.메시지_조회;
@@ -38,10 +37,7 @@ class MessageAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(KKOJAE);
-        워크스페이스_초기화(code);
-
-        String loginCode = 슬랙에서_코드_발행(KKOJAE);
-        ExtractableResponse<Response> loginResponse = AuthRestHandler.로그인(loginCode);
+        ExtractableResponse<Response> loginResponse = AuthRestHandler.워크스페이스_초기화(code);
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_slackId_추출(code);
