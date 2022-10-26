@@ -1,9 +1,9 @@
 package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.멤버_정보_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화;
 import static com.pickpick.fixture.MemberFixture.BOM;
 
 import com.pickpick.acceptance.AcceptanceTestBase;

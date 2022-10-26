@@ -1,13 +1,13 @@
 package com.pickpick.acceptance.slackevent;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.URL_검증;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_삭제;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.브로드캐스트_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화;
 import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 

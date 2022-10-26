@@ -1,8 +1,8 @@
 package com.pickpick.acceptance.channel;
 
 import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.channel.ChannelRestHandler.유저_전체_채널_목록_조회_요청;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화;
 import static com.pickpick.fixture.MemberFixture.YEONLOG;
 import static org.assertj.core.api.Assertions.assertThat;
 
