@@ -5,27 +5,30 @@ import Loader from "@src/components/Loader";
 
 import useGetRegisterSlackWorkspace from "@src/hooks/@query/useGetRegisterSlackWorkspace";
 import useGetSearchParam from "@src/hooks/@shared/useGetSearchParam";
-import useSnackbar from "@src/hooks/useSnackbar";
+import useAuthentication from "@src/hooks/useAuthentication";
 
-import { MESSAGE } from "@src/@constants/message";
 import { PATH_NAME } from "@src/@constants/path";
 
 function RegisterSlackWorkspace() {
   const navigate = useNavigate();
   const slackCode = useGetSearchParam({ key: "code" });
-  const { openSuccessSnackbar } = useSnackbar();
-  const { isSuccess } = useGetRegisterSlackWorkspace({
+  const { login } = useAuthentication();
+  const { isSuccess, isError, data } = useGetRegisterSlackWorkspace({
     slackCode,
   });
 
   useEffect(() => {
-    if (!isSuccess) return;
+    if (isSuccess && data) {
+      login(data.token, data.isFirstLogin);
+    }
+  }, [isSuccess, data]);
 
-    openSuccessSnackbar(MESSAGE.WORKSPACE_SUCCESS);
+  useEffect(() => {
+    if (!isError) return;
+
     navigate(PATH_NAME.HOME);
-  }, [isSuccess]);
+  }, [isError]);
 
   return <Loader />;
 }
-
 export default RegisterSlackWorkspace;
