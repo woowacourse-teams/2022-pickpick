@@ -62,7 +62,7 @@ public class MessageService {
         return List.of(firstSubscription.getChannelId());
     }
 
-    private static boolean isNonNullNorEmpty(final List<Long> channelIds) {
+    private boolean isNonNullNorEmpty(final List<Long> channelIds) {
         return channelIds != null && !channelIds.isEmpty();
     }
 
