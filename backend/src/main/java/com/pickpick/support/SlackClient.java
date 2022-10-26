@@ -1,5 +1,6 @@
 package com.pickpick.support;
 
+import com.pickpick.auth.application.dto.MemberInfoDto;
 import com.pickpick.auth.application.dto.WorkspaceInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.config.SlackProperties;
@@ -16,12 +17,10 @@ import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.conversations.ConversationsInviteRequest;
 import com.slack.api.methods.request.conversations.ConversationsListRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
-import com.slack.api.methods.request.users.UsersIdentityRequest;
 import com.slack.api.methods.request.users.UsersListRequest;
 import com.slack.api.methods.response.conversations.ConversationsInviteResponse;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
-import com.slack.api.methods.response.users.UsersIdentityResponse;
 import com.slack.api.methods.response.users.UsersListResponse;
 import com.slack.api.model.Conversation;
 import com.slack.api.model.User;
@@ -57,17 +56,19 @@ public class SlackClient implements ExternalClient {
         this.methodsClient = methodsClient;
     }
 
-    @Override
-    public String callUserToken(final String code) {
-        OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getLoginRedirectUrl());
-        return response.getAuthedUser().getAccessToken();
-    }
 
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
         OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getWorkspaceRedirectUrl());
         return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId(),
                 response.getAuthedUser().getAccessToken());
+    }
+    
+    @Override
+    public MemberInfoDto callMemberSlackIdByCode(final String code) {
+        OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getLoginRedirectUrl());
+
+        return new MemberInfoDto(response.getAuthedUser().getId(), response.getAuthedUser().getAccessToken());
     }
 
     private OAuthV2AccessResponse callOAuth2(final String code, final String redirectUrl) {
@@ -82,20 +83,6 @@ public class SlackClient implements ExternalClient {
                 .redirectUri(redirectUrl)
                 .code(code)
                 .build();
-    }
-
-    @Override
-    public String callMemberSlackId(final String userToken) {
-        UsersIdentityRequest request = UsersIdentityRequest.builder()
-                .token(userToken)
-                .build();
-
-        UsersIdentityResponse response = execute(
-                methodsClient::usersIdentity,
-                USERS_IDENTITY_METHOD_NAME,
-                request);
-
-        return response.getUser().getId();
     }
 
     @Override
