@@ -10,10 +10,8 @@ import com.pickpick.workspace.domain.Workspace;
 import java.util.List;
 
 public interface ExternalClient {
-    
-    WorkspaceInfoDto callWorkspaceInfo(String code);
 
-    String callMemberSlackId(String userToken);
+    WorkspaceInfoDto callWorkspaceInfo(String code);
 
     MemberInfoDto callMemberSlackIdByCode(String code);
 
