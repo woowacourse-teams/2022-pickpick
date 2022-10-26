@@ -15,6 +15,7 @@ import com.pickpick.workspace.domain.WorkspaceRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -43,11 +44,19 @@ public class AuthService {
     }
 
     @Transactional
-    public void registerWorkspace(final String code) {
+    public LoginResponse registerWorkspace(final String code) {
         WorkspaceInfoDto workspaceInfoDto = externalClient.callWorkspaceInfo(code);
-
         validateExistWorkspace(workspaceInfoDto.getWorkspaceSlackId());
 
+        initWorkspaceInfos(workspaceInfoDto);
+
+        MemberInfoDto memberInfoDto = new MemberInfoDto(workspaceInfoDto.getUserSlackId(),
+                workspaceInfoDto.getUserToken());
+
+        return login(memberInfoDto);
+    }
+
+    private void initWorkspaceInfos(final WorkspaceInfoDto workspaceInfoDto) {
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
         List<Member> allWorkspaceMembers = externalClient.findMembersByWorkspace(workspace);
@@ -63,9 +72,13 @@ public class AuthService {
         }
     }
 
-    @Transactional
     public LoginResponse login(final String code) {
         MemberInfoDto memberInfoDto = externalClient.callMemberSlackIdByCode(code);
+        return login(memberInfoDto);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    LoginResponse login(final MemberInfoDto memberInfoDto) {
         Member member = members.getBySlackId(memberInfoDto.getSlackId());
 
         boolean isFirstLogin = member.isFirstLogin();
