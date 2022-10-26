@@ -10,13 +10,15 @@ public class WorkspaceInfoDto {
     private final String botToken;
     private final String botSlackId;
     private final String userToken;
+    private final String userSlackId;
 
     public WorkspaceInfoDto(final String workspaceSlackId, final String botToken, final String botSlackId,
-                            final String userToken) {
+                            final String userToken, final String userSlackId) {
         this.workspaceSlackId = workspaceSlackId;
         this.botToken = botToken;
         this.botSlackId = botSlackId;
         this.userToken = userToken;
+        this.userSlackId = userSlackId;
     }
 
     public Workspace toEntity() {

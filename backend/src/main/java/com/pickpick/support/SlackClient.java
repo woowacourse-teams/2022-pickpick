@@ -21,6 +21,7 @@ import com.slack.api.methods.request.users.UsersListRequest;
 import com.slack.api.methods.response.conversations.ConversationsInviteResponse;
 import com.slack.api.methods.response.conversations.ConversationsListResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
+import com.slack.api.methods.response.oauth.OAuthV2AccessResponse.AuthedUser;
 import com.slack.api.methods.response.users.UsersListResponse;
 import com.slack.api.model.Conversation;
 import com.slack.api.model.User;
@@ -60,10 +61,12 @@ public class SlackClient implements ExternalClient {
     @Override
     public WorkspaceInfoDto callWorkspaceInfo(final String code) {
         OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getWorkspaceRedirectUrl());
+        AuthedUser user = response.getAuthedUser();
+        
         return new WorkspaceInfoDto(response.getTeam().getId(), response.getAccessToken(), response.getBotUserId(),
-                response.getAuthedUser().getAccessToken());
+                user.getAccessToken(), user.getId());
     }
-    
+
     @Override
     public MemberInfoDto callMemberSlackIdByCode(final String code) {
         OAuthV2AccessResponse response = callOAuth2(code, slackProperties.getLoginRedirectUrl());
