@@ -112,7 +112,8 @@ public class MessageService {
             return false;
         }
 
-        return this.messages.hasPast(channelIds, messageRequest, messages);
+        MessageResponse message = messages.get(messages.size() - 1);
+        return this.messages.existsByChannelsBeforePostedDate(channelIds, messageRequest, message);
     }
 
     private boolean hasFuture(final List<Long> channelIds, final MessageRequest messageRequest,
@@ -121,6 +122,7 @@ public class MessageService {
             return false;
         }
 
-        return this.messages.hasFuture(channelIds, messageRequest, messages);
+        MessageResponse message = messages.get(0);
+        return this.messages.existsByChannelsAfterPostedDate(channelIds, messageRequest, message);
     }
 }

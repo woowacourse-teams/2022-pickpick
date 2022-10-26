@@ -51,23 +51,23 @@ public class QMessageRepository {
                 .fetch();
     }
 
-    public boolean hasPast(final List<Long> channelIds, final MessageRequest messageRequest,
-                           final List<MessageResponse> messages) {
+    public boolean existsByChannelsBeforePostedDate(final List<Long> channelIds, final MessageRequest messageRequest,
+                                                    final MessageResponse messageResponse) {
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(message)
-                .where(meetAllHasPastCondition(channelIds, messageRequest, messages))
+                .where(inChannelsFilterByTextBeforePostedDate(channelIds, messageRequest, messageResponse))
                 .fetchFirst();
 
         return result != null;
     }
 
-    public boolean hasFuture(final List<Long> channelIds, final MessageRequest messageRequest,
-                             final List<MessageResponse> messages) {
+    public boolean existsByChannelsAfterPostedDate(final List<Long> channelIds, final MessageRequest messageRequest,
+                                                   final MessageResponse messageResponse) {
         Integer result = jpaQueryFactory
                 .selectOne()
                 .from(message)
-                .where(meetAllHasFutureCondition(channelIds, messageRequest, messages))
+                .where(inChannelsFilterByTextAfterPostedDate(channelIds, messageRequest, messageResponse))
                 .fetchFirst();
 
         return result != null;
@@ -172,21 +172,17 @@ public class QMessageRepository {
         return message.postedDate.asc();
     }
 
-    private BooleanExpression meetAllHasPastCondition(final List<Long> channelIds, final MessageRequest request,
-                                                      final List<MessageResponse> messages) {
-        MessageResponse targetMessage = messages.get(messages.size() - 1);
-
+    private BooleanExpression inChannelsFilterByTextBeforePostedDate(final List<Long> channelIds, final MessageRequest request,
+                                                                     final MessageResponse messageResponse) {
         return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
-                .and(message.postedDate.before(targetMessage.getPostedDate()));
+                .and(message.postedDate.before(messageResponse.getPostedDate()));
     }
 
-    private BooleanExpression meetAllHasFutureCondition(final List<Long> channelIds, final MessageRequest request,
-                                                        final List<MessageResponse> messages) {
-        MessageResponse targetMessage = messages.get(0);
-
+    private BooleanExpression inChannelsFilterByTextAfterPostedDate(final List<Long> channelIds, final MessageRequest request,
+                                                                    final MessageResponse messageResponse) {
         return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
-                .and(message.postedDate.after(targetMessage.getPostedDate()));
+                .and(message.postedDate.after(messageResponse.getPostedDate()));
     }
 }
