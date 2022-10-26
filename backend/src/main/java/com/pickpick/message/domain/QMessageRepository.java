@@ -42,11 +42,11 @@ public class QMessageRepository {
                 .from(message)
                 .leftJoin(message.member)
                 .leftJoin(bookmark)
-                .on(existsBookmark(memberId))
+                .on(bookmarksFindByMemberId(memberId))
                 .leftJoin(reminder)
-                .on(remainReminder(memberId))
-                .where(meetAllConditions(channelIds, messageRequest))
-                .orderBy(arrangeDateByNeedPastMessage(needPastMessage))
+                .on(remindersFindByMemberIdWhereRemindDateAfterNow(memberId))
+                .where(inChannelsFilterByTextAndPostedDate(channelIds, messageRequest))
+                .orderBy(postedDateDescOrAsc(needPastMessage))
                 .limit(messageCount)
                 .fetch();
     }
@@ -87,25 +87,25 @@ public class QMessageRepository {
                 reminder.remindDate);
     }
 
-    private BooleanExpression existsBookmark(final Long memberId) {
+    private BooleanExpression bookmarksFindByMemberId(final Long memberId) {
         return bookmark.member.id.eq(memberId)
                 .and(bookmark.message.id.eq(message.id));
     }
 
-    private BooleanExpression remainReminder(final Long memberId) {
+    private BooleanExpression remindersFindByMemberIdWhereRemindDateAfterNow(final Long memberId) {
         return reminder.member.id.eq(memberId)
                 .and(reminder.message.id.eq(message.id))
                 .and(reminder.remindDate.after(LocalDateTime.now(clock)));
     }
 
-    private BooleanExpression meetAllConditions(final List<Long> channelIds, final MessageRequest request) {
-        return channelIdsIn(channelIds)
+    private BooleanExpression inChannelsFilterByTextAndPostedDate(final List<Long> channelIds, final MessageRequest request) {
+        return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
-                .and(messageHasText())
-                .and(decideMessageIdOrDate(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
+                .and(textIsNotNullNorEmpty())
+                .and(afterOrBeforeMessagePostedDateOrRequestDate(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
     }
 
-    private BooleanExpression channelIdsIn(final List<Long> channelIds) {
+    private BooleanExpression inChannels(final List<Long> channelIds) {
         return message.channel.id.in(channelIds);
     }
 
@@ -117,23 +117,23 @@ public class QMessageRepository {
         return null;
     }
 
-    private Predicate decideMessageIdOrDate(final Long messageId,
-                                            final LocalDateTime date,
-                                            final boolean needPastMessage) {
-        if (messageId != null) {
-            return messageIdCondition(messageId, needPastMessage);
-        }
-
-        return dateCondition(date, needPastMessage);
-    }
-
-    private BooleanExpression messageHasText() {
+    private BooleanExpression textIsNotNullNorEmpty() {
         return message.text.isNotNull()
                 .and(message.text.isNotEmpty());
     }
 
+    private Predicate afterOrBeforeMessagePostedDateOrRequestDate(final Long messageId,
+                                                                  final LocalDateTime date,
+                                                                  final boolean needPastMessage) {
+        if (messageId != null) {
+            return afterOrBeforeMessagePostedDate(messageId, needPastMessage);
+        }
 
-    private Predicate messageIdCondition(final Long messageId, final boolean needPastMessage) {
+        return afterOrBeforeRequestDate(date, needPastMessage);
+    }
+
+
+    private Predicate afterOrBeforeMessagePostedDate(final Long messageId, final boolean needPastMessage) {
         Message target = Optional.ofNullable(jpaQueryFactory
                         .select(message)
                         .from(message)
@@ -150,7 +150,7 @@ public class QMessageRepository {
         return message.postedDate.after(messageDate);
     }
 
-    private Predicate dateCondition(final LocalDateTime date, final boolean needPastMessage) {
+    private Predicate afterOrBeforeRequestDate(final LocalDateTime date, final boolean needPastMessage) {
         if (Objects.isNull(date)) {
             return null;
         }
@@ -164,7 +164,7 @@ public class QMessageRepository {
                 .or(message.postedDate.after(date));
     }
 
-    private OrderSpecifier<LocalDateTime> arrangeDateByNeedPastMessage(final boolean needPastMessage) {
+    private OrderSpecifier<LocalDateTime> postedDateDescOrAsc(final boolean needPastMessage) {
         if (needPastMessage) {
             return message.postedDate.desc();
         }
@@ -176,7 +176,7 @@ public class QMessageRepository {
                                                       final List<MessageResponse> messages) {
         MessageResponse targetMessage = messages.get(messages.size() - 1);
 
-        return channelIdsIn(channelIds)
+        return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
                 .and(message.postedDate.before(targetMessage.getPostedDate()));
     }
@@ -185,7 +185,7 @@ public class QMessageRepository {
                                                         final List<MessageResponse> messages) {
         MessageResponse targetMessage = messages.get(0);
 
-        return channelIdsIn(channelIds)
+        return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
                 .and(message.postedDate.after(targetMessage.getPostedDate()));
     }
