@@ -32,10 +32,13 @@ public class QMessageRepository {
         this.clock = clock;
     }
 
-    public List<MessageResponse> findMessages(final Long memberId, final List<Long> channelIds,
-                                              final MessageRequest messageRequest) {
-        boolean needPastMessage = messageRequest.isNeedPastMessage();
-        int messageCount = messageRequest.getMessageCount();
+    public List<MessageResponse> findMessages(final Long memberId,
+                                              final List<Long> channelIds,
+                                              final String keyword,
+                                              final Long messageId,
+                                              final LocalDateTime date,
+                                              final boolean needPastMessage,
+                                              final int messageCount) {
 
         return jpaQueryFactory
                 .select(getMessageResponseConstructor())
@@ -45,7 +48,7 @@ public class QMessageRepository {
                 .on(bookmarksFindByMemberId(memberId))
                 .leftJoin(reminder)
                 .on(remindersFindByMemberIdWhereRemindDateAfterNow(memberId))
-                .where(inChannelsFilterByTextAndPostedDate(channelIds, messageRequest))
+                .where(inChannelsFilterByTextAndPostedDate(channelIds, keyword, messageId, date, needPastMessage))
                 .orderBy(postedDateDescOrAsc(needPastMessage))
                 .limit(messageCount)
                 .fetch();
@@ -98,11 +101,15 @@ public class QMessageRepository {
                 .and(reminder.remindDate.after(LocalDateTime.now(clock)));
     }
 
-    private BooleanExpression inChannelsFilterByTextAndPostedDate(final List<Long> channelIds, final MessageRequest request) {
+    private BooleanExpression inChannelsFilterByTextAndPostedDate(final List<Long> channelIds,
+                                                                  final String keyword,
+                                                                  final Long messageId,
+                                                                  final LocalDateTime date,
+                                                                  final boolean needPastMessage) {
         return inChannels(channelIds)
-                .and(textContains(request.getKeyword()))
+                .and(textContains(keyword))
                 .and(textIsNotNullNorEmpty())
-                .and(afterOrBeforeMessagePostedDateOrRequestDate(request.getMessageId(), request.getDate(), request.isNeedPastMessage()));
+                .and(afterOrBeforeMessagePostedDateOrRequestDate(messageId, date, needPastMessage));
     }
 
     private BooleanExpression inChannels(final List<Long> channelIds) {

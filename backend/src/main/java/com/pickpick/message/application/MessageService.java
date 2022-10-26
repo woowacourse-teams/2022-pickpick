@@ -70,7 +70,14 @@ public class MessageService {
                                                final MessageRequest messageRequest) {
         boolean needPastMessage = messageRequest.isNeedPastMessage();
 
-        List<MessageResponse> messageResponses = messages.findMessages(memberId, channelIds, messageRequest);
+        List<MessageResponse> messageResponses = messages.findMessages(
+                memberId,
+                channelIds,
+                messageRequest.getKeyword(),
+                messageRequest.getMessageId(),
+                messageRequest.getDate(),
+                messageRequest.isNeedPastMessage(),
+                messageRequest.getMessageCount());
 
         replaceMentionMembers(memberId, messageResponses);
 
