@@ -34,7 +34,7 @@ public class WorkspaceService {
     @Transactional
     public MemberInfoDto registerWorkspace(final String code) {
         OAuthAccessInfoDto oAuthAccessInfoDto = externalClient.callOAuthAccessInfo(code);
-        validateExistWorkspace(oAuthAccessInfoDto.getWorkspaceSlackId());
+        validateUnregisteredWorkspace(oAuthAccessInfoDto.getWorkspaceSlackId());
 
         initWorkspaceInfos(oAuthAccessInfoDto);
 
@@ -52,7 +52,7 @@ public class WorkspaceService {
         channels.saveAll(allWorkspaceChannels);
     }
 
-    private void validateExistWorkspace(final String workspaceSlackId) {
+    private void validateUnregisteredWorkspace(final String workspaceSlackId) {
         if (workspaces.existsBySlackId(workspaceSlackId)) {
             throw new WorkspaceDuplicateException(workspaceSlackId);
         }
