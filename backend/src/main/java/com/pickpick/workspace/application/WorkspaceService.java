@@ -1,6 +1,5 @@
 package com.pickpick.workspace.application;
 
-import com.pickpick.auth.application.dto.MemberInfoDto;
 import com.pickpick.auth.application.dto.OAuthAccessInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
@@ -32,14 +31,13 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public MemberInfoDto register(final String code) {
+    public OAuthAccessInfoDto register(final String code) {
         OAuthAccessInfoDto oAuthAccessInfoDto = externalClient.callOAuthAccessInfo(code);
         validateUnregisteredWorkspace(oAuthAccessInfoDto.getWorkspaceSlackId());
 
         initWorkspaceInfos(oAuthAccessInfoDto);
 
-        return new MemberInfoDto(oAuthAccessInfoDto.getUserSlackId(),
-                oAuthAccessInfoDto.getUserToken());
+        return oAuthAccessInfoDto;
     }
 
     private void initWorkspaceInfos(final OAuthAccessInfoDto workspaceInfoDto) {

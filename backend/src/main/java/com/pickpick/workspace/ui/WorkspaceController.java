@@ -1,7 +1,7 @@
 package com.pickpick.workspace.ui;
 
 import com.pickpick.auth.application.AuthService;
-import com.pickpick.auth.application.dto.MemberInfoDto;
+import com.pickpick.auth.application.dto.OAuthAccessInfoDto;
 import com.pickpick.auth.ui.dto.LoginResponse;
 import com.pickpick.workspace.application.WorkspaceService;
 import javax.validation.constraints.NotEmpty;
@@ -24,7 +24,7 @@ public class WorkspaceController {
 
     @GetMapping("/slack-workspace")
     public LoginResponse register(@RequestParam @NotEmpty final String code) {
-        MemberInfoDto memberInfoDto = workspaceService.register(code);
-        return authService.login(memberInfoDto);
+        OAuthAccessInfoDto oAuthAccessInfoDto = workspaceService.register(code);
+        return authService.login(oAuthAccessInfoDto);
     }
 }
