@@ -56,6 +56,6 @@ public class AcceptanceTestBase {
     }
 
     protected Workspace 슬랙에서_멤버의_워크스페이스_정보_호출(final String code) {
-        return externalClient.callWorkspaceInfo(code).toEntity();
+        return externalClient.callOAuthAccessInfo(code).toEntity();
     }
 }

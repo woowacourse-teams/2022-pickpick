@@ -1,7 +1,7 @@
 package com.pickpick.workspace.application;
 
 import com.pickpick.auth.application.dto.MemberInfoDto;
-import com.pickpick.auth.application.dto.WorkspaceInfoDto;
+import com.pickpick.auth.application.dto.OAuthAccessInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.workspace.WorkspaceDuplicateException;
@@ -33,16 +33,16 @@ public class WorkspaceService {
 
     @Transactional
     public MemberInfoDto registerWorkspace(final String code) {
-        WorkspaceInfoDto workspaceInfoDto = externalClient.callWorkspaceInfo(code);
-        validateExistWorkspace(workspaceInfoDto.getWorkspaceSlackId());
+        OAuthAccessInfoDto oAuthAccessInfoDto = externalClient.callOAuthAccessInfo(code);
+        validateExistWorkspace(oAuthAccessInfoDto.getWorkspaceSlackId());
 
-        initWorkspaceInfos(workspaceInfoDto);
+        initWorkspaceInfos(oAuthAccessInfoDto);
 
-        return new MemberInfoDto(workspaceInfoDto.getUserSlackId(),
-                workspaceInfoDto.getUserToken());
+        return new MemberInfoDto(oAuthAccessInfoDto.getUserSlackId(),
+                oAuthAccessInfoDto.getUserToken());
     }
 
-    private void initWorkspaceInfos(final WorkspaceInfoDto workspaceInfoDto) {
+    private void initWorkspaceInfos(final OAuthAccessInfoDto workspaceInfoDto) {
         Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
 
         List<Member> allWorkspaceMembers = externalClient.findMembersByWorkspace(workspace);

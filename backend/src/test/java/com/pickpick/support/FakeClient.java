@@ -4,7 +4,7 @@ package com.pickpick.support;
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 
 import com.pickpick.auth.application.dto.MemberInfoDto;
-import com.pickpick.auth.application.dto.WorkspaceInfoDto;
+import com.pickpick.auth.application.dto.OAuthAccessInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
@@ -40,15 +40,15 @@ public class FakeClient implements ExternalClient {
 
 
     @Override
-    public WorkspaceInfoDto callWorkspaceInfo(final String code) {
+    public OAuthAccessInfoDto callOAuthAccessInfo(final String code) {
         Workspace workspace = codeAndWorkspace.get(code);
         Member member = codeAndMember.get(code);
-        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId(),
+        return new OAuthAccessInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId(),
                 member.getSlackToken(), member.getSlackId());
     }
 
     @Override
-    public MemberInfoDto callMemberSlackIdByCode(final String code) {
+    public MemberInfoDto callMemberInfo(final String code) {
         return new MemberInfoDto(codeAndMember.get(code).getSlackId(), codeAndMember.get(code).getSlackToken());
     }
 

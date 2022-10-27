@@ -30,7 +30,7 @@ public class AuthService {
 
     @Transactional
     public LoginResponse login(final String code) {
-        MemberInfoDto memberInfoDto = externalClient.callMemberSlackIdByCode(code);
+        MemberInfoDto memberInfoDto = externalClient.callMemberInfo(code);
         return login(memberInfoDto);
     }
 
