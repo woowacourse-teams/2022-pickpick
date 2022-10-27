@@ -7,7 +7,7 @@ import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.브로드캐스트_메시지_전송;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.회원가입;
-import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,7 +33,7 @@ class MessageEventAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(BOM);
-        워크스페이스_초기화(code);
+        워크스페이스_초기화_및_로그인(code);
         memberSlackId = 코드로_멤버의_slackId_추출(code);
         workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(code);
     }

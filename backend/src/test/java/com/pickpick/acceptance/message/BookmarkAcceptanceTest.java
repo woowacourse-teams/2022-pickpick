@@ -10,7 +10,7 @@ import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_생�
 import static com.pickpick.acceptance.message.BookmarkRestHandler.북마크_조회;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
-import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.fixture.MemberFixture.HOPE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +35,7 @@ class BookmarkAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(HOPE);
-        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화(code);
+        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(code);
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_slackId_추출(code);

@@ -11,7 +11,7 @@ public class WorkspaceRestHandler {
 
     private static final String WORKSPACE_API_URL = "/api/slack-workspace";
 
-    public static ExtractableResponse<Response> 워크스페이스_초기화(final String code) {
+    public static ExtractableResponse<Response> 워크스페이스_초기화_및_로그인(final String code) {
         Map<String, Object> request = Map.of("code", code);
         return get(WORKSPACE_API_URL, request);
     }

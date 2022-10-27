@@ -4,7 +4,7 @@ import static com.pickpick.acceptance.RestHandler.상태코드_200_확인;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_삭제;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.채널_이름_변경;
-import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.fixture.MemberFixture.BOM;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
@@ -26,7 +26,7 @@ class ChannelEventAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(BOM);
-        워크스페이스_초기화(code);
+        워크스페이스_초기화_및_로그인(code);
 
         workspace = 슬랙에서_멤버의_워크스페이스_정보_호출(code);
     }
