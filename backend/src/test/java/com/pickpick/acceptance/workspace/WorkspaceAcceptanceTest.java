@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayName("인증 & 인가 인수 테스트")
+@DisplayName("워크스페이스 인수 테스트")
 class WorkspaceAcceptanceTest extends AcceptanceTestBase {
 
     @Test
