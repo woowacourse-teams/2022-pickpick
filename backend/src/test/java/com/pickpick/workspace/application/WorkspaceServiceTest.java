@@ -59,7 +59,7 @@ class WorkspaceServiceTest {
 
         // then
         assertThat(beforeSave).isEmpty();
-        assertThat(afterSave).isNotEmpty();
+        assertThat(afterSave).isPresent();
     }
 
     @DisplayName("워크스페이스 초기화 시 해당 워크스페이스의 채널과 멤버를 저장한다.")
