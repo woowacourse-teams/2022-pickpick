@@ -23,8 +23,8 @@ public class WorkspaceController {
     }
 
     @GetMapping("/slack-workspace")
-    public LoginResponse registerWorkspace(@RequestParam @NotEmpty final String code) {
-        MemberInfoDto memberInfoDto = workspaceService.registerWorkspace(code);
+    public LoginResponse register(@RequestParam @NotEmpty final String code) {
+        MemberInfoDto memberInfoDto = workspaceService.register(code);
         return authService.login(memberInfoDto);
     }
 }

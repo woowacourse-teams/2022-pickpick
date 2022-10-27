@@ -53,7 +53,7 @@ class WorkspaceServiceTest {
         Optional<Workspace> beforeSave = workspaces.findBySlackId(jupjup.getSlackId());
 
         // when
-        workspaceService.registerWorkspace(KKOJAE.getCode());
+        workspaceService.register(KKOJAE.getCode());
 
         Optional<Workspace> afterSave = workspaces.findBySlackId(jupjup.getSlackId());
 
@@ -70,7 +70,7 @@ class WorkspaceServiceTest {
         Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
 
         // when
-        workspaceService.registerWorkspace(KKOJAE.getCode());
+        workspaceService.register(KKOJAE.getCode());
 
         Workspace savedJupjup = workspaces.getBySlackId(jupjup.getSlackId());
         List<Channel> jupjupChannels = channels.findAllByWorkspaceOrderByName(savedJupjup);
@@ -90,10 +90,10 @@ class WorkspaceServiceTest {
         Workspace jupjup = JUPJUP.create();
 
         // when
-        workspaceService.registerWorkspace(KKOJAE.getCode());
+        workspaceService.register(KKOJAE.getCode());
 
         // then
-        assertThatThrownBy(() -> workspaceService.registerWorkspace(KKOJAE.getCode()))
+        assertThatThrownBy(() -> workspaceService.register(KKOJAE.getCode()))
                 .isInstanceOf(WorkspaceDuplicateException.class);
     }
 }

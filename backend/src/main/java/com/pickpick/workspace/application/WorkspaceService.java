@@ -32,7 +32,7 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public MemberInfoDto registerWorkspace(final String code) {
+    public MemberInfoDto register(final String code) {
         OAuthAccessInfoDto oAuthAccessInfoDto = externalClient.callOAuthAccessInfo(code);
         validateUnregisteredWorkspace(oAuthAccessInfoDto.getWorkspaceSlackId());
 
