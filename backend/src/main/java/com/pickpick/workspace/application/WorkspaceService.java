@@ -43,7 +43,7 @@ public class WorkspaceService {
     }
 
     private void initWorkspaceInfos(final OAuthAccessInfoDto workspaceInfoDto) {
-        Workspace workspace = workspaces.save(workspaceInfoDto.toEntity());
+        Workspace workspace = workspaces.save(workspaceInfoDto.toWorkspace());
 
         List<Member> allWorkspaceMembers = externalClient.findMembersByWorkspace(workspace);
         members.saveAll(allWorkspaceMembers);

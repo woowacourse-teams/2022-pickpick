@@ -21,7 +21,7 @@ public class OAuthAccessInfoDto {
         this.userSlackId = userSlackId;
     }
 
-    public Workspace toEntity() {
+    public Workspace toWorkspace() {
         return new Workspace(workspaceSlackId, botToken, botSlackId);
     }
 }
