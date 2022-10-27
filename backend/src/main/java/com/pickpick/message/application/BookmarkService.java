@@ -13,6 +13,7 @@ import com.pickpick.message.ui.dto.BookmarkFindRequest;
 import com.pickpick.message.ui.dto.BookmarkRequest;
 import com.pickpick.message.ui.dto.BookmarkResponse;
 import com.pickpick.message.ui.dto.BookmarkResponses;
+import com.pickpick.support.MentionIdReplaceable;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -56,6 +57,7 @@ public class BookmarkService {
         bookmarks.save(bookmark);
     }
 
+    @MentionIdReplaceable
     public BookmarkResponses find(final BookmarkFindRequest request, final Long memberId) {
         List<Bookmark> bookmarkList = findBookmarks(request, memberId);
 

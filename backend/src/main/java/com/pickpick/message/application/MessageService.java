@@ -13,6 +13,7 @@ import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
+import com.pickpick.support.MentionIdReplaceable;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -58,6 +59,7 @@ public class MessageService {
         this.slackIdExtractor = slackIdExtractor;
     }
 
+    @MentionIdReplaceable
     public MessageResponses find(final Long memberId, final MessageRequest messageRequest) {
         List<Long> channelIds = findChannelId(memberId, messageRequest);
 
@@ -102,7 +104,7 @@ public class MessageService {
                 .limit(messageCount)
                 .fetch();
 
-        replaceMentionMembers(memberId, messageResponses);
+        //replaceMentionMembers(memberId, messageResponses);
 
         if (needPastMessage) {
             return messageResponses;
