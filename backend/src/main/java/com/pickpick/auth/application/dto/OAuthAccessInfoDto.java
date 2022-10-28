@@ -4,22 +4,24 @@ import com.pickpick.workspace.domain.Workspace;
 import lombok.Getter;
 
 @Getter
-public class WorkspaceInfoDto {
+public class OAuthAccessInfoDto {
 
     private final String workspaceSlackId;
     private final String botToken;
     private final String botSlackId;
     private final String userToken;
+    private final String userSlackId;
 
-    public WorkspaceInfoDto(final String workspaceSlackId, final String botToken, final String botSlackId,
-                            final String userToken) {
+    public OAuthAccessInfoDto(final String workspaceSlackId, final String botToken, final String botSlackId,
+                              final String userToken, final String userSlackId) {
         this.workspaceSlackId = workspaceSlackId;
         this.botToken = botToken;
         this.botSlackId = botSlackId;
         this.userToken = userToken;
+        this.userSlackId = userSlackId;
     }
 
-    public Workspace toEntity() {
+    public Workspace toWorkspace() {
         return new Workspace(workspaceSlackId, botToken, botSlackId);
     }
 }

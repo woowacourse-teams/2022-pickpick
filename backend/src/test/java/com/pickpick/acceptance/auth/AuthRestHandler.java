@@ -12,7 +12,6 @@ public class AuthRestHandler {
 
     private static final String LOGIN_API_URL = "/api/slack-login";
     private static final String CERTIFICATION_API_URL = "/api/certification";
-    private static final String WORKSPACE_API_URL = "/api/slack-workspace";
 
     public static ExtractableResponse<Response> 로그인(final String code) {
         Map<String, Object> request = Map.of("code", code);
@@ -21,10 +20,5 @@ public class AuthRestHandler {
 
     public static ExtractableResponse<Response> 토큰_검증(final String token) {
         return getWithToken(CERTIFICATION_API_URL, token);
-    }
-
-    public static ExtractableResponse<Response> 워크스페이스_초기화(final String code) {
-        Map<String, Object> request = Map.of("code", code);
-        return get(WORKSPACE_API_URL, request);
     }
 }

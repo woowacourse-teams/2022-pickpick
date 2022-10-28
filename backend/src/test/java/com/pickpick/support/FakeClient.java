@@ -3,7 +3,8 @@ package com.pickpick.support;
 
 import static com.pickpick.fixture.WorkspaceFixture.JUPJUP;
 
-import com.pickpick.auth.application.dto.WorkspaceInfoDto;
+import com.pickpick.auth.application.dto.MemberInfoDto;
+import com.pickpick.auth.application.dto.OAuthAccessInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.fixture.ChannelFixture;
 import com.pickpick.fixture.MemberFixture;
@@ -37,22 +38,18 @@ public class FakeClient implements ExternalClient {
             .map(memberFixture -> memberFixture.createLogin(jupjup))
             .collect(Collectors.toMap(Member::getSlackToken, member -> member));
 
-    @Override
-    public String callUserToken(final String code) {
-        return codeAndMember.get(code).getSlackToken();
-    }
 
     @Override
-    public WorkspaceInfoDto callWorkspaceInfo(final String code) {
+    public OAuthAccessInfoDto callOAuthAccessInfo(final String code) {
         Workspace workspace = codeAndWorkspace.get(code);
         Member member = codeAndMember.get(code);
-        return new WorkspaceInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId(),
-                member.getSlackToken());
+        return new OAuthAccessInfoDto(workspace.getSlackId(), workspace.getBotToken(), workspace.getBotSlackId(),
+                member.getSlackToken(), member.getSlackId());
     }
 
     @Override
-    public String callMemberSlackId(final String userToken) {
-        return tokenAndMember.get(userToken).getSlackId();
+    public MemberInfoDto callMemberInfo(final String code) {
+        return new MemberInfoDto(codeAndMember.get(code).getSlackId(), codeAndMember.get(code).getSlackToken());
     }
 
     @Override

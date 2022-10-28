@@ -4,7 +4,6 @@ import DatePicker from "@src/components/AddReminder/DateTimePicker/DatePicker";
 import TimePicker from "@src/components/AddReminder/DateTimePicker/TimePicker";
 
 import useMutateReminder from "@src/hooks/@query/useMutateReminder";
-import useFocus from "@src/hooks/@shared/useFocus";
 
 import { REMINDER_BUTTON_TEXT } from "@src/@constants";
 import { FlexRow } from "@src/@styles/shared";
