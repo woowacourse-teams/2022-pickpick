@@ -12,6 +12,7 @@ import com.pickpick.message.application.BookmarkService;
 import com.pickpick.message.application.MessageService;
 import com.pickpick.message.application.ReminderService;
 import com.pickpick.slackevent.application.SlackEventServiceFinder;
+import com.pickpick.workspace.application.WorkspaceService;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +57,9 @@ public class DocsControllerTestBase {
 
     @MockBean
     protected ReminderService reminderService;
+
+    @MockBean
+    protected WorkspaceService workspaceService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;

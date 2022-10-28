@@ -9,18 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.pickpick.auth.support.JwtTokenProvider;
 import com.pickpick.auth.ui.dto.LoginResponse;
-import com.pickpick.channel.domain.Channel;
-import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.exception.auth.ExpiredTokenException;
 import com.pickpick.exception.auth.InvalidTokenException;
-import com.pickpick.exception.workspace.WorkspaceDuplicateException;
-import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,9 +35,6 @@ class AuthServiceTest {
     private WorkspaceRepository workspaces;
 
     @Autowired
-    private ChannelRepository channels;
-
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Value("${security.jwt.token.secret-key}")
@@ -62,7 +53,7 @@ class AuthServiceTest {
     void login() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member kkojae = members.save(KKOJAE.createLogin(jupjup));
+        members.save(KKOJAE.createLogin(jupjup));
 
         // when
         LoginResponse response = authService.login(KKOJAE.getCode());
@@ -76,7 +67,7 @@ class AuthServiceTest {
     void firstLogin() {
         // given
         Workspace jupjup = workspaces.save(JUPJUP.create());
-        Member kkojae = members.save(KKOJAE.createNeverLoggedIn(jupjup));
+        members.save(KKOJAE.createNeverLoggedIn(jupjup));
 
         // when
         LoginResponse firstLoginResponse = authService.login(KKOJAE.getCode());
@@ -89,61 +80,6 @@ class AuthServiceTest {
                 () -> assertThat(secondLoginResponse.getToken()).isNotEmpty(),
                 () -> assertThat(secondLoginResponse.isFirstLogin()).isFalse()
         );
-    }
-
-    @DisplayName("워크스페이스 초기화 시 워크스페이스를 저장한다.")
-    @Test
-    void registerWorkspace() {
-        // given
-        Workspace jupjup = JUPJUP.create();
-        Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
-
-        Optional<Workspace> beforeSave = workspaces.findBySlackId(jupjup.getSlackId());
-
-        // when
-        authService.registerWorkspace(KKOJAE.getCode());
-
-        Optional<Workspace> afterSave = workspaces.findBySlackId(jupjup.getSlackId());
-
-        // then
-        assertThat(beforeSave).isEmpty();
-        assertThat(afterSave).isNotEmpty();
-    }
-
-    @DisplayName("워크스페이스 초기화 시 해당 워크스페이스의 채널과 멤버를 저장한다.")
-    @Test
-    void registerWorkspaceAnd() {
-        // given
-        Workspace jupjup = JUPJUP.create();
-        Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
-
-        // when
-        authService.registerWorkspace(KKOJAE.getCode());
-
-        Workspace savedJupjup = workspaces.getBySlackId(jupjup.getSlackId());
-        List<Channel> jupjupChannels = channels.findAllByWorkspaceOrderByName(savedJupjup);
-        Member savedKkojae = members.getBySlackId(kkojae.getSlackId());
-
-        List<Member> memberInJupjup = members.findAllByWorkspace(savedJupjup);
-
-        // then
-        assertThat(jupjupChannels).isNotEmpty();
-        assertThat(memberInJupjup).extracting("slackId").contains(savedKkojae.getSlackId());
-    }
-
-    @DisplayName("이미 등록된 워크스페이스를 재등록시 예외가 발생한다.")
-    @Test
-    void registerExistedWorkspace() {
-        // given
-        Workspace jupjup = JUPJUP.create();
-        Member kkojae = KKOJAE.createNeverLoggedIn(jupjup);
-
-        // when
-        authService.registerWorkspace(KKOJAE.getCode());
-
-        // then
-        assertThatThrownBy(() -> authService.registerWorkspace(KKOJAE.getCode()))
-                .isInstanceOf(WorkspaceDuplicateException.class);
     }
 
     @DisplayName("유효한 토큰을 검증한다.")
