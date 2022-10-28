@@ -26,13 +26,13 @@ public class MessageService {
     private static final String MENTION_MARK = "@";
 
     private final MemberRepository members;
-    private final QMessageRepository messages;
     private final ChannelSubscriptionRepository channelSubscriptions;
+    private final QMessageRepository messages;
     private final SlackIdExtractor slackIdExtractor;
 
     public MessageService(final MemberRepository members,
-                          final QMessageRepository messages,
                           final ChannelSubscriptionRepository channelSubscriptions,
+                          final QMessageRepository messages,
                           final SlackIdExtractor slackIdExtractor) {
         this.members = members;
         this.messages = messages;
@@ -53,7 +53,7 @@ public class MessageService {
     private List<Long> findChannelId(final Long memberId, final MessageRequest messageRequest) {
         List<Long> channelIds = messageRequest.getChannelIds();
 
-        if (isNonNullNorEmpty(channelIds)) {
+        if (isNonNullAndNotEmpty(channelIds)) {
             return channelIds;
         }
 
@@ -62,7 +62,7 @@ public class MessageService {
         return List.of(firstSubscription.getChannelId());
     }
 
-    private boolean isNonNullNorEmpty(final List<Long> channelIds) {
+    private boolean isNonNullAndNotEmpty(final List<Long> channelIds) {
         return channelIds != null && !channelIds.isEmpty();
     }
 

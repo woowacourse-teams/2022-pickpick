@@ -54,28 +54,6 @@ public class QMessageRepository {
                 .fetch();
     }
 
-    public boolean existsByChannelsBeforePostedDate(final List<Long> channelIds, final MessageRequest messageRequest,
-                                                    final MessageResponse messageResponse) {
-        Integer result = jpaQueryFactory
-                .selectOne()
-                .from(message)
-                .where(inChannelsFilterByTextBeforePostedDate(channelIds, messageRequest, messageResponse))
-                .fetchFirst();
-
-        return result != null;
-    }
-
-    public boolean existsByChannelsAfterPostedDate(final List<Long> channelIds, final MessageRequest messageRequest,
-                                                   final MessageResponse messageResponse) {
-        Integer result = jpaQueryFactory
-                .selectOne()
-                .from(message)
-                .where(inChannelsFilterByTextAfterPostedDate(channelIds, messageRequest, messageResponse))
-                .fetchFirst();
-
-        return result != null;
-    }
-
     private ConstructorExpression<MessageResponse> getMessageResponseConstructor() {
         return Projections.constructor(MessageResponse.class,
                 message.id,
@@ -108,12 +86,8 @@ public class QMessageRepository {
                                                                   final boolean needPastMessage) {
         return inChannels(channelIds)
                 .and(textContains(keyword))
-                .and(textIsNotNullNorEmpty())
+                .and(textIsNotNullAndNotEmpty())
                 .and(afterOrBeforeMessagePostedDateOrRequestDate(messageId, date, needPastMessage));
-    }
-
-    private BooleanExpression inChannels(final List<Long> channelIds) {
-        return message.channel.id.in(channelIds);
     }
 
     private BooleanExpression textContains(final String keyword) {
@@ -124,7 +98,7 @@ public class QMessageRepository {
         return null;
     }
 
-    private BooleanExpression textIsNotNullNorEmpty() {
+    private BooleanExpression textIsNotNullAndNotEmpty() {
         return message.text.isNotNull()
                 .and(message.text.isNotEmpty());
     }
@@ -139,13 +113,8 @@ public class QMessageRepository {
         return afterOrBeforeRequestDate(date, needPastMessage);
     }
 
-
     private Predicate afterOrBeforeMessagePostedDate(final Long messageId, final boolean needPastMessage) {
-        Message target = Optional.ofNullable(jpaQueryFactory
-                        .select(message)
-                        .from(message)
-                        .where(message.id.eq(messageId))
-                        .fetchOne())
+        Message target = Optional.ofNullable(findById(messageId))
                 .orElseThrow(() -> new MessageNotFoundException(messageId));
 
         LocalDateTime messageDate = target.getPostedDate();
@@ -155,6 +124,14 @@ public class QMessageRepository {
         }
 
         return message.postedDate.after(messageDate);
+    }
+
+    private Message findById(final Long messageId) {
+        return jpaQueryFactory
+                .select(message)
+                .from(message)
+                .where(message.id.eq(messageId))
+                .fetchOne();
     }
 
     private Predicate afterOrBeforeRequestDate(final LocalDateTime date, final boolean needPastMessage) {
@@ -179,14 +156,42 @@ public class QMessageRepository {
         return message.postedDate.asc();
     }
 
-    private BooleanExpression inChannelsFilterByTextBeforePostedDate(final List<Long> channelIds, final MessageRequest request,
+    public boolean existsByChannelsBeforePostedDate(final List<Long> channelIds, final MessageRequest messageRequest,
+                                                    final MessageResponse messageResponse) {
+        Integer result = jpaQueryFactory
+                .selectOne()
+                .from(message)
+                .where(inChannelsFilterByTextBeforePostedDate(channelIds, messageRequest, messageResponse))
+                .fetchFirst();
+
+        return result != null;
+    }
+
+    public boolean existsByChannelsAfterPostedDate(final List<Long> channelIds, final MessageRequest messageRequest,
+                                                   final MessageResponse messageResponse) {
+        Integer result = jpaQueryFactory
+                .selectOne()
+                .from(message)
+                .where(inChannelsFilterByTextAfterPostedDate(channelIds, messageRequest, messageResponse))
+                .fetchFirst();
+
+        return result != null;
+    }
+
+    private BooleanExpression inChannelsFilterByTextBeforePostedDate(final List<Long> channelIds,
+                                                                     final MessageRequest request,
                                                                      final MessageResponse messageResponse) {
         return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
                 .and(message.postedDate.before(messageResponse.getPostedDate()));
     }
 
-    private BooleanExpression inChannelsFilterByTextAfterPostedDate(final List<Long> channelIds, final MessageRequest request,
+    private BooleanExpression inChannels(final List<Long> channelIds) {
+        return message.channel.id.in(channelIds);
+    }
+
+    private BooleanExpression inChannelsFilterByTextAfterPostedDate(final List<Long> channelIds,
+                                                                    final MessageRequest request,
                                                                     final MessageResponse messageResponse) {
         return inChannels(channelIds)
                 .and(textContains(request.getKeyword()))
