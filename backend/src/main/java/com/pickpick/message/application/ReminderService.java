@@ -9,6 +9,7 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
+import com.pickpick.message.support.MentionIdReplacer;
 import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,16 +41,18 @@ public class ReminderService {
     private final JPAQueryFactory jpaQueryFactory;
     private final Clock clock;
     private final SlackIdExtractor slackIdExtractor;
+    private final MentionIdReplacer mentionIdReplacer;
 
     public ReminderService(final ReminderRepository reminders, final MemberRepository members,
                            final MessageRepository messages, final JPAQueryFactory jpaQueryFactory, final Clock clock,
-                           final SlackIdExtractor slackIdExtractor) {
+                           final SlackIdExtractor slackIdExtractor, final MentionIdReplacer mentionIdReplacer) {
         this.reminders = reminders;
         this.members = members;
         this.messages = messages;
         this.jpaQueryFactory = jpaQueryFactory;
         this.clock = clock;
         this.slackIdExtractor = slackIdExtractor;
+        this.mentionIdReplacer = mentionIdReplacer;
     }
 
     @Transactional
@@ -165,26 +167,12 @@ public class ReminderService {
     }
 
     private void replaceMentionMembers(final Long memberId, final List<ReminderResponse> reminderResponses) {
-        Member member = members.getById(memberId);
-        List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
-
-        Map<String, String> memberNames = workspaceMembers.stream()
-                .collect(Collectors.toMap(Member::getSlackId,
-                        workspaceMember -> MENTION_MARK + workspaceMember.getUsername()));
+        Map<String, String> memberNames = mentionIdReplacer.extractMemberNames(memberId);
 
         for (ReminderResponse response : reminderResponses) {
-            String text = replaceMentionMemberInText(response.getText(), memberNames);
+            String text = mentionIdReplacer.replaceMentionMemberInText(response.getText(), memberNames);
             response.replaceText(text);
         }
-    }
-
-    private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
-        Set<String> slackIds = slackIdExtractor.extract(text);
-        for (String slackId : slackIds) {
-            String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;
-            text = text.replace(mention, memberMap.getOrDefault(slackId, mention));
-        }
-        return text;
     }
 
     @Transactional

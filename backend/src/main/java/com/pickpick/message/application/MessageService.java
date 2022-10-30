@@ -2,17 +2,14 @@ package com.pickpick.message.application;
 
 import com.pickpick.channel.domain.ChannelSubscription;
 import com.pickpick.channel.domain.ChannelSubscriptionRepository;
-import com.pickpick.member.domain.Member;
-import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.QMessageRepository;
-import com.pickpick.message.support.SlackIdExtractor;
+import com.pickpick.message.support.MentionIdReplacer;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,23 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MessageService {
 
-    private static final String MENTION_PREFIX = "<@";
-    private static final String MENTION_SUFFIX = ">";
-    private static final String MENTION_MARK = "@";
-
-    private final MemberRepository members;
     private final ChannelSubscriptionRepository channelSubscriptions;
     private final QMessageRepository messages;
-    private final SlackIdExtractor slackIdExtractor;
+    private final MentionIdReplacer mentionIdReplacer;
 
-    public MessageService(final MemberRepository members,
-                          final ChannelSubscriptionRepository channelSubscriptions,
+    public MessageService(final ChannelSubscriptionRepository channelSubscriptions,
                           final QMessageRepository messages,
-                          final SlackIdExtractor slackIdExtractor) {
-        this.members = members;
+                          final MentionIdReplacer mentionIdReplacer) {
         this.messages = messages;
         this.channelSubscriptions = channelSubscriptions;
-        this.slackIdExtractor = slackIdExtractor;
+        this.mentionIdReplacer = mentionIdReplacer;
     }
 
     public MessageResponses find(final Long memberId, final MessageRequest messageRequest) {
@@ -91,26 +81,12 @@ public class MessageService {
     }
 
     private void replaceMentionMembers(final Long memberId, final List<MessageResponse> messageResponses) {
-        Member member = members.getById(memberId);
-        List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
-
-        Map<String, String> memberNames = workspaceMembers.stream()
-                .collect(Collectors.toMap(Member::getSlackId,
-                        workspaceMember -> MENTION_MARK + workspaceMember.getUsername()));
+        Map<String, String> memberNames = mentionIdReplacer.extractMemberNames(memberId);
 
         for (MessageResponse message : messageResponses) {
-            String text = replaceMentionMemberInText(message.getText(), memberNames);
+            String text = mentionIdReplacer.replaceMentionMemberInText(message.getText(), memberNames);
             message.replaceText(text);
         }
-    }
-
-    private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
-        Set<String> slackIds = slackIdExtractor.extract(text);
-        for (String slackId : slackIds) {
-            String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;
-            text = text.replace(mention, memberMap.getOrDefault(slackId, mention));
-        }
-        return text;
     }
 
     private boolean hasPast(final List<Long> channelIds, final MessageRequest messageRequest,
