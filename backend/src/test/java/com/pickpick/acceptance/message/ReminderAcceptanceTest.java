@@ -5,7 +5,6 @@ import static com.pickpick.acceptance.RestHandler.상태코드_201_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_204_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_400_확인;
 import static com.pickpick.acceptance.RestHandler.상태코드_404_확인;
-import static com.pickpick.acceptance.auth.AuthRestHandler.워크스페이스_초기화;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_단건_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_목록_조회;
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_삭제;
@@ -13,12 +12,12 @@ import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_�
 import static com.pickpick.acceptance.message.ReminderRestHandler.리마인더_수정;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_목록_생성;
 import static com.pickpick.acceptance.slackevent.SlackEventRestHandler.메시지_전송;
+import static com.pickpick.acceptance.workspace.WorkspaceRestHandler.워크스페이스_초기화_및_로그인;
 import static com.pickpick.fixture.MemberFixture.BOM;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.acceptance.AcceptanceTestBase;
-import com.pickpick.acceptance.auth.AuthRestHandler;
 import com.pickpick.acceptance.message.ReminderRestHandler.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
@@ -41,10 +40,7 @@ class ReminderAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void init() {
         String code = 슬랙에서_코드_발행(BOM);
-        워크스페이스_초기화(code);
-
-        String loginCode = 슬랙에서_코드_발행(BOM);
-        ExtractableResponse<Response> loginResponse = AuthRestHandler.로그인(loginCode);
+        ExtractableResponse<Response> loginResponse = 워크스페이스_초기화_및_로그인(code);
 
         token = 로그인_응답에서_토큰_추출(loginResponse);
         memberSlackId = 코드로_멤버의_slackId_추출(code);

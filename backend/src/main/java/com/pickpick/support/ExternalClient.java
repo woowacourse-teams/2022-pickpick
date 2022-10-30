@@ -1,7 +1,7 @@
 package com.pickpick.support;
 
 import com.pickpick.auth.application.dto.MemberInfoDto;
-import com.pickpick.auth.application.dto.WorkspaceInfoDto;
+import com.pickpick.auth.application.dto.OAuthAccessInfoDto;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.member.domain.Member;
 import com.pickpick.message.domain.Reminder;
@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface ExternalClient {
 
-    WorkspaceInfoDto callWorkspaceInfo(String code);
+    OAuthAccessInfoDto callOAuthAccessInfo(String code);
 
-    MemberInfoDto callMemberSlackIdByCode(String code);
+    MemberInfoDto callMemberInfo(String code);
 
     List<Member> findMembersByWorkspace(Workspace workspace);
 

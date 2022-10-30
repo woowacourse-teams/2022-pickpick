@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTestBase {
@@ -55,6 +56,6 @@ public class AcceptanceTestBase {
     }
 
     protected Workspace 슬랙에서_멤버의_워크스페이스_정보_호출(final String code) {
-        return externalClient.callWorkspaceInfo(code).toEntity();
+        return externalClient.callOAuthAccessInfo(code).toWorkspace();
     }
 }

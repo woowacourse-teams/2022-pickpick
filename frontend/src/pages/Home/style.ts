@@ -21,7 +21,7 @@ export const UsageContainer = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 40px;
+  gap: 25px;
 
   padding: 30px 43px;
 
@@ -30,7 +30,13 @@ export const UsageContainer = styled.section`
   `}
 `;
 
-export const UsageList = styled.ol`
+export const UsageOrderedList = styled.ol`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+export const UsageList = styled.li`
   display: flex;
   flex-direction: column;
   gap: 14px;
