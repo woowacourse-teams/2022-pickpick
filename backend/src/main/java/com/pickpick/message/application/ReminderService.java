@@ -10,7 +10,6 @@ import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
 import com.pickpick.message.support.MentionIdReplacer;
-import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
@@ -20,7 +19,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,18 +38,16 @@ public class ReminderService {
     private final MessageRepository messages;
     private final JPAQueryFactory jpaQueryFactory;
     private final Clock clock;
-    private final SlackIdExtractor slackIdExtractor;
-    private final MentionIdReplacer mentionIdReplacer;
+    private final MentionIdReplacer<ReminderResponse> mentionIdReplacer;
 
     public ReminderService(final ReminderRepository reminders, final MemberRepository members,
                            final MessageRepository messages, final JPAQueryFactory jpaQueryFactory, final Clock clock,
-                           final SlackIdExtractor slackIdExtractor, final MentionIdReplacer mentionIdReplacer) {
+                           final MentionIdReplacer<ReminderResponse> mentionIdReplacer) {
         this.reminders = reminders;
         this.members = members;
         this.messages = messages;
         this.jpaQueryFactory = jpaQueryFactory;
         this.clock = clock;
-        this.slackIdExtractor = slackIdExtractor;
         this.mentionIdReplacer = mentionIdReplacer;
     }
 
@@ -70,7 +66,7 @@ public class ReminderService {
 
         ReminderResponse response = ReminderResponse.from(reminder);
 
-        replaceMentionMembers(memberId, List.of(response));
+        mentionIdReplacer.replaceMentionMembers(memberId, List.of(response));
 
         return response;
     }
@@ -79,7 +75,7 @@ public class ReminderService {
         List<Reminder> reminderList = findReminders(request, memberId);
 
         List<ReminderResponse> responses = toReminderResponseList(reminderList);
-        replaceMentionMembers(memberId, responses);
+        mentionIdReplacer.replaceMentionMembers(memberId, responses);
 
         return new ReminderResponses(responses, hasPast(reminderList, memberId));
     }
@@ -164,15 +160,6 @@ public class ReminderService {
         LocalDateTime remindDate = targetReminder.getRemindDate();
 
         return QReminder.reminder.remindDate.after(remindDate);
-    }
-
-    private void replaceMentionMembers(final Long memberId, final List<ReminderResponse> reminderResponses) {
-        Map<String, String> memberNames = mentionIdReplacer.extractMemberNames(memberId);
-
-        for (ReminderResponse response : reminderResponses) {
-            String text = mentionIdReplacer.replaceMentionMemberInText(response.getText(), memberNames);
-            response.replaceText(text);
-        }
     }
 
     @Transactional

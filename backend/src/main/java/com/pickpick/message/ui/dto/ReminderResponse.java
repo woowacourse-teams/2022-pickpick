@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ReminderResponse {
+public class ReminderResponse implements MessageTextResponse {
 
     private Long id;
     private Long messageId;

@@ -2,15 +2,15 @@ package com.pickpick.message.support;
 
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
+import com.pickpick.message.ui.dto.MessageTextResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MentionIdReplacer {
+public class MentionIdReplacer<T extends MessageTextResponse> {
 
     private static final String MENTION_PREFIX = "<@";
     private static final String MENTION_SUFFIX = ">";
@@ -24,7 +24,15 @@ public class MentionIdReplacer {
         this.slackIdExtractor = slackIdExtractor;
     }
 
-    @NotNull
+    public void replaceMentionMembers(final Long memberId, final List<T> reminderResponses) {
+        Map<String, String> memberNames = extractMemberNames(memberId);
+
+        for (T response : reminderResponses) {
+            String text = replaceMentionMemberInText(response.getText(), memberNames);
+            response.replaceText(text);
+        }
+    }
+
     public Map<String, String> extractMemberNames(final Long memberId) {
         Member member = members.getById(memberId);
         List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
