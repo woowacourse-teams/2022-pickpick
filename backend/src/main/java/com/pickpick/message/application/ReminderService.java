@@ -9,20 +9,18 @@ import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.message.domain.QReminder;
 import com.pickpick.message.domain.Reminder;
 import com.pickpick.message.domain.ReminderRepository;
-import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.ReminderFindRequest;
 import com.pickpick.message.ui.dto.ReminderResponse;
 import com.pickpick.message.ui.dto.ReminderResponses;
 import com.pickpick.message.ui.dto.ReminderSaveRequest;
+import com.pickpick.support.MentionIdReplaceable;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,17 +38,14 @@ public class ReminderService {
     private final MessageRepository messages;
     private final JPAQueryFactory jpaQueryFactory;
     private final Clock clock;
-    private final SlackIdExtractor slackIdExtractor;
 
     public ReminderService(final ReminderRepository reminders, final MemberRepository members,
-                           final MessageRepository messages, final JPAQueryFactory jpaQueryFactory, final Clock clock,
-                           final SlackIdExtractor slackIdExtractor) {
+                           final MessageRepository messages, final JPAQueryFactory jpaQueryFactory, final Clock clock) {
         this.reminders = reminders;
         this.members = members;
         this.messages = messages;
         this.jpaQueryFactory = jpaQueryFactory;
         this.clock = clock;
-        this.slackIdExtractor = slackIdExtractor;
     }
 
     @Transactional
@@ -63,21 +58,17 @@ public class ReminderService {
         reminders.save(reminder);
     }
 
+    @MentionIdReplaceable
     public ReminderResponse findOne(final Long messageId, final Long memberId) {
         Reminder reminder = reminders.getByMessageIdAndMemberId(messageId, memberId);
 
-        ReminderResponse response = ReminderResponse.from(reminder);
-
-        replaceMentionMembers(memberId, List.of(response));
-
-        return response;
+        return ReminderResponse.from(reminder);
     }
 
+    @MentionIdReplaceable
     public ReminderResponses find(final ReminderFindRequest request, final Long memberId) {
         List<Reminder> reminderList = findReminders(request, memberId);
-
         List<ReminderResponse> responses = toReminderResponseList(reminderList);
-        replaceMentionMembers(memberId, responses);
 
         return new ReminderResponses(responses, hasPast(reminderList, memberId));
     }
@@ -162,29 +153,6 @@ public class ReminderService {
         LocalDateTime remindDate = targetReminder.getRemindDate();
 
         return QReminder.reminder.remindDate.after(remindDate);
-    }
-
-    private void replaceMentionMembers(final Long memberId, final List<ReminderResponse> reminderResponses) {
-        Member member = members.getById(memberId);
-        List<Member> workspaceMembers = members.findAllByWorkspace(member.getWorkspace());
-
-        Map<String, String> memberNames = workspaceMembers.stream()
-                .collect(Collectors.toMap(Member::getSlackId,
-                        workspaceMember -> MENTION_MARK + workspaceMember.getUsername()));
-
-        for (ReminderResponse response : reminderResponses) {
-            String text = replaceMentionMemberInText(response.getText(), memberNames);
-            response.replaceText(text);
-        }
-    }
-
-    private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
-        Set<String> slackIds = slackIdExtractor.extract(text);
-        for (String slackId : slackIds) {
-            String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;
-            text = text.replace(mention, memberMap.getOrDefault(slackId, mention));
-        }
-        return text;
     }
 
     @Transactional

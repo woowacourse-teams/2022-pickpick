@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class BookmarkResponse {
+public class BookmarkResponse implements MessageTextResponse {
 
     private Long id;
     private Long messageId;

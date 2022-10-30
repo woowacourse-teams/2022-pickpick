@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MessageResponse {
+public class MessageResponse implements MessageTextResponse {
 
     private Long id;
     private Long memberId;
@@ -74,6 +74,12 @@ public class MessageResponse {
         this.remindDate = remindDate;
     }
 
+    @Override
+    public String getText() {
+        return text;
+    }
+
+    @Override
     public void replaceText(final String text) {
         this.text = text;
     }

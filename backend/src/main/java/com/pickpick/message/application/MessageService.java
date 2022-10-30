@@ -9,6 +9,7 @@ import com.pickpick.message.support.SlackIdExtractor;
 import com.pickpick.message.ui.dto.MessageRequest;
 import com.pickpick.message.ui.dto.MessageResponse;
 import com.pickpick.message.ui.dto.MessageResponses;
+import com.pickpick.support.MentionIdReplaceable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -79,8 +80,6 @@ public class MessageService {
                 messageRequest.getDate(),
                 messageRequest.isNeedPastMessage(),
                 messageRequest.getMessageCount());
-
-        //replaceMentionMembers(memberId, messageResponses);
 
         if (needPastMessage) {
             return messageResponses;
