@@ -29,18 +29,25 @@
 
 <br>
 
-## 프론트엔드 기술 스택 ✨
+## ✨ 프론트엔드 기술 스택 
 
-![프론트엔드기술스택](https://user-images.githubusercontent.com/61469664/196941679-067588a0-d9e0-4afa-8ad8-18a07abfb70a.png)
+![프론트엔드기술스택](https://user-images.githubusercontent.com/80666066/198928140-3b6a081e-f3e6-401e-b58f-568792f67847.png)
 
-<br>
+## ⚡️ 백엔드 기술 스택 
 
-## 백엔드 기술 스택 ⚡️
+![백엔드기술스택](https://user-images.githubusercontent.com/80666066/198928111-a3e64d8b-abfb-47ca-a97f-14d690fc40dc.png)
 
-![백엔드기술스택](https://user-images.githubusercontent.com/61469664/196941717-8993f980-00fb-47f7-ba7f-bc12fbc70677.png)
+## ⚙️ 인프라 기술 스택 
 
-<br>
+![인프라](https://user-images.githubusercontent.com/80666066/198929767-4f45e341-aa26-4edd-9467-9e2c265df2e3.png)
 
-## 인프라 기술 스택 ⚙️
+## 🕊 프론트엔드 인프라 구조  
 
-![인프라](https://user-images.githubusercontent.com/61469664/196941755-3ca4cd9b-81ce-4301-a549-d8f6d7198980.png)
+![프론트엔드 인프라](https://user-images.githubusercontent.com/80666066/198930210-c01588b1-ffca-4bb3-a2bc-9bbd5148c6e2.png)
+
+## 🦉 백엔드 인프라 구조  
+
+![백엔드 CI](https://user-images.githubusercontent.com/80666066/198933629-a48ebcf7-0d9b-444b-90da-43afe7dd11cc.png)
+
+![백엔드 CD](https://user-images.githubusercontent.com/80666066/198933731-e90f2baf-cd2a-4299-955e-2b4cb9e0825b.png)
+
