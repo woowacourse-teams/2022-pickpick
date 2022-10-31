@@ -24,10 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BookmarkService {
 
-    private static final String MENTION_PREFIX = "<@";
-    private static final String MENTION_SUFFIX = ">";
-    private static final String MENTION_MARK = "@";
-
     private final BookmarkRepository bookmarks;
     private final MessageRepository messages;
     private final MemberRepository members;

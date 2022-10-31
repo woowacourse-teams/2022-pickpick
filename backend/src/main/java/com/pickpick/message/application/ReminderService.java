@@ -29,10 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ReminderService {
 
-    private static final String MENTION_PREFIX = "<@";
-    private static final String MENTION_SUFFIX = ">";
-    private static final String MENTION_MARK = "@";
-
     private final ReminderRepository reminders;
     private final MemberRepository members;
     private final MessageRepository messages;
