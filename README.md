@@ -8,16 +8,14 @@
   <br>
   무료 워크스페이스라도 잠길 걱정 없이 언제든 볼 수 있게 해주는 서비스입니다
   <br>
+  <br>
+
+[![Application](http://img.shields.io/badge/Application-F46A54?style=flat&logo=github&logoColor=white&link=https://jupjup.site/)](https://jupjup.site/)
+[![Storybook](http://img.shields.io/badge/Storybook-FF4785?style=flat&logo=Storybook&logoColor=white&link=https://jupjup.site/)](https://jupjup.site/)
+[![API Docs](http://img.shields.io/badge/-API%20Docs-important?style=flat&logo=dev.to&logoColor=white&link=https://dev.jupjup.site/docs)](https://dev.jupjup.site/docs)
+[![WIKI](http://img.shields.io/badge/-GitHub%20WiKi-395FC1?style=flat&logo=GitHub&logoColor=white&link=https://github.com/woowacourse-teams/2022-pickpick/wiki)](https://github.com/woowacourse-teams/2022-pickpick/wiki)
 
 </div>
-
-## 📎 바로가기
-
-- 📚 [API 문서](https://dev.jupjup.site/docs)
-- 🎁 [스토리북](https://62e64dc73aafd7bc9338ba73-imzhfpkupu.chromatic.com/)
-- 🌎 [깃헙 위키](https://github.com/woowacourse-teams/2022-pickpick/wiki)
-
-<br>
 
 ## 팀원 소개 👩🏻‍💻🧑🏻‍💻
 
@@ -62,7 +60,7 @@
 
 #### 2. 매주 함께 회고해요
 
-- 매주 금요일 오후에 주관 회고를 가져요
+- 매주 금요일 오후에 주간 회고를 가져요
 - 한 주 동안 세웠던 목표와 결과를 공유해요
 - 감정 회고도 함께해 큰 갈등이 되기전에 해결하려 노력해요
 
