@@ -14,6 +14,10 @@
 [![Storybook](http://img.shields.io/badge/Storybook-FF4785?style=flat&logo=Storybook&logoColor=white&link=https://jupjup.site/)](https://jupjup.site/)
 [![API Docs](http://img.shields.io/badge/-API%20Docs-important?style=flat&logo=dev.to&logoColor=white&link=https://dev.jupjup.site/docs)](https://dev.jupjup.site/docs)
 [![WIKI](http://img.shields.io/badge/-GitHub%20WiKi-395FC1?style=flat&logo=GitHub&logoColor=white&link=https://github.com/woowacourse-teams/2022-pickpick/wiki)](https://github.com/woowacourse-teams/2022-pickpick/wiki)
+  <br>
+[![서비스_이용_가이드](http://img.shields.io/badge/-서비스_이용_가이드-81B441?style=flat&logo=Pinboard&logoColor=white&link=https://github.com/woowacourse-teams/2022-pickpick/wiki)](https://github.com/woowacourse-teams/2022-pickpick/blob/develop/docs/%EC%84%9C%EB%B9%84%EC%8A%A4_%EC%9D%B4%EC%9A%A9_%EA%B0%80%EC%9D%B4%EB%93%9C.md)
+[![체험_가이드](http://img.shields.io/badge/-체험_가이드-6F53F3?style=flat&logo=Lemmy&logoColor=white&link=https://github.com/woowacourse-teams/2022-pickpick/wiki)](https://github.com/woowacourse-teams/2022-pickpick/blob/develop/docs/%EC%B2%B4%ED%97%98_%EA%B0%80%EC%9D%B4%EB%93%9C.md)
+
 
 </div>
 
