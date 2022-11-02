@@ -63,9 +63,17 @@ public class MentionAspect {
         return Arrays.stream(returnValue.getClass().getDeclaredFields())
                 .peek(field -> field.setAccessible(true))
                 .filter(field -> field.getType().equals(List.class))
-                .map(FunctionWrapper.apply((field) -> (List<Object>) field.get(returnValue)))
+                .map(field -> getValues(returnValue, field))
                 .findFirst()
                 .orElse(List.of(returnValue));
+    }
+
+    private List<Object> getValues(final Object returnValue, final Field field) {
+        try {
+            return (List<Object>) field.get(returnValue);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<Field> filterTextFields(final Object response) {
