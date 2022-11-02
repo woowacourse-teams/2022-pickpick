@@ -3,7 +3,7 @@ package com.pickpick.message.ui.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class ReminderResponses implements MessageTextResponses<ReminderResponse> {
+public class ReminderResponses {
 
     private List<ReminderResponse> reminders;
 
@@ -24,10 +24,5 @@ public class ReminderResponses implements MessageTextResponses<ReminderResponse>
 
     public boolean hasFuture() {
         return hasFuture;
-    }
-
-    @Override
-    public List<ReminderResponse> findContents() {
-        return reminders;
     }
 }

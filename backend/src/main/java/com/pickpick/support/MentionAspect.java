@@ -3,8 +3,8 @@ package com.pickpick.support;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.support.SlackIdExtractor;
-import com.pickpick.message.ui.dto.MessageTextResponse;
-import com.pickpick.message.ui.dto.MessageTextResponses;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,30 +34,20 @@ public class MentionAspect {
 
     @Pointcut("@annotation(com.pickpick.support.MentionIdReplaceable)")
     private void mentionTarget() {
-
     }
 
     @AfterReturning(
             value = "mentionTarget() && (args(memberId, ..) || args(.., memberId))",
-            returning = "results",
-            argNames = "memberId, results")
-    public void replaceMention(final Long memberId,
-                               final MessageTextResponses<MessageTextResponse> results) {
-        List<MessageTextResponse> responseList = results.findContents();
+            returning = "returnValue",
+            argNames = "memberId, returnValue")
+    public void replaceMention(final Long memberId, final Object returnValue) throws IllegalAccessException {
         Map<String, String> memberNames = extractMemberNames(memberId);
+        List<Object> responses = getObjectContainingText(returnValue);
 
-        replaceMessageMembers(responseList, memberNames);
-    }
-
-    @AfterReturning(
-            value = "mentionTarget() && (args(memberId, ..) || args(.., memberId))",
-            returning = "results",
-            argNames = "memberId, results")
-    public void replaceMention(final Long memberId,
-                               final MessageTextResponse results) {
-        Map<String, String> memberNames = extractMemberNames(memberId);
-
-        replaceMessageMembers(List.of(results), memberNames);
+        for (Object response : responses) {
+            List<Field> texts = filterTextFields(response);
+            replaceMentionMemberInText(texts, response, memberNames);
+        }
     }
 
     private Map<String, String> extractMemberNames(final Long memberId) {
@@ -69,15 +59,33 @@ public class MentionAspect {
                         workspaceMember -> MENTION_MARK + workspaceMember.getUsername()));
     }
 
-    private void replaceMessageMembers(final List<MessageTextResponse> messageResponses,
-                                       final Map<String, String> memberNames) {
-        for (MessageTextResponse message : messageResponses) {
-            String text = replaceMentionMemberInText(message.getText(), memberNames);
-            message.replaceText(text);
+    private List<Object> getObjectContainingText(final Object returnValue) {
+        return Arrays.stream(returnValue.getClass().getDeclaredFields())
+                .peek(field -> field.setAccessible(true))
+                .filter(field -> field.getType().equals(List.class))
+                .map(FunctionWrapper.apply((field) -> (List<Object>) field.get(returnValue)))
+                .findFirst()
+                .orElse(List.of(returnValue));
+    }
+
+    private List<Field> filterTextFields(final Object response) {
+        return Arrays.stream(response.getClass().getDeclaredFields())
+                .peek(field -> field.setAccessible(true))
+                .filter(field -> field.getName().equals("text"))
+                .collect(Collectors.toList());
+    }
+
+    private void replaceMentionMemberInText(List<Field> fields, Object results, Map<String, String> memberMap)
+            throws IllegalAccessException {
+
+        for (Field field : fields) {
+            String text = (String) field.get(results);
+            text = getReplacedText(memberMap, text);
+            field.set(results, text);
         }
     }
 
-    private String replaceMentionMemberInText(String text, final Map<String, String> memberMap) {
+    private String getReplacedText(final Map<String, String> memberMap, String text) {
         Set<String> slackIds = slackIdExtractor.extract(text);
         for (String slackId : slackIds) {
             String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;

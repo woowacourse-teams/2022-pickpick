@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MessageResponse implements MessageTextResponse {
+public class MessageResponse {
 
     private Long id;
     private Long memberId;
@@ -72,15 +72,5 @@ public class MessageResponse implements MessageTextResponse {
         this.bookmarked = Objects.nonNull(bookmarkId);
         this.setReminded = Objects.nonNull(reminderId);
         this.remindDate = remindDate;
-    }
-
-    @Override
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public void replaceText(final String text) {
-        this.text = text;
     }
 }

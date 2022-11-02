@@ -3,7 +3,7 @@ package com.pickpick.message.ui.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class MessageResponses implements MessageTextResponses<MessageResponse> {
+public class MessageResponses {
 
     private List<MessageResponse> messages;
 
@@ -41,10 +41,5 @@ public class MessageResponses implements MessageTextResponses<MessageResponse> {
 
     public boolean isNeedPastMessage() {
         return needPastMessage;
-    }
-
-    @Override
-    public List<MessageResponse> findContents() {
-        return messages;
     }
 }

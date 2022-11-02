@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class BookmarkResponse implements MessageTextResponse {
+public class BookmarkResponse {
 
     private Long id;
     private Long messageId;
@@ -53,9 +53,5 @@ public class BookmarkResponse implements MessageTextResponse {
                 .postedDate(message.getPostedDate())
                 .modifiedDate(message.getModifiedDate())
                 .build();
-    }
-
-    public void replaceText(final String text) {
-        this.text = text;
     }
 }

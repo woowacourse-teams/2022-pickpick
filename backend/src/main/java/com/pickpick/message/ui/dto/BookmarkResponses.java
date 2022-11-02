@@ -3,7 +3,7 @@ package com.pickpick.message.ui.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class BookmarkResponses implements MessageTextResponses<BookmarkResponse> {
+public class BookmarkResponses {
 
     private List<BookmarkResponse> bookmarks;
 
@@ -24,10 +24,5 @@ public class BookmarkResponses implements MessageTextResponses<BookmarkResponse>
 
     public boolean hasPast() {
         return hasPast;
-    }
-
-    @Override
-    public List<BookmarkResponse> findContents() {
-        return bookmarks;
     }
 }
