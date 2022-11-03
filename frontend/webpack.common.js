@@ -3,7 +3,6 @@
 
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { DefinePlugin } = require("webpack");
 
 module.exports = {
   entry: path.join(__dirname, "src/index.tsx"),
@@ -49,14 +48,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "public/index.html"),
       favicon: path.join(__dirname, "public/assets/images/favicon.ico"),
-    }),
-    new DefinePlugin({
-      "process.env.SLACK_LOGIN_URL": JSON.stringify(
-        process.env.SLACK_LOGIN_URL
-      ),
-      "process.env.SLACK_REGISTER_WORKSPACE_URL": JSON.stringify(
-        process.env.SLACK_REGISTER_WORKSPACE_URL
-      ),
     }),
   ],
   optimization: {
