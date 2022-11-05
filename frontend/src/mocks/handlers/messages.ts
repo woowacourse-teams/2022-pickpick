@@ -19,7 +19,7 @@ const getPreviousResponseInfo = (
     ctx.delay(500),
     ctx.json({
       messages: newMessages,
-      isLast: newMessages.length !== SIZE,
+      hasFuture: newMessages.length === SIZE,
     })
   );
 };
@@ -36,7 +36,7 @@ const getNextResponseInfo = (
     ctx.delay(500),
     ctx.json({
       messages: newMessages,
-      isLast: newMessages.length !== SIZE,
+      hasPast: newMessages.length === SIZE,
     })
   );
 };
@@ -44,6 +44,7 @@ const getNextResponseInfo = (
 const handlers = [
   rest.get("/api/messages", (req, res, ctx) => {
     const messageId = Number(req.url.searchParams.get("messageId"));
+
     const needPastMessage =
       req.url.searchParams.get("needPastMessage") === "true";
     const date = req.url.searchParams.get("date")?.split("T")[0];
@@ -51,7 +52,7 @@ const handlers = [
     const targetIndex = messages.findIndex(
       (message) => message.id === messageId
     );
-
+    console.log("희희..");
     if (!date && !messageId) {
       return getNextResponseInfo(res, ctx, targetIndex + 1);
     }
