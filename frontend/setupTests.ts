@@ -1,5 +1,4 @@
 import "@testing-library/jest-dom";
-import "@testing-library/jest-dom";
 import "@testing-library/react";
 import { cleanup } from "@testing-library/react";
 
