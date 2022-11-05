@@ -36,6 +36,7 @@ const getNextResponseInfo = (
     ctx.delay(500),
     ctx.json({
       messages: newMessages,
+      hasFuture: true,
       hasPast: newMessages.length === SIZE,
     })
   );
@@ -52,7 +53,7 @@ const handlers = [
     const targetIndex = messages.findIndex(
       (message) => message.id === messageId
     );
-    console.log("희희..");
+
     if (!date && !messageId) {
       return getNextResponseInfo(res, ctx, targetIndex + 1);
     }
