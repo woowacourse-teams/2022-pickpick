@@ -15,7 +15,6 @@ const config: Config.InitialOptions = {
 
   transform: {
     "^.+\\.(js|jsx|ts|tsx)?$": "ts-jest",
-    "^.+\\.svg$": "jest-transformer-svg",
   },
 
   testEnvironment: "jsdom",
