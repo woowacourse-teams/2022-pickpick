@@ -9,10 +9,7 @@ const config: Config.InitialOptions = {
   moduleDirectories: ["node_modules", "src", "public"],
   moduleNameMapper: {
     "^@src/(.*)$": "<rootDir>/src/$1",
-    "@public/assets/icons/pickpick.svg":
-      "<rootDir>/public/assets/icons/pickpick.svg",
-
-    "\\.(ttf|woff|woff2)$": "<rootDir>/__mock__/fileMock.ts",
+    "\\.(ttf|woff|woff2|png|svg)$": "<rootDir>/src/mocks/fileMock.ts",
   },
 
   moduleFileExtensions: ["ts", "tsx", "js", "json", "jsx", "json"],
