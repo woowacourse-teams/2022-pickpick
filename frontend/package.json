@@ -9,7 +9,8 @@
     "build-dev": "tsc && webpack --config webpack.dev.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "jest --silent --no-cache --watchAll"
+    "test": "jest --silent",
+    "test-dev": "jest --silent --no-cache --watchAll"
   },
   "keywords": [],
   "author": "",
