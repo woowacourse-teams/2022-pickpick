@@ -109,6 +109,7 @@
     "src",
     "public",
     "src/@types/style.d.ts",
-    "src/@types/custom.d.ts"
+    "src/@types/custom.d.ts",
+    "setupTests.ts"
   ]
 }
