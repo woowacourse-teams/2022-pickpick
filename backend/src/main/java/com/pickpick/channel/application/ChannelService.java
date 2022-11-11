@@ -11,6 +11,7 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.domain.Participation;
 import com.pickpick.support.ExternalClient;
+import com.pickpick.support.MentionIdReplaceable;
 import com.pickpick.workspace.domain.Workspace;
 import com.querydsl.core.util.StringUtils;
 import java.util.List;
@@ -36,6 +37,7 @@ public class ChannelService {
         this.channelSubscriptions = channelSubscriptions;
     }
 
+    @MentionIdReplaceable
     public ChannelResponses findByWorkspace(final Long memberId) {
         Member member = members.getById(memberId);
         validateToken(member);

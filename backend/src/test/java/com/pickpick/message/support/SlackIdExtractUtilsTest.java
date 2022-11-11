@@ -3,23 +3,19 @@ package com.pickpick.message.support;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.pickpick.utils.SlackIdExtractUtils;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class SlackIdExtractorTest {
-
-    private static final String MENTION_PREFIX = "<@";
-    private static final String MENTION_SUFFIX = ">";
-
-    private final SlackIdExtractor slackIdExtractor = new SlackIdExtractor();
+class SlackIdExtractUtilsTest {
 
     @DisplayName("슬랙 아이디가 한 개도 존재하지 않는 경우 빈 set 반환")
     @Test
     void noSlackId() {
         String text = "아무도 멘션하지 않은 메시지 내용";
-        Set<String> slackIds = slackIdExtractor.extract(text);
+        Set<String> slackIds = SlackIdExtractUtils.extract(text);
 
         assertThat(slackIds).isEmpty();
     }
@@ -28,7 +24,7 @@ class SlackIdExtractorTest {
     @Test
     void extractOneSlackId() {
         String text = "봄을 멘션 <@U1111111111> 한 메시지 내용";
-        Set<String> slackIds = slackIdExtractor.extract(text);
+        Set<String> slackIds = SlackIdExtractUtils.extract(text);
 
         assertAll(
                 () -> assertThat(slackIds).hasSize(1),
@@ -40,7 +36,7 @@ class SlackIdExtractorTest {
     @Test
     void extractOneSameSlackId() {
         String text = "봄을 여러번 멘션 <@U1111111111> 한 메시지 내용 <@U1111111111> 봄을 총 세번 멘션 <@U1111111111>";
-        Set<String> slackIds = slackIdExtractor.extract(text);
+        Set<String> slackIds = SlackIdExtractUtils.extract(text);
 
         assertAll(
                 () -> assertThat(slackIds).hasSize(1),
@@ -53,7 +49,7 @@ class SlackIdExtractorTest {
     void extractSeveralSlackIds() {
         String text =
                 "봄(<@U1111111111>), 써머(<@U2222222222>), 연로그(<@U3333333333>)를 한 번씩 멘션";
-        Set<String> slackIds = slackIdExtractor.extract(text);
+        Set<String> slackIds = SlackIdExtractUtils.extract(text);
 
         assertAll(
                 () -> assertThat(slackIds).hasSize(3),
@@ -67,7 +63,7 @@ class SlackIdExtractorTest {
     void extractSameAndSeveralSlackIds() {
         String text = "써머(<@U2222222222>), 연로그(<@U3333333333>)를 한 번씩 멘션"
                 + "봄은 두 번 멘션 <@U1111111111> <@U1111111111>";
-        Set<String> slackIds = slackIdExtractor.extract(text);
+        Set<String> slackIds = SlackIdExtractUtils.extract(text);
 
         assertAll(
                 () -> assertThat(slackIds).hasSize(3),

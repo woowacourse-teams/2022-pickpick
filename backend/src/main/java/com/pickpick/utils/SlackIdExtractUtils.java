@@ -1,18 +1,19 @@
-package com.pickpick.message.support;
+package com.pickpick.utils;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.springframework.stereotype.Component;
 
-@Component
-public class SlackIdExtractor {
+public class SlackIdExtractUtils {
 
     private static final String SLACK_ID_PATTERN = "<@\\w{11}>";
     private static final Pattern PATTERN = Pattern.compile(SLACK_ID_PATTERN);
 
-    public Set<String> extract(String text) {
+    private SlackIdExtractUtils() {
+    }
+
+    public static Set<String> extract(final String text) {
         Matcher matcher = PATTERN.matcher(text);
 
         Set<String> slackIds = new HashSet<>();
@@ -25,7 +26,7 @@ public class SlackIdExtractor {
         return slackIds;
     }
 
-    private String extractSlackId(final Matcher matcher) {
+    private static String extractSlackId(final Matcher matcher) {
         return matcher.group()
                 .replace("<@", "")
                 .replace(">", "");
