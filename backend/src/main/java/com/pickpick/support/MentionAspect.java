@@ -1,8 +1,9 @@
 package com.pickpick.support;
 
+import com.pickpick.exception.utils.ReflectionFailureException;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.message.support.SlackIdExtractor;
+import com.pickpick.utils.SlackIdExtractUtils;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -23,13 +24,12 @@ public class MentionAspect {
     private static final String MENTION_PREFIX = "<@";
     private static final String MENTION_SUFFIX = ">";
     private static final String MENTION_MARK = "@";
+    private static final String TEXT = "text";
 
     private final MemberRepository members;
-    private final SlackIdExtractor slackIdExtractor;
 
-    public MentionAspect(final MemberRepository members, final SlackIdExtractor slackIdExtractor) {
+    public MentionAspect(final MemberRepository members) {
         this.members = members;
-        this.slackIdExtractor = slackIdExtractor;
     }
 
     @Pointcut("@annotation(com.pickpick.support.MentionIdReplaceable)")
@@ -39,14 +39,22 @@ public class MentionAspect {
     @AfterReturning(
             value = "mentionTarget() && (args(memberId, ..) || args(.., memberId))",
             returning = "returnValue",
-            argNames = "memberId, returnValue")
-    public void replaceMention(final Long memberId, final Object returnValue) throws IllegalAccessException {
+            argNames = "memberId,returnValue")
+    public void apply(final Long memberId, final Object returnValue) {
+        try {
+            replaceMention(memberId, returnValue);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void replaceMention(final Long memberId, final Object returnValue) {
         Map<String, String> memberNames = extractMemberNames(memberId);
         List<Object> responses = getObjectContainingText(returnValue);
 
         for (Object response : responses) {
             List<Field> texts = filterTextFields(response);
-            replaceMentionMemberInText(texts, response, memberNames);
+            replaceMentionIdInText(texts, response, memberNames);
         }
     }
 
@@ -61,7 +69,6 @@ public class MentionAspect {
 
     private List<Object> getObjectContainingText(final Object returnValue) {
         return Arrays.stream(returnValue.getClass().getDeclaredFields())
-                .peek(field -> field.setAccessible(true))
                 .filter(field -> field.getType().equals(List.class))
                 .map(field -> getValues(returnValue, field))
                 .findFirst()
@@ -70,31 +77,39 @@ public class MentionAspect {
 
     private List<Object> getValues(final Object returnValue, final Field field) {
         try {
+            field.setAccessible(true);
             return (List<Object>) field.get(returnValue);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new ReflectionFailureException();
         }
     }
 
     private List<Field> filterTextFields(final Object response) {
         return Arrays.stream(response.getClass().getDeclaredFields())
-                .peek(field -> field.setAccessible(true))
-                .filter(field -> field.getName().equals("text"))
+                .filter(field -> field.getName().equals(TEXT))
                 .collect(Collectors.toList());
     }
 
-    private void replaceMentionMemberInText(List<Field> fields, Object results, Map<String, String> memberMap)
-            throws IllegalAccessException {
-
+    private void replaceMentionIdInText(final List<Field> fields, final Object results,
+                                        final Map<String, String> memberMap) {
         for (Field field : fields) {
+            field.setAccessible(true);
+            replaceField(results, memberMap, field);
+        }
+    }
+
+    private void replaceField(final Object results, final Map<String, String> memberMap, final Field field) {
+        try {
             String text = (String) field.get(results);
             text = getReplacedText(memberMap, text);
             field.set(results, text);
+        } catch (IllegalAccessException e) {
+            throw new ReflectionFailureException();
         }
     }
 
     private String getReplacedText(final Map<String, String> memberMap, String text) {
-        Set<String> slackIds = slackIdExtractor.extract(text);
+        Set<String> slackIds = SlackIdExtractUtils.extract(text);
         for (String slackId : slackIds) {
             String mention = MENTION_PREFIX + slackId + MENTION_SUFFIX;
             text = text.replace(mention, memberMap.getOrDefault(slackId, mention));
