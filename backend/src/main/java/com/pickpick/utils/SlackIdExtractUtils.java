@@ -10,6 +10,9 @@ public class SlackIdExtractUtils {
     private static final String SLACK_ID_PATTERN = "<@\\w{11}>";
     private static final Pattern PATTERN = Pattern.compile(SLACK_ID_PATTERN);
 
+    private SlackIdExtractUtils() {
+    }
+
     public static Set<String> extract(final String text) {
         Matcher matcher = PATTERN.matcher(text);
 
