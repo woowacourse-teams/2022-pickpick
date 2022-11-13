@@ -15,7 +15,7 @@ public interface ChannelSubscriptionRepository extends Repository<ChannelSubscri
     List<ChannelSubscription> findAllByMemberId(Long memberId);
 
     @Query("select cs from ChannelSubscription cs join fetch cs.channel where cs.member.id = :memberId order by cs.viewOrder")
-    List<ChannelSubscription> findAllByMemberIdOrderByViewOrderJoinFetch(Long memberId);
+    List<ChannelSubscription> findAllByMemberIdOrderByViewOrder(Long memberId);
 
     Optional<ChannelSubscription> findFirstByMemberOrderByViewOrderDesc(Member member);
 
