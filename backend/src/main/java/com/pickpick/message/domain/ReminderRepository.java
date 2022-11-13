@@ -21,7 +21,7 @@ public interface ReminderRepository extends Repository<Reminder, Long> {
 
     void deleteById(Long id);
 
-    void deleteAllByRemindDate(LocalDateTime remindDate);
+    void deleteInBatch(Iterable<Reminder> reminders);
 
     default Reminder getById(final Long id) {
         return findById(id)
