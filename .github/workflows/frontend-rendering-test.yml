@@ -1,4 +1,4 @@
-name: 줍줍 프론트엔드 스토리북 빌드 및 배포 자동화
+name: 줍줍 프론트엔드 컴포넌트 렌더링 테스트
 
 on:
   push:
@@ -7,9 +7,15 @@ on:
       - release/*
       - develop
     paths: "frontend/**"
+  pull_request:
+    branches:
+      - main
+      - release/*
+      - develop
+    paths: "frontend/**"
 
 jobs:
-  visual-and-composition:
+  unit-test:
     runs-on: ubuntu-latest
     env:
       working-directory: ./frontend
@@ -41,14 +47,6 @@ jobs:
         run: npm install
         working-directory: ${{ env.working-directory }}
 
-      - name: Build Storybook
-        run: npm run build-storybook --quiet
+      - name: Run Render Test
+        run: npm run test
         working-directory: ${{ env.working-directory }}
-
-      - name: Publish to Chromatic
-        uses: chromaui/action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          storybookBuildDir: storybook-static
-          workingDir: ${{ env.working-directory }}
