@@ -33,7 +33,7 @@ public class ReminderSender {
             externalClient.sendMessage(reminder);
         }
 
-        reminders.deleteAllByRemindDate(nowTime);
+        reminders.deleteInBatch(foundReminders);
     }
 
     private LocalDateTime now() {
