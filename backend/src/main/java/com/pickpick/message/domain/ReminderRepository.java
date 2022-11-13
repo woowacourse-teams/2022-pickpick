@@ -14,7 +14,7 @@ public interface ReminderRepository extends Repository<Reminder, Long> {
 
     Optional<Reminder> findById(Long id);
 
-    @Query("select r from Reminder r WHERE r.message.id = :messageId and r.member.id = :memberId")
+    @Query("select r from Reminder r join fetch r.member join fetch r.message WHERE r.message.id = :messageId and r.member.id = :memberId")
     Optional<Reminder> findByMessageIdAndMemberId(Long messageId, Long memberId);
 
     @Query("select r from Reminder r join fetch r.member join fetch r.message where r.remindDate = :remindDate")
