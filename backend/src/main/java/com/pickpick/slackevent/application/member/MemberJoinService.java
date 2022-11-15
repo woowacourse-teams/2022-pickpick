@@ -39,7 +39,7 @@ public class MemberJoinService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MEMBER_JOIN == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MEMBER_JOIN;
     }
 }

@@ -4,5 +4,5 @@ public interface SlackEventService {
 
     void execute(String requestBody);
 
-    boolean isSameSlackEvent(SlackEvent slackEvent);
+    SlackEvent getSlackEvent();
 }

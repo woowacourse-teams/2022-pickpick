@@ -41,7 +41,7 @@ public class ChannelDeletedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.CHANNEL_DELETED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.CHANNEL_DELETED;
     }
 }

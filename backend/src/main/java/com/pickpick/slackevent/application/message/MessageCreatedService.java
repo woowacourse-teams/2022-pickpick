@@ -52,7 +52,7 @@ public class MessageCreatedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_CREATED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_CREATED;
     }
 }

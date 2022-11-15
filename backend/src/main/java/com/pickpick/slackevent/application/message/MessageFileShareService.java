@@ -55,7 +55,7 @@ public class MessageFileShareService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_FILE_SHARE == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_FILE_SHARE;
     }
 }

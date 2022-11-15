@@ -59,7 +59,7 @@ public class MessageThreadBroadcastService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_THREAD_BROADCAST == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_THREAD_BROADCAST;
     }
 }

@@ -35,7 +35,7 @@ public class ChannelRenameService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.CHANNEL_RENAME == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.CHANNEL_RENAME;
     }
 }

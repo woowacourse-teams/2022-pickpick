@@ -31,7 +31,7 @@ public class MessageDeletedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_DELETED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_DELETED;
     }
 }

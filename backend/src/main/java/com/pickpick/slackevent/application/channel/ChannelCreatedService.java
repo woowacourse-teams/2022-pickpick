@@ -36,7 +36,7 @@ public class ChannelCreatedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.CHANNEL_CREATED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.CHANNEL_CREATED;
     }
 }

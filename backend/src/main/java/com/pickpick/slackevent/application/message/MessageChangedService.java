@@ -44,7 +44,7 @@ public class MessageChangedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_CHANGED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_CHANGED;
     }
 }
