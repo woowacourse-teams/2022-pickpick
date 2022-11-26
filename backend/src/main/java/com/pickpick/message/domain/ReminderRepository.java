@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ReminderRepository extends Repository<Reminder, Long> {
 
@@ -22,6 +23,7 @@ public interface ReminderRepository extends Repository<Reminder, Long> {
 
     void deleteById(Long id);
 
+    @Transactional
     @Modifying
     @Query("delete from Reminder r where r in :reminders")
     void deleteInBatch(Iterable<Reminder> reminders);
