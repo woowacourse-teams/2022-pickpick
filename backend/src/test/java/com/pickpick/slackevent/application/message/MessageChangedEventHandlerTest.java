@@ -28,10 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessageChangedServiceTest {
+class MessageChangedEventHandlerTest {
 
     @Autowired
-    private MessageChangedService messageChangedService;
+    private MessageChangedEventHandler messageChangedService;
 
     @Autowired
     private MessageRepository messages;

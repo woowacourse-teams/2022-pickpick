@@ -29,10 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessageFileShareServiceTest {
+class MessageFileShareEventHandlerTest {
 
     @Autowired
-    private MessageFileShareService messageFileShareService;
+    private MessageFileShareEventHandler messageFileShareService;
 
     @Autowired
     private MessageRepository messages;

@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemberChangedServiceTest {
+class MemberChangedEventHandlerTest {
 
     @Autowired
-    private MemberChangedService memberChangedService;
+    private MemberChangedEventHandler memberChangedService;
 
     @Autowired
     private MemberRepository members;

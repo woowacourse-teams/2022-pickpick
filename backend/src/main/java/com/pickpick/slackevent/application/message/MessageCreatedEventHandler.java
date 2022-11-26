@@ -6,7 +6,7 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
@@ -16,14 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MessageCreatedService implements SlackEventService {
+public class MessageCreatedEventHandler implements SlackEventHandler {
 
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
 
-    public MessageCreatedService(final MessageRepository messages, final MemberRepository members,
-                                 final ChannelRepository channels) {
+    public MessageCreatedEventHandler(final MessageRepository messages, final MemberRepository members,
+                                      final ChannelRepository channels) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;

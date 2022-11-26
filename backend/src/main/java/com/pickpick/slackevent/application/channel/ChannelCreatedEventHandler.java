@@ -3,7 +3,7 @@ package com.pickpick.slackevent.application.channel;
 import com.pickpick.channel.domain.Channel;
 import com.pickpick.channel.domain.ChannelRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.channel.dto.ChannelRequest;
 import com.pickpick.utils.JsonUtils;
 import com.pickpick.workspace.domain.Workspace;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
-public class ChannelCreatedService implements SlackEventService {
+public class ChannelCreatedEventHandler implements SlackEventHandler {
 
     private final WorkspaceRepository workspaces;
     private final ChannelRepository channels;
 
-    public ChannelCreatedService(final WorkspaceRepository workspaces, final ChannelRepository channels) {
+    public ChannelCreatedEventHandler(final WorkspaceRepository workspaces, final ChannelRepository channels) {
         this.workspaces = workspaces;
         this.channels = channels;
     }

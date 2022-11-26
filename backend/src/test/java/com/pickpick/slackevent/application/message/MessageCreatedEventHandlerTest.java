@@ -26,10 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessageCreatedServiceTest {
+class MessageCreatedEventHandlerTest {
 
     @Autowired
-    private MessageCreatedService messageCreatedService;
+    private MessageCreatedEventHandler messageCreatedService;
 
     @Autowired
     private MessageRepository messages;

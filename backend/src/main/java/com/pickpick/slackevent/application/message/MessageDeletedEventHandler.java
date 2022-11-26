@@ -2,7 +2,7 @@ package com.pickpick.slackevent.application.message;
 
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.message.dto.MessageDeletedRequest;
 import com.pickpick.utils.JsonUtils;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MessageDeletedService implements SlackEventService {
+public class MessageDeletedEventHandler implements SlackEventHandler {
 
     private final MessageRepository messages;
 
-    public MessageDeletedService(final MessageRepository messages) {
+    public MessageDeletedEventHandler(final MessageRepository messages) {
         this.messages = messages;
     }
 

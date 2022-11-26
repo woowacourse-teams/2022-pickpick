@@ -11,7 +11,7 @@ import com.pickpick.channel.application.ChannelSubscriptionService;
 import com.pickpick.message.application.BookmarkService;
 import com.pickpick.message.application.MessageService;
 import com.pickpick.message.application.ReminderService;
-import com.pickpick.slackevent.application.SlackEventServiceFinder;
+import com.pickpick.slackevent.application.SlackEventHandlerFinder;
 import com.pickpick.workspace.application.WorkspaceService;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +65,7 @@ public class DocsControllerTestBase {
     protected JwtTokenProvider jwtTokenProvider;
 
     @MockBean
-    protected SlackEventServiceFinder slackEventServiceFinder;
+    protected SlackEventHandlerFinder slackEventHandlerFinder;
 
     @Autowired
     protected MockMvc mockMvc;

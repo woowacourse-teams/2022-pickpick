@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemberJoinServiceTest {
+class MemberJoinEventHandlerTest {
 
     @Autowired
-    private MemberJoinService memberJoinService;
+    private MemberJoinEventHandler memberJoinService;
 
     @Autowired
     private MemberRepository members;

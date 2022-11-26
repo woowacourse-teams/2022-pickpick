@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ChannelRenameServiceTest {
+class ChannelRenameEventHandlerTest {
 
     @Autowired
     private ChannelRepository channels;
@@ -30,7 +30,7 @@ class ChannelRenameServiceTest {
     private WorkspaceRepository workspaces;
 
     @Autowired
-    private ChannelRenameService channelRenameService;
+    private ChannelRenameEventHandler channelRenameService;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

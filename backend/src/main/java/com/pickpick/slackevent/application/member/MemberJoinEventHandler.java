@@ -3,7 +3,7 @@ package com.pickpick.slackevent.application.member;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.member.dto.MemberJoinDto;
 import com.pickpick.slackevent.application.member.dto.MemberRequest;
 import com.pickpick.utils.JsonUtils;
@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MemberJoinService implements SlackEventService {
+public class MemberJoinEventHandler implements SlackEventHandler {
 
     private final MemberRepository members;
     private final WorkspaceRepository workspaces;
 
-    public MemberJoinService(final MemberRepository members, final WorkspaceRepository workspaces) {
+    public MemberJoinEventHandler(final MemberRepository members, final WorkspaceRepository workspaces) {
         this.members = members;
         this.workspaces = workspaces;
     }

@@ -1,7 +1,7 @@
 package com.pickpick.slackevent.ui;
 
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventServiceFinder;
+import com.pickpick.slackevent.application.SlackEventHandlerFinder;
 import com.pickpick.slackevent.ui.dto.ChallengeRequest;
 import com.pickpick.utils.JsonUtils;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +17,10 @@ public class SlackEventController {
     private static final String URL_VERIFICATION = "url_verification";
     private static final String EMPTY_STRING = "";
 
-    private final SlackEventServiceFinder slackEventServiceFinder;
+    private final SlackEventHandlerFinder slackEventHandlerFinder;
 
-    public SlackEventController(final SlackEventServiceFinder slackEventServiceFinder) {
-        this.slackEventServiceFinder = slackEventServiceFinder;
+    public SlackEventController(final SlackEventHandlerFinder slackEventHandlerFinder) {
+        this.slackEventHandlerFinder = slackEventHandlerFinder;
     }
 
     @PostMapping
@@ -30,7 +30,7 @@ public class SlackEventController {
             return ResponseEntity.ok(challengeRequest.getChallenge());
         }
 
-        slackEventServiceFinder.findBySlackEvent(SlackEvent.of(requestBody))
+        slackEventHandlerFinder.findBySlackEvent(SlackEvent.of(requestBody))
                 .execute(requestBody);
 
         return ResponseEntity.ok(EMPTY_STRING);

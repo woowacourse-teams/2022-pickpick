@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ChannelCreatedServiceTest {
+class ChannelCreatedEventHandlerTest {
 
     @Autowired
     private ChannelRepository channels;
@@ -29,7 +29,7 @@ class ChannelCreatedServiceTest {
     private WorkspaceRepository workspaces;
 
     @Autowired
-    private ChannelCreatedService channelCreatedService;
+    private ChannelCreatedEventHandler channelCreatedService;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

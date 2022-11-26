@@ -28,10 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessageThreadBroadcastServiceTest {
+class MessageThreadBroadcastEventHandlerTest {
 
     @Autowired
-    private MessageThreadBroadcastService messageThreadBroadcastService;
+    private MessageThreadBroadcastEventHandler messageThreadBroadcastService;
 
     @Autowired
     private MessageRepository messages;
