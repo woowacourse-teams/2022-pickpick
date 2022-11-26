@@ -26,17 +26,6 @@ class SlackEventHandlerFinderTest {
     @Autowired
     private SlackEventHandlerFinder slackEventHandlerFinder;
 
-    @DisplayName(value = "SlackEvent 타입에 따라 적절한 서비스를 찾는다")
-    @ParameterizedTest
-    @MethodSource("sources")
-    void findService(final SlackEvent slackEvent, final Class<?> expected) {
-        // given & when
-        SlackEventHandler slackEventHandler = slackEventHandlerFinder.findBySlackEvent(slackEvent);
-
-        // then
-        assertThat(slackEventHandler).isInstanceOf(expected);
-    }
-
     private static Stream<Arguments> sources() {
         return Stream.of(
                 Arguments.arguments(SlackEvent.MEMBER_JOIN, MemberJoinEventHandler.class),
@@ -50,5 +39,16 @@ class SlackEventHandlerFinderTest {
                 Arguments.arguments(SlackEvent.CHANNEL_RENAME, ChannelRenameEventHandler.class),
                 Arguments.arguments(SlackEvent.CHANNEL_DELETED, ChannelDeletedEventHandler.class)
         );
+    }
+
+    @DisplayName(value = "SlackEvent 타입에 따라 적절한 서비스를 찾는다")
+    @ParameterizedTest
+    @MethodSource("sources")
+    void findService(final SlackEvent slackEvent, final Class<?> expected) {
+        // given & when
+        SlackEventHandler slackEventHandler = slackEventHandlerFinder.findBySlackEvent(slackEvent);
+
+        // then
+        assertThat(slackEventHandler).isInstanceOf(expected);
     }
 }
