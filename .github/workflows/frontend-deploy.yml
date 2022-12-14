@@ -1,0 +1,56 @@
+name: 줍줍 프론트엔드 AWS S3 Bucket Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths: "frontend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    steps:
+      - name: checkout Github Actions
+        uses: actions/checkout@master
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+        working-directory: ${{ env.working-directory }}
+
+      - name: Create .env file
+        run: |
+          echo -e "\nSLACK_LOGIN_URL=${{ secrets.SLACK_LOGIN_URL }} \nSLACK_REGISTER_WORKSPACE_URL=${{ secrets.SLACK_REGISTER_WORKSPACE_URL }} "> .env.production
+        working-directory: ${{ env.working-directory }}
+
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: ${{ env.working-directory }}
+
+      - name: React build
+        run: npm run build
+        working-directory: ${{ env.working-directory }}
+
+      - name: AWS S3 deploy
+        run: aws s3 sync ./frontend/dist s3://jupjup-front/ --acl bucket-owner-full-control
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
