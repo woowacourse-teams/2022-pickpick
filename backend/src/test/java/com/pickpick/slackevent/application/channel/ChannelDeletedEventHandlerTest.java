@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ChannelDeletedServiceTest {
+class ChannelDeletedEventHandlerTest {
 
     @Autowired
     private ChannelRepository channels;
@@ -47,7 +47,7 @@ class ChannelDeletedServiceTest {
     private WorkspaceRepository workspaces;
 
     @Autowired
-    private ChannelDeletedService channelDeletedService;
+    private ChannelDeletedEventHandler channelDeletedService;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

@@ -25,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessageDeletedServiceTest {
+class MessageDeletedEventHandlerTest {
 
     @Autowired
-    private MessageDeletedService messageDeletedService;
+    private MessageDeletedEventHandler messageDeletedService;
 
     @Autowired
     private MessageRepository messages;

@@ -3,7 +3,7 @@ package com.pickpick.slackevent.application.message;
 import com.pickpick.message.domain.Message;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.message.dto.MessageChangedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MessageChangedService implements SlackEventService {
+public class MessageChangedEventHandler implements SlackEventHandler {
 
-    private final MessageThreadBroadcastService messageThreadBroadcastService;
+    private final MessageThreadBroadcastEventHandler messageThreadBroadcastService;
     private final MessageRepository messages;
 
-    public MessageChangedService(final MessageThreadBroadcastService messageThreadBroadcastService,
-                                 final MessageRepository messages) {
+    public MessageChangedEventHandler(final MessageThreadBroadcastEventHandler messageThreadBroadcastService,
+                                      final MessageRepository messages) {
         this.messageThreadBroadcastService = messageThreadBroadcastService;
         this.messages = messages;
     }
@@ -44,7 +44,7 @@ public class MessageChangedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_CHANGED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_CHANGED;
     }
 }

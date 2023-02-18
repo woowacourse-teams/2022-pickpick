@@ -6,23 +6,24 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MessageFileShareService implements SlackEventService {
+public class MessageCreatedEventHandler implements SlackEventHandler {
 
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
 
-    public MessageFileShareService(final MessageRepository messages, final MemberRepository members,
-                                   final ChannelRepository channels) {
+    public MessageCreatedEventHandler(final MessageRepository messages, final MemberRepository members,
+                                      final ChannelRepository channels) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
@@ -30,32 +31,28 @@ public class MessageFileShareService implements SlackEventService {
 
     @Override
     public void execute(final String requestBody) {
-        SlackMessageDto slackMessageDto = convert(requestBody);
+        MessageCreatedRequest request = JsonUtils.convert(requestBody, MessageCreatedRequest.class);
+        if (isReplyEvent(request)) {
+            return;
+        }
 
-        Member member = findMember(slackMessageDto);
-        Channel channel = findChannel(slackMessageDto);
+        SlackMessageDto slackMessageDto = request.toDto();
+
+        String memberSlackId = slackMessageDto.getMemberSlackId();
+        Member member = members.getBySlackId(memberSlackId);
+
+        String channelSlackId = slackMessageDto.getChannelSlackId();
+        Channel channel = channels.getBySlackId(channelSlackId);
 
         messages.save(slackMessageDto.toEntity(member, channel));
     }
 
-    private SlackMessageDto convert(final String requestBody) {
-        MessageCreatedRequest request = JsonUtils.convert(requestBody, MessageCreatedRequest.class);
-        return request.toDto();
-    }
-
-    private Member findMember(final SlackMessageDto slackMessageDto) {
-        String memberSlackId = slackMessageDto.getMemberSlackId();
-
-        return members.getBySlackId(memberSlackId);
-    }
-
-    private Channel findChannel(final SlackMessageDto slackMessageDto) {
-        String channelSlackId = slackMessageDto.getChannelSlackId();
-        return channels.getBySlackId(channelSlackId);
+    private boolean isReplyEvent(final MessageCreatedRequest request) {
+        return Objects.nonNull(request.getEvent().getThreadTs());
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_FILE_SHARE == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_CREATED;
     }
 }

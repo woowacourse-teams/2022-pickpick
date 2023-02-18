@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
-import com.pickpick.slackevent.application.SlackEvent;
 import com.pickpick.support.DatabaseCleaner;
 import com.pickpick.workspace.domain.Workspace;
 import com.pickpick.workspace.domain.WorkspaceRepository;
@@ -16,16 +15,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemberJoinServiceTest {
+class MemberJoinEventHandlerTest {
 
     @Autowired
-    private MemberJoinService memberJoinService;
+    private MemberJoinEventHandler memberJoinService;
 
     @Autowired
     private MemberRepository members;
@@ -39,28 +36,6 @@ class MemberJoinServiceTest {
     @AfterEach
     void tearDown() {
         databaseCleaner.clear();
-    }
-
-    @DisplayName("MEMBER_JOIN 이벤트 타입에 true 반환")
-    @Test
-    void supportsMemberJoinEventTrue() {
-        // given & when
-        boolean actual = memberJoinService.isSameSlackEvent(SlackEvent.MEMBER_JOIN);
-
-        // then
-        assertThat(actual).isTrue();
-    }
-
-    @DisplayName("MEMBER_JOIN을 제외한 모든 이벤트 타입에 false 반환")
-    @ValueSource(strings = {"MESSAGE_CREATED", "MESSAGE_CHANGED", "MESSAGE_DELETED",
-            "CHANNEL_RENAME", "CHANNEL_DELETED", "MEMBER_CHANGED"})
-    @ParameterizedTest
-    void supportsOtherEventFalse(final SlackEvent slackEvent) {
-        // given & when
-        boolean actual = memberJoinService.isSameSlackEvent(slackEvent);
-
-        // then
-        assertThat(actual).isFalse();
     }
 
     @DisplayName("MEMBER_JOIN 이벤트가 들어오면 신규 멤버를 저장")

@@ -6,7 +6,7 @@ import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.message.domain.MessageRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.message.dto.MessageCreatedRequest;
 import com.pickpick.slackevent.application.message.dto.SlackMessageDto;
 import com.pickpick.utils.JsonUtils;
@@ -15,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MessageThreadBroadcastService implements SlackEventService {
+public class MessageFileShareEventHandler implements SlackEventHandler {
 
     private final MessageRepository messages;
     private final MemberRepository members;
     private final ChannelRepository channels;
 
-    public MessageThreadBroadcastService(final MessageRepository messages, final MemberRepository members,
-                                         final ChannelRepository channels) {
+    public MessageFileShareEventHandler(final MessageRepository messages, final MemberRepository members,
+                                        final ChannelRepository channels) {
         this.messages = messages;
         this.members = members;
         this.channels = channels;
@@ -32,7 +32,10 @@ public class MessageThreadBroadcastService implements SlackEventService {
     public void execute(final String requestBody) {
         SlackMessageDto slackMessageDto = convert(requestBody);
 
-        save(slackMessageDto);
+        Member member = findMember(slackMessageDto);
+        Channel channel = findChannel(slackMessageDto);
+
+        messages.save(slackMessageDto.toEntity(member, channel));
     }
 
     private SlackMessageDto convert(final String requestBody) {
@@ -40,26 +43,19 @@ public class MessageThreadBroadcastService implements SlackEventService {
         return request.toDto();
     }
 
-    public void saveWhenSubtypeIsMessageChanged(final SlackMessageDto slackMessageDto) {
-        messages.findBySlackId(slackMessageDto.getSlackId())
-                .ifPresentOrElse(
-                        message -> message.changeText(slackMessageDto.getText(), slackMessageDto.getModifiedDate()),
-                        () -> save(slackMessageDto)
-                );
+    private Member findMember(final SlackMessageDto slackMessageDto) {
+        String memberSlackId = slackMessageDto.getMemberSlackId();
+
+        return members.getBySlackId(memberSlackId);
     }
 
-    private void save(final SlackMessageDto slackMessageDto) {
-        String memberSlackId = slackMessageDto.getMemberSlackId();
-        Member member = members.getBySlackId(memberSlackId);
-
+    private Channel findChannel(final SlackMessageDto slackMessageDto) {
         String channelSlackId = slackMessageDto.getChannelSlackId();
-        Channel channel = channels.getBySlackId(channelSlackId);
-
-        messages.save(slackMessageDto.toEntity(member, channel));
+        return channels.getBySlackId(channelSlackId);
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MESSAGE_THREAD_BROADCAST == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MESSAGE_FILE_SHARE;
     }
 }

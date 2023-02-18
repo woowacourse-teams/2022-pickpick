@@ -3,7 +3,7 @@ package com.pickpick.slackevent.application.member;
 import com.pickpick.member.domain.Member;
 import com.pickpick.member.domain.MemberRepository;
 import com.pickpick.slackevent.application.SlackEvent;
-import com.pickpick.slackevent.application.SlackEventService;
+import com.pickpick.slackevent.application.SlackEventHandler;
 import com.pickpick.slackevent.application.member.dto.MemberProfileChangedDto;
 import com.pickpick.slackevent.application.member.dto.MemberRequest;
 import com.pickpick.utils.JsonUtils;
@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class MemberChangedService implements SlackEventService {
+public class MemberChangedEventHandler implements SlackEventHandler {
 
     private final MemberRepository members;
 
-    public MemberChangedService(final MemberRepository members) {
+    public MemberChangedEventHandler(final MemberRepository members) {
         this.members = members;
     }
 
@@ -36,7 +36,7 @@ public class MemberChangedService implements SlackEventService {
     }
 
     @Override
-    public boolean isSameSlackEvent(final SlackEvent slackEvent) {
-        return SlackEvent.MEMBER_CHANGED == slackEvent;
+    public SlackEvent getSlackEvent() {
+        return SlackEvent.MEMBER_CHANGED;
     }
 }
