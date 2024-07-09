@@ -11,7 +11,7 @@
   <br>
 
 [![Application](http://img.shields.io/badge/Application-F46A54?style=flat&logo=github&logoColor=white&link=https://jupjup.site/)](https://jupjup.site/)
-[![Storybook](http://img.shields.io/badge/Storybook-FF4785?style=flat&logo=Storybook&logoColor=white&link=https://jupjup.site/)](https://jupjup.site/)
+[![Storybook](http://img.shields.io/badge/Storybook-FF4785?style=flat&logo=Storybook&logoColor=white&link=https://62e64dc73aafd7bc9338ba73-imzhfpkupu.chromatic.com/?path=/story/layouts-header--default-template)](https://62e64dc73aafd7bc9338ba73-imzhfpkupu.chromatic.com/?path=/story/layouts-header--default-template )
 [![API Docs](http://img.shields.io/badge/-API%20Docs-important?style=flat&logo=dev.to&logoColor=white&link=https://dev.jupjup.site/docs)](https://dev.jupjup.site/docs)
 [![WIKI](http://img.shields.io/badge/-GitHub%20WiKi-395FC1?style=flat&logo=GitHub&logoColor=white&link=https://github.com/woowacourse-teams/2022-pickpick/wiki)](https://github.com/woowacourse-teams/2022-pickpick/wiki)
 <br>
